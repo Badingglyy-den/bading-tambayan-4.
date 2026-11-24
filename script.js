@@ -247,23 +247,30 @@ function escapeHTML(s) {
   }[c]));
 }
 
+/* Safe during the transition away from the old Hangout layout. */
 function renderHangout() {
   const feed = $("hangoutFeed");
 
-  feed.innerHTML = state.hangoutPosts.length
-    ? state.hangoutPosts.slice().reverse().map(p => `
-      <div class="feed-item">
-        <b>${escapeHTML(p.name)}</b> · ${escapeHTML(p.message)}
-        <small>${new Date(p.date).toLocaleString()}</small>
-      </div>
-    `).join("")
-    : '<p class="empty-state">Wala pang nag-post. Be the first, sis.</p>';
+  if (feed) {
+    feed.innerHTML = state.hangoutPosts.length
+      ? state.hangoutPosts.slice().reverse().map(p => `
+        <div class="feed-item">
+          <b>${escapeHTML(p.name)}</b> · ${escapeHTML(p.message)}
+          <small>${new Date(p.date).toLocaleString()}</small>
+        </div>
+      `).join("")
+      : '<p class="empty-state">Wala pang nag-post. Be the first, sis.</p>';
+  }
 
-  $("kindFeed").innerHTML = state.kindPosts
-    .slice()
-    .reverse()
-    .map(p => `<div class="kind-item">💌 ${escapeHTML(p)}</div>`)
-    .join("");
+  const kindnessFeed = $("kindFeed");
+
+  if (kindnessFeed) {
+    kindnessFeed.innerHTML = state.kindPosts
+      .slice()
+      .reverse()
+      .map(p => `<div class="kind-item">💌 ${escapeHTML(p)}</div>`)
+      .join("");
+  }
 }
 
 const shopItems = [
@@ -1135,54 +1142,9 @@ $("diaryList").onclick = e => {
   save();
 };
 
-$("hangoutForm").onsubmit = e => {
-  e.preventDefault();
-
-  const message = $("hangoutMessage").value.trim();
-
-  if (!message) return;
-
-  state.hangoutPosts.push({
-    name: $("hangoutName").value.trim() ||
-      state.profile.name ||
-      "Sis",
-    message,
-    date: new Date().toISOString()
-  });
-
-  $("hangoutMessage").value = "";
-
-  if (state.hangoutPosts.length === 1) {
-    state.achievements.push("community");
-  }
-
-  visit("community");
-  awardXP(3, "Posted in the tambayan!");
-};
-
-$("newQuestion").onclick = () => {
-  $("questionOfDay").textContent = random([
-    "What's one tiny thing that made you smile today?",
-    "If your current era had a title, what would it be?",
-    "What's a song that feels like a hug?",
-    "What boundary are you proud of keeping?",
-    "What's your most unserious current obsession?"
-  ]);
-
-  visit("community");
-};
-
-$("kindPost").onclick = () => {
-  const v = $("kindMessage").value.trim();
-
-  if (!v) return;
-
-  state.kindPosts.push(v);
-  $("kindMessage").value = "";
-
-  save();
-  toast("A little kindness has been pinned. 💌");
-};
+/* The old local-only Hangout form and daily-question handlers are retired.
+   The shared Kindness Wall is managed by kindness.js, so script.js must not
+   attach a competing local-only handler to its button. */
 
 $("shopGrid").onclick = e => {
   const b = e.target.closest("[data-buy]");
