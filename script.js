@@ -1,4 +1,3 @@
-
 (() => {
 "use strict";
 
@@ -629,6 +628,272 @@ $("coinBtn").onclick = () => {
 
   played();
 };
+
+/* NEW ARCADE GAMES: 7–12 */
+
+const rpsChoices = ["rock", "paper", "scissors"];
+
+document.querySelector(".game-grid").addEventListener("click", e => {
+  const button = e.target.closest("[data-rps]");
+  if (!button) return;
+
+  const player = button.dataset.rps;
+  if (!rpsChoices.includes(player)) return;
+
+  const computer = random(rpsChoices);
+  let result;
+
+  if (player === computer) {
+    result = `It's a draw! You both chose ${player}.`;
+  } else if (
+    (player === "rock" && computer === "scissors") ||
+    (player === "paper" && computer === "rock") ||
+    (player === "scissors" && computer === "paper")
+  ) {
+    result = `You win! ${player} beats ${computer}. 🎉`;
+  } else {
+    result = `Computer wins! ${computer} beats ${player}. Try again!`;
+  }
+
+  $("rpsResult").textContent = result;
+  played();
+});
+
+let mathAnswer = 0;
+
+function newMathQuestion() {
+  const operations = ["+", "-", "×"];
+  const operation = random(operations);
+  let a = Math.floor(Math.random() * 12) + 1;
+  let b = Math.floor(Math.random() * 12) + 1;
+
+  if (operation === "-" && b > a) {
+    [a, b] = [b, a];
+  }
+
+  if (operation === "+") mathAnswer = a + b;
+  if (operation === "-") mathAnswer = a - b;
+  if (operation === "×") mathAnswer = a * b;
+
+  $("mathQuestion").textContent = `${a} ${operation} ${b} = ?`;
+  $("mathInput").value = "";
+  $("mathResult").textContent = "Solve it to earn your XP!";
+}
+
+$("mathCheck").onclick = () => {
+  const value = $("mathInput").value.trim();
+
+  if (value === "") {
+    $("mathResult").textContent = "Enter your answer first, sis.";
+    return;
+  }
+
+  if (Number(value) === mathAnswer) {
+    $("mathResult").textContent = "Correct! Math genius era. 🧠✨";
+    played();
+    newMathQuestion();
+  } else {
+    $("mathResult").textContent = "Not quite! Try again. You got this.";
+  }
+};
+
+$("mathNew").onclick = newMathQuestion;
+
+const scrambleWords = [
+  "RAINBOW",
+  "TAMBAYAN",
+  "BUTTERFLY",
+  "MIDNIGHT",
+  "PINEAPPLE",
+  "GALAXY",
+  "KARAOKE",
+  "SUNSHINE"
+];
+
+let scrambleAnswer = "";
+
+function shuffleWord(word) {
+  let shuffled = word.split("");
+
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  }
+
+  if (shuffled.join("") === word) {
+    shuffled.reverse();
+  }
+
+  return shuffled.join(" ");
+}
+
+function newScramble() {
+  scrambleAnswer = random(scrambleWords);
+  $("scrambleWord").textContent = shuffleWord(scrambleAnswer);
+  $("scrambleInput").value = "";
+  $("scrambleResult").textContent = "Unscramble the word!";
+}
+
+$("scrambleCheck").onclick = () => {
+  const guess = $("scrambleInput").value.trim().toUpperCase();
+
+  if (!guess) {
+    $("scrambleResult").textContent = "Type your answer first!";
+    return;
+  }
+
+  if (guess === scrambleAnswer) {
+    $("scrambleResult").textContent = "You got it! Word wizard! 🔤";
+    played();
+    newScramble();
+  } else {
+    $("scrambleResult").textContent = "Not that one. Keep trying!";
+  }
+};
+
+$("scrambleNew").onclick = newScramble;
+
+const emojiPuzzles = [
+  { clue: "🌧️ + 🐱 + 🐶", answer: "raining cats and dogs" },
+  { clue: "🧊 + ☕", answer: "iced coffee" },
+  { clue: "⭐ + 🐟", answer: "starfish" },
+  { clue: "🌞 + 🌻", answer: "sunflower" },
+  { clue: "🍯 + 🌙", answer: "honeymoon" },
+  { clue: "🔥 + 🪰", answer: "firefly" }
+];
+
+let emojiAnswer = "";
+
+function newEmojiPuzzle() {
+  const puzzle = random(emojiPuzzles);
+  emojiAnswer = puzzle.answer;
+  $("emojiClue").textContent = puzzle.clue;
+  $("emojiInput").value = "";
+  $("emojiResult").textContent = "What phrase do these emojis make?";
+}
+
+$("emojiCheck").onclick = () => {
+  const guess = $("emojiInput").value
+    .trim()
+    .toLowerCase()
+    .replace(/[^a-z]/g, "");
+
+  const answer = emojiAnswer.replace(/[^a-z]/g, "");
+
+  if (!guess) {
+    $("emojiResult").textContent = "Enter your guess first!";
+    return;
+  }
+
+  if (guess === answer) {
+    $("emojiResult").textContent = "Decoded! You're an emoji expert. 🧩";
+    played();
+    newEmojiPuzzle();
+  } else {
+    $("emojiResult").textContent = "Nope, decode those emojis again!";
+  }
+};
+
+$("emojiNew").onclick = newEmojiPuzzle;
+
+let higherAnswer = 0;
+let higherFinished = false;
+
+function newHigherNumber() {
+  higherAnswer = Math.floor(Math.random() * 20) + 1;
+  higherFinished = false;
+  $("higherInput").value = "";
+  $("higherResult").textContent = "I'm thinking of a number from 1 to 20...";
+}
+
+$("higherCheck").onclick = () => {
+  if (higherFinished) {
+    $("higherResult").textContent = "Start a new round to play again.";
+    return;
+  }
+
+  const value = Number($("higherInput").value);
+
+  if (
+    $("higherInput").value.trim() === "" ||
+    !Number.isInteger(value) ||
+    value < 1 ||
+    value > 20
+  ) {
+    $("higherResult").textContent = "Enter a whole number from 1 to 20.";
+    return;
+  }
+
+  if (value === higherAnswer) {
+    higherFinished = true;
+    $("higherResult").textContent = `Correct! It was ${higherAnswer}! 🎉`;
+    played();
+  } else if (value < higherAnswer) {
+    $("higherResult").textContent = "Higher! Guess again.";
+  } else {
+    $("higherResult").textContent = "Lower! Guess again.";
+  }
+};
+
+$("higherNew").onclick = newHigherNumber;
+
+const colorSets = [
+  ["red", "yellow", "blue"],
+  ["green", "purple", "orange", "red"],
+  ["blue", "blue", "yellow", "green"],
+  ["purple", "orange", "red", "yellow", "blue"]
+];
+
+const colorEmojis = {
+  red: "🔴",
+  yellow: "🟡",
+  blue: "🔵",
+  green: "🟢",
+  purple: "🟣",
+  orange: "🟠"
+};
+
+let colorAnswer = [];
+
+function newColorSequence() {
+  colorAnswer = random(colorSets).slice();
+  $("colorSequence").textContent =
+    colorAnswer.map(color => colorEmojis[color]).join(" ");
+  $("colorInput").value = "";
+  $("colorResult").textContent =
+    "Memorize the sequence, then type the color names in order.";
+}
+
+$("colorCheck").onclick = () => {
+  const guess = $("colorInput").value
+    .trim()
+    .toLowerCase()
+    .split(/[\s,]+/)
+    .filter(Boolean);
+
+  if (!guess.length) {
+    $("colorResult").textContent = "Type the colors in order first!";
+    return;
+  }
+
+  if (guess.join(" ") === colorAnswer.join(" ")) {
+    $("colorResult").textContent = "Perfect memory! Color champion! 🎨";
+    played();
+    newColorSequence();
+  } else {
+    $("colorResult").textContent =
+      "Not quite! Check the order and try again.";
+  }
+};
+
+$("colorNew").onclick = newColorSequence;
+
+/* Prepare one question for each new game when the page loads. */
+newMathQuestion();
+newScramble();
+newEmojiPuzzle();
+newHigherNumber();
+newColorSequence();
 
 $("comfortBtn").onclick = () => {
   $("comfortText").textContent = random([
