@@ -265,10 +265,10 @@
 
   let messageIds = new Set();
   const profileCache = new Map();
+  const typingUsers = new Map();
 
   let typingTimer = null;
   let isTyping = false;
-  const typingUsers = new Map();
 
   function status(message, error = false) {
     $("onlineStatus").textContent = message;
@@ -516,7 +516,8 @@
             key: currentUser.id
           },
           broadcast: {
-            self: false
+            self: false,
+            ack: true
           }
         }
       }
@@ -536,8 +537,8 @@
       }, renderMembers)
       .on("broadcast", {
         event: "typing"
-      }, ({ payload }) => {
-        handleTyping(payload);
+      }, event => {
+        handleTyping(event?.payload);
       })
       .subscribe(async state => {
         if (state === "SUBSCRIBED") {
@@ -552,6 +553,8 @@
             "You're in " + roomName +
             ". Share code " + code + " with friends!"
           );
+        } else if (state === "CHANNEL_ERROR") {
+          status("Room connection error. Please rejoin.", true);
         }
       });
   }
@@ -686,10 +689,11 @@
       $("onlineTypingIndicator").textContent = "";
     } else if (names.length === 1) {
       $("onlineTypingIndicator").textContent =
-        "✨ " + names[0] + " is typing...";
+        "✨ " + names[0].name + " is typing...";
     } else if (names.length === 2) {
       $("onlineTypingIndicator").textContent =
-        "✨ " + names.join(" and ") + " are typing...";
+        "✨ " + names.map(person => person.name).join(" and ") +
+        " are typing...";
     } else {
       $("onlineTypingIndicator").textContent =
         "✨ Several people are typing...";
@@ -708,32 +712,25 @@
     }
 
     if (payload.is_typing) {
-      const name = payload.display_name || "Someone";
-
       const timer = setTimeout(() => {
         typingUsers.delete(userId);
         updateTypingDisplay();
       }, 2500);
 
       typingUsers.set(userId, {
-        name,
+        name: payload.display_name || "Someone",
         timer
       });
-
-      updateTypingDisplay();
-    } else {
-      updateTypingDisplay();
     }
+
+    updateTypingDisplay();
   }
 
   async function broadcastTyping(typing) {
     if (!roomChannel || !currentRoom) return;
-    if (isTyping === typing) return;
-
-    isTyping = typing;
 
     try {
-      await roomChannel.send({
+      const result = await roomChannel.send({
         type: "broadcast",
         event: "typing",
         payload: {
@@ -742,8 +739,12 @@
           is_typing: typing
         }
       });
+
+      if (result !== "ok") {
+        console.warn("Typing broadcast result:", result);
+      }
     } catch (error) {
-      console.warn("Typing update failed:", error);
+      console.error("Typing broadcast failed:", error);
     }
   }
 
@@ -752,17 +753,25 @@
 
     if (!input.value.trim()) {
       clearTimeout(typingTimer);
-      broadcastTyping(false);
+      typingTimer = null;
+
+      if (isTyping) {
+        isTyping = false;
+        broadcastTyping(false);
+      }
+
       return;
     }
 
-    if (!isTyping) {
-      broadcastTyping(true);
-    }
+    isTyping = true;
+
+    // Send an update whenever the player types.
+    broadcastTyping(true);
 
     clearTimeout(typingTimer);
 
     typingTimer = setTimeout(() => {
+      isTyping = false;
       broadcastTyping(false);
     }, 1800);
   }
@@ -790,7 +799,11 @@
   async function leaveRoom(updateStatus = true) {
     clearTimeout(typingTimer);
     typingTimer = null;
-    isTyping = false;
+
+    if (isTyping) {
+      isTyping = false;
+      await broadcastTyping(false);
+    }
 
     if (roomChannel && client) {
       await client.removeChannel(roomChannel);
@@ -848,7 +861,12 @@
     if (!value) return;
 
     clearTimeout(typingTimer);
-    await broadcastTyping(false);
+    typingTimer = null;
+
+    if (isTyping) {
+      isTyping = false;
+      await broadcastTyping(false);
+    }
 
     input.value = "";
 
