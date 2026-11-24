@@ -4,208 +4,155 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#111027">
-  <meta name="description" content="Bading Tambayan — your little corner of controlled chaos, comfort, and surprises.">
+  <meta name="theme-color" content="#100b25">
+  <meta name="description" content="Bading Tambayan 4.0 — A little chaos. A little comfort. A universe of surprises.">
   <title>Bading Tambayan 4.0 | The Tambayanverse</title>
   <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
-
-  <div class="star-layer" id="starLayer"></div>
+  <div class="starfield" aria-hidden="true"></div>
 
   <header class="topbar">
-    <a href="#" class="brand" onclick="showDashboard();return false;">
+    <a href="#" class="brand" data-view="home">
       <span class="brand-icon">✦</span>
-      <span>BADING <b>TAMBAYAN</b></span>
-      <small>4.0</small>
+      <span>BADING TAMBAYAN <small>4.0</small></span>
     </a>
-    <button class="menu-button" id="menuButton" aria-label="Open navigation">☰</button>
+    <button class="menu-toggle" id="menuToggle" aria-label="Toggle navigation">☰</button>
     <nav id="mainNav">
-      <button onclick="showDashboard()">Home</button>
-      <button onclick="showCollection()">My Collection</button>
-      <button onclick="showSettings()">Settings</button>
+      <button data-view="home" class="nav-link active">Home</button>
+      <button data-view="collection" class="nav-link">✦ Collection</button>
+      <button data-view="journal" class="nav-link">📔 Journal</button>
+      <button data-view="settings" class="nav-link">⚙ Settings</button>
     </nav>
   </header>
 
-  <main>
-    <!-- WELCOME -->
-    <section id="welcome" class="welcome-screen">
-      <div class="welcome-orb">🌙</div>
-      <p class="eyebrow">A LITTLE PLACE IN THE INTERNET</p>
-      <h1>WELCOME TO THE<br><span>TAMBAYANVERSE</span></h1>
-      <p class="welcome-copy">
-        A little chaos. A little comfort.<br>
-        A universe full of surprises.
-      </p>
-      <button class="primary-button" onclick="enterTambayan()">
-        PASOK KA, SIS! <span>✦</span>
-      </button>
-      <p class="welcome-foot">No judgment. Just vibes. 💜</p>
+  <main class="container">
+    <section id="homeView" class="view">
+      <section class="hero panel">
+        <div class="hero-orbit orbit-one"></div>
+        <div class="hero-orbit orbit-two"></div>
+        <div class="hero-content">
+          <div class="eyebrow"><span class="live-dot"></span> YOUR LITTLE CORNER OF THE INTERNET</div>
+          <p class="hero-moon">☾ ✦</p>
+          <h1>WELCOME TO THE<br><span>TAMBAYANVERSE.</span></h1>
+          <p class="hero-subtitle">A little chaos. A little comfort.<br>A universe full of surprises.</p>
+          <button class="primary-btn" data-action="enter">PASOK KA, SIS! ✦</button>
+          <p class="hero-note">No judgment. Just vibes. 💜</p>
+        </div>
+        <div class="hero-decoration">✧<br>☾<br>✦</div>
+      </section>
+
+      <section class="welcome-row">
+        <div>
+          <p class="eyebrow">YOUR TAMBAYAN IS WAITING</p>
+          <h2>Hoy, ikaw!<br>Welcome back.</h2>
+          <p class="muted">Ready ka na bang mag-explore, tumawa, or huminga muna?</p>
+        </div>
+        <div class="mood-card panel">
+          <label for="moodSelect">How are you feeling today?</label>
+          <select id="moodSelect">
+            <option value="">Choose your mood...</option>
+            <option>Happy ✨</option>
+            <option>Okay lang 🙂</option>
+            <option>Pagod na 😮‍💨</option>
+            <option>Overthinking 🌀</option>
+            <option>Delulu 🤡</option>
+            <option>Sad but trying 💜</option>
+            <option>Chaotic 😭</option>
+          </select>
+          <p id="moodMessage" class="small muted">Your mood, your pace. No pressure.</p>
+        </div>
+      </section>
+
+      <section class="stats-grid">
+        <div class="stat-card panel"><span>✨</span><strong id="starCount">0</strong><small>Stars collected</small></div>
+        <div class="stat-card panel"><span>🏆</span><strong id="achievementCount">0</strong><small>Achievements</small></div>
+        <div class="stat-card panel"><span>🔎</span><strong id="discoveryCount">0</strong><small>Discoveries</small></div>
+      </section>
+
+      <section class="section-block">
+        <div class="section-heading">
+          <div><p class="eyebrow">PICK YOUR PORTAL</p><h2>Choose your destination</h2></div>
+          <span class="section-sparkle">✧ ✦ ✧</span>
+        </div>
+        <div id="worldGrid" class="world-grid"></div>
+      </section>
+
+      <section class="daily-card panel">
+        <div class="daily-icon">🌟</div>
+        <div><p class="eyebrow">A LITTLE REMINDER FOR TODAY</p><h3 id="dailyTitle">You made it here.</h3><p id="dailyText">And that already counts for something. Take things one step at a time.</p></div>
+        <button class="secondary-btn" data-action="daily">I NEEDED THAT 💜</button>
+      </section>
+
+      <section class="section-block">
+        <div class="section-heading"><div><p class="eyebrow">YOUR LITTLE JOURNEY</p><h2>Recently unlocked</h2></div></div>
+        <div id="recentAchievements" class="recent-list panel">Your adventures will appear here. ✨</div>
+      </section>
+
+      <footer>Made with 💜, a little chaos, and lots of lambing.<br><span>BADING TAMBAYAN 4.0 — THE TAMBAYANVERSE</span></footer>
     </section>
 
-    <!-- APP -->
-    <div id="app" class="hidden">
+    <section id="worldView" class="view hidden">
+      <button class="back-btn" data-action="home">← Back to the universe</button>
+      <div id="worldContent"></div>
+    </section>
 
-      <section id="dashboard" class="page active">
-        <div class="hero">
-          <div class="hero-copy">
-            <p class="eyebrow">YOUR LITTLE CORNER OF THE INTERNET</p>
-            <h1>Hoy, ikaw!<br><span>Welcome back.</span></h1>
-            <p>Ready ka na bang mag-explore, tumawa, or huminga muna?</p>
-          </div>
-          <div class="hero-moon">🌙</div>
-        </div>
+    <section id="collectionView" class="view hidden">
+      <div class="page-heading"><p class="eyebrow">YOUR LITTLE TREASURES</p><h1>My Collection ✨</h1><p class="muted">Every little adventure leaves a sparkle.</p></div>
+      <div class="stats-grid">
+        <div class="stat-card panel"><span>✨</span><strong id="collectionStars">0</strong><small>Total stars</small></div>
+        <div class="stat-card panel"><span>🏆</span><strong id="collectionAchievements">0</strong><small>Achievements</small></div>
+        <div class="stat-card panel"><span>🔎</span><strong id="collectionDiscoveries">0</strong><small>Discoveries</small></div>
+      </div>
+      <div class="panel collection-panel"><h2>🏆 Achievements</h2><div id="achievementList" class="badge-grid"></div></div>
+      <div class="panel collection-panel"><h2>🗝️ Discovery Tracker</h2><div id="discoveryList" class="discovery-list"></div></div>
+    </section>
 
-        <div class="stats-grid">
-          <div class="stat-card">
-            <span>✨</span>
-            <div><strong id="starCount">0</strong><small>Stars collected</small></div>
-          </div>
-          <div class="stat-card">
-            <span>🏆</span>
-            <div><strong id="achievementCount">0</strong><small>Achievements</small></div>
-          </div>
-          <div class="stat-card">
-            <span>🔎</span>
-            <div><strong id="discoveryCount">0</strong><small>Discoveries</small></div>
-          </div>
-        </div>
+    <section id="journalView" class="view hidden">
+      <div class="page-heading"><p class="eyebrow">A SPACE THAT BELONGS TO YOU</p><h1>The Confession Room 📔</h1><p class="muted">Write it down. Let it out. You don't have to share it with anyone.</p></div>
+      <div class="panel journal-panel">
+        <label for="journalText">Dear diary, today I feel...</label>
+        <textarea id="journalText" rows="9" placeholder="Write whatever is on your mind. Walang judgment dito..."></textarea>
+        <div class="button-row"><button class="primary-btn" data-action="saveJournal">SAVE MY THOUGHTS ✨</button><button class="secondary-btn" data-action="clearJournal">Clear entry</button></div>
+        <p class="small muted">Your journal is saved locally in this browser on this device. It is not published or sent anywhere.</p>
+        <p id="journalStatus" class="small"></p>
+      </div>
+      <div class="panel journal-panel">
+        <h2>💌 Unsent letter</h2>
+        <label for="letterText">A letter I'll never send...</label>
+        <textarea id="letterText" rows="6" placeholder="Say what you wish you could say..."></textarea>
+        <button class="secondary-btn" data-action="saveLetter">SAVE UNSENT LETTER</button>
+        <p id="letterStatus" class="small muted"></p>
+      </div>
+    </section>
 
-        <section class="dashboard-section">
-          <div class="section-heading">
-            <div>
-              <p class="eyebrow">CHOOSE YOUR DESTINATION</p>
-              <h2>Explore your worlds</h2>
-            </div>
-            <span class="heading-star">✧</span>
-          </div>
-
-          <div class="world-grid">
-            <button class="world-card arcade" onclick="openWorld('arcade')">
-              <span class="world-emoji">🎮</span>
-              <span class="world-number">WORLD 01</span>
-              <strong>The Chaos Arcade</strong>
-              <small>Games, chaos, and questionable decisions.</small>
-              <span class="world-enter">ENTER WORLD →</span>
-            </button>
-
-            <button class="world-card comfort" onclick="openWorld('comfort')">
-              <span class="world-emoji">🫂</span>
-              <span class="world-number">WORLD 02</span>
-              <strong>The Comfort Corner</strong>
-              <small>A little warmth for your tired heart.</small>
-              <span class="world-enter">ENTER WORLD →</span>
-            </button>
-
-            <button class="world-card lab" onclick="openWorld('lab')">
-              <span class="world-emoji">🧪</span>
-              <span class="world-number">WORLD 03</span>
-              <strong>The Experiment Lab</strong>
-              <small>Curiosity, potions, and delulu science.</small>
-              <span class="world-enter">ENTER WORLD →</span>
-            </button>
-
-            <button class="world-card mystery" onclick="openWorld('mystery')">
-              <span class="world-emoji">🔮</span>
-              <span class="world-number">WORLD 04</span>
-              <strong>The Mystery Library</strong>
-              <small>Secrets are waiting to be discovered.</small>
-              <span class="world-enter">ENTER WORLD →</span>
-            </button>
-
-            <button class="world-card confession" onclick="openWorld('confession')">
-              <span class="world-emoji">📔</span>
-              <span class="world-number">WORLD 05</span>
-              <strong>The Confession Room</strong>
-              <small>Some thoughts need somewhere to go.</small>
-              <span class="world-enter">ENTER WORLD →</span>
-            </button>
-
-            <button class="world-card community" onclick="openWorld('community')">
-              <span class="world-emoji">🌟</span>
-              <span class="world-number">WORLD 06</span>
-              <strong>The Community Board</strong>
-              <small>Little challenges and good energy.</small>
-              <span class="world-enter">ENTER WORLD →</span>
-            </button>
-          </div>
-        </section>
-
-        <section class="feature-strip">
-          <div>
-            <p class="eyebrow">TODAY'S LITTLE REMINDER</p>
-            <h2>KAYA MO 'YAN! 💜</h2>
-            <p>You don't have to figure everything out today.</p>
-            <strong>KAYA NATIN 'TO!</strong>
-          </div>
-          <span class="feature-emoji">🌷</span>
-        </section>
-      </section>
-
-      <!-- WORLD PAGE -->
-      <section id="worldPage" class="page">
-        <button class="back-button" onclick="showDashboard()">← Back to Dashboard</button>
-        <div class="world-hero" id="worldHero">
-          <span id="worldEmoji" class="large-emoji">🎮</span>
-          <p id="worldNumber" class="eyebrow">WORLD 01</p>
-          <h1 id="worldTitle">The Chaos Arcade</h1>
-          <p id="worldDescription">Your description goes here.</p>
-        </div>
-        <div class="coming-soon">
-          <span>✨</span>
-          <h2>This world is under construction!</h2>
-          <p>Something wonderful (and probably chaotic) is being prepared.</p>
-          <small>Abangan ang next update, sis. 💜</small>
-        </div>
-      </section>
-
-      <!-- COLLECTION -->
-      <section id="collectionPage" class="page">
-        <button class="back-button" onclick="showDashboard()">← Back to Dashboard</button>
-        <p class="eyebrow">YOUR LITTLE TREASURES</p>
-        <h1>My Collection ✨</h1>
-        <p class="page-intro">Every little discovery counts.</p>
-
-        <div class="collection-panel">
-          <div class="collection-number">
-            <span>✨</span>
-            <strong id="collectionStars">0</strong>
-            <small>Stars collected</small>
-          </div>
-          <div class="progress-track"><div id="starProgress"></div></div>
-          <p id="collectionMessage">Your journey starts here!</p>
-        </div>
-
-        <h2>Achievements</h2>
-        <div id="achievementList" class="achievement-grid"></div>
-
-        <h2>Discoveries</h2>
-        <p id="discoverySummary">0 worlds explored.</p>
-      </section>
-
-      <!-- SETTINGS -->
-      <section id="settingsPage" class="page">
-        <button class="back-button" onclick="showDashboard()">← Back to Dashboard</button>
-        <p class="eyebrow">YOUR TAMBAYAN, YOUR RULES</p>
-        <h1>Settings ⚙️</h1>
-        <div class="settings-panel">
-          <h3>Progress and privacy</h3>
-          <p>Your progress is stored locally in this browser on this device.</p>
-          <button class="secondary-button" onclick="exportProgress()">Export my progress</button>
-          <button class="danger-button" onclick="resetProgress()">Reset all progress</button>
-          <small>Resetting progress cannot be undone. Export first if you want a backup.</small>
-        </div>
-      </section>
-
-    </div>
+    <section id="settingsView" class="view hidden">
+      <div class="page-heading"><p class="eyebrow">MAKE YOURSELF AT HOME</p><h1>Settings ⚙️</h1><p class="muted">Your tambayan, your rules.</p></div>
+      <div class="panel settings-panel">
+        <h2>💾 Your progress</h2>
+        <p class="muted">Your stars, achievements, and discoveries are saved in this browser using local storage.</p>
+        <button class="secondary-btn" data-action="export">DOWNLOAD MY PROGRESS</button>
+      </div>
+      <div class="panel settings-panel">
+        <h2>🔒 Privacy corner</h2>
+        <p class="muted">Journal entries and unsent letters stay in this browser on this device. They are not uploaded to a server. Anyone with access to this browser or device may be able to see them.</p>
+      </div>
+      <div class="panel settings-panel">
+        <h2>🌙 Motion settings</h2>
+        <label class="toggle-line"><span>Reduce animations</span><input type="checkbox" id="motionToggle"></label>
+      </div>
+      <div class="panel settings-panel danger-panel">
+        <h2>🧹 Start fresh</h2>
+        <p class="muted">This clears your local stars, achievements, discoveries, journal, and letters.</p>
+        <button class="danger-btn" data-action="reset">RESET EVERYTHING</button>
+      </div>
+    </section>
   </main>
 
-  <footer>
-    <p>Made with 💜, chaos, and questionable decisions.</p>
-    <small>BADING TAMBAYAN 4.0 · THE TAMBAYANVERSE</small>
-  </footer>
-
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
   <script src="script.js"></script>
 </body>
-  </html>
-                
+</html>
