@@ -3,7 +3,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#100b25">
   <meta name="description" content="Bading Tambayan 4.0 — A little chaos. A little comfort. A universe of surprises.">
   <title>Bading Tambayan 4.0 | The Tambayanverse</title>
@@ -16,15 +16,12 @@
   <div class="starfield" aria-hidden="true"></div>
 
   <header class="topbar">
-    <a href="#" class="brand" data-view="home">
-      <span class="brand-icon">✦</span>
-      <span>BADING TAMBAYAN <small>4.0</small></span>
-    </a>
+    <a href="#" class="brand" data-view="home"><span class="brand-icon">✦</span> BADING TAMBAYAN <small>4.0</small></a>
     <button class="menu-toggle" id="menuToggle" aria-label="Toggle navigation">☰</button>
     <nav id="mainNav">
       <button data-view="home" class="nav-link active">Home</button>
       <button data-view="collection" class="nav-link">✦ Collection</button>
-      <button data-view="journal" class="nav-link">📔 Journal</button>
+      <button data-view="journal" class="nav-link">📔 Confession Room</button>
       <button data-view="settings" class="nav-link">⚙ Settings</button>
     </nav>
   </header>
@@ -83,7 +80,11 @@
 
       <section class="daily-card panel">
         <div class="daily-icon">🌟</div>
-        <div><p class="eyebrow">A LITTLE REMINDER FOR TODAY</p><h3 id="dailyTitle">You made it here.</h3><p id="dailyText">And that already counts for something. Take things one step at a time.</p></div>
+        <div>
+          <p class="eyebrow">A LITTLE REMINDER FOR TODAY</p>
+          <h3 id="dailyTitle">You made it here.</h3>
+          <p id="dailyText">And that already counts for something. Take things one step at a time.</p>
+        </div>
         <button class="secondary-btn" data-action="daily">I NEEDED THAT 💜</button>
       </section>
 
@@ -91,7 +92,6 @@
         <div class="section-heading"><div><p class="eyebrow">YOUR LITTLE JOURNEY</p><h2>Recently unlocked</h2></div></div>
         <div id="recentAchievements" class="recent-list panel">Your adventures will appear here. ✨</div>
       </section>
-
       <footer>Made with 💜, a little chaos, and lots of lambing.<br><span>BADING TAMBAYAN 4.0 — THE TAMBAYANVERSE</span></footer>
     </section>
 
@@ -112,33 +112,98 @@
     </section>
 
     <section id="journalView" class="view hidden">
-      <div class="page-heading"><p class="eyebrow">A SPACE THAT BELONGS TO YOU</p><h1>The Confession Room 📔</h1><p class="muted">Write it down. Let it out. You don't have to share it with anyone.</p></div>
-      <div class="panel journal-panel">
-        <label for="journalText">Dear diary, today I feel...</label>
-        <textarea id="journalText" rows="9" placeholder="Write whatever is on your mind. Walang judgment dito..."></textarea>
-        <div class="button-row"><button class="primary-btn" data-action="saveJournal">SAVE MY THOUGHTS ✨</button><button class="secondary-btn" data-action="clearJournal">Clear entry</button></div>
-        <p class="small muted">Your journal is saved locally in this browser on this device. It is not published or sent anywhere.</p>
-        <p id="journalStatus" class="small"></p>
+      <div class="page-heading">
+        <p class="eyebrow">A SPACE THAT BELONGS TO YOU</p>
+        <h1>The Confession Room 📔</h1>
+        <p class="muted">Your thoughts, your memories, your little pieces of life. No judgment here.</p>
       </div>
-      <div class="panel journal-panel">
-        <h2>💌 Unsent letter</h2>
-        <label for="letterText">A letter I'll never send...</label>
-        <textarea id="letterText" rows="6" placeholder="Say what you wish you could say..."></textarea>
-        <button class="secondary-btn" data-action="saveLetter">SAVE UNSENT LETTER</button>
-        <p id="letterStatus" class="small muted"></p>
+
+      <div class="confession-tabs">
+        <button class="confession-tab active" data-confession-tab="journal">📔 Journal</button>
+        <button class="confession-tab" data-confession-tab="letters">💌 Letters</button>
+        <button class="confession-tab" data-confession-tab="memories">🫙 Memory Jar</button>
       </div>
+
+      <div id="journalPanel" class="confession-panel">
+        <div class="panel journal-panel">
+          <p class="eyebrow">DEAR DIARY</p>
+          <h2>What's on your mind?</h2>
+          <label for="journalTitle">Give this entry a title</label>
+          <input id="journalTitle" class="confession-input" maxlength="100" placeholder="A little title for today...">
+          <label for="journalText">Write your thoughts</label>
+          <textarea id="journalText" rows="8" placeholder="Write whatever is on your mind. Walang judgment dito..."></textarea>
+          <button class="primary-btn" data-action="saveJournal">SAVE TO MY ARCHIVE ✨</button>
+          <p id="journalStatus" class="small muted"></p>
+        </div>
+        <div class="panel journal-panel">
+          <div class="archive-heading">
+            <div><p class="eyebrow">YOUR PERSONAL HISTORY</p><h2>📚 Journal Archive</h2></div>
+            <span id="journalTotal" class="archive-count">0 entries</span>
+          </div>
+          <input id="journalSearch" class="confession-input" placeholder="🔍 Search your journal...">
+          <div id="journalArchive" class="archive-list"></div>
+        </div>
+      </div>
+
+      <div id="lettersPanel" class="confession-panel hidden">
+        <div class="panel journal-panel">
+          <p class="eyebrow">WORDS LEFT UNSENT</p>
+          <h2>💌 Dear someone...</h2>
+          <label for="letterTitle">Letter title</label>
+          <input id="letterTitle" class="confession-input" maxlength="100" placeholder="A letter I'll never send...">
+          <label for="letterText">Your letter</label>
+          <textarea id="letterText" rows="8" placeholder="Say what you wish you could say..."></textarea>
+          <button class="primary-btn" data-action="saveLetter">SAVE MY LETTER 💌</button>
+          <p id="letterStatus" class="small muted"></p>
+        </div>
+        <div class="panel journal-panel">
+          <div class="archive-heading">
+            <div><p class="eyebrow">THE WORDS YOU KEPT</p><h2>💌 Letter Collection</h2></div>
+            <span id="letterTotal" class="archive-count">0 letters</span>
+          </div>
+          <input id="letterSearch" class="confession-input" placeholder="🔍 Search your letters...">
+          <div id="letterArchive" class="archive-list"></div>
+        </div>
+      </div>
+
+      <div id="memoriesPanel" class="confession-panel hidden">
+        <div class="panel journal-panel">
+          <p class="eyebrow">LITTLE MOMENTS, BIG MEANING</p>
+          <h2>🫙 Put it in the Memory Jar</h2>
+          <label for="memoryTitle">What do you want to remember?</label>
+          <input id="memoryTitle" class="confession-input" maxlength="100" placeholder="That one lovely afternoon...">
+          <label for="memoryText">Tell the story</label>
+          <textarea id="memoryText" rows="6" placeholder="A moment, a person, a feeling, a little win..."></textarea>
+          <button class="primary-btn" data-action="saveMemory">SAVE THIS MEMORY ✨</button>
+          <p id="memoryStatus" class="small muted"></p>
+        </div>
+        <div class="panel journal-panel">
+          <div class="archive-heading">
+            <div><p class="eyebrow">YOUR LITTLE TIME CAPSULE</p><h2>🫙 Saved Memories</h2></div>
+            <span id="memoryTotal" class="archive-count">0 memories</span>
+          </div>
+          <input id="memorySearch" class="confession-input" placeholder="🔍 Search your memories...">
+          <div id="memoryArchive" class="archive-list"></div>
+        </div>
+      </div>
+
+      <p class="privacy-note">🔒 Entries are saved locally in this browser on this device. They are not published or uploaded to a server. Clearing browser data can erase them. Export your progress in Settings to keep a backup.</p>
     </section>
 
     <section id="settingsView" class="view hidden">
       <div class="page-heading"><p class="eyebrow">MAKE YOURSELF AT HOME</p><h1>Settings ⚙️</h1><p class="muted">Your tambayan, your rules.</p></div>
       <div class="panel settings-panel">
         <h2>💾 Your progress</h2>
-        <p class="muted">Your stars, achievements, and discoveries are saved in this browser using local storage.</p>
+        <p class="muted">Your stars, achievements, discoveries, journal, letters, and memories are saved in this browser.</p>
         <button class="secondary-btn" data-action="export">DOWNLOAD MY PROGRESS</button>
+        <p class="small muted">You can also import a previous progress backup.</p>
+        <label class="secondary-btn import-label" for="importFile">IMPORT MY BACKUP</label>
+        <input id="importFile" type="file" accept=".json,application/json" hidden>
+        <p id="importStatus" class="small muted"></p>
       </div>
       <div class="panel settings-panel">
         <h2>🔒 Privacy corner</h2>
-        <p class="muted">Journal entries and unsent letters stay in this browser on this device. They are not uploaded to a server. Anyone with access to this browser or device may be able to see them.</p>
+        <p class="muted">Your journal, letters, and memories stay in this browser on this device. They are not uploaded to a server. Anyone with access to this browser or device may be able to see them.</p>
       </div>
       <div class="panel settings-panel">
         <h2>🌙 Motion settings</h2>
@@ -146,7 +211,7 @@
       </div>
       <div class="panel settings-panel danger-panel">
         <h2>🧹 Start fresh</h2>
-        <p class="muted">This clears your local stars, achievements, discoveries, journal, and letters.</p>
+        <p class="muted">This clears your local stars, achievements, discoveries, journal entries, letters, and memories.</p>
         <button class="danger-btn" data-action="reset">RESET EVERYTHING</button>
       </div>
     </section>
