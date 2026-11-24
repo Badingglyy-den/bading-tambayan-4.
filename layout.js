@@ -1,4 +1,3 @@
-
 (() => {
   "use strict";
 
@@ -95,7 +94,7 @@
     },
     {
       id: "community",
-      label: "🌟 Community",
+      label: "🌟 Tambayan Lounge",
       start: hangoutIndex,
       end: spaceIndex,
       routes: ["hangout", "community"]
@@ -328,4 +327,4 @@
   activateFromHash();
 
 })();
-    
+      
