@@ -2,19 +2,13 @@
 (() => {
   "use strict";
 
-  const SUPABASE_URL =
-    "https://lieisalrqexbqvgjwekv.supabase.co";
-
-  const SUPABASE_KEY =
-    "sb_publishable_sDPQI0S05ykOaMye6_CrzA_zMOskR0P";
+  const SUPABASE_URL = "https://lieisalrqexbqvgjwekv.supabase.co";
+  const SUPABASE_KEY = "sb_publishable_sDPQI0S05ykOaMye6_CrzA_zMOskR0P";
 
   const style = document.createElement("style");
 
   style.textContent = `
-    #onlineTambayan {
-      margin: 28px 0 42px;
-    }
-
+    #onlineTambayan { margin: 28px 0 42px; }
     #onlineTambayan .online-panel {
       background: var(--panel, #21183b);
       border: 1px solid rgba(190,160,255,.22);
@@ -22,28 +16,16 @@
       padding: 22px;
       color: var(--text, #fff);
     }
-
-    #onlineTambayan h3 {
-      margin: 0 0 8px;
-    }
-
-    #onlineTambayan p {
-      line-height: 1.55;
-    }
-
+    #onlineTambayan h3 { margin: 0 0 8px; }
+    #onlineTambayan p { line-height: 1.55; }
     #onlineTambayan .online-grid {
       display: grid;
-      grid-template-columns:
-        repeat(auto-fit,minmax(220px,1fr));
+      grid-template-columns: repeat(auto-fit,minmax(220px,1fr));
       gap: 12px;
       margin: 16px 0;
     }
-
     #onlineTambayan input,
-    #onlineTambayan button {
-      font: inherit;
-    }
-
+    #onlineTambayan button { font: inherit; }
     #onlineTambayan input {
       width: 100%;
       box-sizing: border-box;
@@ -54,7 +36,6 @@
       color: inherit;
       margin: 5px 0;
     }
-
     #onlineTambayan button {
       cursor: pointer;
       border: 0;
@@ -65,30 +46,25 @@
       color: #1b1231;
       font-weight: 700;
     }
-
     #onlineTambayan button:disabled {
       opacity: .5;
       cursor: not-allowed;
     }
-
     #onlineTambayan .online-muted {
       opacity: .75;
       font-size: .92rem;
     }
-
     #onlineTambayan .online-status {
       min-height: 1.4em;
       color: #cbbaff;
       font-size: .92rem;
     }
-
     #onlineTambayan .online-room {
       display: none;
       margin-top: 18px;
       border-top: 1px solid rgba(190,160,255,.2);
       padding-top: 18px;
     }
-
     #onlineTambayan .online-room-top {
       display: flex;
       flex-wrap: wrap;
@@ -96,29 +72,24 @@
       justify-content: space-between;
       gap: 10px;
     }
-
     #onlineTambayan .online-code {
       font-size: 1.2rem;
       letter-spacing: .18em;
       font-weight: 800;
       color: #d9c9ff;
     }
-
     #onlineTambayan .online-columns {
       display: grid;
-      grid-template-columns:
-        minmax(0,2fr) minmax(180px,1fr);
+      grid-template-columns: minmax(0,2fr) minmax(180px,1fr);
       gap: 14px;
       margin-top: 14px;
     }
-
     #onlineTambayan .online-box {
       border: 1px solid rgba(190,160,255,.2);
       border-radius: 16px;
       padding: 14px;
       min-width: 0;
     }
-
     #onlineTambayan .online-messages {
       height: 270px;
       overflow: auto;
@@ -127,62 +98,49 @@
       gap: 9px;
       padding: 5px 0;
     }
-
     #onlineTambayan .online-message {
       background: rgba(255,255,255,.07);
       padding: 9px 11px;
       border-radius: 12px;
       overflow-wrap: anywhere;
     }
-
     #onlineTambayan .online-message small {
       display: block;
-      opacity: .7;
-      margin-bottom: 3px;
+      opacity: .85;
+      margin-bottom: 5px;
     }
-
+    #onlineTambayan .online-message strong {
+      color: #d9c9ff;
+    }
     #onlineTambayan .online-members {
       display: flex;
       flex-direction: column;
       gap: 8px;
     }
-
     #onlineTambayan .online-member {
       padding: 8px;
       border-radius: 10px;
       background: rgba(255,255,255,.06);
     }
-
     #onlineTambayan .online-compose {
       display: flex;
       gap: 6px;
       align-items: center;
     }
-
-    #onlineTambayan .online-compose input {
-      flex: 1;
-    }
-
+    #onlineTambayan .online-compose input { flex: 1; }
     #onlineTambayan .online-reactions button {
       font-size: 1.15rem;
       padding: 7px 10px;
     }
-
     @media(max-width:620px) {
-      #onlineTambayan .online-columns {
-        grid-template-columns: 1fr;
-      }
-
-      #onlineTambayan .online-panel {
-        padding: 16px;
-      }
+      #onlineTambayan .online-columns { grid-template-columns: 1fr; }
+      #onlineTambayan .online-panel { padding: 16px; }
     }
   `;
 
   document.head.appendChild(style);
 
   const section = document.createElement("section");
-
   section.id = "onlineTambayan";
 
   section.innerHTML = `
@@ -195,114 +153,63 @@
     </div>
 
     <div class="online-panel">
-
       <p class="online-muted">
         Create a private room, share its six-character
         code, and chat live with friends.
       </p>
 
       <div class="online-grid">
-
         <div>
           <h3>🪩 Your online profile</h3>
-
           <label for="onlineName">Nickname</label>
-          <input
-            id="onlineName"
-            maxlength="24"
-            placeholder="Your tambayan nickname"
-          >
+          <input id="onlineName" maxlength="24"
+            placeholder="Your tambayan nickname">
 
           <label for="onlineAvatar">Avatar (emoji)</label>
-          <input
-            id="onlineAvatar"
-            maxlength="8"
-            value="💜"
-          >
+          <input id="onlineAvatar" maxlength="8" value="💜">
 
-          <button id="onlineSaveProfile">
-            Save profile
-          </button>
+          <button id="onlineSaveProfile">Save profile</button>
         </div>
 
         <div>
           <h3>✨ Create a room</h3>
+          <input id="onlineRoomName" maxlength="40"
+            placeholder="Give your room a name">
 
-          <input
-            id="onlineRoomName"
-            maxlength="40"
-            placeholder="Give your room a name"
-          >
+          <button id="onlineCreateRoom">Create private room</button>
 
-          <button id="onlineCreateRoom">
-            Create private room
-          </button>
+          <h3 style="margin-top:14px">🔑 Join with a code</h3>
+          <input id="onlineJoinCode" maxlength="6"
+            placeholder="Six-character code">
 
-          <h3 style="margin-top:14px">
-            🔑 Join with a code
-          </h3>
-
-          <input
-            id="onlineJoinCode"
-            maxlength="6"
-            placeholder="Six-character code"
-          >
-
-          <button id="onlineJoinRoom">
-            Join room
-          </button>
+          <button id="onlineJoinRoom">Join room</button>
         </div>
-
       </div>
 
-      <p
-        class="online-status"
-        id="onlineStatus"
-        role="status"
-        aria-live="polite"
-      >
+      <p class="online-status" id="onlineStatus"
+        role="status" aria-live="polite">
         Connecting to the online tambayan…
       </p>
 
       <div class="online-room" id="onlineRoom">
-
         <div class="online-room-top">
           <div>
             <p class="online-muted">YOU'RE IN</p>
             <h3 id="onlineRoomTitle">Room</h3>
-            <div
-              class="online-code"
-              id="onlineRoomCode"
-            ></div>
+            <div class="online-code" id="onlineRoomCode"></div>
           </div>
-
-          <button id="onlineLeaveRoom">
-            Leave room
-          </button>
+          <button id="onlineLeaveRoom">Leave room</button>
         </div>
 
         <div class="online-columns">
-
           <div class="online-box">
             <h3>💬 Live chat</h3>
+            <div class="online-messages" id="onlineMessages"
+              aria-live="polite"></div>
 
-            <div
-              class="online-messages"
-              id="onlineMessages"
-              aria-live="polite"
-            ></div>
-
-            <form
-              class="online-compose"
-              id="onlineMessageForm"
-            >
-              <input
-                id="onlineMessageInput"
-                maxlength="1000"
-                placeholder="Say something..."
-                required
-              >
-
+            <form class="online-compose" id="onlineMessageForm">
+              <input id="onlineMessageInput" maxlength="1000"
+                placeholder="Say something..." required>
               <button type="submit">Send</button>
             </form>
 
@@ -317,17 +224,10 @@
 
           <div class="online-box">
             <h3>🟢 Online members</h3>
-
-            <div
-              class="online-members"
-              id="onlineMembers"
-            >
-              <span class="online-muted">
-                Waiting for members…
-              </span>
+            <div class="online-members" id="onlineMembers">
+              <span class="online-muted">Waiting for members…</span>
             </div>
           </div>
-
         </div>
       </div>
     </div>
@@ -354,10 +254,10 @@
   };
 
   let messageIds = new Set();
+  const profileCache = new Map();
 
   function status(message, error = false) {
     $("onlineStatus").textContent = message;
-
     $("onlineStatus").style.color =
       error ? "#ffaaaa" : "#cbbaff";
   }
@@ -383,16 +283,11 @@
       }
 
       const script = document.createElement("script");
-
       script.src =
         "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2";
-
       script.onload = resolve;
-
-      script.onerror = () => reject(
-        new Error("Could not load Supabase.")
-      );
-
+      script.onerror = () =>
+        reject(new Error("Could not load Supabase."));
       document.head.appendChild(script);
     });
   }
@@ -418,7 +313,6 @@
           await client.auth.signInAnonymously();
 
         if (error) throw error;
-
         currentUser = data.user;
       }
 
@@ -439,7 +333,6 @@
           .maybeSingle();
 
       if (profileError) throw profileError;
-
       if (savedProfile) profile = savedProfile;
 
       $("onlineName").value = profile.display_name;
@@ -448,7 +341,6 @@
       await saveProfile(false);
 
       status("You're connected! Create a room or join with a code. 💜");
-
     } catch (error) {
       console.error(error);
       status(error.message || "Connection failed.", true);
@@ -459,12 +351,10 @@
     if (!client || !currentUser) return;
 
     const name =
-      $("onlineName").value.trim().slice(0, 24) ||
-      "Tambay";
+      $("onlineName").value.trim().slice(0, 24) || "Tambay";
 
     const avatar =
-      $("onlineAvatar").value.trim().slice(0, 8) ||
-      "💜";
+      $("onlineAvatar").value.trim().slice(0, 8) || "💜";
 
     const { error } = await client
       .from("profiles")
@@ -483,6 +373,19 @@
       avatar: avatar
     };
 
+    profileCache.clear();
+
+    if (roomChannel && currentRoom) {
+      await roomChannel.track({
+        user_id: currentUser.id,
+        display_name: profile.display_name,
+        avatar: profile.avatar,
+        online_at: new Date().toISOString()
+      });
+
+      renderMembers();
+    }
+
     if (showNotice) {
       status("Online profile saved! ✨");
     }
@@ -495,8 +398,7 @@
     }
 
     const name =
-      $("onlineRoomName").value.trim() ||
-      "Tambayan Room";
+      $("onlineRoomName").value.trim() || "Tambayan Room";
 
     try {
       await saveProfile(false);
@@ -514,12 +416,7 @@
         throw new Error("Unexpected room response.");
       }
 
-      await enterRoom(
-        result.room_id,
-        result.room_code,
-        name
-      );
-
+      await enterRoom(result.room_id, result.room_code, name);
     } catch (error) {
       console.error(error);
       status(error.message || "Couldn't create room.", true);
@@ -570,12 +467,7 @@
 
       if (roomError) throw roomError;
 
-      await enterRoom(
-        room.id,
-        room.room_code,
-        room.room_name
-      );
-
+      await enterRoom(room.id, room.room_code, room.room_name);
     } catch (error) {
       console.error(error);
       status(error.message || "Couldn't join room.", true);
@@ -596,6 +488,7 @@
     $("onlineRoomCode").textContent = code;
 
     messageIds = new Set();
+    profileCache.clear();
 
     await loadMessages();
 
@@ -616,8 +509,8 @@
         schema: "public",
         table: "messages",
         filter: "room_id=eq." + roomId
-      }, payload => {
-        appendMessage(payload.new);
+      }, async payload => {
+        await appendMessage(payload.new);
       })
       .on("presence", {
         event: "sync"
@@ -647,55 +540,87 @@
       .from("messages")
       .select("id,user_id,content,created_at")
       .eq("room_id", currentRoom.id)
-      .order("created_at", {
-        ascending: true
-      })
+      .order("created_at", { ascending: true })
       .limit(100);
 
     if (error) throw error;
 
     $("onlineMessages").innerHTML = "";
 
-    (data || []).forEach(appendMessage);
+    for (const message of (data || [])) {
+      await appendMessage(message);
+    }
   }
 
-  function appendMessage(message) {
+  async function getMessageProfile(userId) {
+    if (!userId) {
+      return { display_name: "Tambay", avatar: "💜" };
+    }
+
+    if (userId === currentUser.id) {
+      return profile;
+    }
+
+    if (profileCache.has(userId)) {
+      return profileCache.get(userId);
+    }
+
+    const fallback = {
+      display_name: "Tambay",
+      avatar: "💜"
+    };
+
+    const { data, error } = await client
+      .from("profiles")
+      .select("display_name,avatar")
+      .eq("user_id", userId)
+      .maybeSingle();
+
+    const result = !error && data ? data : fallback;
+
+    profileCache.set(userId, result);
+    return result;
+  }
+
+  async function appendMessage(message) {
     if (!message) return;
 
     const id = String(message.id);
 
     if (messageIds.has(id)) return;
-
     messageIds.add(id);
 
-    const mine =
-      message.user_id === currentUser.id;
+    const mine = message.user_id === currentUser.id;
+    const sender = await getMessageProfile(message.user_id);
 
     const who = mine
       ? profile.display_name
-      : "Tambay";
+      : sender.display_name;
+
+    const avatar = mine
+      ? profile.avatar
+      : sender.avatar;
 
     const item = document.createElement("div");
-
     item.className = "online-message";
 
     const time = message.created_at
-      ? new Date(message.created_at)
-          .toLocaleTimeString([], {
-            hour: "2-digit",
-            minute: "2-digit"
-          })
+      ? new Date(message.created_at).toLocaleTimeString([], {
+          hour: "2-digit",
+          minute: "2-digit"
+        })
       : "";
 
     item.innerHTML = `
       <small>
-        ${safeText(who)} · ${safeText(time)}
+        <span aria-hidden="true">${safeText(avatar || "💜")}</span>
+        <strong>${safeText(who || "Tambay")}</strong>
+        · ${safeText(time)}
       </small>
       <div>${safeText(message.content)}</div>
     `;
 
     $("onlineMessages").appendChild(item);
-
     $("onlineMessages").scrollTop =
       $("onlineMessages").scrollHeight;
   }
@@ -757,7 +682,6 @@
     }
 
     currentRoom = null;
-
     $("onlineRoom").style.display = "none";
 
     if (updateStatus && client) {
@@ -813,6 +737,5 @@
   });
 
   initialize();
-
 })();
-
+    
