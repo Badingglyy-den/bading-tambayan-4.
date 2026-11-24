@@ -60,6 +60,13 @@
       display: flex; flex-wrap: wrap; align-items: center;
       justify-content: space-between; gap: 10px;
     }
+    #onlineTambayan .online-room-actions {
+      display: flex; flex-wrap: wrap; gap: 6px;
+    }
+    #onlineTambayan .online-danger-button {
+      background: #7f354e; color: #fff;
+      border: 1px solid rgba(255,180,200,.35);
+    }
     #onlineTambayan .online-code {
       font-size: 1.2rem; letter-spacing: .18em;
       font-weight: 800; color: #d9c9ff;
@@ -154,7 +161,10 @@
             <h3 id="onlineRoomTitle">Room</h3>
             <div class="online-code" id="onlineRoomCode"></div>
           </div>
-          <button id="onlineLeaveRoom">Back to room list</button>
+          <div class="online-room-actions">
+            <button type="button" id="onlineLeaveRoom">Back to room list</button>
+            <button type="button" id="onlineLeaveMembership" class="online-danger-button">Leave chatroom</button>
+          </div>
         </div>
         <div class="online-columns">
           <div class="online-box">
@@ -694,6 +704,30 @@
     if (updateStatus && client) status("Back to your chatroom list. Your room membership is saved.");
   }
 
+  async function leaveChatroom() {
+    if (!client || !currentUser || !currentRoom) return;
+    const room = { ...currentRoom };
+    const confirmed = window.confirm(
+      "Leave '" + (room.name || "this chatroom") + "'? It will disappear from My Chatrooms. Your messages will remain in the room for its other members."
+    );
+    if (!confirmed) return;
+
+    try {
+      const { error } = await client.from("room_members")
+        .delete()
+        .eq("room_id", room.id)
+        .eq("user_id", currentUser.id);
+      if (error) throw error;
+
+      await leaveRoom(true);
+      await refreshRoomList();
+      status("You left " + (room.name || "the chatroom") + ". It was removed from My Chatrooms.");
+    } catch (error) {
+      console.error("Could not leave chatroom:", error);
+      status(error.message || "Couldn't leave this chatroom. Please try again.", true);
+    }
+  }
+
   $("onlineSaveProfile").onclick = async () => {
     try { await saveProfile(true); }
     catch (error) { status(error.message, true); }
@@ -701,6 +735,7 @@
   $("onlineCreateRoom").onclick = createRoom;
   $("onlineJoinRoom").onclick = joinRoom;
   $("onlineLeaveRoom").onclick = () => leaveRoom();
+  $("onlineLeaveMembership").onclick = leaveChatroom;
 
   $("onlineJoinCode").oninput = event => {
     event.target.value = event.target.value.toUpperCase()
