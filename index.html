@@ -1,243 +1,120 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#17102f">
-  <meta name="description" content="Bading Tambayan 4.1 — your magical little universe of chaos, comfort, games, and memories.">
-  <title>Bading Tambayan 4.1 | The Tambayanverse</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <meta name="theme-color" content="#17112f">
+  <title>Bading Tambayan 4.2 — The Tambayanverse</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="stars-bg"></div>
-
+  <div class="ambient ambient-one"></div><div class="ambient ambient-two"></div>
   <header class="topbar">
-    <a class="brand" href="#" data-view="home">
-      <span class="brand-icon">🌌</span>
-      <span>BADING <b>TAMBAYAN</b><small>THE TAMBAYANVERSE 4.1</small></span>
-    </a>
-    <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu">☰</button>
-    <nav id="mainNav">
-      <button data-view="home" class="nav-link active">🏠 Home</button>
-      <button data-view="worlds" class="nav-link">🪐 Worlds</button>
-      <button data-view="games" class="nav-link">🎮 Games</button>
-      <button data-view="diary" class="nav-link">📔 Diary</button>
-      <button data-view="collection" class="nav-link">🏆 Collection</button>
-      <button data-view="profile" class="nav-link">👤 Profile</button>
-    </nav>
+    <a class="brand" href="#home" aria-label="Bading Tambayan home"><span class="brand-mark">✦</span><span>BADING <b>TAMBAYAN</b><small>THE TAMBAYANVERSE 4.2</small></span></a>
+    <div class="top-actions">
+      <span class="currency">⭐ <b id="starCount">0</b></span>
+      <button class="icon-btn" id="profileOpen" title="Your profile">👤</button>
+      <button class="icon-btn" id="settingsOpen" title="Settings">⚙️</button>
+    </div>
   </header>
 
-  <main class="container">
-    <section id="home" class="view active">
-      <div class="hero">
-        <div class="hero-copy">
-          <span class="eyebrow">✦ YOUR LITTLE CORNER OF THE UNIVERSE ✦</span>
-          <h1>Welcome to your<br><span>Tambayanverse.</span></h1>
-          <p>A little chaos, a little comfort, a little magic. This universe is yours. Do whatever makes your inner bading happy.</p>
-          <div class="hero-actions">
-            <button class="primary-btn" data-view="worlds">Explore the worlds ✨</button>
-            <button class="secondary-btn" data-view="games">Play a game 🎮</button>
-          </div>
-        </div>
-        <div class="planet-art">
-          <div class="planet">💜</div>
-          <span class="orbit orbit-one">✦</span>
-          <span class="orbit orbit-two">✧</span>
-          <span class="orbit orbit-three">★</span>
-          <span class="floating f1">🌙</span>
-          <span class="floating f2">🪄</span>
-          <span class="floating f3">🪐</span>
-        </div>
+  <main id="home" class="shell">
+    <section class="hero panel">
+      <div class="hero-copy">
+        <p class="eyebrow">WELCOME BACK TO YOUR SAFE SPACE</p>
+        <h1>Hi, <span id="welcomeName">Sis</span>!<br><em>Kalma. Kalat. Kilig.</em></h1>
+        <p class="hero-text">A little universe for your big feelings, random thoughts, questionable decisions, and iconic moments.</p>
+        <div class="hero-buttons"><a class="primary-btn" href="#worlds">Explore the tambayan <span>↗</span></a><button class="soft-btn" id="dailyMessage">Give me a message ✨</button></div>
       </div>
-
-      <div class="player-strip panel">
-        <div class="avatar" id="homeAvatar">💜</div>
-        <div class="player-info">
-          <span class="muted small">CURRENT PLAYER</span>
-          <h3 id="homeName">Little Chaos</h3>
-          <p id="homeTitle">New arrival of the Tambayanverse</p>
-        </div>
-        <div class="level-box">
-          <strong id="homeLevel">LVL 1</strong>
-          <div class="xp-track"><span id="homeXpBar"></span></div>
-          <small id="homeXpText">0 / 100 XP</small>
-        </div>
-      </div>
-
-      <div class="section-heading">
-        <div><span class="eyebrow">YOUR UNIVERSE</span><h2>Dashboard ✨</h2></div>
-        <span class="pill" id="todayLabel"></span>
-      </div>
-
-      <div class="stats-grid">
-        <article class="stat-card"><span>⭐</span><strong id="statStars">0</strong><small>Stars collected</small></article>
-        <article class="stat-card"><span>🏆</span><strong id="statBadges">0</strong><small>Badges earned</small></article>
-        <article class="stat-card"><span>🎮</span><strong id="statGames">0</strong><small>Games played</small></article>
-        <article class="stat-card"><span>📔</span><strong id="statEntries">0</strong><small>Saved memories</small></article>
-      </div>
-
-      <div class="two-column">
-        <article class="panel mission-panel">
-          <div class="panel-heading"><div><span class="eyebrow">TODAY'S LITTLE CHALLENGE</span><h3>Daily Mission 🎯</h3></div><span class="mission-icon">🌟</span></div>
-          <h4 id="missionTitle">Your mission awaits!</h4>
-          <p id="missionDescription">Complete today's little challenge and earn rewards.</p>
-          <div class="mission-reward">Reward: ⭐ <b id="missionReward">25 XP + 5 stars</b></div>
-          <button class="primary-btn full" id="completeMission">Complete mission</button>
-          <small id="missionStatus" class="muted"></small>
-        </article>
-
-        <article class="panel quick-panel">
-          <span class="eyebrow">A LITTLE SOMETHING</span>
-          <h3>Random universe message 💌</h3>
-          <p id="dailyMessage">The universe has something to tell you.</p>
-          <button class="secondary-btn full" id="newMessage">Give me another message</button>
-        </article>
-      </div>
-
-      <div class="section-heading"><div><span class="eyebrow">PICK YOUR DESTINATION</span><h2>Featured worlds 🪐</h2></div><button class="text-btn" data-view="worlds">See all →</button></div>
-      <div class="world-grid compact-worlds">
-        <button class="world-card arcade" data-world="arcade"><span>🎮</span><b>The Chaos Arcade</b><small>Play, laugh, and lose your dignity.</small></button>
-        <button class="world-card comfort" data-world="comfort"><span>🫂</span><b>The Comfort Corner</b><small>A soft place to land.</small></button>
-        <button class="world-card diary-world" data-world="confession"><span>📔</span><b>The Confession Room</b><small>Your thoughts are safe here.</small></button>
-      </div>
+      <div class="hero-orbit"><div class="orbit orbit-a"></div><div class="orbit orbit-b"></div><div class="planet">💜</div><span class="float f1">⭐</span><span class="float f2">🪩</span><span class="float f3">🦋</span></div>
     </section>
 
-    <section id="worlds" class="view">
-      <div class="page-intro"><span class="eyebrow">CHOOSE YOUR ADVENTURE</span><h1>Explore the <span>worlds.</span></h1><p>Six little dimensions. Endless possibilities. Pick your portal.</p></div>
-      <div class="world-grid">
-        <button class="world-card arcade" data-world="arcade"><span>🎮</span><b>The Chaos Arcade</b><small>Games, silly challenges, and questionable decisions.</small><em>Enter world →</em></button>
-        <button class="world-card comfort" data-world="comfort"><span>🫂</span><b>The Comfort Corner</b><small>Affirmations, gentle reminders, and virtual hugs.</small><em>Enter world →</em></button>
-        <button class="world-card lab" data-world="lab"><span>🧪</span><b>The Experiment Lab</b><small>Discover your mood, vibe, and chaotic personality.</small><em>Enter world →</em></button>
-        <button class="world-card library" data-world="library"><span>🔮</span><b>The Mystery Library</b><small>Fortunes, universe messages, and secret discoveries.</small><em>Enter world →</em></button>
-        <button class="world-card diary-world" data-world="confession"><span>📔</span><b>The Confession Room</b><small>Write it down. Keep it. Come back to it.</small><em>Enter world →</em></button>
-        <button class="world-card community" data-world="community"><span>🌟</span><b>The Community Board</b><small>Compliments, roasts, and public announcements.</small><em>Enter world →</em></button>
-      </div>
-      <div class="secret-portal panel" id="secretPortal">
-        <div><span class="eyebrow">A STRANGE LITTLE DOOR</span><h3>Something is hiding here... 🔐</h3><p id="secretText">Keep exploring. Some things reveal themselves when you least expect them.</p></div>
-        <button class="secondary-btn" id="secretButton">Check the portal</button>
-      </div>
+    <section class="stats-grid">
+      <article class="stat panel"><span>LEVEL</span><strong id="levelValue">1</strong><small id="titleValue">Certified Tambay</small></article>
+      <article class="stat panel"><span>EXPERIENCE</span><strong id="xpValue">0 XP</strong><div class="progress"><i id="xpBar"></i></div><small id="xpNext">0 / 100 XP to next level</small></article>
+      <article class="stat panel"><span>DISCOVERIES</span><strong id="discoveryValue">0</strong><small>Secrets found</small></article>
+      <article class="stat panel"><span>BADGES</span><strong id="badgeValue">0</strong><small>Iconic achievements</small></article>
     </section>
 
-    <section id="worldDetail" class="view">
-      <button class="back-btn" data-view="worlds">← Back to worlds</button>
-      <div class="page-intro"><span class="eyebrow" id="worldEyebrow">YOUR DESTINATION</span><h1 id="worldTitle">World title</h1><p id="worldDescription">World description</p></div>
-      <div id="worldContent" class="activity-grid"></div>
-      <div id="worldResult" class="result-box hidden" aria-live="polite"></div>
+    <section class="section-heading" id="worlds"><div><p class="eyebrow">PICK YOUR DESTINATION</p><h2>Your little worlds</h2></div><span class="section-note">Choose your own chaos.</span></section>
+    <section class="world-grid">
+      <a class="world-card arcade" href="#games"><span class="world-icon">🎮</span><span class="world-kicker">WORLD 01</span><h3>The Chaos Arcade</h3><p>Games, challenges, at konting brain cells.</p><b>Enter world ↗</b></a>
+      <a class="world-card comfort" href="#comfort"><span class="world-icon">🫂</span><span class="world-kicker">WORLD 02</span><h3>The Comfort Corner</h3><p>Soft reminders for hard days.</p><b>Enter world ↗</b></a>
+      <a class="world-card lab" href="#lab"><span class="world-icon">🧪</span><span class="world-kicker">WORLD 03</span><h3>The Experiment Lab</h3><p>Tests, meters, and questionable science.</p><b>Enter world ↗</b></a>
+      <a class="world-card library" href="#mystery"><span class="world-icon">🔮</span><span class="world-kicker">WORLD 04</span><h3>The Mystery Library</h3><p>Fortunes, secrets, and strange little truths.</p><b>Enter world ↗</b></a>
+      <a class="world-card diary" href="#diary"><span class="world-icon">📔</span><span class="world-kicker">WORLD 05</span><h3>The Confession Room</h3><p>Letters, journal entries, and memory keeping.</p><b>Enter world ↗</b></a>
+      <a class="world-card community" href="#hangout"><span class="world-icon">🌟</span><span class="world-kicker">WORLD 06</span><h3>The Community Board</h3><p>Tambay prompts and shared-room vibes.</p><b>Enter world ↗</b></a>
     </section>
 
-    <section id="games" class="view">
-      <div class="page-intro"><span class="eyebrow">ARCADE MODE ACTIVATED</span><h1>The <span>Chaos Arcade.</span></h1><p>Play a little game. Earn XP. Pretend you're productive.</p></div>
+    <section class="section-heading" id="games"><div><p class="eyebrow">WORLD 01 · PLAY SOMETHING</p><h2>Chaos Arcade</h2></div><span class="section-note">Win stars. Lose dignity.</span></section>
+    <section class="panel content-panel">
       <div class="game-grid">
-        <article class="game-card">
-          <div class="game-art">🔢</div><span class="eyebrow">GUESSING GAME</span><h3>Guess the Number</h3><p>I'm thinking of a number from 1 to 20. Can you guess it?</p>
-          <div class="game-controls"><input id="guessInput" type="number" min="1" max="20" placeholder="Your guess"><button class="primary-btn" id="guessButton">Guess!</button></div>
-          <p class="game-feedback" id="guessFeedback">You have 5 attempts. Good luck!</p>
-          <button class="text-btn" id="resetGuess">Restart game ↻</button>
-        </article>
-        <article class="game-card">
-          <div class="game-art">⚡</div><span class="eyebrow">REFLEX CHALLENGE</span><h3>Reaction Test</h3><p>Wait for the screen to turn green, then tap as quickly as you can.</p>
-          <button class="reaction-box" id="reactionBox">Press to start</button>
-          <p class="game-feedback" id="reactionFeedback">Let's see those reflexes.</p>
-        </article>
-        <article class="game-card">
-          <div class="game-art">🧠</div><span class="eyebrow">MEMORY CHALLENGE</span><h3>Memory Match</h3><p>Find all matching pairs. Try to finish in as few moves as possible.</p>
-          <div class="memory-grid" id="memoryGrid"></div>
-          <p class="game-feedback" id="memoryFeedback">Moves: 0</p>
-          <button class="text-btn" id="restartMemory">Shuffle cards ↻</button>
-        </article>
-        <article class="game-card">
-          <div class="game-art">🎲</div><span class="eyebrow">PURE CHAOS</span><h3>Would You Rather?</h3><p id="wyrQuestion">Choose your fate.</p>
-          <div class="choice-stack"><button class="choice-btn" id="wyrA">Option A</button><button class="choice-btn" id="wyrB">Option B</button></div>
-          <p class="game-feedback" id="wyrFeedback">There are no correct answers. Only consequences.</p>
-          <button class="text-btn" id="nextWyr">Next question →</button>
-        </article>
+        <article class="game-card"><div class="game-emoji">🔢</div><h3>Guess the Number</h3><p>Guess a number from 1 to 10.</p><div class="inline-form"><input id="guessInput" type="number" min="1" max="10" placeholder="1–10"><button class="small-btn" id="guessBtn">Guess</button></div><p class="game-result" id="guessResult">A number is waiting...</p></article>
+        <article class="game-card"><div class="game-emoji">⚡</div><h3>Reaction Test</h3><p>Wait for green, then tap fast.</p><button class="small-btn" id="reactionBtn">Start reaction test</button><p class="game-result" id="reactionResult">Ready ka na ba?</p></article>
+        <article class="game-card"><div class="game-emoji">🧠</div><h3>Memory Match</h3><p>Find all matching pairs.</p><div id="memoryBoard" class="memory-board"></div><p class="game-result" id="memoryResult">Find the pairs!</p><button class="tiny-link" id="memoryReset">Shuffle cards ↻</button></article>
+        <article class="game-card"><div class="game-emoji">💭</div><h3>Would You Rather</h3><p id="wyrQuestion">Would you rather read minds or see the future?</p><div class="choice-row"><button class="choice-btn" id="wyrA">Read minds</button><button class="choice-btn" id="wyrB">See the future</button></div><p class="game-result" id="wyrResult">Walang wrong answer. May judgment lang.</p></article>
+        <article class="game-card"><div class="game-emoji">🎲</div><h3>Truth or Dare-ish</h3><p>Random prompt, no pressure.</p><button class="small-btn" id="promptBtn">Give me a prompt</button><p class="game-result" id="promptResult">Your turn, sis.</p></article>
+        <article class="game-card"><div class="game-emoji">🪙</div><h3>Coin of Fate</h3><p>Let the universe decide this tiny thing.</p><button class="small-btn" id="coinBtn">Flip the coin</button><p class="game-result" id="coinResult">Heads or tails?</p></article>
       </div>
     </section>
 
-    <section id="diary" class="view">
-      <div class="page-intro"><span class="eyebrow">A SPACE THAT BELONGS TO YOU</span><h1>The <span>Confession Room.</span></h1><p>Write the things you want to remember, release, or keep close.</p></div>
-      <div class="diary-layout">
-        <form class="panel diary-form" id="diaryForm">
-          <span class="eyebrow">NEW ENTRY</span><h3 id="formHeading">Dear diary...</h3>
-          <label for="entryTitle">Title</label><input id="entryTitle" maxlength="80" placeholder="Give this memory a name..." required>
-          <label for="entryMood">How are you feeling?</label>
-          <select id="entryMood"><option>😊 Happy</option><option>🥰 Loved</option><option>😌 Peaceful</option><option>🥲 Emotional</option><option>😔 Sad</option><option>😤 Angry</option><option>🤡 Chaotic</option><option>😶 Numb</option><option>✨ Hopeful</option></select>
-          <label for="entryType">Entry type</label>
-          <select id="entryType"><option value="journal">Journal</option><option value="letter">Letter</option><option value="memory">Memory Jar</option></select>
-          <label for="entryBody">Your thoughts</label><textarea id="entryBody" rows="7" placeholder="You can say anything here..." required></textarea>
-          <label class="favorite-label"><input type="checkbox" id="entryFavorite"> 💜 Save as a favorite</label>
-          <div class="form-actions"><button class="primary-btn" type="submit" id="saveEntry">Save entry ✨</button><button class="secondary-btn hidden" type="button" id="cancelEdit">Cancel edit</button></div>
-          <small class="muted">Your entries are saved in this browser on this device. Export backups regularly.</small>
-        </form>
+    <section class="section-heading" id="comfort"><div><p class="eyebrow">WORLD 02 · TAKE A BREATHER</p><h2>Comfort Corner</h2></div></section>
+    <section class="comfort-panel panel"><div class="comfort-art">🫂</div><div><p class="eyebrow">A NOTE FOR YOU</p><h3 id="comfortText">You don't have to figure everything out today.</h3><p>Rest is productive, feelings are allowed, and you are not behind in life.</p><button class="soft-btn" id="comfortBtn">Another gentle reminder</button></div></section>
 
-        <div class="panel archive-panel">
-          <div class="panel-heading"><div><span class="eyebrow">YOUR PERSONAL ARCHIVE</span><h3>Saved thoughts 📚</h3></div><span id="entryCount" class="pill">0 entries</span></div>
-          <div class="archive-tools"><input id="archiveSearch" placeholder="Search your entries..."><select id="archiveFilter"><option value="all">All entries</option><option value="journal">Journals</option><option value="letter">Letters</option><option value="memory">Memory Jar</option><option value="favorites">Favorites 💜</option></select></div>
-          <div id="archiveList" class="archive-list"><div class="empty-state">Your archive is waiting for its first memory. 💜</div></div>
-        </div>
-      </div>
+    <section class="section-heading" id="lab"><div><p class="eyebrow">WORLD 03 · SCIENCE, BUT MAKE IT GAY</p><h2>Experiment Lab</h2></div></section>
+    <section class="tool-grid">
+      <article class="tool-card panel"><span>🤡</span><h3>Delulu Meter</h3><p>Rate your current level of delusion.</p><input id="deluluRange" type="range" min="0" max="100" value="50"><strong id="deluluValue">50% — cautiously delusional</strong></article>
+      <article class="tool-card panel"><span>😭</span><h3>Excuse Generator</h3><p id="excuseText">Need a reason? We got you.</p><button class="small-btn" id="excuseBtn">Generate excuse</button></article>
+      <article class="tool-card panel"><span>🎭</span><h3>Drama Queen Button</h3><p id="dramaText">The situation is not that deep...</p><button class="small-btn" id="dramaBtn">Activate drama</button></article>
+      <article class="tool-card panel"><span>💅</span><h3>Compliment or Roast</h3><p id="complimentText">Ready ka na ba sa truth?</p><button class="small-btn" id="complimentBtn">Reveal my fate</button></article>
     </section>
 
-    <section id="collection" class="view">
-      <div class="page-intro"><span class="eyebrow">YOUR LITTLE TROPHY CABINET</span><h1>The <span>Collection.</span></h1><p>Every little adventure leaves something behind.</p></div>
-      <div class="collection-summary panel"><div><strong id="collectionBadgeCount">0</strong><small>Badges unlocked</small></div><div><strong id="collectionStarCount">0</strong><small>Stars collected</small></div><div><strong id="collectionDiscoveryCount">0</strong><small>Worlds discovered</small></div></div>
-      <h2 class="subheading">🏆 Achievements</h2>
-      <div class="badge-grid" id="badgeGrid"></div>
-      <h2 class="subheading">🌟 Discoveries</h2>
-      <div class="discovery-grid" id="discoveryGrid"></div>
-      <h2 class="subheading">🎖️ Your player title</h2>
-      <div class="panel title-panel"><div class="big-title" id="collectionTitle">New Arrival</div><p>Keep exploring to unlock more titles and achievements.</p></div>
+    <section class="section-heading" id="mystery"><div><p class="eyebrow">WORLD 04 · OPEN AT YOUR OWN RISK</p><h2>Mystery Library</h2></div></section>
+    <section class="tool-grid">
+      <article class="tool-card panel"><span>🔮</span><h3>Manghuhula ng Kapalaran</h3><p id="fortuneText">Your future is buffering...</p><button class="small-btn" id="fortuneBtn">Read my future</button></article>
+      <article class="tool-card panel"><span>⚖️</span><h3>Bading Court</h3><p id="courtText">The court is now in session.</p><button class="small-btn" id="courtBtn">Judge my situation</button></article>
+      <article class="tool-card panel"><span>🐸</span><h3>Palakang Marites</h3><p id="frogText">Ribbit. May chika ka ba?</p><button class="small-btn" id="frogBtn">Ask the frog</button></article>
+      <article class="tool-card panel"><span>🌌</span><h3>Ask the Universe</h3><p id="universeText">Ask a yes-or-no question in your head.</p><button class="small-btn" id="universeBtn">Ask the universe</button></article>
+      <article class="tool-card panel"><span>🎰</span><h3>Sampal o Lambing Machine</h3><p id="machineText">Choose your emotional damage.</p><button class="small-btn" id="machineBtn">Pull the lever</button></article>
+      <article class="tool-card panel"><span>🚫</span><h3>The Forbidden Button</h3><p id="forbiddenText">They said don't touch it.</p><button class="small-btn danger-btn" id="forbiddenBtn">DO NOT PRESS</button></article>
     </section>
 
-    <section id="profile" class="view">
-      <div class="page-intro"><span class="eyebrow">YOUR IDENTITY IN THIS UNIVERSE</span><h1>Player <span>Profile.</span></h1><p>Make this little corner feel like yours.</p></div>
-      <div class="profile-layout">
-        <form class="panel profile-form" id="profileForm">
-          <div class="avatar large" id="profileAvatar">💜</div>
-          <label for="playerName">Your nickname</label><input id="playerName" maxlength="24" placeholder="Enter your nickname">
-          <label for="playerAvatar">Choose your avatar</label>
-          <div class="avatar-picker" id="avatarPicker">
-            <button type="button" data-avatar="💜">💜</button><button type="button" data-avatar="🌙">🌙</button><button type="button" data-avatar="🦋">🦋</button><button type="button" data-avatar="🐸">🐸</button><button type="button" data-avatar="👑">👑</button><button type="button" data-avatar="🪐">🪐</button><button type="button" data-avatar="🧸">🧸</button><button type="button" data-avatar="✨">✨</button>
-          </div>
-          <button class="primary-btn full" type="submit">Save profile</button>
-        </form>
-        <div class="panel profile-stats">
-          <span class="eyebrow">YOUR JOURNEY SO FAR</span><h3>Player statistics</h3>
-          <div class="profile-stat"><span>Level</span><b id="profileLevel">1</b></div>
-          <div class="profile-stat"><span>Total XP</span><b id="profileXp">0</b></div>
-          <div class="profile-stat"><span>Stars</span><b id="profileStars">0</b></div>
-          <div class="profile-stat"><span>Games played</span><b id="profileGames">0</b></div>
-          <div class="profile-stat"><span>Diary entries</span><b id="profileEntries">0</b></div>
-          <div class="profile-stat"><span>Worlds discovered</span><b id="profileWorlds">0 / 6</b></div>
-          <div class="profile-stat"><span>Current title</span><b id="profileTitle">New Arrival</b></div>
-        </div>
-      </div>
-      <div class="panel data-panel">
-        <span class="eyebrow">YOUR DATA, YOUR CHOICE</span><h3>Save and restore progress</h3>
-        <p>Download a backup of your progress or restore one from a previous backup. Your saved data is stored locally in this browser.</p>
-        <div class="data-actions"><button class="secondary-btn" id="exportButton">⬇ Export backup</button><label class="secondary-btn file-label">⬆ Import backup<input type="file" id="importFile" accept=".json,application/json" hidden></label><button class="danger-btn" id="resetButton">Reset all progress</button></div>
-        <small class="muted">Important: local browser storage is not cloud sync. Use backups if you change devices or browsers.</small>
-      </div>
+    <section class="section-heading" id="diary"><div><p class="eyebrow">WORLD 05 · THIS SPACE IS YOURS</p><h2>Confession Room</h2></div><span class="section-note">Saved on this device.</span></section>
+    <section class="diary-layout">
+      <form class="panel diary-form" id="diaryForm">
+        <label for="entryType">What are we saving?</label><select id="entryType"><option value="journal">Journal entry</option><option value="letter">A letter</option><option value="memory">Memory jar</option></select>
+        <label for="entryTitle">Title</label><input id="entryTitle" maxlength="70" placeholder="A little title..." required>
+        <label for="entryMood">Current mood</label><select id="entryMood"><option>😊 Happy</option><option>🥹 Soft</option><option>😔 Sad but trying 💜</option><option>😤 Annoyed</option><option>🤡 Delulu</option><option>😌 At peace</option><option>✨ Hopeful</option></select>
+        <label for="entryBody">Your thoughts</label><textarea id="entryBody" rows="6" placeholder="Write anything. Walang judgment dito..." required></textarea>
+        <button class="primary-btn full-btn" type="submit">Save to my little universe ✦</button><p class="form-note" id="diaryNotice">Your entries stay in this browser unless you export a backup.</p>
+      </form>
+      <div class="panel diary-list-panel"><div class="diary-list-head"><div><p class="eyebrow">YOUR PRIVATE COLLECTION</p><h3>Saved thoughts</h3></div><input id="diarySearch" placeholder="Search entries..."></div><div id="diaryList" class="diary-list"><p class="empty-state">Your page is waiting for its first story.</p></div></div>
     </section>
 
-    <section id="settings" class="view">
-      <div class="page-intro"><span class="eyebrow">MAKE YOURSELF AT HOME</span><h1>Little <span>Settings.</span></h1></div>
-      <div class="panel"><h3>Website information</h3><p>Bading Tambayan 4.1 — The Tambayanverse. Your progress is saved in your browser using local storage.</p><p class="muted">If you clear browser data, your local progress may be erased. Export a backup to keep a copy.</p><button class="secondary-btn" data-view="profile">Go to profile and backups</button></div>
+    <section class="section-heading" id="hangout"><div><p class="eyebrow">WORLD 06 · COMMUNITY BOARD</p><h2>Tambayan Hangout</h2></div><span class="section-note">Local hangout mode</span></section>
+    <section class="hangout-layout">
+      <article class="panel hangout-card"><span class="big-icon">🪩</span><h3>Tambayan Room</h3><p>Drop a message on this device's room board. This is a local, single-device experience—not live online chat.</p><form id="hangoutForm" class="hangout-form"><input id="hangoutName" maxlength="24" placeholder="Nickname"><input id="hangoutMessage" maxlength="180" placeholder="Drop your tambay thought..." required><button class="small-btn">Post</button></form><div id="hangoutFeed" class="hangout-feed"></div></article>
+      <article class="panel hangout-card"><span class="big-icon">🗣️</span><h3>Question of the Day</h3><p id="questionOfDay">What's one tiny thing that made you smile today?</p><button class="soft-btn" id="newQuestion">New question</button><div class="prompt-box"><b>Community wall prompt</b><p>Leave a kind message for whoever visits this tambayan next.</p><textarea id="kindMessage" rows="3" placeholder="To the next sis who visits..."></textarea><button class="small-btn" id="kindPost">Pin my kindness</button><div id="kindFeed"></div></div></article>
     </section>
+
+    <section class="section-heading"><div><p class="eyebrow">YOUR LITTLE REWARDS</p><h2>Star Shop & collectibles</h2></div><span class="section-note">Spend stars to unlock goodies.</span></section>
+    <section class="shop-layout">
+      <div class="panel shop-panel"><div class="shop-heading"><div><p class="eyebrow">THE CELESTIAL BOUTIQUE</p><h3>Star Shop</h3></div><span class="currency">⭐ <b id="shopStars">0</b></span></div><div id="shopGrid" class="shop-grid"></div></div>
+      <div class="panel collection-panel"><p class="eyebrow">YOUR COLLECTION</p><h3>Unlocked goodies</h3><div id="collectionList" class="collection-list"></div></div>
+    </section>
+
+    <section class="section-heading"><div><p class="eyebrow">MAKE IT YOURS</p><h2>Personalize your universe</h2></div></section>
+    <section class="panel theme-panel"><div><div><h3>Choose your atmosphere</h3><p>Theme changes are saved on this device.</p></div><div class="theme-options" id="themeOptions"><button data-theme="violet" class="theme-choice active">💜 Violet</button><button data-theme="rose" class="theme-choice">🌸 Rose</button><button data-theme="ocean" class="theme-choice">🌊 Ocean</button><button data-theme="midnight" class="theme-choice">🌙 Midnight</button></div></div></section>
+
+    <section class="section-heading"><div><p class="eyebrow">YOUR JOURNEY</p><h2>Achievements & discoveries</h2></div></section>
+    <section class="panel achievements-panel"><div><h3>Achievements</h3><div id="achievementList" class="chip-list"></div></div><div><h3>Discoveries</h3><div id="discoveryList" class="chip-list"></div></div></section>
+
+    <footer class="footer"><span>✦ BADING TAMBAYAN 4.2 ✦</span><p>Made for the soft-hearted, the chaotic, and everyone in between.</p><button class="tiny-link" id="backupOpen">Backup & settings</button></footer>
   </main>
 
-  <footer class="footer">
-    <div>💜 Made with chaos, comfort, and a little bit of magic.</div>
-    <small>BADING TAMBAYAN 4.1 · THE TAMBAYANVERSE</small>
-    <button class="text-btn" data-view="settings">Settings & privacy</button>
-  </footer>
-
-  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <dialog id="profileDialog" class="modal"><form method="dialog" class="modal-close"><button aria-label="Close">✕</button></form><p class="eyebrow">YOUR PLAYER CARD</p><h2>Profile settings</h2><label for="profileName">Nickname</label><input id="profileName" maxlength="24" placeholder="Your nickname"><label for="profileAvatar">Choose an avatar</label><select id="profileAvatar"><option>💜</option><option>🦋</option><option>🐸</option><option>🌙</option><option>🪩</option><option>🌷</option><option>⭐</option><option>🧚</option></select><button class="primary-btn full-btn" id="saveProfile" type="button">Save profile</button></dialog>
+  <dialog id="settingsDialog" class="modal"><form method="dialog" class="modal-close"><button aria-label="Close">✕</button></form><p class="eyebrow">TAKE CARE OF YOUR DATA</p><h2>Backup & settings</h2><p>Export a JSON backup before clearing browser data or moving devices. Import the file to restore your progress.</p><div class="settings-actions"><button class="primary-btn" id="exportBtn">⬇ Export backup</button><label class="soft-btn file-label">⬆ Import backup<input type="file" id="importFile" accept=".json,application/json" hidden></label><button class="soft-btn" id="resetBtn">Reset local progress</button></div><p class="form-note" id="backupStatus"></p><p class="form-note">Your data is stored locally in this browser. Export backups regularly. Importing replaces the current local save.</p></dialog>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
   <script src="script.js"></script>
 </body>
   </html>
-            
