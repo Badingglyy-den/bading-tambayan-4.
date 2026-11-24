@@ -38,6 +38,20 @@
     #onlineTambayan .online-status {
       min-height: 1.4em; color: #cbbaff; font-size: .92rem;
     }
+    #onlineTambayan .online-room-list {
+      display: grid; gap: 8px; margin: 12px 0 18px;
+    }
+    #onlineTambayan .online-room-card {
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 10px; width: 100%; text-align: left; margin: 0;
+      background: rgba(255,255,255,.06); color: inherit;
+      border: 1px solid rgba(190,160,255,.2);
+    }
+    #onlineTambayan .online-room-card.active {
+      border-color: #a98bff; background: rgba(169,139,255,.16);
+    }
+    #onlineTambayan .online-room-card span { display: block; }
+    #onlineTambayan .online-room-card small { opacity: .7; font-weight: 400; }
     #onlineTambayan .online-room {
       display: none; margin-top: 18px;
       border-top: 1px solid rgba(190,160,255,.2); padding-top: 18px;
@@ -128,6 +142,11 @@
         </div>
       </div>
       <p class="online-status" id="onlineStatus" role="status" aria-live="polite">Connecting to the online tambayan…</p>
+      <div class="online-box" id="onlineMyRoomsBox">
+        <h3>🗂️ My Chatrooms</h3>
+        <p class="online-muted">Your joined rooms are saved here. Choose one to switch conversations.</p>
+        <div class="online-room-list" id="onlineRoomList"><span class="online-muted">Loading your rooms…</span></div>
+      </div>
       <div class="online-room" id="onlineRoom">
         <div class="online-room-top">
           <div>
@@ -135,7 +154,7 @@
             <h3 id="onlineRoomTitle">Room</h3>
             <div class="online-code" id="onlineRoomCode"></div>
           </div>
-          <button id="onlineLeaveRoom">Leave room</button>
+          <button id="onlineLeaveRoom">Back to room list</button>
         </div>
         <div class="online-columns">
           <div class="online-box">
@@ -180,6 +199,27 @@
   const receiptMessageIds = new Set();
   let typingTimer = null;
   let isTyping = false;
+  let joinedRooms = [];
+
+  // Keep the last active room per anonymous Supabase account on this device.
+  const ACTIVE_ROOM_KEY = () => "tambayan_active_room_" + (currentUser?.id || "guest");
+
+  function saveActiveRoom(room) {
+    try {
+      if (room) localStorage.setItem(ACTIVE_ROOM_KEY(), JSON.stringify({ id: room.id }));
+      else localStorage.removeItem(ACTIVE_ROOM_KEY());
+    } catch (error) {
+      console.warn("Could not save active room:", error);
+    }
+  }
+
+  function getSavedActiveRoom() {
+    try {
+      return JSON.parse(localStorage.getItem(ACTIVE_ROOM_KEY()) || "null");
+    } catch (_) {
+      return null;
+    }
+  }
 
   function status(message, error = false) {
     $("onlineStatus").textContent = message;
@@ -230,7 +270,24 @@
       $("onlineName").value = profile.display_name;
       $("onlineAvatar").value = profile.avatar;
       await saveProfile(false);
+      await refreshRoomList();
       status("You're connected! Create a room or join with a code. 💜");
+
+      // Restore the last room only if this account is still a member.
+      const savedRoom = getSavedActiveRoom();
+      if (savedRoom?.id) {
+        const room = joinedRooms.find(item => item.id === savedRoom.id);
+        if (room) {
+          try {
+            await enterRoom(room.id, room.room_code, room.room_name);
+          } catch (restoreError) {
+            console.warn("Could not restore previous room:", restoreError);
+            status("Connected! Choose a room from My Chatrooms to continue.");
+          }
+        } else {
+          saveActiveRoom(null);
+        }
+      }
     } catch (error) {
       console.error(error);
       status(error.message || "Connection failed.", true);
@@ -255,6 +312,79 @@
       renderMembers();
     }
     if (showNotice) status("Online profile saved! ✨");
+  }
+
+  async function refreshRoomList() {
+    if (!client || !currentUser) return;
+
+    const list = $("onlineRoomList");
+    list.innerHTML = '<span class="online-muted">Loading your rooms…</span>';
+
+    const { data: memberships, error: memberError } = await client
+      .from("room_members")
+      .select("room_id")
+      .eq("user_id", currentUser.id);
+
+    if (memberError) {
+      console.warn("Could not load joined rooms:", memberError);
+      list.innerHTML = '<span class="online-muted">Could not load your rooms. You can still join with a code.</span>';
+      return;
+    }
+
+    const ids = [...new Set((memberships || []).map(row => row.room_id).filter(Boolean))];
+    if (!ids.length) {
+      joinedRooms = [];
+      renderRoomList();
+      return;
+    }
+
+    const { data: rooms, error: roomsError } = await client
+      .from("rooms")
+      .select("id,room_code,room_name")
+      .in("id", ids);
+
+    if (roomsError) {
+      console.warn("Could not load room details:", roomsError);
+      list.innerHTML = '<span class="online-muted">Could not load room details. Please refresh.</span>';
+      return;
+    }
+
+    joinedRooms = rooms || [];
+    renderRoomList();
+  }
+
+  function renderRoomList() {
+    const list = $("onlineRoomList");
+    if (!list) return;
+
+    if (!joinedRooms.length) {
+      list.innerHTML = '<span class="online-muted">No chatrooms yet. Create one or join using a code!</span>';
+      return;
+    }
+
+    list.innerHTML = joinedRooms.map(room => `
+      <button type="button"
+        class="online-room-card ${currentRoom?.id === room.id ? "active" : ""}"
+        data-open-room="${safeText(room.id)}">
+        <span>💬 <strong>${safeText(room.room_name || "Tambayan Room")}</strong>
+          <small>Code: ${safeText(room.room_code || "")}</small>
+        </span>
+        <span aria-hidden="true">›</span>
+      </button>
+    `).join("");
+
+    list.querySelectorAll("[data-open-room]").forEach(button => {
+      button.onclick = async () => {
+        const room = joinedRooms.find(item => item.id === button.dataset.openRoom);
+        if (!room) return;
+        try {
+          await enterRoom(room.id, room.room_code, room.room_name);
+        } catch (error) {
+          console.error(error);
+          status(error.message || "Couldn't open room.", true);
+        }
+      };
+    });
   }
 
   async function createRoom() {
@@ -297,7 +427,9 @@
   async function enterRoom(roomId, code, roomName) {
     await leaveRoom(false);
     currentRoom = { id: roomId, code, name: roomName };
+    saveActiveRoom(currentRoom);
     $("onlineRoom").style.display = "block";
+    renderRoomList();
     $("onlineRoomTitle").textContent = roomName;
     $("onlineRoomCode").textContent = code;
     $("onlineTypingIndicator").textContent = "";
@@ -308,6 +440,8 @@
     typingUsers.clear();
 
     await loadMessages();
+    await refreshRoomList();
+    renderRoomList();
 
     roomChannel = client.channel("online-room-" + roomId, {
       config: { presence: { key: currentUser.id }, broadcast: { self: false, ack: true } }
@@ -554,8 +688,10 @@
     typingUsers.clear();
     if ($("onlineTypingIndicator")) $("onlineTypingIndicator").textContent = "";
     currentRoom = null;
+    if (updateStatus) saveActiveRoom(null);
     $("onlineRoom").style.display = "none";
-    if (updateStatus && client) status("You left the room.");
+    renderRoomList();
+    if (updateStatus && client) status("Back to your chatroom list. Your room membership is saved.");
   }
 
   $("onlineSaveProfile").onclick = async () => {
