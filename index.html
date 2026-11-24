@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -35,12 +34,8 @@
         </div>
       </div>
       <div class="hero-orbit">
-        <div class="orbit orbit-a"></div>
-        <div class="orbit orbit-b"></div>
-        <div class="planet">💜</div>
-        <span class="float f1">⭐</span>
-        <span class="float f2">🪩</span>
-        <span class="float f3">🦋</span>
+        <div class="orbit orbit-a"></div><div class="orbit orbit-b"></div><div class="planet">💜</div>
+        <span class="float f1">⭐</span><span class="float f2">🪩</span><span class="float f3">🦋</span>
       </div>
     </section>
 
@@ -52,10 +47,8 @@
     </section>
 
     <section class="section-heading" id="worlds">
-      <div><p class="eyebrow">PICK YOUR DESTINATION</p><h2>Your little worlds</h2></div>
-      <span class="section-note">Choose your own chaos.</span>
+      <div><p class="eyebrow">PICK YOUR DESTINATION</p><h2>Your little worlds</h2></div><span class="section-note">Choose your own chaos.</span>
     </section>
-
     <section class="world-grid">
       <a class="world-card arcade" href="#games"><span class="world-icon">🎮</span><span class="world-kicker">WORLD 01</span><h3>The Chaos Arcade</h3><p>Games, challenges, at konting brain cells.</p><b>Enter world ↗</b></a>
       <a class="world-card comfort" href="#comfort"><span class="world-icon">🫂</span><span class="world-kicker">WORLD 02</span><h3>The Comfort Corner</h3><p>Soft reminders for hard days.</p><b>Enter world ↗</b></a>
@@ -66,10 +59,8 @@
     </section>
 
     <section class="section-heading" id="games">
-      <div><p class="eyebrow">WORLD 01 · PLAY SOMETHING</p><h2>Chaos Arcade</h2></div>
-      <span class="section-note">Win stars. Lose dignity.</span>
+      <div><p class="eyebrow">WORLD 01 · PLAY SOMETHING</p><h2>Chaos Arcade</h2></div><span class="section-note">Win stars. Lose dignity.</span>
     </section>
-
     <section class="panel content-panel">
       <div class="game-grid">
         <article class="game-card">
@@ -79,50 +70,64 @@
         </article>
         <article class="game-card">
           <div class="game-emoji">⚡</div><h3>Reaction Test</h3><p>Wait for green, then tap fast.</p>
-          <button class="small-btn" id="reactionBtn">Start reaction test</button>
-          <p class="game-result" id="reactionResult">Ready ka na ba?</p>
+          <button class="small-btn" id="reactionBtn">Start reaction test</button><p class="game-result" id="reactionResult">Ready ka na ba?</p>
         </article>
         <article class="game-card">
           <div class="game-emoji">🧠</div><h3>Memory Match</h3><p>Find all matching pairs.</p>
-          <div id="memoryBoard" class="memory-board"></div>
-          <p class="game-result" id="memoryResult">Find the pairs!</p>
-          <button class="tiny-link" id="memoryReset">Shuffle cards ↻</button>
+          <div id="memoryBoard" class="memory-board"></div><p class="game-result" id="memoryResult">Find the pairs!</p><button class="tiny-link" id="memoryReset">Shuffle cards ↻</button>
         </article>
         <article class="game-card">
-          <div class="game-emoji">💭</div><h3>Would You Rather</h3>
-          <p id="wyrQuestion">Would you rather read minds or see the future?</p>
-          <div class="choice-row"><button class="choice-btn" id="wyrA">Read minds</button><button class="choice-btn" id="wyrB">See the future</button></div>
-          <p class="game-result" id="wyrResult">Walang wrong answer. May judgment lang.</p>
+          <div class="game-emoji">💭</div><h3>Would You Rather</h3><p id="wyrQuestion">Would you rather read minds or see the future?</p>
+          <div class="choice-row"><button class="choice-btn" id="wyrA">Read minds</button><button class="choice-btn" id="wyrB">See the future</button></div><p class="game-result" id="wyrResult">Walang wrong answer. May judgment lang.</p>
         </article>
         <article class="game-card">
-          <div class="game-emoji">🎲</div><h3>Truth or Dare-ish</h3><p>Random prompt, no pressure.</p>
-          <button class="small-btn" id="promptBtn">Give me a prompt</button>
-          <p class="game-result" id="promptResult">Your turn, sis.</p>
+          <div class="game-emoji">🎲</div><h3>Truth or Dare-ish</h3><p>Random prompt, no pressure.</p><button class="small-btn" id="promptBtn">Give me a prompt</button><p class="game-result" id="promptResult">Your turn, sis.</p>
         </article>
         <article class="game-card">
-          <div class="game-emoji">🪙</div><h3>Coin of Fate</h3><p>Let the universe decide this tiny thing.</p>
-          <button class="small-btn" id="coinBtn">Flip the coin</button>
-          <p class="game-result" id="coinResult">Heads or tails?</p>
+          <div class="game-emoji">🪙</div><h3>Coin of Fate</h3><p>Let the universe decide this tiny thing.</p><button class="small-btn" id="coinBtn">Flip the coin</button><p class="game-result" id="coinResult">Heads or tails?</p>
+        </article>
+
+        <article class="game-card">
+          <div class="game-emoji">✊</div><h3>Rock, Paper, Scissors</h3><p>Can you beat the computer?</p>
+          <div class="choice-row"><button class="choice-btn" data-rps="rock">✊ Rock</button><button class="choice-btn" data-rps="paper">✋ Paper</button><button class="choice-btn" data-rps="scissors">✌️ Scissors</button></div>
+          <p class="game-result" id="rpsResult">Make your move!</p>
+        </article>
+        <article class="game-card">
+          <div class="game-emoji">➕</div><h3>Quick Math</h3><p>Solve the equation. Kaya mo 'yan!</p>
+          <p class="game-result" id="mathQuestion">Ready for a math challenge?</p>
+          <div class="inline-form"><input id="mathInput" type="number" placeholder="Your answer"><button class="small-btn" id="mathCheck">Check</button></div>
+          <p class="game-result" id="mathResult">Get it right to earn XP.</p><button class="tiny-link" id="mathNew">New question ↻</button>
+        </article>
+        <article class="game-card">
+          <div class="game-emoji">🔤</div><h3>Word Scramble</h3><p>Unscramble the hidden word.</p>
+          <h3 id="scrambleWord">T A M B A Y A N</h3>
+          <div class="inline-form"><input id="scrambleInput" type="text" placeholder="Your answer"><button class="small-btn" id="scrambleCheck">Guess</button></div>
+          <p class="game-result" id="scrambleResult">Unscramble it!</p><button class="tiny-link" id="scrambleNew">New word ↻</button>
+        </article>
+        <article class="game-card">
+          <div class="game-emoji">🧩</div><h3>Emoji Decoder</h3><p>Decode the emojis into a phrase.</p>
+          <h3 id="emojiClue">🌧️ + 🐱 + 🐶</h3>
+          <div class="inline-form"><input id="emojiInput" type="text" placeholder="What's the phrase?"><button class="small-btn" id="emojiCheck">Decode</button></div>
+          <p class="game-result" id="emojiResult">What do the emojis mean?</p><button class="tiny-link" id="emojiNew">Next clue ↻</button>
+        </article>
+        <article class="game-card">
+          <div class="game-emoji">🔢</div><h3>Higher or Lower</h3><p>Guess the secret number from 1 to 20.</p>
+          <div class="inline-form"><input id="higherInput" type="number" min="1" max="20" placeholder="1–20"><button class="small-btn" id="higherCheck">Guess</button></div>
+          <p class="game-result" id="higherResult">I'm thinking of a number...</p><button class="tiny-link" id="higherNew">Start over ↻</button>
+        </article>
+        <article class="game-card">
+          <div class="game-emoji">🎨</div><h3>Color Memory</h3><p>Memorize the sequence, then type it back.</p>
+          <h3 id="colorSequence">🔴 🟡 🔵</h3>
+          <div class="inline-form"><input id="colorInput" type="text" placeholder="red yellow blue"><button class="small-btn" id="colorCheck">Check</button></div>
+          <p class="game-result" id="colorResult">Remember the colors in order!</p><button class="tiny-link" id="colorNew">New sequence ↻</button>
         </article>
       </div>
     </section>
 
-    <section class="section-heading" id="comfort">
-      <div><p class="eyebrow">WORLD 02 · TAKE A BREATHER</p><h2>Comfort Corner</h2></div>
-    </section>
-    <section class="comfort-panel panel">
-      <div class="comfort-art">🫂</div>
-      <div>
-        <p class="eyebrow">A NOTE FOR YOU</p>
-        <h3 id="comfortText">You don't have to figure everything out today.</h3>
-        <p>Rest is productive, feelings are allowed, and you are not behind in life.</p>
-        <button class="soft-btn" id="comfortBtn">Another gentle reminder</button>
-      </div>
-    </section>
+    <section class="section-heading" id="comfort"><div><p class="eyebrow">WORLD 02 · TAKE A BREATHER</p><h2>Comfort Corner</h2></div></section>
+    <section class="comfort-panel panel"><div class="comfort-art">🫂</div><div><p class="eyebrow">A NOTE FOR YOU</p><h3 id="comfortText">You don't have to figure everything out today.</h3><p>Rest is productive, feelings are allowed, and you are not behind in life.</p><button class="soft-btn" id="comfortBtn">Another gentle reminder</button></div></section>
 
-    <section class="section-heading" id="lab">
-      <div><p class="eyebrow">WORLD 03 · SCIENCE, BUT MAKE IT GAY</p><h2>Experiment Lab</h2></div>
-    </section>
+    <section class="section-heading" id="lab"><div><p class="eyebrow">WORLD 03 · SCIENCE, BUT MAKE IT GAY</p><h2>Experiment Lab</h2></div></section>
     <section class="tool-grid">
       <article class="tool-card panel"><span>🤡</span><h3>Delulu Meter</h3><p>Rate your current level of delusion.</p><input id="deluluRange" type="range" min="0" max="100" value="50"><strong id="deluluValue">50% — cautiously delusional</strong></article>
       <article class="tool-card panel"><span>😭</span><h3>Excuse Generator</h3><p id="excuseText">Need a reason? We got you.</p><button class="small-btn" id="excuseBtn">Generate excuse</button></article>
@@ -130,9 +135,7 @@
       <article class="tool-card panel"><span>💅</span><h3>Compliment or Roast</h3><p id="complimentText">Ready ka na ba sa truth?</p><button class="small-btn" id="complimentBtn">Reveal my fate</button></article>
     </section>
 
-    <section class="section-heading" id="mystery">
-      <div><p class="eyebrow">WORLD 04 · OPEN AT YOUR OWN RISK</p><h2>Mystery Library</h2></div>
-    </section>
+    <section class="section-heading" id="mystery"><div><p class="eyebrow">WORLD 04 · OPEN AT YOUR OWN RISK</p><h2>Mystery Library</h2></div></section>
     <section class="tool-grid">
       <article class="tool-card panel"><span>🔮</span><h3>Manghuhula ng Kapalaran</h3><p id="fortuneText">Your future is buffering...</p><button class="small-btn" id="fortuneBtn">Read my future</button></article>
       <article class="tool-card panel"><span>⚖️</span><h3>Bading Court</h3><p id="courtText">The court is now in session.</p><button class="small-btn" id="courtBtn">Judge my situation</button></article>
@@ -142,152 +145,53 @@
       <article class="tool-card panel"><span>🚫</span><h3>The Forbidden Button</h3><p id="forbiddenText">They said don't touch it.</p><button class="small-btn danger-btn" id="forbiddenBtn">DO NOT PRESS</button></article>
     </section>
 
-    <section class="section-heading" id="diary">
-      <div><p class="eyebrow">WORLD 05 · THIS SPACE IS YOURS</p><h2>Confession Room</h2></div>
-      <span class="section-note">Saved on this device.</span>
-    </section>
+    <section class="section-heading" id="diary"><div><p class="eyebrow">WORLD 05 · THIS SPACE IS YOURS</p><h2>Confession Room</h2></div><span class="section-note">Saved on this device.</span></section>
     <section class="diary-layout">
       <form class="panel diary-form" id="diaryForm">
-        <label for="entryType">What are we saving?</label>
-        <select id="entryType"><option value="journal">Journal entry</option><option value="letter">A letter</option><option value="memory">Memory jar</option></select>
-        <label for="entryTitle">Title</label>
-        <input id="entryTitle" maxlength="70" placeholder="A little title..." required>
-        <label for="entryMood">Current mood</label>
-        <select id="entryMood"><option>😊 Happy</option><option>🥹 Soft</option><option>😔 Sad but trying 💜</option><option>😤 Annoyed</option><option>🤡 Delulu</option><option>😌 At peace</option><option>✨ Hopeful</option></select>
-        <label for="entryBody">Your thoughts</label>
-        <textarea id="entryBody" rows="6" placeholder="Write anything. Walang judgment dito..." required></textarea>
-        <button class="primary-btn full-btn" type="submit">Save to my little universe ✦</button>
-        <p class="form-note" id="diaryNotice">Your entries stay in this browser unless you export a backup.</p>
+        <label for="entryType">What are we saving?</label><select id="entryType"><option value="journal">Journal entry</option><option value="letter">A letter</option><option value="memory">Memory jar</option></select>
+        <label for="entryTitle">Title</label><input id="entryTitle" maxlength="70" placeholder="A little title..." required>
+        <label for="entryMood">Current mood</label><select id="entryMood"><option>😊 Happy</option><option>🥹 Soft</option><option>😔 Sad but trying 💜</option><option>😤 Annoyed</option><option>🤡 Delulu</option><option>😌 At peace</option><option>✨ Hopeful</option></select>
+        <label for="entryBody">Your thoughts</label><textarea id="entryBody" rows="6" placeholder="Write anything. Walang judgment dito..." required></textarea>
+        <button class="primary-btn full-btn" type="submit">Save to my little universe ✦</button><p class="form-note" id="diaryNotice">Your entries stay in this browser unless you export a backup.</p>
       </form>
-      <div class="panel diary-list-panel">
-        <div class="diary-list-head">
-          <div><p class="eyebrow">YOUR PRIVATE COLLECTION</p><h3>Saved thoughts</h3></div>
-          <input id="diarySearch" placeholder="Search entries...">
-        </div>
-        <div id="diaryList" class="diary-list"><p class="empty-state">Your page is waiting for its first story.</p></div>
-      </div>
+      <div class="panel diary-list-panel"><div class="diary-list-head"><div><p class="eyebrow">YOUR PRIVATE COLLECTION</p><h3>Saved thoughts</h3></div><input id="diarySearch" placeholder="Search entries..."></div><div id="diaryList" class="diary-list"><p class="empty-state">Your page is waiting for its first story.</p></div></div>
     </section>
 
-    <section class="section-heading" id="hangout">
-      <div><p class="eyebrow">WORLD 06 · COMMUNITY BOARD</p><h2>Tambayan Hangout</h2></div>
-      <span class="section-note">Local hangout mode</span>
-    </section>
+    <section class="section-heading" id="hangout"><div><p class="eyebrow">WORLD 06 · COMMUNITY BOARD</p><h2>Tambayan Hangout</h2></div><span class="section-note">Local hangout mode</span></section>
     <section class="hangout-layout">
-      <article class="panel hangout-card">
-        <span class="big-icon">🪩</span>
-        <h3>Tambayan Room</h3>
-        <p>Drop a message on this device's room board. This is a local, single-device experience—not live online chat.</p>
-        <form id="hangoutForm" class="hangout-form">
-          <input id="hangoutName" maxlength="24" placeholder="Nickname">
-          <input id="hangoutMessage" maxlength="180" placeholder="Drop your tambay thought..." required>
-          <button class="small-btn">Post</button>
-        </form>
-        <div id="hangoutFeed" class="hangout-feed"></div>
+      <article class="panel hangout-card"><span class="big-icon">🪩</span><h3>Tambayan Room</h3><p>Drop a message on this device's room board. This is a local, single-device experience—not live online chat.</p>
+        <form id="hangoutForm" class="hangout-form"><input id="hangoutName" maxlength="24" placeholder="Nickname"><input id="hangoutMessage" maxlength="180" placeholder="Drop your tambay thought..." required><button class="small-btn">Post</button></form><div id="hangoutFeed" class="hangout-feed"></div>
       </article>
-      <article class="panel hangout-card">
-        <span class="big-icon">🗣️</span>
-        <h3>Question of the Day</h3>
-        <p id="questionOfDay">What's one tiny thing that made you smile today?</p>
-        <button class="soft-btn" id="newQuestion">New question</button>
-        <div class="prompt-box">
-          <b>Community wall prompt</b>
-          <p>Leave a kind message for whoever visits this tambayan next.</p>
-          <textarea id="kindMessage" rows="3" placeholder="To the next sis who visits..."></textarea>
-          <button class="small-btn" id="kindPost">Pin my kindness</button>
-          <div id="kindFeed"></div>
-        </div>
+      <article class="panel hangout-card"><span class="big-icon">🗣️</span><h3>Question of the Day</h3><p id="questionOfDay">What's one tiny thing that made you smile today?</p><button class="soft-btn" id="newQuestion">New question</button>
+        <div class="prompt-box"><b>Community wall prompt</b><p>Leave a kind message for whoever visits this tambayan next.</p><textarea id="kindMessage" rows="3" placeholder="To the next sis who visits..."></textarea><button class="small-btn" id="kindPost">Pin my kindness</button><div id="kindFeed"></div></div>
       </article>
     </section>
 
-    <section class="section-heading">
-      <div><p class="eyebrow">YOUR LITTLE REWARDS</p><h2>Star Shop & collectibles</h2></div>
-      <span class="section-note">Spend stars to unlock goodies.</span>
-    </section>
-    <section class="shop-layout">
-      <div class="panel shop-panel">
-        <div class="shop-heading">
-          <div><p class="eyebrow">THE CELESTIAL BOUTIQUE</p><h3>Star Shop</h3></div>
-          <span class="currency">⭐ <b id="shopStars">0</b></span>
-        </div>
-        <div id="shopGrid" class="shop-grid"></div>
-      </div>
-      <div class="panel collection-panel">
-        <p class="eyebrow">YOUR COLLECTION</p>
-        <h3>Unlocked goodies</h3>
-        <div id="collectionList" class="collection-list"></div>
-      </div>
-    </section>
+    <section class="section-heading"><div><p class="eyebrow">YOUR LITTLE REWARDS</p><h2>Star Shop & collectibles</h2></div><span class="section-note">Spend stars to unlock goodies.</span></section>
+    <section class="shop-layout"><div class="panel shop-panel"><div class="shop-heading"><div><p class="eyebrow">THE CELESTIAL BOUTIQUE</p><h3>Star Shop</h3></div><span class="currency">⭐ <b id="shopStars">0</b></span></div><div id="shopGrid" class="shop-grid"></div></div><div class="panel collection-panel"><p class="eyebrow">YOUR COLLECTION</p><h3>Unlocked goodies</h3><div id="collectionList" class="collection-list"></div></div></section>
 
-    <section class="section-heading">
-      <div><p class="eyebrow">MAKE IT YOURS</p><h2>Personalize your universe</h2></div>
-    </section>
-    <section class="panel theme-panel">
-      <div>
-        <div><h3>Choose your atmosphere</h3><p>Theme changes are saved on this device.</p></div>
-        <div class="theme-options" id="themeOptions">
-          <button data-theme="violet" class="theme-choice active">💜 Violet</button>
-          <button data-theme="rose" class="theme-choice">🌸 Rose</button>
-          <button data-theme="ocean" class="theme-choice">🌊 Ocean</button>
-          <button data-theme="midnight" class="theme-choice">🌙 Midnight</button>
-        </div>
-      </div>
-    </section>
+    <section class="section-heading"><div><p class="eyebrow">MAKE IT YOURS</p><h2>Personalize your universe</h2></div></section>
+    <section class="panel theme-panel"><div><div><h3>Choose your atmosphere</h3><p>Theme changes are saved on this device.</p></div><div class="theme-options" id="themeOptions"><button data-theme="violet" class="theme-choice active">💜 Violet</button><button data-theme="rose" class="theme-choice">🌸 Rose</button><button data-theme="ocean" class="theme-choice">🌊 Ocean</button><button data-theme="midnight" class="theme-choice">🌙 Midnight</button></div></div></section>
 
-    <section class="section-heading">
-      <div><p class="eyebrow">YOUR JOURNEY</p><h2>Achievements & discoveries</h2></div>
-    </section>
-    <section class="panel achievements-panel">
-      <div><h3>Achievements</h3><div id="achievementList" class="chip-list"></div></div>
-      <div><h3>Discoveries</h3><div id="discoveryList" class="chip-list"></div></div>
-    </section>
+    <section class="section-heading"><div><p class="eyebrow">YOUR JOURNEY</p><h2>Achievements & discoveries</h2></div></section>
+    <section class="panel achievements-panel"><div><h3>Achievements</h3><div id="achievementList" class="chip-list"></div></div><div><h3>Discoveries</h3><div id="discoveryList" class="chip-list"></div></div></section>
 
-    <footer class="footer">
-      <span>✦ BADING TAMBAYAN 4.2 ✦</span>
-      <p>Made for the soft-hearted, the chaotic, and everyone in between.</p>
-      <button class="tiny-link" id="backupOpen">Backup & settings</button>
-    </footer>
+    <footer class="footer"><span>✦ BADING TAMBAYAN 4.2 ✦</span><p>Made for the soft-hearted, the chaotic, and everyone in between.</p><button class="tiny-link" id="backupOpen">Backup & settings</button></footer>
   </main>
 
-  <dialog id="profileDialog" class="modal">
-    <form method="dialog" class="modal-close"><button aria-label="Close">✕</button></form>
-    <p class="eyebrow">YOUR PLAYER CARD</p>
-    <h2>Profile settings</h2>
-    <label for="profileName">Nickname</label>
-    <input id="profileName" maxlength="24" placeholder="Your nickname">
-    <label for="profileAvatar">Choose an avatar</label>
-    <select id="profileAvatar">
-      <option>💜</option><option>🦋</option><option>🐸</option><option>🌙</option>
-      <option>🪩</option><option>🌷</option><option>⭐</option><option>🧚</option>
-    </select>
-    <button class="primary-btn full-btn" id="saveProfile" type="button">Save profile</button>
-  </dialog>
+  <dialog id="profileDialog" class="modal"><form method="dialog" class="modal-close"><button aria-label="Close">✕</button></form><p class="eyebrow">YOUR PLAYER CARD</p><h2>Profile settings</h2><label for="profileName">Nickname</label><input id="profileName" maxlength="24" placeholder="Your nickname"><label for="profileAvatar">Choose an avatar</label><select id="profileAvatar"><option>💜</option><option>🦋</option><option>🐸</option><option>🌙</option><option>🪩</option><option>🌷</option><option>⭐</option><option>🧚</option></select><button class="primary-btn full-btn" id="saveProfile" type="button">Save profile</button></dialog>
 
-  <dialog id="settingsDialog" class="modal">
-    <form method="dialog" class="modal-close"><button aria-label="Close">✕</button></form>
-    <p class="eyebrow">TAKE CARE OF YOUR DATA</p>
-    <h2>Backup & settings</h2>
-    <p>Export a JSON backup before clearing browser data or moving devices. Import the file to restore your progress.</p>
-    <div class="settings-actions">
-      <button class="primary-btn" id="exportBtn">⬇ Export backup</button>
-      <label class="soft-btn file-label">⬆ Import backup<input type="file" id="importFile" accept=".json,application/json" hidden></label>
-      <button class="soft-btn" id="resetBtn">Reset local progress</button>
-    </div>
-    <p class="form-note" id="backupStatus"></p>
-    <p class="form-note">Your data is stored locally in this browser. Export backups regularly. Importing replaces the current local save.</p>
-  </dialog>
-
+  <dialog id="settingsDialog" class="modal"><form method="dialog" class="modal-close"><button aria-label="Close">✕</button></form><p class="eyebrow">TAKE CARE OF YOUR DATA</p><h2>Backup & settings</h2><p>Export a JSON backup before clearing browser data or moving devices. Import the file to restore your progress.</p><div class="settings-actions"><button class="primary-btn" id="exportBtn">⬇ Export backup</button><label class="soft-btn file-label">⬆ Import backup<input type="file" id="importFile" accept=".json,application/json" hidden></label><button class="soft-btn" id="resetBtn">Reset local progress</button></div><p class="form-note" id="backupStatus"></p><p class="form-note">Your data is stored locally in this browser. Export backups regularly. Importing replaces the current local save.</p></dialog>
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
   <!-- Existing Bading Tambayan features -->
   <script src="script.js"></script>
-
   <!-- Supabase library required by online multiplayer -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
-    <!-- Online multiplayer module -->
+  <!-- Online multiplayer module -->
   <script src="multiplayer.js"></script>
-
   <!-- Separate-screen navigation -->
   <script src="layout.js"></script>
 </body>
-</html>
+  </html>
+  
