@@ -1,4 +1,3 @@
-
 (() => {
   "use strict";
 
@@ -682,43 +681,77 @@
         `;
   }
 
+  function normalizeTypingName(value) {
+    if (typeof value === "string" && value.trim()) {
+      return value.trim();
+    }
+
+    if (value && typeof value === "object") {
+      const possibleNames = [
+        value.display_name,
+        value.name,
+        value.nickname,
+        value.username,
+        value.user?.display_name,
+        value.profile?.display_name
+      ];
+
+      for (const name of possibleNames) {
+        if (typeof name === "string" && name.trim()) {
+          return name.trim();
+        }
+      }
+    }
+
+    return "Someone";
+  }
+
   function updateTypingDisplay() {
-    const people = Array.from(typingUsers.values());
+    const people = Array.from(typingUsers.values())
+      .map(person => normalizeTypingName(person?.name))
+      .filter(Boolean);
+
+    const indicator = $("onlineTypingIndicator");
+
+    if (!indicator) return;
 
     if (!people.length) {
-      $("onlineTypingIndicator").textContent = "";
+      indicator.textContent = "";
     } else if (people.length === 1) {
-      $("onlineTypingIndicator").textContent =
-        "✨ " + people[0].name + " is typing...";
+      indicator.textContent =
+        "✨ " + people[0] + " is typing...";
     } else if (people.length === 2) {
-      $("onlineTypingIndicator").textContent =
-        "✨ " + people[0].name + " and " +
-        people[1].name + " are typing...";
+      indicator.textContent =
+        "✨ " + people[0] + " and " +
+        people[1] + " are typing...";
     } else {
-      $("onlineTypingIndicator").textContent =
+      indicator.textContent =
         "✨ Several people are typing...";
     }
   }
 
   function handleTyping(payload) {
-    if (!payload || !payload.user_id) return;
-    if (payload.user_id === currentUser.id) return;
+    const data = payload?.payload || payload;
 
-    const userId = payload.user_id;
+    if (!data || typeof data !== "object") return;
+    if (!data.user_id) return;
+    if (data.user_id === currentUser.id) return;
+
+    const userId = data.user_id;
 
     if (typingUsers.has(userId)) {
       clearTimeout(typingUsers.get(userId).timer);
       typingUsers.delete(userId);
     }
 
-    if (payload.is_typing) {
+    if (data.is_typing) {
       const timer = setTimeout(() => {
         typingUsers.delete(userId);
         updateTypingDisplay();
       }, 2500);
 
       typingUsers.set(userId, {
-        name: payload.display_name || "Someone",
+        name: normalizeTypingName(data.display_name),
         timer
       });
     }
@@ -765,7 +798,6 @@
 
     isTyping = true;
 
-    // Send an update whenever the player types.
     broadcastTyping(true);
 
     clearTimeout(typingTimer);
