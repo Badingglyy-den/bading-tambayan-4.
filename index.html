@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -56,7 +55,7 @@
       <a class="world-card lab" href="#lab"><span class="world-icon">🧪</span><span class="world-kicker">WORLD 03</span><h3>The Experiment Lab</h3><p>Tests, meters, and questionable science.</p><b>Enter world ↗</b></a>
       <a class="world-card library" href="#mystery"><span class="world-icon">🔮</span><span class="world-kicker">WORLD 04</span><h3>The Mystery Library</h3><p>Fortunes, secrets, and strange little truths.</p><b>Enter world ↗</b></a>
       <a class="world-card diary" href="#diary"><span class="world-icon">📔</span><span class="world-kicker">WORLD 05</span><h3>The Confession Room</h3><p>Letters, journal entries, and memory keeping.</p><b>Enter world ↗</b></a>
-      <a class="world-card community" href="#hangout"><span class="world-icon">🌟</span><span class="world-kicker">WORLD 06</span><h3>The Community Board</h3><p>Tambay prompts and shared-room vibes.</p><b>Enter world ↗</b></a>
+      <a class="world-card community" href="#hangout"><span class="world-icon">🌟</span><span class="world-kicker">WORLD 06</span><h3>Tambayan Lounge</h3><p>Games, daily activities, discoveries, and community spaces.</p><b>Enter world ↗</b></a>
     </section>
 
     <section class="section-heading" id="games">
@@ -157,14 +156,107 @@
       <div class="panel diary-list-panel"><div class="diary-list-head"><div><p class="eyebrow">YOUR PRIVATE COLLECTION</p><h3>Saved thoughts</h3></div><input id="diarySearch" placeholder="Search entries..."></div><div id="diaryList" class="diary-list"><p class="empty-state">Your page is waiting for its first story.</p></div></div>
     </section>
 
-    <section class="section-heading" id="hangout"><div><p class="eyebrow">WORLD 06 · COMMUNITY BOARD</p><h2>Tambayan Hangout</h2></div><span class="section-note">Local hangout mode</span></section>
+    <section class="section-heading" id="hangout">
+      <div>
+        <p class="eyebrow">WORLD 06 · YOUR COMMUNITY UNIVERSE</p>
+        <h2>Tambayan Lounge</h2>
+      </div>
+      <span class="section-note">Your little corner of the internet 💜</span>
+    </section>
+
     <section class="hangout-layout">
-      <article class="panel hangout-card"><span class="big-icon">🪩</span><h3>Tambayan Room</h3><p>Drop a message on this device's room board. This is a local, single-device experience—not live online chat.</p>
-        <form id="hangoutForm" class="hangout-form"><input id="hangoutName" maxlength="24" placeholder="Nickname"><input id="hangoutMessage" maxlength="180" placeholder="Drop your tambay thought..." required><button class="small-btn">Post</button></form><div id="hangoutFeed" class="hangout-feed"></div>
+      <article class="panel hangout-card lounge-welcome">
+        <span class="big-icon">🌟</span>
+        <h3>Welcome to the Tambayan Lounge!</h3>
+        <p>A place to play, connect, discover little surprises, and spend time with the community.</p>
       </article>
-      <article class="panel hangout-card"><span class="big-icon">🗣️</span><h3>Question of the Day</h3><p id="questionOfDay">What's one tiny thing that made you smile today?</p><button class="soft-btn" id="newQuestion">New question</button>
-        <div class="prompt-box"><b>Community wall prompt</b><p>Leave a kind message for whoever visits this tambayan next.</p><textarea id="kindMessage" rows="3" placeholder="To the next sis who visits..."></textarea><button class="small-btn" id="kindPost">Pin my kindness</button><div id="kindFeed"></div></div>
-      </article>
+
+      <div class="lounge-section">
+        <p class="eyebrow">01 · GAME CORNER</p>
+        <h3>Play & Win</h3>
+        <div class="tool-grid">
+          <article class="tool-card panel">
+            <span>🎡</span>
+            <h3>Spin & Win</h3>
+            <p>Try your luck with a daily spin.</p>
+            <button class="small-btn" type="button" disabled>Coming soon</button>
+          </article>
+          <article class="tool-card panel">
+            <span>🎁</span>
+            <h3>Mystery Box</h3>
+            <p>Open a mystery box and discover what's inside.</p>
+            <button class="small-btn" type="button" disabled>Coming soon</button>
+          </article>
+        </div>
+      </div>
+
+      <div class="lounge-section">
+        <p class="eyebrow">02 · COMMUNITY GARDEN</p>
+        <h3>Grow Together</h3>
+        <div class="tool-grid">
+          <article class="tool-card panel">
+            <span>📊</span>
+            <h3>Daily Poll</h3>
+            <p>Share your vote and see what everyone thinks.</p>
+            <button class="small-btn" type="button" disabled>Coming soon</button>
+          </article>
+          <article class="tool-card panel">
+            <span>🌷</span>
+            <h3>Mood Garden</h3>
+            <p>Plant a flower that represents your mood today.</p>
+            <button class="small-btn" type="button" disabled>Coming soon</button>
+          </article>
+        </div>
+      </div>
+
+      <div class="lounge-section">
+        <p class="eyebrow">03 · DISCOVERY CORNER</p>
+        <h3>Find Something Special</h3>
+        <div class="tool-grid">
+          <article class="tool-card panel">
+            <span>🔎</span>
+            <h3>Secret Hunt</h3>
+            <p>Explore the Tambayanverse and uncover hidden surprises.</p>
+            <button class="small-btn" type="button" disabled>Coming soon</button>
+          </article>
+          <article class="tool-card panel">
+            <span>🧚</span>
+            <h3>NPC of the Day</h3>
+            <p>Meet a new character and see what they have to say.</p>
+            <button class="small-btn" type="button" disabled>Coming soon</button>
+          </article>
+        </div>
+      </div>
+
+      <div class="lounge-section">
+        <p class="eyebrow">04 · COMMUNITY SPACES</p>
+        <h3>Our Shared Spaces</h3>
+
+        <article class="panel hangout-card">
+          <span class="big-icon">💌</span>
+          <h3>Kindness Wall</h3>
+          <p>Leave a little kindness for whoever visits next.</p>
+          <div class="prompt-box">
+            <textarea id="kindMessage" rows="3" maxlength="300" placeholder="Leave a kind message..."></textarea>
+            <button class="small-btn" id="kindPost" type="button">Pin my kindness</button>
+            <div id="kindFeed"></div>
+          </div>
+        </article>
+
+        <article class="panel hangout-card">
+          <span class="big-icon">🌍</span>
+          <h3>Public Community</h3>
+          <p>Share thoughts, meet members, comment, and react.</p>
+          <p>Our public community space is just below.</p>
+        </article>
+
+        <article class="panel hangout-card">
+          <span class="big-icon">🪩</span>
+          <h3>Online Tambayan</h3>
+          <p>Create or join a private room and chat with friends.</p>
+          <p>Our online chatroom is just below.</p>
+        </article>
+      </div>
     </section>
 
     <section class="section-heading"><div><p class="eyebrow">YOUR LITTLE REWARDS</p><h2>Star Shop & collectibles</h2></div><span class="section-note">Spend stars to unlock goodies.</span></section>
@@ -197,4 +289,3 @@
   <script src="layout.js"></script>
 </body>
                                                        </html>
-                                                                                   
