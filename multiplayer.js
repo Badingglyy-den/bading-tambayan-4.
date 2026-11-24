@@ -683,17 +683,17 @@
   }
 
   function updateTypingDisplay() {
-    const names = Array.from(typingUsers.values());
+    const people = Array.from(typingUsers.values());
 
-    if (!names.length) {
+    if (!people.length) {
       $("onlineTypingIndicator").textContent = "";
-    } else if (names.length === 1) {
+    } else if (people.length === 1) {
       $("onlineTypingIndicator").textContent =
-        "✨ " + names[0].name + " is typing...";
-    } else if (names.length === 2) {
+        "✨ " + people[0].name + " is typing...";
+    } else if (people.length === 2) {
       $("onlineTypingIndicator").textContent =
-        "✨ " + names.map(person => person.name).join(" and ") +
-        " are typing...";
+        "✨ " + people[0].name + " and " +
+        people[1].name + " are typing...";
     } else {
       $("onlineTypingIndicator").textContent =
         "✨ Several people are typing...";
