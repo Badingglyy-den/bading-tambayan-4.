@@ -1,1325 +1,1066 @@
 
+(() => {
 "use strict";
 
-/* ==========================================
-   BADING TAMBAYAN 4.1 — THE TAMBAYANVERSE
-   Complete game, profile, diary and save system
-========================================== */
+const KEY = "tambayanverse_42_progress";
+const LEGACY_KEYS = [
+  "tambayanverse_41_progress",
+  "tambayanverse_4_progress"
+];
 
-const SAVE_KEY = "tambayanverse_41_progress";
-const LEGACY_KEY = "tambayanverse_4_progress";
+const $ = id => document.getElementById(id);
 
-const $ = (selector) => document.querySelector(selector);
-
-const defaultState = {
-  version: 41,
-  profile: {
-    name: "Little Chaos",
-    avatar: "💜"
-  },
+const defaultState = () => ({
+  version: 42,
+  profile: { name: "Sis", avatar: "💜" },
   xp: 0,
-  stars: 0,
+  stars: 20,
   gamesPlayed: 0,
   entries: [],
   discoveries: [],
   badges: [],
   completedMissions: [],
   lastMissionDate: "",
-  lastDailyMessage: "",
-  createdAt: new Date().toISOString()
-};
+  lastDailyMessage: "A little progress is still progress.",
+  createdAt: new Date().toISOString(),
+  achievements: [],
+  visited: [],
+  completed: [],
+  journalEntries: [],
+  letters: [],
+  memories: [],
+  mood: "",
+  reducedMotion: false,
+  theme: "violet",
+  ownedItems: [],
+  hangoutPosts: [],
+  kindPosts: [],
+  lastHangoutQuestion: ""
+});
 
 let state = loadState();
-let editingEntryId = null;
 let toastTimer = null;
-let guessSecret = randomNumber();
-let guessAttempts = 5;
-let reactionState = "idle";
-let reactionStart = 0;
 let reactionTimer = null;
+let reactionStart = 0;
+let reactionMode = "idle";
 let memoryCards = [];
 let memoryOpen = [];
-let memoryMoves = 0;
-let memoryLocked = false;
+let memoryMatches = 0;
 
-const worlds = {
-  arcade: {
-    title: "🎮 The Chaos Arcade",
-    description: "Welcome to the place where common sense takes a vacation.",
-    eyebrow: "WORLD 01 · ENTERTAINMENT",
-    activities: [
-      ["🔮", "Manghuhula ng Kapalaran", "Let the universe give you a questionable prediction.", "fortune"],
-      ["⚖️", "Bading Court", "Present your case. The court is always dramatic.", "court"],
-      ["🎰", "Sampal o Lambing Machine", "Let fate decide whether you need a hug or a reality check.", "sampal"],
-      ["🐸", "Palakang Marites", "Ask the frog for a little gossip from the universe.", "frog"],
-      ["🤡", "Delulu Meter", "Measure your current level of delusion.", "delulu"],
-      ["😭", "Excuse Generator", "Need an excuse? We have absolutely no standards.", "excuse"],
-      ["🎭", "Drama Queen Button", "Activate your daily dose of unnecessary drama.", "drama"],
-      ["💅", "Compliment or Roast", "Let the machine decide your fate.", "roast"]
-    ]
-  },
-  comfort: {
-    title: "🫂 The Comfort Corner",
-    description: "A soft little corner for days when the world feels too loud.",
-    eyebrow: "WORLD 02 · SOFT LANDING",
-    activities: [
-      ["💜", "Virtual Hug", "You deserve a little warmth.", "hug"],
-      ["🌷", "Gentle Reminder", "A small reminder for your heart.", "reminder"],
-      ["✨", "Random Compliment", "Receive a little kindness.", "compliment"],
-      ["🕯️", "Permission to Rest", "You don't have to earn your rest.", "rest"],
-      ["💌", "Letter to Yourself", "A reminder that you are worth showing up for.", "selfletter"],
-      ["🌙", "Midnight Comfort", "A soft message for your tired mind.", "midnight"]
-    ]
-  },
-  lab: {
-    title: "🧪 The Experiment Lab",
-    description: "Research, questionable science, and highly unqualified personality tests.",
-    eyebrow: "WORLD 03 · EXPERIMENTATION",
-    activities: [
-      ["🧠", "Chaos Personality Test", "Discover your current chaos category.", "personality"],
-      ["🌈", "Mood Detector", "Find a name for your current vibe.", "mood"],
-      ["💥", "Emotional Damage Report", "Generate your official emotional report.", "damage"],
-      ["🪞", "Main Character Energy", "Check your current main character status.", "maincharacter"],
-      ["🧬", "Bading Species", "Discover your fictional tambayan species.", "species"]
-    ]
-  },
-  library: {
-    title: "🔮 The Mystery Library",
-    description: "The shelves are full of secrets, signs, and questionable prophecies.",
-    eyebrow: "WORLD 04 · MYSTERY",
-    activities: [
-      ["🌌", "Ask the Universe", "Ask a question. Receive a mysterious answer.", "universe"],
-      ["🔮", "Tarot of the Tambayan", "Draw a completely unofficial card.", "tarot"],
-      ["📜", "Secret Prophecy", "Read your prophecy for today.", "prophecy"],
-      ["⭐", "Lucky Number", "Find your random lucky number.", "lucky"],
-      ["🚪", "The Forbidden Button", "You were told not to press it.", "forbidden"]
-    ]
-  },
-  confession: {
-    title: "📔 The Confession Room",
-    description: "No judgment. No pressure. Just a place to put your thoughts.",
-    eyebrow: "WORLD 05 · MEMORIES",
-    activities: [
-      ["📖", "Write a Journal", "Save a thought in your personal diary.", "journal"],
-      ["💌", "Write a Letter", "Write a letter you may or may not send.", "letter"],
-      ["🫙", "Memory Jar", "Save a little moment worth remembering.", "memory"],
-      ["💭", "Brain Dump", "Let your thoughts out without organizing them.", "braindump"]
-    ]
-  },
-  community: {
-    title: "🌟 The Community Board",
-    description: "Announcements, compliments, and public displays of unseriousness.",
-    eyebrow: "WORLD 06 · COMMUNITY",
-    activities: [
-      ["📢", "Tambayan Announcement", "A very important and totally unnecessary announcement.", "announcement"],
-      ["💜", "Compliment Generator", "You deserve to hear something nice.", "compliment"],
-      ["🔥", "Friendly Roast", "A little playful teasing, nothing too serious.", "friendlyroast"],
-      ["📋", "Daily Bulletin", "Today's official report from the universe.", "bulletin"],
-      ["🎤", "Confession Booth", "Send yourself a prompt for a confession.", "prompt"]
-    ]
+function safeParse(s) {
+  try {
+    return JSON.parse(s);
+  } catch {
+    return null;
   }
-};
-
-const responses = {
-  fortune: [
-    "A plot twist is approaching. Please prepare snacks.",
-    "Your next chapter involves peace, better decisions, and possibly food.",
-    "The universe says: stop overthinking that one message.",
-    "Something good is coming. It may arrive disguised as a random Tuesday.",
-    "Your future is bright. Your sleep schedule, however, needs help."
-  ],
-  court: [
-    "VERDICT: Not guilty. The defendant was simply being iconic.",
-    "VERDICT: Guilty of overthinking in the first degree.",
-    "VERDICT: Case dismissed. Everybody go drink water.",
-    "VERDICT: The court finds you innocent but dramatic.",
-    "VERDICT: You deserve compensation in the form of snacks."
-  ],
-  sampal: [
-    "LAMBING! You deserve a hug. Come here. 🫂",
-    "SAMPAL! A gentle reminder to stop entertaining nonsense. 😭",
-    "LAMBING! Be kind to yourself today. 💜",
-    "SAMPAL! Stand up, drink water, and reclaim your dignity.",
-    "LAMBING! You are doing better than you think."
-  ],
-  frog: [
-    "RIBBIT. Someone is thinking about you. Or maybe they're just hungry.",
-    "RIBBIT. The tea is hot, but so is your potential.",
-    "RIBBIT. Stop checking something that is not checking on you.",
-    "RIBBIT. Your peace is more important than the latest chismis.",
-    "RIBBIT. The frog knows everything. The frog says take a nap."
-  ],
-  delulu: [
-    "Mildly delusional. Still within acceptable limits.",
-    "Delulu level: 87%. Reality has filed a complaint.",
-    "You are not delusional. You are simply exploring alternative realities.",
-    "Critical delulu. Please reconnect with the real world.",
-    "Delulu but self-aware. A rare and powerful species."
-  ],
-  excuse: [
-    "Sorry, I was busy being a functioning member of society. Temporarily.",
-    "My brain has entered airplane mode.",
-    "I would love to, but my social battery has submitted a resignation letter.",
-    "I was going to, but the universe had other plans.",
-    "Please understand. I am currently buffering."
-  ],
-  drama: [
-    "EVERYBODY STOP. I HAVE AN ANNOUNCEMENT.",
-    "This is not a drill. I need attention immediately.",
-    "Cue the dramatic background music.",
-    "I have suffered enough. Bring me a snack.",
-    "A moment of silence for my patience. It has left the group chat."
-  ],
-  roast: [
-    "You're the plot twist nobody asked for, but everybody remembers.",
-    "Your confidence is impressive. Your decision-making is a separate discussion.",
-    "You have the energy of a group chat notification at 3 AM.",
-    "You're not a red flag. You're the entire parade.",
-    "Respectfully, please sit down and think about your choices."
-  ],
-  hug: [
-    "Sending you the biggest virtual hug. You don't have to explain anything. 🫂",
-    "You are allowed to have difficult days. It doesn't make you any less wonderful.",
-    "Take a breath. You are here. That's enough for this moment.",
-    "Imagine a warm blanket, a quiet room, and absolutely no responsibilities for five minutes.",
-    "You deserve gentleness, including from yourself."
-  ],
-  reminder: [
-    "You don't have to figure everything out today.",
-    "Rest is not a reward. It is a human need.",
-    "You can care about people without carrying everything for them.",
-    "Your worth is not measured by how useful you are to others.",
-    "You are allowed to change your mind and choose a different path."
-  ],
-  compliment: [
-    "You have a way of making ordinary things feel a little more special.",
-    "You are more capable than your doubts let you believe.",
-    "Your presence matters, even on days when you feel invisible.",
-    "You deserve the same patience you give to other people.",
-    "There is something lovely about the way you keep going."
-  ],
-  rest: [
-    "Permission granted. Close the tabs in your brain for a moment.",
-    "You can pause. The world can wait a little.",
-    "You do not need to turn every free moment into a productive one.",
-    "Take your break. No explanation required.",
-    "Rest first. Figure things out later."
-  ],
-  selfletter: [
-    "Dear self, I hope you remember that you are a person too. You deserve care, patience, and a life that feels like your own.",
-    "Dear self, thank you for making it through the days you never thought you could handle. I am proud of you.",
-    "Dear self, you do not need to be perfect to be worthy of love and respect."
-  ],
-  midnight: [
-    "If today was heavy, let tonight be gentle.",
-    "You can put down the things you cannot solve right now.",
-    "Not every thought deserves an answer tonight.",
-    "Tomorrow is another page. You don't have to write it all before sleeping."
-  ],
-  personality: [
-    "The Responsible Chaos: somehow organized, somehow a disaster.",
-    "The Silent Observer: knows everything, says very little.",
-    "The Soft Menace: sweet intentions, questionable execution.",
-    "The Main Character: dramatic soundtrack included.",
-    "The Professional Overthinker: has 37 possible scenarios ready."
-  ],
-  mood: [
-    "Your vibe is lavender skies after a long day.",
-    "Your mood is a sleepy cat pretending to be productive.",
-    "Your current energy is rainy afternoon with a little hope.",
-    "Your aura is chaotic but healing.",
-    "You are giving quiet comeback energy."
-  ],
-  damage: [
-    "REPORT: Emotional battery at 42%. Recommended treatment: rest and snacks.",
-    "REPORT: Too many tabs open in your mind. Close three of them.",
-    "REPORT: Current status: surviving with style.",
-    "REPORT: You have been through a lot. Please schedule a little joy.",
-    "REPORT: No further questions. You deserve a peaceful day."
-  ],
-  maincharacter: [
-    "Main character energy: 94%. The soundtrack is excellent.",
-    "Side quest energy today. Go collect a little joy.",
-    "Character development is happening. Please be patient with the storyline.",
-    "You are the main character. Stop giving every random extra a speaking role.",
-    "Your season finale is not today. Keep going."
-  ],
-  species: [
-    "Moonlight Frog: mysterious, sleepy, and full of opinions.",
-    "Lavender Dragon: protective, soft-hearted, and occasionally dramatic.",
-    "Chaos Fairy: small wings, big problems, excellent intentions.",
-    "Cosmic Cat: independent, observant, and selectively affectionate.",
-    "Stardust Goblin: collects little joys and random screenshots."
-  ],
-  universe: [
-    "The universe says: give yourself more time.",
-    "A closed door is not always a punishment. Sometimes it is direction.",
-    "You do not need to chase what is meant to meet you halfway.",
-    "Your next step does not need to be impressive. It only needs to be yours.",
-    "Something can be meaningful even if it does not last forever."
-  ],
-  tarot: [
-    "THE STAR ✨ — Hope, renewal, and remembering what makes you feel alive.",
-    "THE MOON 🌙 — Uncertainty. Trust yourself, but check the facts.",
-    "THE SUN ☀️ — Joy, clarity, and a reason to celebrate.",
-    "THE HERMIT 🕯️ — Quiet time. You might need a little space.",
-    "THE FOOL 🪄 — A fresh start. Be curious, not reckless."
-  ],
-  prophecy: [
-    "A small decision will make your day unexpectedly better.",
-    "You will soon laugh about something that once stressed you out.",
-    "An opportunity may appear when you stop forcing the timeline.",
-    "Your next adventure begins with one brave little step.",
-    "A peaceful chapter is worth choosing."
-  ],
-  lucky: [
-    "Your lucky number is 7. Use it wisely.",
-    "Your lucky number is 13. Be a little mysterious.",
-    "Your lucky number is 24. Something lovely is possible.",
-    "Your lucky number is 8. Keep your balance.",
-    "Your lucky number is 3. Make room for fun."
-  ],
-  forbidden: [
-    "You pressed it. The frog has been notified.",
-    "The button did absolutely nothing. Suspicious.",
-    "A tiny portal opened. You are now legally responsible for the moon.",
-    "The universe is disappointed. The universe is also laughing.",
-    "Achievement unlocked: Cannot Follow Instructions."
-  ],
-  announcement: [
-    "ATTENTION TAMBAYANVERSE: Hydrate, stretch, and mind your business.",
-    "PUBLIC SERVICE ANNOUNCEMENT: You are allowed to log off.",
-    "Important notice: Being kind to yourself is now mandatory.",
-    "The management would like to remind everyone that snacks are important.",
-    "Please remain calm. The chaos is under control. Probably."
-  ],
-  friendlyroast: [
-    "You have 47 open tabs in your brain and none of them are loading.",
-    "Your plans have plans, but somehow nothing gets done.",
-    "You are a limited edition. The instruction manual is missing.",
-    "Your talent for making things complicated deserves an award.",
-    "You say 'one last thing' like it is not a whole new season."
-  ],
-  bulletin: [
-    "TODAY: 60% chance of overthinking, 100% chance of needing a snack.",
-    "UNIVERSE UPDATE: Your peace is still the priority.",
-    "BREAKING: You are allowed to have a good day without earning it.",
-    "WEATHER: A little chaos, followed by a chance of calm.",
-    "HEADLINES: Main character refuses to give up."
-  ],
-  prompt: [
-    "What is one thing you wish people understood about you?",
-    "What is something you are proud of but rarely mention?",
-    "What memory would you like to revisit for five minutes?",
-    "What do you need more of in your life?",
-    "What is one thing you are ready to let go of?"
-  ]
-};
-
-const dailyMissions = [
-  { title: "Visit a new world", description: "Explore a world you haven't visited before.", reward: 25, stars: 5, type: "world" },
-  { title: "Play a little game", description: "Try one of the games in the Chaos Arcade.", reward: 25, stars: 5, type: "game" },
-  { title: "Write something down", description: "Save a thought, letter, or memory in your diary.", reward: 25, stars: 5, type: "entry" },
-  { title: "Discover your fortune", description: "Visit the Mystery Library and reveal a message.", reward: 25, stars: 5, type: "library" },
-  { title: "Give yourself kindness", description: "Visit the Comfort Corner and receive a reminder.", reward: 25, stars: 5, type: "comfort" },
-  { title: "Explore the universe", description: "Visit two different worlds today.", reward: 30, stars: 6, type: "twoWorlds" },
-  { title: "Collect a little joy", description: "Play a game and save a diary entry.", reward: 35, stars: 7, type: "gameEntry" }
-];
-
-const badges = [
-  { id: "first_world", icon: "🪐", name: "First Steps", description: "Visit your first world." },
-  { id: "all_worlds", icon: "🌌", name: "Universe Explorer", description: "Discover all six worlds." },
-  { id: "first_game", icon: "🎮", name: "Player One", description: "Play your first game." },
-  { id: "game_five", icon: "🕹️", name: "Arcade Regular", description: "Play five games." },
-  { id: "first_entry", icon: "📔", name: "Dear Diary", description: "Save your first diary entry." },
-  { id: "entry_five", icon: "📚", name: "Memory Keeper", description: "Save five entries." },
-  { id: "first_favorite", icon: "💜", name: "Treasured", description: "Favorite an entry." },
-  { id: "level_five", icon: "👑", name: "Rising Star", description: "Reach level five." },
-  { id: "mission", icon: "🎯", name: "Mission Accomplished", description: "Complete a daily mission." },
-  { id: "secret", icon: "🔐", name: "Secret Finder", description: "Discover the hidden portal." }
-];
-
-const discoveries = [
-  ["arcade", "🎮", "Chaos Arcade"],
-  ["comfort", "🫂", "Comfort Corner"],
-  ["lab", "🧪", "Experiment Lab"],
-  ["library", "🔮", "Mystery Library"],
-  ["confession", "📔", "Confession Room"],
-  ["community", "🌟", "Community Board"]
-];
-
-const titles = [
-  { level: 1, title: "New Arrival" },
-  { level: 2, title: "Little Explorer" },
-  { level: 3, title: "Certified Tambay" },
-  { level: 5, title: "Chaos Enthusiast" },
-  { level: 8, title: "Keeper of the Stars" },
-  { level: 10, title: "Tambayan Royalty" },
-  { level: 15, title: "Guardian of the Universe" },
-  { level: 20, title: "Legend of the Tambayanverse" }
-];
-
-const dailyMessages = [
-  "You are not behind. Your life is not a race.",
-  "May today surprise you in the gentlest way.",
-  "You deserve a life that feels good, not just one that looks good.",
-  "Some days are for growing. Some days are for resting.",
-  "A little progress is still progress.",
-  "You can begin again without explaining why.",
-  "May you find something to smile about today."
-];
-
-/* ---------- STORAGE AND MIGRATION ---------- */
+}
 
 function loadState() {
-  try {
-    const saved = localStorage.getItem(SAVE_KEY);
-    if (saved) return normalizeState(JSON.parse(saved));
+  let current = safeParse(localStorage.getItem(KEY));
 
-    const legacy = localStorage.getItem(LEGACY_KEY);
-    if (legacy) {
-      const old = JSON.parse(legacy);
-      const migrated = { ...defaultState, ...old };
-      migrated.entries = Array.isArray(old.entries) ? old.entries : [];
+  if (current?.data) current = current.data;
 
-      if (Array.isArray(old.journal)) {
-        old.journal.forEach(item => migrated.entries.push({
-          id: makeId(),
-          title: item.title || "Old journal entry",
-          body: item.body || item.text || "",
-          mood: item.mood || "😶 Numb",
-          type: "journal",
-          favorite: false,
-          date: item.date || new Date().toISOString()
-        }));
-      }
+  if (current && typeof current === "object") {
+    return normalize(current);
+  }
 
-      if (Array.isArray(old.letters)) {
-        old.letters.forEach(item => migrated.entries.push({
-          id: makeId(),
-          title: item.title || "Old letter",
-          body: item.body || item.text || "",
-          mood: "💌 Letter",
-          type: "letter",
-          favorite: false,
-          date: item.date || new Date().toISOString()
-        }));
-      }
+  for (const k of LEGACY_KEYS) {
+    let old = safeParse(localStorage.getItem(k));
 
-      return normalizeState(migrated);
+    if (old?.data) old = old.data;
+
+    if (old && typeof old === "object") {
+      const migrated = normalize(old);
+      localStorage.setItem(KEY, JSON.stringify(migrated));
+      return migrated;
     }
-  } catch (error) {
-    console.warn("Could not read saved progress:", error);
   }
-  return structuredCloneSafe(defaultState);
+
+  return defaultState();
 }
 
-function normalizeState(data) {
-  const base = structuredCloneSafe(defaultState);
-  const merged = { ...base, ...data };
-  merged.profile = { ...base.profile, ...(data.profile || {}) };
-  merged.entries = Array.isArray(data.entries) ? data.entries : [];
-  merged.discoveries = Array.isArray(data.discoveries) ? data.discoveries : [];
-  merged.badges = Array.isArray(data.badges) ? data.badges : [];
-  merged.completedMissions = Array.isArray(data.completedMissions) ? data.completedMissions : [];
-  merged.xp = Number(merged.xp) || 0;
-  merged.stars = Number(merged.stars) || 0;
-  merged.gamesPlayed = Number(merged.gamesPlayed) || 0;
-  return merged;
+function normalize(x) {
+  const d = defaultState();
+
+  return {
+    ...d,
+    ...x,
+    version: 42,
+    profile: { ...d.profile, ...(x.profile || {}) },
+    entries: Array.isArray(x.entries) ? x.entries : [],
+    discoveries: Array.isArray(x.discoveries) ? x.discoveries : [],
+    badges: Array.isArray(x.badges) ? x.badges : [],
+    completedMissions: Array.isArray(x.completedMissions) ? x.completedMissions : [],
+    achievements: Array.isArray(x.achievements) ? x.achievements : [],
+    visited: Array.isArray(x.visited) ? x.visited : [],
+    completed: Array.isArray(x.completed) ? x.completed : [],
+    ownedItems: Array.isArray(x.ownedItems) ? x.ownedItems : [],
+    hangoutPosts: Array.isArray(x.hangoutPosts) ? x.hangoutPosts : [],
+    kindPosts: Array.isArray(x.kindPosts) ? x.kindPosts : []
+  };
 }
 
-function structuredCloneSafe(value) {
-  return JSON.parse(JSON.stringify(value));
+function save() {
+  state.version = 42;
+  localStorage.setItem(KEY, JSON.stringify(state));
+  render();
 }
 
-function saveState() {
-  try {
-    localStorage.setItem(SAVE_KEY, JSON.stringify(state));
-    updateInterface();
-  } catch (error) {
-    console.error("Saving failed:", error);
-    showToast("Could not save. Your browser storage may be full.");
+function toast(msg) {
+  const t = $("toast");
+  t.textContent = msg;
+  t.classList.add("show");
+
+  clearTimeout(toastTimer);
+
+  toastTimer = setTimeout(() => {
+    t.classList.remove("show");
+  }, 2500);
+}
+
+function awardXP(n, reason = "") {
+  state.xp += n;
+
+  const bonus = Math.floor(n / 10);
+  state.stars += bonus;
+
+  const before = Math.floor((state.xp - n) / 100) + 1;
+  const after = Math.floor(state.xp / 100) + 1;
+
+  if (after > before) {
+    toast(`LEVEL UP! You're now level ${after} ✨`);
+  } else {
+    toast(`${reason || "Nice!"} +${n} XP${bonus ? ` and ${bonus} ⭐` : ""}`);
+  }
+
+  save();
+}
+
+function level() {
+  return Math.floor(state.xp / 100) + 1;
+}
+
+function addBadge(id) {
+  if (!state.badges.includes(id)) {
+    state.badges.push(id);
+    toast("New badge unlocked! 🏅");
   }
 }
 
-function makeId() {
-  return "entry_" + Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
+function visit(id) {
+  if (!state.visited.includes(id)) {
+    state.visited.push(id);
+    state.discoveries.push(id);
+
+    if (state.visited.length === 1) {
+      addBadge("first_world");
+    }
+
+    awardXP(5, "World discovered!");
+  } else {
+    save();
+  }
 }
 
-/* ---------- GENERAL HELPERS ---------- */
+function render() {
+  $("starCount").textContent = state.stars;
+  $("shopStars").textContent = state.stars;
+  $("welcomeName").textContent = state.profile.name || "Sis";
 
-function randomNumber() {
-  return Math.floor(Math.random() * 20) + 1;
+  $("levelValue").textContent = level();
+  $("xpValue").textContent = state.xp + " XP";
+
+  $("titleValue").textContent =
+    level() >= 10
+      ? "Tambayan Legend"
+      : level() >= 5
+      ? "Certified Main Character"
+      : "Certified Tambay";
+
+  $("xpBar").style.width = (state.xp % 100) + "%";
+  $("xpNext").textContent =
+    (state.xp % 100) + " / 100 XP to next level";
+
+  $("discoveryValue").textContent = state.discoveries.length;
+  $("badgeValue").textContent = state.badges.length;
+
+  renderDiary();
+  renderHangout();
+  renderShop();
+  renderAchievements();
+
+  document.body.dataset.theme = state.theme || "violet";
+
+  document.querySelectorAll(".theme-choice").forEach(b => {
+    b.classList.toggle("active", b.dataset.theme === state.theme);
+  });
 }
 
-function randomItem(array) {
-  return array[Math.floor(Math.random() * array.length)];
+function renderDiary() {
+  const q = $("diarySearch").value.toLowerCase();
+  const list = $("diaryList");
+
+  const entries = [...state.entries]
+    .reverse()
+    .filter(e =>
+      (e.title + " " + e.body + " " + e.mood)
+        .toLowerCase()
+        .includes(q)
+    );
+
+  if (!entries.length) {
+    list.innerHTML =
+      '<p class="empty-state">No entries found. Your page is waiting for its next story.</p>';
+    return;
+  }
+
+  list.innerHTML = entries.map(e => `
+    <article class="diary-entry">
+      <div class="entry-meta">
+        ${escapeHTML(e.type || "journal")} ·
+        ${new Date(e.date || Date.now()).toLocaleString()} ·
+        ${escapeHTML(e.mood || "")}
+      </div>
+
+      <h4>${e.favorite ? "💜 " : ""}${escapeHTML(e.title)}</h4>
+
+      <p>${escapeHTML(e.body)}</p>
+
+      <div class="entry-actions">
+        <button data-entry="fav" data-id="${e.id}">
+          ${e.favorite ? "Unfavorite" : "Favorite"}
+        </button>
+
+        <button data-entry="edit" data-id="${e.id}">Edit</button>
+        <button data-entry="delete" data-id="${e.id}">Delete</button>
+      </div>
+    </article>
+  `).join("");
 }
 
-function escapeHTML(value) {
-  return String(value ?? "").replace(/[&<>"']/g, char => ({
+function escapeHTML(s) {
+  return String(s ?? "").replace(/[&<>"']/g, c => ({
     "&": "&amp;",
     "<": "&lt;",
     ">": "&gt;",
     '"': "&quot;",
-    "'": "&#039;"
-  })[char]);
+    "'": "&#39;"
+  }[c]));
 }
 
-function showToast(message) {
-  const toast = $("#toast");
-  if (!toast) return;
-  toast.textContent = message;
-  toast.classList.add("show");
-  clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => toast.classList.remove("show"), 2800);
+function renderHangout() {
+  const feed = $("hangoutFeed");
+
+  feed.innerHTML = state.hangoutPosts.length
+    ? state.hangoutPosts.slice().reverse().map(p => `
+      <div class="feed-item">
+        <b>${escapeHTML(p.name)}</b> · ${escapeHTML(p.message)}
+        <small>${new Date(p.date).toLocaleString()}</small>
+      </div>
+    `).join("")
+    : '<p class="empty-state">Wala pang nag-post. Be the first, sis.</p>';
+
+  $("kindFeed").innerHTML = state.kindPosts
+    .slice()
+    .reverse()
+    .map(p => `<div class="kind-item">💌 ${escapeHTML(p)}</div>`)
+    .join("");
 }
 
-function getLevel() {
-  return Math.floor(state.xp / 100) + 1;
-}
-
-function getLevelProgress() {
-  return state.xp % 100;
-}
-
-function getPlayerTitle() {
-  const level = getLevel();
-  let current = titles[0].title;
-  titles.forEach(item => {
-    if (level >= item.level) current = item.title;
-  });
-  return current;
-}
-
-function addXP(amount, message = "") {
-  const previousLevel = getLevel();
-  state.xp += amount;
-  state.stars += Math.max(1, Math.floor(amount / 10));
-  const newLevel = getLevel();
-
-  if (newLevel > previousLevel) {
-    showToast(`🎉 LEVEL UP! You are now level ${newLevel}!`);
-  } else {
-    showToast(message || `+${amount} XP and some stars! ⭐`);
+const shopItems = [
+  {
+    id: "title_star",
+    icon: "🌟",
+    name: "Star Child title",
+    desc: "A tiny celestial flex.",
+    cost: 25
+  },
+  {
+    id: "title_delulu",
+    icon: "🤡",
+    name: "Delulu Royalty title",
+    desc: "Delusion with distinction.",
+    cost: 30
+  },
+  {
+    id: "badge_frog",
+    icon: "🐸",
+    name: "Frog Bestie badge",
+    desc: "Official frog confidante.",
+    cost: 35
+  },
+  {
+    id: "badge_chaos",
+    icon: "🪩",
+    name: "Chaos Icon badge",
+    desc: "You are the plot twist.",
+    cost: 40
+  },
+  {
+    id: "avatar_crown",
+    icon: "👑",
+    name: "Golden crown",
+    desc: "A royal profile collectible.",
+    cost: 50
+  },
+  {
+    id: "title_soft",
+    icon: "🧸",
+    name: "Softie Supreme title",
+    desc: "Gentle but iconic.",
+    cost: 30
   }
+];
 
-  checkBadges();
-  saveState();
+function renderShop() {
+  $("shopGrid").innerHTML = shopItems.map(i => {
+    let owned = state.ownedItems.includes(i.id);
+
+    return `
+      <article class="shop-item">
+        <span>${i.icon}</span>
+        <h4>${i.name}</h4>
+        <p>${i.desc}</p>
+
+        <button
+          class="small-btn"
+          data-buy="${i.id}"
+          ${owned || state.stars < i.cost ? "disabled" : ""}
+        >
+          ${owned ? "Owned" : `⭐ ${i.cost} · Unlock`}
+        </button>
+      </article>
+    `;
+  }).join("");
+
+  $("collectionList").innerHTML = state.ownedItems.length
+    ? state.ownedItems.map(id => {
+        let i = shopItems.find(x => x.id === id);
+
+        return i
+          ? `<span class="collection-pill">${i.icon} ${i.name}</span>`
+          : "";
+      }).join("")
+    : '<span class="empty-state">Your collection starts here.</span>';
 }
 
-function addGameXP(amount = 15) {
+function renderAchievements() {
+  const ach = [
+    ["first", "First steps"],
+    ["arcade", "Arcade rookie"],
+    ["comfort", "Comfort seeker"],
+    ["lab", "Lab rat"],
+    ["library", "Mystery hunter"],
+    ["confession", "Open book"],
+    ["community", "Community spirit"],
+    ["five", "Five entries"],
+    ["ten", "Ten games"],
+    ["explorer", "World explorer"]
+  ];
+
+  $("achievementList").innerHTML = ach.map(([id, n]) => `
+    <span class="chip ${state.achievements.includes(id) ? "" : "locked"}">
+      ${state.achievements.includes(id) ? "🏆" : "🔒"} ${n}
+    </span>
+  `).join("");
+
+  const disc = [
+    "arcade",
+    "comfort",
+    "lab",
+    "library",
+    "confession",
+    "community",
+    "moon-message",
+    "star-surprise"
+  ];
+
+  $("discoveryList").innerHTML = disc.map(id => `
+    <span class="chip ${state.discoveries.includes(id) ? "" : "locked"}">
+      ${state.discoveries.includes(id) ? "✦" : "🔒"}
+      ${id.replaceAll("-", " ")}
+    </span>
+  `).join("");
+}
+
+function played() {
   state.gamesPlayed++;
-  addXP(amount, `Game complete! +${amount} XP 🎮`);
-}
 
-function discoverWorld(worldId) {
-  if (!worlds[worldId]) return;
-  if (!state.discoveries.includes(worldId)) {
-    state.discoveries.push(worldId);
-    state.stars += 3;
-    showToast("New world discovered! +3 stars 🌟");
-    checkBadges();
-    saveState();
+  if (state.gamesPlayed >= 1) {
+    state.achievements.push("arcade");
   }
+
+  if (state.gamesPlayed >= 10) {
+    state.achievements.push("ten");
+  }
+
+  awardXP(8, "Game played!");
 }
 
-function checkBadges() {
-  const conditions = {
-    first_world: state.discoveries.length >= 1,
-    all_worlds: state.discoveries.length >= 6,
-    first_game: state.gamesPlayed >= 1,
-    game_five: state.gamesPlayed >= 5,
-    first_entry: state.entries.length >= 1,
-    entry_five: state.entries.length >= 5,
-    first_favorite: state.entries.some(entry => entry.favorite),
-    level_five: getLevel() >= 5,
-    mission: state.completedMissions.length >= 1,
-    secret: state.badges.includes("secret")
-  };
+function random(a) {
+  return a[Math.floor(Math.random() * a.length)];
+}
 
-  badges.forEach(badge => {
-    if (conditions[badge.id] && !state.badges.includes(badge.id)) {
-      state.badges.push(badge.id);
-      state.stars += 5;
-      showToast(`🏆 Badge unlocked: ${badge.name}! +5 stars`);
-    }
+$("profileOpen").onclick = () =>
+  $("profileDialog").showModal();
+
+$("settingsOpen").onclick = () =>
+  $("settingsDialog").showModal();
+
+$("backupOpen").onclick = () =>
+  $("settingsDialog").showModal();
+
+$("saveProfile").onclick = () => {
+  state.profile.name = $("profileName").value.trim() || "Sis";
+  state.profile.avatar = $("profileAvatar").value;
+
+  save();
+
+  $("profileDialog").close();
+  toast("Profile updated! 💜");
+};
+
+$("profileOpen").addEventListener("click", () => {
+  $("profileName").value = state.profile.name;
+  $("profileAvatar").value = state.profile.avatar;
+});
+
+$("dailyMessage").onclick = () => {
+  const m = random([
+    "You are allowed to outgrow places you once begged to belong in.",
+    "Hindi ka late. You are living at your own pace.",
+    "You can be a work in progress and still be worthy of love.",
+    "Rest. Hindi ka robot, kahit minsan ikaw ang taga-ayos ng lahat.",
+    "A little progress is still progress. Keep going, sis."
+  ]);
+
+  state.lastDailyMessage = m;
+  toast(m);
+  save();
+};
+
+document.querySelectorAll(".world-card").forEach(a => {
+  a.addEventListener("click", () => {
+    visit(a.getAttribute("href").replace("#", ""));
   });
-}
+});
 
-/* ---------- NAVIGATION ---------- */
+$("guessBtn").onclick = () => {
+  const n = Number($("guessInput").value);
+  const target = Number(
+    $("guessInput").dataset.target || Math.ceil(Math.random() * 10)
+  );
 
-function showView(viewId) {
-  const target = document.getElementById(viewId);
-  if (!target) return;
+  $("guessInput").dataset.target = target;
 
-  document.querySelectorAll(".view").forEach(view => view.classList.remove("active"));
-  target.classList.add("active");
-
-  document.querySelectorAll(".nav-link").forEach(button => {
-    button.classList.toggle("active", button.dataset.view === viewId);
-  });
-
-  $("#mainNav").classList.remove("open");
-  window.scrollTo({ top: 0, behavior: "smooth" });
-
-  if (viewId === "diary") renderArchive();
-  if (viewId === "collection") renderCollection();
-  if (viewId === "profile") renderProfile();
-}
-
-function enterWorld(worldId) {
-  const world = worlds[worldId];
-  if (!world) return;
-
-  discoverWorld(worldId);
-  $("#worldEyebrow").textContent = world.eyebrow;
-  $("#worldTitle").textContent = world.title;
-  $("#worldDescription").textContent = world.description;
-  $("#worldResult").classList.add("hidden");
-  $("#worldResult").textContent = "";
-
-  $("#worldContent").innerHTML = world.activities.map(activity => `
-    <article class="activity-card">
-      <div class="activity-icon">${activity[0]}</div>
-      <h3>${escapeHTML(activity[1])}</h3>
-      <p>${escapeHTML(activity[2])}</p>
-      <button class="secondary-btn" data-action="${escapeHTML(activity[3])}">Try it ✨</button>
-    </article>
-  `).join("");
-
-  showView("worldDetail");
-}
-
-/* ---------- WORLD ACTIVITIES ---------- */
-
-function runActivity(action) {
-  const result = $("#worldResult");
-  if (!result) return;
-
-  if (action === "journal" || action === "letter" || action === "memory" || action === "braindump") {
-    showView("diary");
-    const type = action === "braindump" ? "journal" : action;
-    $("#entryType").value = type;
-    $("#entryTitle").focus();
-    showToast("Your diary is ready. Write whatever you need. 💜");
+  if (!n || n < 1 || n > 10) {
+    $("guessResult").textContent = "Pick a number from 1 to 10, sis.";
     return;
   }
 
-  const message = randomItem(responses[action] || ["The universe is thinking. Try again."]);
-  result.textContent = message;
-  result.classList.remove("hidden");
-  result.scrollIntoView({ behavior: "smooth", block: "nearest" });
-  addXP(5, "+5 XP for exploring!");
-}
+  if (n === target) {
+    $("guessResult").textContent =
+      "Correct! The universe chose you. 🎉";
 
-/* ---------- DAILY MISSION ---------- */
-
-function todayKey() {
-  const date = new Date();
-  return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
-}
-
-function getTodayMission() {
-  const dayNumber = Math.floor(Date.now() / 86400000);
-  return dailyMissions[dayNumber % dailyMissions.length];
-}
-
-function renderMission() {
-  const mission = getTodayMission();
-  const completed = state.lastMissionDate === todayKey();
-
-  $("#missionTitle").textContent = mission.title;
-  $("#missionDescription").textContent = mission.description;
-  $("#missionReward").textContent = `${mission.reward} XP + ${mission.stars} stars`;
-  $("#completeMission").disabled = completed;
-  $("#completeMission").textContent = completed ? "Mission completed ✓" : "Complete mission";
-  $("#missionStatus").textContent = completed ? "You've completed today's mission. Come back tomorrow!" : "Your daily challenge is waiting.";
-}
-
-function completeMission() {
-  if (state.lastMissionDate === todayKey()) {
-    showToast("Today's mission is already complete. 💜");
-    return;
+    $("guessInput").dataset.target = "";
+    played();
+  } else {
+    $("guessResult").textContent =
+      n < target ? "Higher! Try again." : "Lower! Try again.";
   }
+};
 
-  const mission = getTodayMission();
-  let eligible = false;
-
-  switch (mission.type) {
-    case "world":
-      eligible = state.discoveries.length >= 1;
-      break;
-    case "game":
-      eligible = state.gamesPlayed >= 1;
-      break;
-    case "entry":
-      eligible = state.entries.length >= 1;
-      break;
-    case "library":
-      eligible = state.discoveries.includes("library");
-      break;
-    case "comfort":
-      eligible = state.discoveries.includes("comfort");
-      break;
-    case "twoWorlds":
-      eligible = state.discoveries.length >= 2;
-      break;
-    case "gameEntry":
-      eligible = state.gamesPlayed >= 1 && state.entries.length >= 1;
-      break;
-  }
-
-  if (!eligible) {
-    showToast("Not quite yet! Complete the mission activity first. ✨");
-    return;
-  }
-
-  state.lastMissionDate = todayKey();
-  state.completedMissions.push(todayKey());
-  state.xp += mission.reward;
-  state.stars += mission.stars;
-  checkBadges();
-  saveState();
-  showToast(`Mission complete! +${mission.reward} XP and +${mission.stars} stars!`);
-}
-
-/* ---------- DAILY MESSAGE ---------- */
-
-function newDailyMessage() {
-  let message = randomItem(dailyMessages);
-  if (dailyMessages.length > 1) {
-    while (message === state.lastDailyMessage) message = randomItem(dailyMessages);
-  }
-  state.lastDailyMessage = message;
-  $("#dailyMessage").textContent = message;
-  saveState();
-}
-
-/* ---------- GUESS THE NUMBER ---------- */
-
-function resetGuessGame() {
-  guessSecret = randomNumber();
-  guessAttempts = 5;
-  $("#guessInput").value = "";
-  $("#guessInput").disabled = false;
-  $("#guessButton").disabled = false;
-  $("#guessFeedback").textContent = "You have 5 attempts. Good luck!";
-}
-
-function makeGuess() {
-  const input = $("#guessInput");
-  const guess = Number(input.value);
-
-  if (!input.value || !Number.isInteger(guess) || guess < 1 || guess > 20) {
-    $("#guessFeedback").textContent = "Enter a whole number from 1 to 20.";
-    return;
-  }
-
-  guessAttempts--;
-
-  if (guess === guessSecret) {
-    $("#guessFeedback").textContent = `🎉 Correct! The number was ${guessSecret}. You did it!`;
-    $("#guessInput").disabled = true;
-    $("#guessButton").disabled = true;
-    addGameXP(25);
-    return;
-  }
-
-  if (guessAttempts <= 0) {
-    $("#guessFeedback").textContent = `Game over! The number was ${guessSecret}. Try again!`;
-    $("#guessInput").disabled = true;
-    $("#guessButton").disabled = true;
-    addGameXP(5);
-    return;
-  }
-
-  $("#guessFeedback").textContent = `${guess < guessSecret ? "Too low!" : "Too high!"} ${guessAttempts} attempts left.`;
-  input.value = "";
-  input.focus();
-}
-
-/* ---------- REACTION TEST ---------- */
-
-function startReaction() {
-  if (reactionState === "waiting" || reactionState === "ready") return;
-
-  reactionState = "waiting";
-  const box = $("#reactionBox");
-  box.className = "reaction-box waiting";
-  box.textContent = "Wait for green...";
-  $("#reactionFeedback").textContent = "Don't tap too early!";
-
-  const delay = 1500 + Math.random() * 3500;
-  reactionTimer = setTimeout(() => {
-    reactionState = "ready";
-    reactionStart = performance.now();
-    box.className = "reaction-box ready";
-    box.textContent = "TAP NOW!";
-  }, delay);
-}
-
-function reactionClick() {
-  const box = $("#reactionBox");
-
-  if (reactionState === "idle") {
-    startReaction();
-    return;
-  }
-
-  if (reactionState === "waiting") {
+$("reactionBtn").onclick = () => {
+  if (reactionMode === "waiting") {
     clearTimeout(reactionTimer);
-    reactionState = "idle";
-    box.className = "reaction-box";
-    box.textContent = "Too early! Try again";
-    $("#reactionFeedback").textContent = "Patience, superstar. Tap to restart.";
+    reactionMode = "idle";
+
+    $("reactionBtn").textContent = "Start reaction test";
+    $("reactionResult").textContent = "Too early! Hala, excited?";
+
     return;
   }
 
-  if (reactionState === "ready") {
-    const time = Math.round(performance.now() - reactionStart);
-    reactionState = "idle";
-    box.className = "reaction-box";
-    box.textContent = "Press to play again";
-    $("#reactionFeedback").textContent = `Your reaction time: ${time} ms! ${time < 250 ? "Lightning fast!" : time < 400 ? "Not bad!" : "We need coffee."}`;
-    addGameXP(time < 300 ? 25 : 15);
+  if (reactionMode === "ready") {
+    const ms = Date.now() - reactionStart;
+
+    reactionMode = "idle";
+    $("reactionBtn").textContent = "Start reaction test";
+    $("reactionResult").textContent =
+      `${ms} ms! ${ms < 300 ? "Ang bilis!" : "Not bad, sis."}`;
+
+    played();
+    return;
   }
-}
 
-/* ---------- MEMORY MATCH ---------- */
+  reactionMode = "waiting";
+  $("reactionBtn").textContent = "Wait for green...";
+  $("reactionResult").textContent = "Don't tap yet!";
+  $("reactionBtn").style.background = "#e5a0a0";
 
-function createMemoryGame() {
-  const symbols = ["🌙", "💜", "🐸", "⭐", "🦋", "🍓", "🪐", "🧸"];
-  memoryCards = [...symbols, ...symbols].sort(() => Math.random() - .5).map((symbol, index) => ({
-    id: index,
-    symbol,
-    flipped: false,
-    matched: false
-  }));
+  reactionTimer = setTimeout(() => {
+    reactionMode = "ready";
+    reactionStart = Date.now();
+
+    $("reactionBtn").textContent = "TAP NOW!";
+    $("reactionBtn").style.background = "#75d7a0";
+  }, 1000 + Math.random() * 2500);
+};
+
+function setupMemory() {
+  const icons = [
+    "🌙", "💜", "🐸", "⭐",
+    "🦋", "🍓", "🪩", "🌷"
+  ];
+
+  memoryCards = [...icons, ...icons].sort(() => Math.random() - 0.5);
   memoryOpen = [];
-  memoryMoves = 0;
-  memoryLocked = false;
-  renderMemoryGame();
-}
+  memoryMatches = 0;
 
-function renderMemoryGame() {
-  $("#memoryGrid").innerHTML = memoryCards.map(card => `
-    <button class="memory-card ${card.flipped || card.matched ? "flipped" : ""} ${card.matched ? "matched" : ""}"
-      data-memory="${card.id}" aria-label="Memory card">
-      ${card.flipped || card.matched ? card.symbol : "❔"}
-    </button>
+  $("memoryBoard").innerHTML = memoryCards.map((_, i) => `
+    <button class="memory-card" data-card="${i}">?</button>
   `).join("");
-  $("#memoryFeedback").textContent = `Moves: ${memoryMoves}`;
+
+  $("memoryResult").textContent = "Find the pairs!";
 }
 
-function flipMemoryCard(id) {
-  if (memoryLocked) return;
-  const card = memoryCards.find(item => item.id === id);
-  if (!card || card.flipped || card.matched) return;
+$("memoryBoard").onclick = e => {
+  const b = e.target.closest("[data-card]");
 
-  card.flipped = true;
-  memoryOpen.push(card);
-  renderMemoryGame();
+  if (!b || b.disabled || memoryOpen.length === 2) return;
+
+  const i = Number(b.dataset.card);
+
+  b.textContent = memoryCards[i];
+  b.disabled = true;
+
+  memoryOpen.push({ i, b });
 
   if (memoryOpen.length === 2) {
-    memoryMoves++;
-    memoryLocked = true;
-    const [first, second] = memoryOpen;
-
-    if (first.symbol === second.symbol) {
-      first.matched = true;
-      second.matched = true;
+    if (
+      memoryCards[memoryOpen[0].i] ===
+      memoryCards[memoryOpen[1].i]
+    ) {
+      memoryOpen.forEach(x => x.b.classList.add("matched"));
+      memoryMatches++;
       memoryOpen = [];
-      memoryLocked = false;
-      renderMemoryGame();
 
-      if (memoryCards.every(item => item.matched)) {
-        $("#memoryFeedback").textContent = `You matched everything in ${memoryMoves} moves! 🎉`;
-        addGameXP(Math.max(15, 45 - memoryMoves));
+      if (memoryMatches === 8) {
+        $("memoryResult").textContent =
+          "All pairs found! Memory queen!";
+
+        played();
       }
     } else {
       setTimeout(() => {
-        first.flipped = false;
-        second.flipped = false;
+        memoryOpen.forEach(x => {
+          x.b.textContent = "?";
+          x.b.disabled = false;
+        });
+
         memoryOpen = [];
-        memoryLocked = false;
-        renderMemoryGame();
-      }, 750);
+      }, 700);
     }
   }
-}
+};
 
-/* ---------- WOULD YOU RATHER ---------- */
+$("memoryReset").onclick = setupMemory;
+setupMemory();
 
-const wouldYouRather = [
-  ["Have unlimited snacks 🍟", "Have unlimited vacations 🏝️"],
-  ["Read minds for one day 🧠", "Be invisible for one day 👻"],
-  ["Never overthink again 🕊️", "Never feel awkward again 😭"],
-  ["Live in a magical library 📚", "Live in a cozy cottage 🌷"],
-  ["Always be 10 minutes early ⏰", "Always have perfect timing ✨"],
-  ["Know every language 🌎", "Play every instrument 🎹"]
+const wyr = [
+  [
+    "Would you rather read minds or see the future?",
+    "Read minds",
+    "See the future"
+  ],
+  [
+    "Would you rather have unlimited snacks or unlimited naps?",
+    "Unlimited snacks",
+    "Unlimited naps"
+  ],
+  [
+    "Would you rather be famous or peacefully rich?",
+    "Famous",
+    "Peacefully rich"
+  ],
+  [
+    "Would you rather relive your best day or skip your worst day?",
+    "Relive the best",
+    "Skip the worst"
+  ]
 ];
 
-let wyrIndex = 0;
+function newWyr() {
+  let x = random(wyr);
 
-function nextWYR() {
-  wyrIndex = (wyrIndex + 1) % wouldYouRather.length;
-  $("#wyrQuestion").textContent = "Choose your fate:";
-  $("#wyrA").textContent = wouldYouRather[wyrIndex][0];
-  $("#wyrB").textContent = wouldYouRather[wyrIndex][1];
-  $("#wyrFeedback").textContent = "There are no correct answers. Only consequences.";
+  $("wyrQuestion").textContent = x[0];
+  $("wyrA").textContent = x[1];
+  $("wyrB").textContent = x[2];
+  $("wyrResult").textContent =
+    "Walang wrong answer. May judgment lang.";
 }
 
-function chooseWYR(choice) {
-  $("#wyrFeedback").textContent = `You chose: ${choice}. The universe respects your questionable decision.`;
-  addGameXP(10);
-}
+["wyrA", "wyrB"].forEach(id => {
+  $(id).onclick = () => {
+    $("wyrResult").textContent =
+      "Choice locked in. Panindigan mo 'yan, sis. 💅";
 
-/* ---------- DIARY ---------- */
+    played();
+    newWyr();
+  };
+});
 
-function saveEntry(event) {
-  event.preventDefault();
+$("promptBtn").onclick = () => {
+  $("promptResult").textContent = random([
+    "Truth: What's a tiny thing you pretend doesn't bother you?",
+    "Dare: Give yourself one genuine compliment.",
+    "Truth: What's your most harmless delusion?",
+    "Dare: Drink some water. Yes, that's the dare."
+  ]);
 
-  const title = $("#entryTitle").value.trim();
-  const body = $("#entryBody").value.trim();
+  played();
+};
 
-  if (!title || !body) {
-    showToast("Please add a title and your thoughts first.");
-    return;
+$("coinBtn").onclick = () => {
+  $("coinResult").textContent = random([
+    "HEADS! Take the chance. 🪙",
+    "TAILS! Maybe rest first. 🪙"
+  ]);
+
+  played();
+};
+
+$("comfortBtn").onclick = () => {
+  $("comfortText").textContent = random([
+    "You don't have to earn rest.",
+    "You can start again without hating who you were yesterday.",
+    "Your feelings deserve space, even when they are messy.",
+    "You are allowed to choose peace without explaining yourself.",
+    "You are doing better than your anxious thoughts say."
+  ]);
+
+  visit("comfort");
+  state.achievements.push("comfort");
+  save();
+};
+
+$("deluluRange").oninput = () => {
+  const n = Number($("deluluRange").value);
+
+  $("deluluValue").textContent =
+    n < 25
+      ? `${n}% — grounded queen`
+      : n < 50
+      ? `${n}% — hopeful but aware`
+      : n < 75
+      ? `${n}% — cautiously delusional`
+      : `${n}% — delulu is the solulu`;
+};
+
+$("deluluRange").onchange = () => {
+  visit("lab");
+  state.achievements.push("lab");
+  save();
+};
+
+$("excuseBtn").onclick = () => {
+  $("excuseText").textContent = random([
+    "My social battery filed for bankruptcy.",
+    "I was emotionally buffering.",
+    " Mercury is in Gatorade. I cannot explain.",
+    "My bed and I had an important meeting.",
+    "I had to protect my peace and my snacks."
+  ]);
+
+  visit("lab");
+};
+
+$("dramaBtn").onclick = () => {
+  $("dramaText").textContent = random([
+    "THIS IS A HISTORICAL EVENT. CALL THE ARCHIVES.",
+    "I need a fainting couch and a glass of water.",
+    "The audacity has entered the building.",
+    "Cue the rain, the violin, and my slow-motion exit."
+  ]);
+
+  visit("lab");
+};
+
+$("complimentBtn").onclick = () => {
+  $("complimentText").textContent = random([
+    "Compliment: Your presence is a whole comfort playlist. 💜",
+    "Roast: You overthink like it's a full-time job. 🤡",
+    "Compliment: You make ordinary moments feel special. ✨",
+    "Roast: Your delulu has its own postal address."
+  ]);
+
+  visit("lab");
+};
+
+$("fortuneBtn").onclick = () => {
+  $("fortuneText").textContent = random([
+    "A plot twist is coming, but this time you brought boundaries.",
+    "Your next era involves peace, good food, and better decisions.",
+    "The stars say: stop checking their profile. Focus, sis.",
+    "A small opportunity will ask you to be brave. Say hello."
+  ]);
+
+  visit("library");
+  state.achievements.push("library");
+  save();
+};
+
+$("courtBtn").onclick = () => {
+  $("courtText").textContent = random([
+    "VERDICT: Not guilty. You were just being iconic.",
+    "VERDICT: Guilty of entertaining nonsense. Sentence: log off.",
+    "The court finds you innocent, but your screenshots are suspicious.",
+    "Case dismissed. The judge needs a snack break."
+  ]);
+
+  visit("library");
+};
+
+$("frogBtn").onclick = () => {
+  $("frogText").textContent = random([
+    "RIBBIT. The tea is hot but your peace is hotter.",
+    "The frog says: don't text them. Text your bestie.",
+    "Ribbit: someone is watching your stories. Let them.",
+    "The frog has no advice. Just vibes and damp skin."
+  ]);
+
+  visit("library");
+};
+
+$("universeBtn").onclick = () => {
+  $("universeText").textContent = random([
+    "YES. But use your brain too.",
+    "NO. Protect your peace.",
+    "THE SIGNS ARE UNCLEAR. Ask again after a snack.",
+    "MOST LIKELY. Stop asking the universe and take a step."
+  ]);
+
+  visit("library");
+};
+
+$("machineBtn").onclick = () => {
+  $("machineText").textContent = random([
+    "🫶 LAMBING! You deserve softness today.",
+    "👋 SAMPAL! Wake up, the standards are on the floor.",
+    "💜 LAMBING! Virtual hug, no explanation needed.",
+    "🎰 JACKPOT: Both. Sampal sa delusion, lambing sa sarili."
+  ]);
+
+  visit("library");
+};
+
+$("forbiddenBtn").onclick = () => {
+  const lines = [
+    "You pressed it. The frog has filed a complaint.",
+    "The forbidden button has chosen you. Unfortunately.",
+    "Achievement unlocked: Walang self-control. 💀",
+    "The universe said 'behave' and you said 'no'."
+  ];
+
+  $("forbiddenText").textContent = random(lines);
+
+  addBadge("forbidden");
+  awardXP(5, "Forbidden discovery!");
+
+  if (!state.discoveries.includes("star-surprise")) {
+    state.discoveries.push("star-surprise");
   }
 
-  const entryData = {
-    title,
-    body,
-    mood: $("#entryMood").value,
-    type: $("#entryType").value,
-    favorite: $("#entryFavorite").checked
+  save();
+};
+
+$("excuseBtn").addEventListener("click", () =>
+  state.achievements.push("lab")
+);
+
+$("fortuneBtn").addEventListener("click", () =>
+  state.achievements.push("library")
+);
+
+$("diaryForm").onsubmit = e => {
+  e.preventDefault();
+
+  const entry = {
+    id: "entry_" + Date.now() + "_" +
+      Math.random().toString(36).slice(2, 7),
+    title: $("entryTitle").value.trim(),
+    body: $("entryBody").value.trim(),
+    mood: $("entryMood").value,
+    type: $("entryType").value,
+    favorite: false,
+    date: new Date().toISOString()
   };
 
-  if (editingEntryId) {
-    const entry = state.entries.find(item => item.id === editingEntryId);
-    if (entry) Object.assign(entry, entryData);
-    showToast("Your entry has been updated. 💜");
-  } else {
-    state.entries.unshift({
-      id: makeId(),
-      ...entryData,
-      date: new Date().toISOString()
-    });
-    state.xp += 10;
-    state.stars += 2;
-    showToast("Memory saved! +10 XP and +2 stars. 📔");
+  if (!entry.title || !entry.body) return;
+
+  state.entries.push(entry);
+
+  state.journalEntries =
+    state.entries.filter(x => x.type === "journal");
+
+  state.letters =
+    state.entries.filter(x => x.type === "letter");
+
+  state.memories =
+    state.entries.filter(x => x.type === "memory");
+
+  addBadge("first_entry");
+
+  if (state.entries.length >= 5) {
+    state.achievements.push("five");
   }
 
-  cancelEdit();
-  checkBadges();
-  saveState();
-  renderArchive();
-}
+  $("diaryForm").reset();
 
-function cancelEdit() {
-  editingEntryId = null;
-  $("#diaryForm").reset();
-  $("#formHeading").textContent = "Dear diary...";
-  $("#saveEntry").textContent = "Save entry ✨";
-  $("#cancelEdit").classList.add("hidden");
-}
+  awardXP(10, "Thought saved!");
+};
 
-function editEntry(id) {
-  const entry = state.entries.find(item => item.id === id);
-  if (!entry) return;
+$("diarySearch").oninput = renderDiary;
 
-  editingEntryId = id;
-  $("#entryTitle").value = entry.title;
-  $("#entryBody").value = entry.body;
-  $("#entryMood").value = entry.mood;
-  $("#entryType").value = entry.type;
-  $("#entryFavorite").checked = !!entry.favorite;
-  $("#formHeading").textContent = "Edit your entry";
-  $("#saveEntry").textContent = "Update entry";
-  $("#cancelEdit").classList.remove("hidden");
-  $("#diaryForm").scrollIntoView({ behavior: "smooth", block: "start" });
-}
+$("diaryList").onclick = e => {
+  const b = e.target.closest("[data-entry]");
 
-function deleteEntry(id) {
-  const entry = state.entries.find(item => item.id === id);
-  if (!entry) return;
+  if (!b) return;
 
-  if (!confirm(`Delete "${entry.title}"? This cannot be undone unless you have a backup.`)) return;
+  const item = state.entries.find(x => x.id === b.dataset.id);
 
-  state.entries = state.entries.filter(item => item.id !== id);
-  if (editingEntryId === id) cancelEdit();
-  saveState();
-  renderArchive();
-  showToast("Entry deleted.");
-}
+  if (!item) return;
 
-function toggleFavorite(id) {
-  const entry = state.entries.find(item => item.id === id);
-  if (!entry) return;
-  entry.favorite = !entry.favorite;
-  checkBadges();
-  saveState();
-  renderArchive();
-  showToast(entry.favorite ? "Added to favorites 💜" : "Removed from favorites.");
-}
+  if (b.dataset.entry === "delete") {
+    if (confirm("Delete this entry?")) {
+      state.entries = state.entries.filter(x => x.id !== item.id);
+    }
+  }
 
-function formatDate(dateString) {
-  const date = new Date(dateString);
-  if (Number.isNaN(date.getTime())) return "Date unavailable";
-  return date.toLocaleString([], {
-    year: "numeric",
-    month: "short",
-    day: "numeric",
-    hour: "2-digit",
-    minute: "2-digit"
+  if (b.dataset.entry === "fav") {
+    item.favorite = !item.favorite;
+
+    if (item.favorite) {
+      addBadge("first_favorite");
+    }
+  }
+
+  if (b.dataset.entry === "edit") {
+    const title = prompt("Edit title:", item.title);
+
+    if (title === null) return;
+
+    const body = prompt("Edit your thoughts:", item.body);
+
+    if (body === null) return;
+
+    item.title = title;
+    item.body = body;
+  }
+
+  state.journalEntries =
+    state.entries.filter(x => x.type === "journal");
+
+  state.letters =
+    state.entries.filter(x => x.type === "letter");
+
+  state.memories =
+    state.entries.filter(x => x.type === "memory");
+
+  save();
+};
+
+$("hangoutForm").onsubmit = e => {
+  e.preventDefault();
+
+  const message = $("hangoutMessage").value.trim();
+
+  if (!message) return;
+
+  state.hangoutPosts.push({
+    name: $("hangoutName").value.trim() ||
+      state.profile.name ||
+      "Sis",
+    message,
+    date: new Date().toISOString()
   });
-}
 
-function renderArchive() {
-  const search = ($("#archiveSearch")?.value || "").toLowerCase().trim();
-  const filter = $("#archiveFilter")?.value || "all";
+  $("hangoutMessage").value = "";
 
-  let entries = [...state.entries];
-
-  if (filter === "favorites") {
-    entries = entries.filter(entry => entry.favorite);
-  } else if (filter !== "all") {
-    entries = entries.filter(entry => entry.type === filter);
+  if (state.hangoutPosts.length === 1) {
+    state.achievements.push("community");
   }
 
-  if (search) {
-    entries = entries.filter(entry =>
-      `${entry.title} ${entry.body} ${entry.mood}`.toLowerCase().includes(search)
-    );
-  }
+  visit("community");
+  awardXP(3, "Posted in the tambayan!");
+};
 
-  $("#entryCount").textContent = `${state.entries.length} entries`;
+$("newQuestion").onclick = () => {
+  $("questionOfDay").textContent = random([
+    "What's one tiny thing that made you smile today?",
+    "If your current era had a title, what would it be?",
+    "What's a song that feels like a hug?",
+    "What boundary are you proud of keeping?",
+    "What's your most unserious current obsession?"
+  ]);
 
-  if (!entries.length) {
-    $("#archiveList").innerHTML = `<div class="empty-state">${state.entries.length ? "No entries match your search." : "Your archive is waiting for its first memory. 💜"}</div>`;
+  visit("community");
+};
+
+$("kindPost").onclick = () => {
+  const v = $("kindMessage").value.trim();
+
+  if (!v) return;
+
+  state.kindPosts.push(v);
+  $("kindMessage").value = "";
+
+  save();
+  toast("A little kindness has been pinned. 💌");
+};
+
+$("shopGrid").onclick = e => {
+  const b = e.target.closest("[data-buy]");
+
+  if (!b) return;
+
+  const item = shopItems.find(x => x.id === b.dataset.buy);
+
+  if (
+    !item ||
+    state.ownedItems.includes(item.id) ||
+    state.stars < item.cost
+  ) {
     return;
   }
 
-  const labels = { journal: "📔 Journal", letter: "💌 Letter", memory: "🫙 Memory Jar" };
+  state.stars -= item.cost;
+  state.ownedItems.push(item.id);
 
-  $("#archiveList").innerHTML = entries.map(entry => `
-    <article class="archive-entry">
-      <div class="archive-meta">
-        <span>${escapeHTML(labels[entry.type] || "📔 Entry")}</span>
-        <span>${escapeHTML(entry.mood || "")}</span>
-        <span>${escapeHTML(formatDate(entry.date))}</span>
-        ${entry.favorite ? "<span>💜 Favorite</span>" : ""}
-      </div>
-      <h4>${escapeHTML(entry.title)}</h4>
-      <p>${escapeHTML(entry.body)}</p>
-      <div class="archive-actions">
-        <button data-edit="${escapeHTML(entry.id)}">✏️ Edit</button>
-        <button data-favorite="${escapeHTML(entry.id)}">${entry.favorite ? "💜 Unfavorite" : "♡ Favorite"}</button>
-        <button class="delete-entry" data-delete="${escapeHTML(entry.id)}">🗑 Delete</button>
-      </div>
-    </article>
-  `).join("");
-}
+  addBadge("shopper");
 
-/* ---------- COLLECTION ---------- */
+  save();
+  toast(`${item.name} unlocked! ✨`);
+};
 
-function renderCollection() {
-  $("#collectionBadgeCount").textContent = state.badges.length;
-  $("#collectionStarCount").textContent = state.stars;
-  $("#collectionDiscoveryCount").textContent = state.discoveries.length;
-  $("#collectionTitle").textContent = getPlayerTitle();
+$("themeOptions").onclick = e => {
+  const b = e.target.closest("[data-theme]");
 
-  $("#badgeGrid").innerHTML = badges.map(badge => {
-    const unlocked = state.badges.includes(badge.id);
-    return `
-      <article class="badge-card ${unlocked ? "" : "locked"}">
-        <span>${unlocked ? badge.icon : "🔒"}</span>
-        <b>${escapeHTML(badge.name)}</b>
-        <small>${escapeHTML(badge.description)}</small>
-        <small>${unlocked ? "UNLOCKED ✓" : "NOT YET UNLOCKED"}</small>
-      </article>
-    `;
-  }).join("");
+  if (!b) return;
 
-  $("#discoveryGrid").innerHTML = discoveries.map(item => {
-    const unlocked = state.discoveries.includes(item[0]);
-    return `
-      <article class="discovery-card ${unlocked ? "" : "locked"}">
-        <span>${unlocked ? item[1] : "🔒"}</span>
-        <b>${escapeHTML(item[2])}</b>
-        <small>${unlocked ? "Discovered ✓" : "Undiscovered"}</small>
-      </article>
-    `;
-  }).join("");
-}
+  state.theme = b.dataset.theme;
 
-/* ---------- PROFILE ---------- */
+  save();
+  toast("Theme updated! 💜");
+};
 
-function renderProfile() {
-  $("#playerName").value = state.profile.name;
-  $("#profileAvatar").textContent = state.profile.avatar;
-  $("#profileLevel").textContent = getLevel();
-  $("#profileXp").textContent = state.xp;
-  $("#profileStars").textContent = state.stars;
-  $("#profileGames").textContent = state.gamesPlayed;
-  $("#profileEntries").textContent = state.entries.length;
-  $("#profileWorlds").textContent = `${state.discoveries.length} / 6`;
-  $("#profileTitle").textContent = getPlayerTitle();
-
-  document.querySelectorAll("[data-avatar]").forEach(button => {
-    button.classList.toggle("selected", button.dataset.avatar === state.profile.avatar);
-  });
-}
-
-function saveProfile(event) {
-  event.preventDefault();
-  const name = $("#playerName").value.trim().slice(0, 24);
-
-  if (!name) {
-    showToast("Please choose a nickname.");
-    return;
-  }
-
-  state.profile.name = name;
-  saveState();
-  showToast("Profile saved! 💜");
-}
-
-/* ---------- SECRET PORTAL ---------- */
-
-function checkSecretPortal() {
-  const unlocked = state.discoveries.length >= 3 || state.gamesPlayed >= 3;
-
-  if (!unlocked) {
-    $("#secretText").textContent = "The portal is still sleeping. Discover three worlds or play three games to wake it up.";
-    showToast("The portal is still locked. Keep exploring! 🔐");
-    return;
-  }
-
-  if (!state.badges.includes("secret")) {
-    state.badges.push("secret");
-    state.stars += 10;
-    state.xp += 30;
-    saveState();
-  }
-
-  $("#secretText").textContent = "YOU FOUND THE SECRET DIMENSION! 🌠 The universe has chosen you as its official agent of chaos. Your reward: 30 XP and 10 stars.";
-  $("#secretButton").textContent = "Portal discovered ✓";
-  $("#secretButton").disabled = true;
-  showToast("Secret Finder badge unlocked! +30 XP and +10 stars!");
-}
-
-/* ---------- BACKUP AND RESTORE ---------- */
-
-function exportProgress() {
-  const backup = {
-    app: "Bading Tambayan 4.1",
+$("exportBtn").onclick = () => {
+  const payload = {
+    app: "Bading Tambayan 4.2",
     exportedAt: new Date().toISOString(),
     data: state
   };
 
-  const blob = new Blob([JSON.stringify(backup, null, 2)], { type: "application/json" });
-  const url = URL.createObjectURL(blob);
-  const link = document.createElement("a");
-  link.href = url;
-  link.download = `bading-tambayan-backup-${todayKey()}.json`;
-  document.body.appendChild(link);
-  link.click();
-  link.remove();
-  URL.revokeObjectURL(url);
-  showToast("Your backup is ready. Keep it somewhere safe! 💜");
-}
+  const blob = new Blob(
+    [JSON.stringify(payload, null, 2)],
+    { type: "application/json" }
+  );
 
-function importProgress(event) {
-  const file = event.target.files?.[0];
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+
+  a.href = url;
+  a.download =
+    `bading-tambayan-backup-${new Date().toISOString().slice(0, 10)}.json`;
+
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+
+  URL.revokeObjectURL(url);
+
+  $("backupStatus").textContent =
+    "Backup exported! Keep the .json file somewhere safe.";
+
+  toast("Your backup is ready! 💾");
+};
+
+$("importFile").onchange = async e => {
+  const file = e.target.files[0];
+
   if (!file) return;
 
-  const reader = new FileReader();
+  try {
+    const parsed = safeParse(await file.text());
+    const data = parsed?.data || parsed;
 
-  reader.onload = () => {
-    try {
-      const parsed = JSON.parse(reader.result);
-      const imported = parsed.data || parsed;
-
-      if (!imported || !Array.isArray(imported.entries) || !imported.profile) {
-        throw new Error("Invalid backup format");
-      }
-
-      if (!confirm("Import this backup? Your current saved progress will be replaced.")) {
-        event.target.value = "";
-        return;
-      }
-
-      state = normalizeState(imported);
-      saveState();
-      renderArchive();
-      renderCollection();
-      renderProfile();
-      showToast("Backup restored successfully! 💜");
-    } catch (error) {
-      console.error(error);
-      showToast("That file doesn't look like a valid Tambayanverse backup.");
+    if (
+      !data ||
+      typeof data !== "object" ||
+      !Array.isArray(data.entries)
+    ) {
+      throw new Error("Invalid backup");
     }
-    event.target.value = "";
-  };
 
-  reader.readAsText(file);
-}
+    if (!confirm(
+      "Importing will replace the current local save. Continue?"
+    )) {
+      return;
+    }
 
-function resetProgress() {
-  const confirmed = confirm("Are you sure you want to reset ALL your progress, stars, achievements, profile, and diary entries? Export a backup first if you want to keep them.");
-  if (!confirmed) return;
+    state = normalize(data);
 
-  const doubleCheck = confirm("Last chance! This cannot be undone without a backup. Reset everything?");
-  if (!doubleCheck) return;
+    save();
 
-  state = structuredCloneSafe(defaultState);
-  localStorage.removeItem(SAVE_KEY);
-  cancelEdit();
-  saveState();
-  renderArchive();
-  renderCollection();
-  renderProfile();
-  $("#secretText").textContent = "Keep exploring. Some things reveal themselves when you least expect them.";
-  $("#secretButton").textContent = "Check the portal";
-  $("#secretButton").disabled = false;
-  showToast("Your Tambayanverse has been reset.");
-  showView("home");
-}
+    $("backupStatus").textContent =
+      "Backup imported successfully!";
 
-/* ---------- DASHBOARD REFRESH ---------- */
+    toast("Progress restored! 💜");
 
-function updateInterface() {
-  const level = getLevel();
-  const progress = getLevelProgress();
-  const title = getPlayerTitle();
+  } catch (err) {
+    $("backupStatus").textContent =
+      "That file doesn't look like a valid Bading Tambayan backup.";
 
-  $("#homeName").textContent = state.profile.name;
-  $("#homeAvatar").textContent = state.profile.avatar;
-  $("#homeTitle").textContent = title;
-  $("#homeLevel").textContent = `LVL ${level}`;
-  $("#homeXpBar").style.width = `${progress}%`;
-  $("#homeXpText").textContent = `${progress} / 100 XP`;
+    toast("Import failed. Please choose a valid JSON backup.");
+  }
 
-  $("#statStars").textContent = state.stars;
-  $("#statBadges").textContent = state.badges.length;
-  $("#statGames").textContent = state.gamesPlayed;
-  $("#statEntries").textContent = state.entries.length;
+  e.target.value = "";
+};
 
-  $("#todayLabel").textContent = new Date().toLocaleDateString([], {
-    weekday: "short",
-    month: "short",
-    day: "numeric"
-  });
+$("resetBtn").onclick = () => {
+  if (!confirm(
+    "This will erase local progress on this device. Export a backup first. Continue?"
+  )) {
+    return;
+  }
 
-  renderMission();
-}
+  state = defaultState();
 
-function initialize() {
-  // Migrate older 4.0 diary fields if present.
-  if (!Array.isArray(state.entries)) state.entries = [];
-  if (!Array.isArray(state.discoveries)) state.discoveries = [];
-  if (!Array.isArray(state.badges)) state.badges = [];
+  save();
 
-  checkBadges();
-  updateInterface();
-  renderArchive();
-  renderCollection();
-  renderProfile();
-  createMemoryGame();
+  $("backupStatus").textContent = "Local progress reset.";
 
-  $("#dailyMessage").textContent = state.lastDailyMessage || randomItem(dailyMessages);
-  if (!state.lastDailyMessage) {
-    state.lastDailyMessage = $("#dailyMessage").textContent;
-    saveState();
+  toast("Fresh start. Ingat, sis.");
+};
+
+function initialMigrate() {
+  if (!state.visited.length && state.discoveries.length) {
+    state.visited = state.discoveries.filter(x =>
+      [
+        "arcade",
+        "comfort",
+        "lab",
+        "library",
+        "confession",
+        "community"
+      ].includes(x)
+    );
   }
 }
 
-/* ---------- EVENT LISTENERS ---------- */
+initialMigrate();
+render();
+newWyr();
+setupMemory();
 
-document.addEventListener("click", event => {
-  const viewButton = event.target.closest("[data-view]");
-  if (viewButton) {
-    showView(viewButton.dataset.view);
-    return;
-  }
-
-  const worldButton = event.target.closest("[data-world]");
-  if (worldButton) {
-    enterWorld(worldButton.dataset.world);
-    return;
-  }
-
-  const activityButton = event.target.closest("[data-action]");
-  if (activityButton) {
-    runActivity(activityButton.dataset.action);
-    return;
-  }
-
-  const editButton = event.target.closest("[data-edit]");
-  if (editButton) {
-    editEntry(editButton.dataset.edit);
-    return;
-  }
-
-  const deleteButton = event.target.closest("[data-delete]");
-  if (deleteButton) {
-    deleteEntry(deleteButton.dataset.delete);
-    return;
-  }
-
-  const favoriteButton = event.target.closest("[data-favorite]");
-  if (favoriteButton) {
-    toggleFavorite(favoriteButton.dataset.favorite);
-    return;
-  }
-
-  const avatarButton = event.target.closest("[data-avatar]");
-  if (avatarButton) {
-    state.profile.avatar = avatarButton.dataset.avatar;
-    renderProfile();
-    $("#profileAvatar").textContent = state.profile.avatar;
-  }
-
-  const memoryButton = event.target.closest("[data-memory]");
-  if (memoryButton) {
-    flipMemoryCard(Number(memoryButton.dataset.memory));
-  }
-});
-
-$("#menuToggle").addEventListener("click", () => {
-  $("#mainNav").classList.toggle("open");
-});
-
-$("#completeMission").addEventListener("click", completeMission);
-$("#newMessage").addEventListener("click", newDailyMessage);
-$("#secretButton").addEventListener("click", checkSecretPortal);
-
-$("#diaryForm").addEventListener("submit", saveEntry);
-$("#cancelEdit").addEventListener("click", cancelEdit);
-$("#archiveSearch").addEventListener("input", renderArchive);
-$("#archiveFilter").addEventListener("change", renderArchive);
-
-$("#profileForm").addEventListener("submit", saveProfile);
-
-$("#guessButton").addEventListener("click", makeGuess);
-$("#guessInput").addEventListener("keydown", event => {
-  if (event.key === "Enter") makeGuess();
-});
-$("#resetGuess").addEventListener("click", resetGuessGame);
-
-$("#reactionBox").addEventListener("click", reactionClick);
-$("#restartMemory").addEventListener("click", createMemoryGame);
-
-$("#nextWyr").addEventListener("click", nextWYR);
-$("#wyrA").addEventListener("click", () => chooseWYR($("#wyrA").textContent));
-$("#wyrB").addEventListener("click", () => chooseWYR($("#wyrB").textContent));
-
-$("#exportButton").addEventListener("click", exportProgress);
-$("#importFile").addEventListener("change", importProgress);
-$("#resetButton").addEventListener("click", resetProgress);
-
-/* ---------- START ---------- */
-
-initialize();
+})();
