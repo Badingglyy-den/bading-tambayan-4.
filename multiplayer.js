@@ -132,6 +132,13 @@
       font-size: 1.15rem;
       padding: 7px 10px;
     }
+    #onlineTambayan .online-typing {
+      min-height: 22px;
+      font-size: .86rem;
+      color: #cbbaff;
+      font-style: italic;
+      margin: 3px 0 8px;
+    }
     @media(max-width:620px) {
       #onlineTambayan .online-columns { grid-template-columns: 1fr; }
       #onlineTambayan .online-panel { padding: 16px; }
@@ -207,6 +214,9 @@
             <div class="online-messages" id="onlineMessages"
               aria-live="polite"></div>
 
+            <p class="online-typing" id="onlineTypingIndicator"
+              aria-live="polite"></p>
+
             <form class="online-compose" id="onlineMessageForm">
               <input id="onlineMessageInput" maxlength="1000"
                 placeholder="Say something..." required>
@@ -255,6 +265,10 @@
 
   let messageIds = new Set();
   const profileCache = new Map();
+
+  let typingTimer = null;
+  let isTyping = false;
+  const typingUsers = new Map();
 
   function status(message, error = false) {
     $("onlineStatus").textContent = message;
@@ -486,9 +500,11 @@
     $("onlineRoom").style.display = "block";
     $("onlineRoomTitle").textContent = roomName;
     $("onlineRoomCode").textContent = code;
+    $("onlineTypingIndicator").textContent = "";
 
     messageIds = new Set();
     profileCache.clear();
+    typingUsers.clear();
 
     await loadMessages();
 
@@ -498,6 +514,9 @@
         config: {
           presence: {
             key: currentUser.id
+          },
+          broadcast: {
+            self: false
           }
         }
       }
@@ -515,6 +534,11 @@
       .on("presence", {
         event: "sync"
       }, renderMembers)
+      .on("broadcast", {
+        event: "typing"
+      }, ({ payload }) => {
+        handleTyping(payload);
+      })
       .subscribe(async state => {
         if (state === "SUBSCRIBED") {
           await roomChannel.track({
@@ -655,6 +679,94 @@
         `;
   }
 
+  function updateTypingDisplay() {
+    const names = Array.from(typingUsers.values());
+
+    if (!names.length) {
+      $("onlineTypingIndicator").textContent = "";
+    } else if (names.length === 1) {
+      $("onlineTypingIndicator").textContent =
+        "✨ " + names[0] + " is typing...";
+    } else if (names.length === 2) {
+      $("onlineTypingIndicator").textContent =
+        "✨ " + names.join(" and ") + " are typing...";
+    } else {
+      $("onlineTypingIndicator").textContent =
+        "✨ Several people are typing...";
+    }
+  }
+
+  function handleTyping(payload) {
+    if (!payload || !payload.user_id) return;
+    if (payload.user_id === currentUser.id) return;
+
+    const userId = payload.user_id;
+
+    if (typingUsers.has(userId)) {
+      clearTimeout(typingUsers.get(userId).timer);
+      typingUsers.delete(userId);
+    }
+
+    if (payload.is_typing) {
+      const name = payload.display_name || "Someone";
+
+      const timer = setTimeout(() => {
+        typingUsers.delete(userId);
+        updateTypingDisplay();
+      }, 2500);
+
+      typingUsers.set(userId, {
+        name,
+        timer
+      });
+
+      updateTypingDisplay();
+    } else {
+      updateTypingDisplay();
+    }
+  }
+
+  async function broadcastTyping(typing) {
+    if (!roomChannel || !currentRoom) return;
+    if (isTyping === typing) return;
+
+    isTyping = typing;
+
+    try {
+      await roomChannel.send({
+        type: "broadcast",
+        event: "typing",
+        payload: {
+          user_id: currentUser.id,
+          display_name: profile.display_name,
+          is_typing: typing
+        }
+      });
+    } catch (error) {
+      console.warn("Typing update failed:", error);
+    }
+  }
+
+  function handleMessageTyping() {
+    const input = $("onlineMessageInput");
+
+    if (!input.value.trim()) {
+      clearTimeout(typingTimer);
+      broadcastTyping(false);
+      return;
+    }
+
+    if (!isTyping) {
+      broadcastTyping(true);
+    }
+
+    clearTimeout(typingTimer);
+
+    typingTimer = setTimeout(() => {
+      broadcastTyping(false);
+    }, 1800);
+  }
+
   async function sendMessage(content) {
     if (!client || !currentRoom) return;
 
@@ -676,9 +788,23 @@
   }
 
   async function leaveRoom(updateStatus = true) {
+    clearTimeout(typingTimer);
+    typingTimer = null;
+    isTyping = false;
+
     if (roomChannel && client) {
       await client.removeChannel(roomChannel);
       roomChannel = null;
+    }
+
+    typingUsers.forEach(person => {
+      clearTimeout(person.timer);
+    });
+
+    typingUsers.clear();
+
+    if ($("onlineTypingIndicator")) {
+      $("onlineTypingIndicator").textContent = "";
     }
 
     currentRoom = null;
@@ -708,6 +834,11 @@
       .slice(0, 6);
   };
 
+  $("onlineMessageInput").addEventListener(
+    "input",
+    handleMessageTyping
+  );
+
   $("onlineMessageForm").onsubmit = async event => {
     event.preventDefault();
 
@@ -715,6 +846,9 @@
     const value = input.value.trim();
 
     if (!value) return;
+
+    clearTimeout(typingTimer);
+    await broadcastTyping(false);
 
     input.value = "";
 
@@ -738,4 +872,3 @@
 
   initialize();
 })();
-    
