@@ -1,3 +1,4 @@
+
 /* Bading Tambayan 4.2 — Secret Hunt add-on
  * Keep this file separate from lounge.js.
  * The answer is never stored or sent by this frontend.
@@ -86,11 +87,13 @@
   }
 
   function findCard(title) {
-    return Array.from(document.querySelectorAll(".tool-card, .hangout-card"))
-      .find(card => {
-        const heading = card.querySelector("h3");
-        return heading && heading.textContent.trim().toLowerCase() === title.toLowerCase();
-      }) || null;
+    return Array.from(
+      document.querySelectorAll(".tool-card, .hangout-card")
+    ).find(card => {
+      const heading = card.querySelector("h3");
+      return heading &&
+        heading.textContent.trim().toLowerCase() === title.toLowerCase();
+    }) || null;
   }
 
   function makeHints(card) {
@@ -98,6 +101,7 @@
 
     const huntBox = card.querySelector(".lounge-hunt-box");
     const host = huntBox || card;
+
     const panel = document.createElement("div");
     panel.id = HINTS_ID;
     panel.className = "secret-hunt-hints";
@@ -109,6 +113,7 @@
 
     HINTS.forEach((hint, index) => {
       const item = document.createElement("div");
+
       const button = document.createElement("button");
       button.type = "button";
       button.className = "small-btn secret-hunt-hint-button";
@@ -138,10 +143,14 @@
 
   function removeOldAnswerForm(card) {
     if (!card) return;
+
     card.querySelectorAll(".lounge-hunt-form, form").forEach(form => {
-      // Only remove the legacy answer form, never unrelated forms.
-      if (form.querySelector(".lounge-hunt-input") ||
-          form.querySelector('input[aria-label="Your Secret Hunt answer"]')) {
+      if (
+        form.querySelector(".lounge-hunt-input") ||
+        form.querySelector(
+          'input[aria-label="Your Secret Hunt answer"]'
+        )
+      ) {
         form.remove();
       }
     });
@@ -158,16 +167,23 @@
   }
 
   function addTreasure(spinCard) {
-    if (!spinCard || spinCard.querySelector("#" + TREASURE_ID)) return;
+    if (!spinCard || spinCard.querySelector("#" + TREASURE_ID)) {
+      return;
+    }
 
     const button = document.createElement("button");
     button.type = "button";
     button.id = TREASURE_ID;
     button.className = "secret-hunt-treasure";
+
     button.innerHTML =
       '<span class="secret-hunt-purple-star" aria-hidden="true">💜⭐</span>' +
       '<span>Tap the hidden Purple Star</span>';
-    button.setAttribute("aria-label", "Discover the hidden Purple Star");
+
+    button.setAttribute(
+      "aria-label",
+      "Discover the hidden Purple Star"
+    );
 
     const status = document.createElement("p");
     status.id = STATUS_ID;
@@ -188,14 +204,22 @@
       }
 
       button.disabled = true;
-      setTreasureStatus(status, "✨ Checking your discovery...", false);
+      setTreasureStatus(
+        status,
+        "✨ Checking your discovery...",
+        false
+      );
 
       try {
         // The secure database wrapper retrieves the answer server-side.
-        const { data, error } = await client.rpc("lounge_click_hunt_treasure");
+        const { data, error } = await client.rpc(
+          "lounge_click_hunt_treasure"
+        );
+
         if (error) throw error;
 
         const result = getResultObject(data);
+
         const already =
           result.already_discovered === true ||
           result.status === "already_discovered" ||
@@ -207,14 +231,18 @@
             "You've already discovered today's Purple Star! Your discovery is safe and recorded. 💜",
             false
           );
-          button.textContent = "💜 Purple Star already discovered";
+
+          button.textContent =
+            "💜 Purple Star already discovered";
+
           return;
         }
 
         if (result.success === false) {
           setTreasureStatus(
             status,
-            result.message || "The Purple Star couldn't be discovered right now. Please try again later.",
+            result.message ||
+              "The Purple Star couldn't be discovered right now. Please try again later.",
             true
           );
           return;
@@ -222,29 +250,43 @@
 
         const rewardType = result.reward_type;
         const rewardAmount = result.reward_amount;
+
         let rewardMessage = "Your discovery has been recorded!";
 
         if (rewardType === "xp") {
-          rewardMessage = "You found it! 🎉 You received " +
+          rewardMessage =
+            "You found it! 🎉 You received " +
             (rewardAmount ?? 10) + " XP!";
         } else if (rewardType === "star") {
-          rewardMessage = "You found it! ⭐ You received " +
+          rewardMessage =
+            "You found it! ⭐ You received " +
             (rewardAmount ?? "") + " star(s)!";
         } else if (rewardType === "collectible") {
-          rewardMessage = "You found it! 🎁 Your collectible reward has been recorded.";
+          rewardMessage =
+            "You found it! 🎁 Your collectible reward has been recorded.";
         }
 
-        setTreasureStatus(status, rewardMessage + " See you on the next hunt! 💜", false);
+        setTreasureStatus(
+          status,
+          rewardMessage + " See you on the next hunt! 💜",
+          false
+        );
+
         button.textContent = "💜 Purple Star discovered!";
+
       } catch (error) {
-        console.error("Secret Hunt treasure click error:", error);
+        console.error(
+          "Secret Hunt treasure click error:",
+          error
+        );
+
         setTreasureStatus(
           status,
           "We couldn't record your discovery right now. Please check your connection and try again.",
           true
         );
+
       } finally {
-        // Keep a successfully discovered button disabled; allow retries after errors.
         if (!/discovered/i.test(button.textContent)) {
           button.disabled = false;
         }
@@ -265,29 +307,31 @@
       makeHints(huntCard);
     }
 
-    if (spinCard) addTreasure(spinCard);
+    if (spinCard) {
+      addTreasure(spinCard);
+    }
   }
 
   function start() {
     enhance();
 
-    // lounge.js builds the Secret Hunt contents asynchronously.
+    // Keep watching because lounge.js builds its content asynchronously.
     const observer = new MutationObserver(() => {
       enhance();
-      const huntReady = !!document.querySelector("#" + HINTS_ID);
-      const treasureReady = !!document.querySelector("#" + TREASURE_ID);
-
     });
-    observer.observe(document.body, { childList: true, subtree: true });
 
-    const huntReady = !!document.querySelector("#" + HINTS_ID);
-    const treasureReady = !!document.querySelector("#" + TREASURE_ID);
-    
+    observer.observe(document.body, {
+      childList: true,
+      subtree: true
+    });
   }
 
   if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", start, { once: true });
+    document.addEventListener("DOMContentLoaded", start, {
+      once: true
+    });
   } else {
     start();
   }
 })();
+        
