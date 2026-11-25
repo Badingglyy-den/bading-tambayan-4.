@@ -530,16 +530,241 @@
     }
   }
 
+  function getManilaDate() {
+    const parts = new Intl.DateTimeFormat("en-US", {
+      timeZone: "Asia/Manila",
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit"
+    }).formatToParts(new Date());
+
+    const values = {};
+    parts.forEach(part => {
+      if (part.type !== "literal") values[part.type] = part.value;
+    });
+
+    return values.year + "-" + values.month + "-" + values.day;
+  }
+
+  function addSecretHuntStyles() {
+    if (document.getElementById("loungeSecretHuntStyles")) return;
+
+    const style = document.createElement("style");
+    style.id = "loungeSecretHuntStyles";
+    style.textContent = `
+      .lounge-hunt-box {
+        margin-top: 12px;
+        padding: 13px;
+        border: 1px solid rgba(215, 165, 255, .45);
+        border-radius: 14px;
+        background: rgba(160, 120, 210, .1);
+      }
+      .lounge-hunt-clue {
+        margin: 0 0 12px;
+        font-weight: 600;
+        line-height: 1.55;
+      }
+      .lounge-hunt-form {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        align-items: center;
+      }
+      .lounge-hunt-input {
+        flex: 1 1 180px;
+        min-width: 0;
+        width: 100%;
+        padding: 10px 12px;
+        border: 1px solid rgba(190, 150, 230, .5);
+        border-radius: 10px;
+        background: rgba(255, 255, 255, .08);
+        color: inherit;
+        font: inherit;
+      }
+      .lounge-hunt-input::placeholder {
+        color: inherit;
+        opacity: .65;
+      }
+      .lounge-hunt-status {
+        margin: 10px 0 0;
+        line-height: 1.45;
+      }
+    `;
+    document.head.appendChild(style);
+  }
+
+  async function loadSecretHunt(card) {
+    addSecretHuntStyles();
+
+    const originalButton = card.querySelector("button");
+    if (originalButton) {
+      originalButton.disabled = true;
+      originalButton.textContent = "Looking for today's hunt...";
+    }
+
+    const description = card.querySelector("p");
+    const huntBox = document.createElement("div");
+    huntBox.className = "lounge-hunt-box";
+    if (description) {
+      description.insertAdjacentElement("afterend", huntBox);
+    } else {
+      card.appendChild(huntBox);
+    }
+
+    const status = addText(
+      huntBox,
+      "p",
+      "Connecting to the Secret Hunt...",
+      "form-note lounge-hunt-status"
+    );
+
+    const client = await waitForClient();
+    if (!client) {
+      setStatus(status, "The Lounge connection is unavailable. Please refresh and try again.", true);
+      if (originalButton) originalButton.remove();
+      return;
+    }
+
+    try {
+      const today = getManilaDate();
+      const { data: hunt, error } = await client
+        .from("lounge_daily_hunts")
+        .select("id, clue, hunt_date, status")
+        .eq("hunt_date", today)
+        .eq("status", "published")
+        .maybeSingle();
+
+      if (error) throw error;
+
+      if (!hunt) {
+        setStatus(status, "🔎 No Secret Hunt has been published for today yet. Check back soon! 💜");
+        if (originalButton) originalButton.remove();
+        return;
+      }
+
+      const clue = findValue(hunt, ["clue"]);
+      if (!clue) {
+        setStatus(status, "Today's Secret Hunt is being prepared. Please check back soon.");
+        if (originalButton) originalButton.remove();
+        return;
+      }
+
+      status.textContent = "";
+      const clueText = addText(huntBox, "p", clue, "lounge-hunt-clue");
+      clueText.setAttribute("aria-label", "Today's Secret Hunt clue");
+
+      const form = document.createElement("form");
+      form.className = "lounge-hunt-form";
+
+      const answer = document.createElement("input");
+      answer.type = "text";
+      answer.className = "lounge-hunt-input";
+      answer.maxLength = 100;
+      answer.autocomplete = "off";
+      answer.placeholder = "What do you think the hidden answer is?";
+      answer.setAttribute("aria-label", "Your Secret Hunt answer");
+      answer.required = true;
+
+      const submit = document.createElement("button");
+      submit.type = "submit";
+      submit.className = "small-btn";
+      submit.textContent = "🔍 Submit answer";
+
+      form.appendChild(answer);
+      form.appendChild(submit);
+      huntBox.appendChild(form);
+
+      form.addEventListener("submit", async event => {
+        event.preventDefault();
+
+        const objectKey = answer.value.trim();
+        if (!objectKey) {
+          setStatus(status, "Type your answer first. 💜", true);
+          return;
+        }
+
+        submit.disabled = true;
+        answer.disabled = true;
+        setStatus(status, "Checking your discovery...");
+
+        try {
+          const { data, error: discoverError } = await client.rpc(
+            "lounge_discover_hunt_object",
+            { p_object_key: objectKey }
+          );
+
+          if (discoverError) throw discoverError;
+
+          const result = normalizeResult(data) || {};
+          const success = result.success === true;
+          const alreadyDiscovered = result.already_discovered === true;
+
+          if (alreadyDiscovered) {
+            setStatus(status, "You've already discovered today's secret. Come back for the next hunt! 💜");
+            form.remove();
+            return;
+          }
+
+          if (!success) {
+            setStatus(
+              status,
+              result.message || "Not quite! Take another look at the clue and try again. 🔎"
+            );
+            answer.disabled = false;
+            answer.value = "";
+            answer.focus();
+            submit.disabled = false;
+            return;
+          }
+
+          const rewardType = result.reward_type;
+          const rewardAmount = result.reward_amount;
+          let rewardText = "Your discovery has been recorded!";
+
+          if (rewardType === "xp") {
+            rewardText = "You found it! 🎉 Your discovery reward: " + rewardAmount + " XP.";
+          } else if (rewardType === "star") {
+            rewardText = "You found it! ⭐ Your discovery reward: " + rewardAmount + " star(s).";
+          } else if (rewardType === "collectible") {
+            rewardText = "You found it! 🎁 A collectible reward has been recorded.";
+          }
+
+          setStatus(status, rewardText + " See you in the next hunt! 💜");
+          form.remove();
+        } catch (discoverError) {
+          console.error("Secret Hunt discovery error:", discoverError);
+          setStatus(
+            status,
+            "We couldn't check your answer right now. Please try again in a moment.",
+            true
+          );
+          answer.disabled = false;
+          submit.disabled = false;
+        }
+      });
+
+      if (originalButton) originalButton.remove();
+    } catch (error) {
+      console.error("Secret Hunt load error:", error);
+      setStatus(status, "We couldn't load today's Secret Hunt. Please try again later.", true);
+      if (originalButton) {
+        originalButton.disabled = true;
+        originalButton.textContent = "Secret Hunt unavailable";
+      }
+    }
+  }
+
   function setup() {
     const cards = Array.from(document.querySelectorAll(".tool-card"));
     const spinCard = cards.find(card => /spin\s*&\s*win/i.test(card.textContent));
     const boxCard = cards.find(card => /mystery\s*box/i.test(card.textContent));
     const pollCard = cards.find(card => /daily\s*poll/i.test(card.textContent));
     const moodCard = cards.find(card => /mood\s*garden/i.test(card.textContent));
+    const secretHuntCard = cards.find(card => /secret\s*hunt/i.test(card.textContent));
 
-    if (!spinCard && !boxCard && !pollCard && !moodCard) return;
+    if (!spinCard && !boxCard && !pollCard && !moodCard && !secretHuntCard) return;
 
-    const host = spinCard || boxCard || pollCard || moodCard;
+    const host = spinCard || boxCard || pollCard || moodCard || secretHuntCard;
     let statusElement = document.getElementById("loungeGameStatus");
 
     if (!statusElement) {
@@ -575,6 +800,7 @@
 
     if (pollCard) loadPoll(pollCard);
     if (moodCard) loadMoodGarden(moodCard);
+    if (secretHuntCard) loadSecretHunt(secretHuntCard);
   }
 
   if (document.readyState === "loading") {
@@ -583,4 +809,3 @@
     setup();
   }
 })();
-        
