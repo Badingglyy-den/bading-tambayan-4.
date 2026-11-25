@@ -236,9 +236,11 @@
       document.querySelectorAll(".tool-card")
     );
 
-    const card = cards.find(item =>
-      /NPC of the Day/i.test(item.textContent)
-    );
+    const card = cards.find(item => {
+  const heading = item.querySelector("h3");
+  return heading &&
+    heading.textContent.trim().toLowerCase() === "npc of the day";
+});
 
     if (!card || card.dataset.npcReady === "true") return;
 
