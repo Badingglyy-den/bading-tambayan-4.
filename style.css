@@ -2112,6 +2112,48 @@ body {
   .map-lounge { top: 40%; left: 0; }
  }
  
+/* MAP DESTINATION TAP EFFECT */
+
+.map-location {
+  -webkit-tap-highlight-color: transparent;
+  cursor: pointer;
+  position: absolute;
+  overflow: hidden;
+}
+
+.map-location::after {
+  content: "";
+  position: absolute;
+  inset: -2px;
+  border-radius: inherit;
+  background: radial-gradient(
+    circle,
+    rgba(220, 180, 255, 0.35),
+    transparent 70%
+  );
+  opacity: 0;
+  transition: opacity .25s ease;
+  pointer-events: none;
+}
+
+.map-location:active {
+  transform: scale(0.94);
+  border-color: #f0d5ff;
+  box-shadow:
+    0 0 18px rgba(205, 155, 255, 0.8),
+    0 0 35px rgba(135, 75, 220, 0.5);
+}
+
+.map-location:active::after {
+  opacity: 1;
+}
+
+.map-location:focus-visible {
+  outline: 2px solid #e5c6ff;
+  outline-offset: 4px;
+}
+ 
+ 
  
  
                     
