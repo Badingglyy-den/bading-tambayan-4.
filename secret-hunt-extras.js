@@ -276,7 +276,7 @@
       enhance();
       const huntReady = !!document.querySelector("#" + HINTS_ID);
       const treasureReady = !!document.querySelector("#" + TREASURE_ID);
-      if (huntReady && treasureReady) observer.disconnect();
+
     });
     observer.observe(document.body, { childList: true, subtree: true });
 
