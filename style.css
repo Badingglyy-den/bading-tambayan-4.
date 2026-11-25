@@ -1586,6 +1586,152 @@ body {
   }
  }
  
+/* =====================================
+   TOPBAR — MAGICAL NAVIGATION
+   ===================================== */
+
+.topbar {
+  position: sticky;
+  top: 10px;
+  z-index: 100;
+  margin: 10px auto 22px;
+  padding: 13px 18px;
+  border: 1px solid #c6a5ff55;
+  border-radius: 20px;
+  background: linear-gradient(
+    120deg,
+    #21152feF,
+    #302044eF,
+    #1b1730eF
+  );
+  box-shadow:
+    0 8px 28px #00000045,
+    0 0 18px #bd91ff18,
+    inset 0 1px 0 #ffffff12;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  transition: border-color .3s ease, box-shadow .3s ease;
+}
+
+.topbar:hover {
+  border-color: #d6aaff88;
+  box-shadow:
+    0 10px 30px #00000050,
+    0 0 24px #bd91ff30,
+    inset 0 1px 0 #ffffff18;
+}
+
+.brand {
+  gap: 11px;
+  color: #f4eaff;
+  letter-spacing: 1.2px;
+  text-shadow: 0 0 14px #bd91ff35;
+}
+
+.brand-mark {
+  display: inline-grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  border: 1px solid #d6aaff88;
+  border-radius: 13px;
+  background: linear-gradient(145deg, #bd91ff35, #ffb6dc25);
+  color: #f4d8ff;
+  font-size: 23px;
+  box-shadow: 0 0 16px #bd91ff35;
+  animation: brandSparkle 3s ease-in-out infinite;
+}
+
+.brand small {
+  color: #c9a8ed;
+  letter-spacing: 2px;
+}
+
+.top-actions {
+  gap: 10px;
+}
+
+.currency {
+  padding: 9px 13px;
+  border: 1px solid #ffd87555;
+  border-radius: 13px;
+  background: #ffd87512;
+  color: #ffe6a3;
+  box-shadow: 0 0 14px #ffd87515;
+}
+
+.icon-btn {
+  border: 1px solid #c6a5ff55;
+  border-radius: 13px;
+  background: #bd91ff16;
+  color: #f4eaff;
+  transition: transform .25s ease, background .25s ease,
+    box-shadow .25s ease;
+}
+
+.icon-btn:hover {
+  transform: translateY(-3px) rotate(-5deg);
+  background: #bd91ff30;
+  box-shadow: 0 0 16px #bd91ff55;
+}
+
+@keyframes brandSparkle {
+  0%, 100% {
+    box-shadow: 0 0 12px #bd91ff25;
+    transform: rotate(0deg);
+  }
+  50% {
+    box-shadow: 0 0 22px #bd91ff70;
+    transform: rotate(8deg);
+  }
+}
+
+@media (max-width: 600px) {
+  .topbar {
+    top: 5px;
+    margin: 5px auto 16px;
+    padding: 10px 11px;
+    border-radius: 16px;
+  }
+
+  .brand {
+    gap: 8px;
+    font-size: 12px;
+    letter-spacing: .7px;
+  }
+
+  .brand-mark {
+    width: 33px;
+    height: 33px;
+    font-size: 20px;
+  }
+
+  .brand small {
+    font-size: 8px;
+    letter-spacing: 1.3px;
+  }
+
+  .top-actions {
+    gap: 6px;
+  }
+
+  .currency {
+    padding: 8px;
+    font-size: 12px;
+  }
+
+  .icon-btn {
+    padding: 7px 9px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .brand-mark {
+    animation: none !important;
+  }
+ }
+ 
+ 
                     
                               
  
