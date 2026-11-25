@@ -186,6 +186,51 @@ window.tambayanApplyLoungeReward = function (rewardType, amount, reason = "Loung
   return false;
 };
 
+// Allowlisted collectibles earned from Lounge rewards.
+// These are inventory items, not purchasable shop items.
+const loungeCollectibles = {
+  rare_collectible_01: {
+    icon: "💎",
+    name: "Rare Tambayan Gem"
+  },
+  epic_collectible_01: {
+    icon: "🔮",
+    name: "Epic Tambayan Relic"
+  },
+  legendary_collectible_01: {
+    icon: "👑",
+    name: "Legendary Tambayan Treasure"
+  }
+};
+
+// Add a collectible to the player's inventory.
+// Unknown keys are rejected, and duplicate items are not added.
+window.tambayanAddLoungeCollectible = function (
+  key,
+  reason = "Lounge collectible!"
+) {
+  const item = loungeCollectibles[key];
+
+  if (!item) {
+    console.warn("Unknown Lounge collectible:", key);
+    return false;
+  }
+
+  if (!Array.isArray(state.ownedItems)) {
+    state.ownedItems = [];
+  }
+
+  if (state.ownedItems.includes(key)) {
+    return true;
+  }
+
+  state.ownedItems.push(key);
+  toast(reason + " " + item.icon + " " + item.name);
+  save();
+
+  return true;
+};
+
 function level() {
   return Math.floor(state.xp / 100) + 1;
 }
@@ -218,7 +263,6 @@ function render() {
   $("welcomeName").textContent = state.profile.name || "Sis";
 
   $("levelValue").textContent = level();
-  $("xpValue").textContent = state.xp + " XP";
 
   $("titleValue").textContent =
     level() >= 10
@@ -390,12 +434,22 @@ function renderShop() {
     `;
   }).join("");
 
+  // Show both shop purchases and Lounge-earned collectibles.
+  // Lounge collectibles remain separate from the purchasable shop.
   $("collectionList").innerHTML = state.ownedItems.length
     ? state.ownedItems.map(id => {
-        let i = shopItems.find(x => x.id === id);
+        const shopItem = shopItems.find(x => x.id === id);
+        const loungeItem = Object.prototype.hasOwnProperty.call(
+          loungeCollectibles,
+          id
+        )
+          ? loungeCollectibles[id]
+          : null;
 
-        return i
-          ? `<span class="collection-pill">${i.icon} ${i.name}</span>`
+        const item = shopItem || loungeItem;
+
+        return item
+          ? `<span class="collection-pill">${item.icon} ${item.name}</span>`
           : "";
       }).join("")
     : '<span class="empty-state">Your collection starts here.</span>';
