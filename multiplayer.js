@@ -111,11 +111,245 @@
       min-height: 22px; font-size: .86rem; color: #cbbaff;
       font-style: italic; margin: 3px 0 8px;
     }
-    @media(max-width:620px) {
-      #onlineTambayan .online-columns { grid-template-columns: 1fr; }
-      #onlineTambayan .online-panel { padding: 16px; }
+    
+    /* ONLINE TAMBAYAN — VISUAL REFRESH */
+
+    #onlineTambayan {
+      margin: 34px 0 48px;
     }
-  `;
+
+    #onlineTambayan .section-heading {
+      margin-bottom: 16px;
+    }
+
+    #onlineTambayan .online-panel {
+      background:
+        radial-gradient(ellipse at top left, rgba(151,105,255,.16), transparent 48%),
+        linear-gradient(145deg, #211735, #171126);
+      border: 1px solid rgba(194,158,255,.28);
+      border-radius: 25px;
+      padding: 24px;
+      box-shadow: 0 18px 45px rgba(0,0,0,.2);
+    }
+
+    #onlineTambayan .online-grid > div,
+    #onlineTambayan .online-box {
+      background: rgba(255,255,255,.035);
+      border: 1px solid rgba(194,158,255,.17);
+      border-radius: 19px;
+      padding: 17px;
+      min-width: 0;
+    }
+
+    #onlineTambayan h3 {
+      color: #eadcff;
+      letter-spacing: .01em;
+    }
+
+    #onlineTambayan label {
+      display: block;
+      margin-top: 10px;
+      color: #cbb9e9;
+      font-size: .88rem;
+      font-weight: 700;
+    }
+
+    #onlineTambayan input {
+      min-height: 46px;
+      border-radius: 13px;
+      border: 1px solid rgba(194,158,255,.25);
+      background: rgba(12,8,25,.55);
+      color: #fff;
+      padding: 12px 14px;
+      outline: none;
+    }
+
+    #onlineTambayan input:focus {
+      border-color: #c6a5ff;
+      box-shadow: 0 0 0 3px rgba(169,139,255,.13);
+    }
+
+    #onlineTambayan input::placeholder {
+      color: #9385aa;
+    }
+
+    #onlineTambayan button {
+      min-height: 42px;
+      border-radius: 13px;
+      background: linear-gradient(135deg, #c3a2ff, #9872ed);
+      color: #211432;
+      box-shadow: 0 5px 16px rgba(137,96,220,.18);
+      transition: transform .18s ease, filter .18s ease;
+    }
+
+    #onlineTambayan button:hover {
+      filter: brightness(1.09);
+      transform: translateY(-1px);
+    }
+
+    #onlineTambayan button:active {
+      transform: scale(.97);
+    }
+
+    #onlineTambayan .online-status {
+      padding: 11px 14px;
+      border-radius: 12px;
+      background: rgba(169,139,255,.09);
+      border: 1px solid rgba(194,158,255,.15);
+    }
+
+    #onlineTambayan .online-room-card {
+      min-height: 62px;
+      padding: 13px 15px;
+      border-radius: 14px;
+      background: rgba(255,255,255,.045);
+      border: 1px solid rgba(194,158,255,.17);
+    }
+
+    #onlineTambayan .online-room-card.active {
+      background: rgba(169,139,255,.16);
+      border-color: #b99aff;
+      box-shadow: 0 0 18px rgba(169,139,255,.12);
+    }
+
+    #onlineTambayan .online-room {
+      border-top: 1px solid rgba(194,158,255,.2);
+      margin-top: 22px;
+      padding-top: 22px;
+    }
+
+    #onlineTambayan .online-code {
+      display: inline-block;
+      margin-top: 5px;
+      padding: 8px 13px;
+      border-radius: 10px;
+      background: rgba(169,139,255,.13);
+      border: 1px dashed rgba(194,158,255,.4);
+      letter-spacing: .22em;
+    }
+
+    #onlineTambayan .online-columns {
+      gap: 16px;
+    }
+
+    #onlineTambayan .online-messages {
+      height: 320px;
+      padding: 12px;
+      border-radius: 14px;
+      background: rgba(9,6,19,.35);
+      border: 1px solid rgba(194,158,255,.12);
+    }
+
+    #onlineTambayan .online-message {
+      max-width: 90%;
+      padding: 12px 14px;
+      border-radius: 15px;
+      background: rgba(169,139,255,.12);
+      border: 1px solid rgba(194,158,255,.12);
+      line-height: 1.5;
+    }
+
+    #onlineTambayan .online-message strong {
+      color: #e0caff;
+    }
+
+    #onlineTambayan .online-message-receipt {
+      color: #cbb2ff;
+    }
+
+    #onlineTambayan .online-member {
+      padding: 11px 13px;
+      border: 1px solid rgba(194,158,255,.12);
+      border-radius: 12px;
+      background: rgba(169,139,255,.08);
+    }
+
+    #onlineTambayan .online-compose {
+      gap: 9px;
+      margin-top: 10px;
+    }
+
+    #onlineTambayan .online-compose input {
+      margin: 0;
+      min-width: 0;
+    }
+
+    #onlineTambayan .online-compose button {
+      flex-shrink: 0;
+      margin: 0;
+    }
+
+    #onlineTambayan .online-reactions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+      margin-top: 10px;
+    }
+
+    #onlineTambayan .online-reactions button {
+      min-width: 43px;
+      margin: 0;
+      background: rgba(169,139,255,.13);
+      color: #f0e5ff;
+      border: 1px solid rgba(194,158,255,.2);
+      box-shadow: none;
+    }
+
+    #onlineTambayan .online-danger-button {
+      background: linear-gradient(135deg, #a94f70, #78334f);
+      color: #fff;
+    }
+
+    @media(max-width:620px) {
+      #onlineTambayan {
+        margin: 24px 0 35px;
+      }
+
+      #onlineTambayan .online-panel {
+        padding: 13px;
+        border-radius: 19px;
+      }
+
+      #onlineTambayan .online-grid {
+        grid-template-columns: 1fr;
+      }
+
+      #onlineTambayan .online-grid > div,
+      #onlineTambayan .online-box {
+        padding: 13px;
+      }
+
+      #onlineTambayan .online-columns {
+        grid-template-columns: 1fr;
+      }
+
+      #onlineTambayan .online-messages {
+        height: 280px;
+      }
+
+      #onlineTambayan .online-room-top {
+        align-items: flex-start;
+      }
+
+      #onlineTambayan .online-room-actions {
+        width: 100%;
+      }
+
+      #onlineTambayan .online-room-actions button {
+        flex: 1;
+      }
+
+      #onlineTambayan .online-message {
+        max-width: 96%;
+      }
+    }
+
+    @media(prefers-reduced-motion: reduce) {
+      #onlineTambayan button {
+        transition: none;
+      }
+    }
+
   document.head.appendChild(style);
 
   const section = document.createElement("section");
