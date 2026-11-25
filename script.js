@@ -38,8 +38,6 @@ const defaultState = () => ({
 });
 
 let state = loadState();
-
-alert(JSON.stringify(report, null, 2));
 let toastTimer = null;
 let reactionTimer = null;
 let reactionStart = 0;
