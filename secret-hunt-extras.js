@@ -58,18 +58,24 @@
       }
 
       .secret-hunt-treasure {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        align-self: flex-end;
-        width: 38px;
-        height: 38px;
-        margin: 10px 0 0;
-        padding: 0;
-        border: 1px solid rgba(215, 165, 255, .3);
-        border-radius: 50%;
-        background: rgba(155, 105, 220, .12);
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        width: 28px !important;
+        min-width: 28px !important;
+        max-width: 28px !important;
+        height: 28px !important;
+        min-height: 28px !important;
+        max-height: 28px !important;
+        flex: 0 0 28px !important;
+        margin: 8px 0 0 auto !important;
+        padding: 0 !important;
+        border: 1px solid rgba(215, 165, 255, .3) !important;
+        border-radius: 50% !important;
+        background: rgba(155, 105, 220, .12) !important;
         color: inherit;
+        font-size: 0 !important;
+        line-height: 1 !important;
         cursor: pointer;
         opacity: .8;
         transition: opacity .2s, transform .2s;
@@ -77,7 +83,7 @@
 
       .secret-hunt-treasure:hover {
         opacity: 1;
-        transform: scale(1.12);
+        transform: scale(1.08);
       }
 
       .secret-hunt-treasure:disabled {
@@ -86,10 +92,11 @@
       }
 
       .secret-hunt-purple-star {
-        font-size: 1.15rem;
-        line-height: 1;
+        display: block;
+        font-size: 13px !important;
+        line-height: 1 !important;
         filter: drop-shadow(
-          0 0 5px rgba(190, 130, 255, .65)
+          0 0 4px rgba(190, 130, 255, .65)
         );
       }
 
@@ -235,7 +242,6 @@
           "The Lounge connection is still starting. Please try again in a moment.",
           true
         );
-
         return;
       }
 
@@ -248,7 +254,6 @@
       );
 
       try {
-        // The secure database wrapper retrieves the answer server-side.
         const { data, error } = await client.rpc(
           "lounge_click_hunt_treasure"
         );
@@ -269,8 +274,10 @@
             false
           );
 
-          button.textContent =
-            "💜 Purple Star already discovered";
+          button.setAttribute(
+            "aria-label",
+            "Purple Star already discovered"
+          );
 
           return;
         }
@@ -282,14 +289,12 @@
               "The Purple Star couldn't be discovered right now. Please try again later.",
             true
           );
-
           return;
         }
 
         const rewardType = result.reward_type;
         const rewardAmount = result.reward_amount;
 
-        // Apply XP and Star rewards.
         if (
           rewardType === "xp" ||
           rewardType === "star" ||
@@ -315,10 +320,7 @@
               "The Secret Hunt reward could not be added to your local profile."
             );
           }
-        }
-
-        // Apply collectible rewards to the user's collection.
-        else if (rewardType === "collectible") {
+        } else if (rewardType === "collectible") {
           if (
             typeof window.tambayanAddLoungeCollectible !==
             "function"
@@ -365,8 +367,10 @@
           false
         );
 
-        button.textContent =
-          "💜 Purple Star discovered!";
+        button.setAttribute(
+          "aria-label",
+          "Purple Star discovered"
+        );
 
       } catch (error) {
         console.error(
@@ -381,7 +385,7 @@
         );
 
       } finally {
-        if (!/discovered/i.test(button.textContent)) {
+        if (!/discovered/i.test(button.getAttribute("aria-label") || "")) {
           button.disabled = false;
         }
       }
@@ -409,7 +413,6 @@
   function start() {
     enhance();
 
-    // Keep watching because lounge.js builds its content asynchronously.
     const observer = new MutationObserver(() => {
       enhance();
     });
@@ -428,4 +431,4 @@
     start();
   }
 })();
-  
+      
