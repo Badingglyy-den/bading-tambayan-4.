@@ -833,6 +833,39 @@ body {
   }
  }
  
+/* WORLD CARD — STRONGER PURPLE GLOW */
+
+.world-card {
+  border: 1px solid #b98aff55 !important;
+  box-shadow:
+    0 8px 24px #00000030,
+    0 0 12px #a66cff22 !important;
+}
+
+.world-card .world-icon {
+  box-shadow:
+    0 0 12px #bd91ff55,
+    0 0 25px #bd91ff22;
+  border: 1px solid #d4b5ff88;
+}
+
+.world-card:hover,
+.world-card:active {
+  border-color: #d6aaff !important;
+  box-shadow:
+    0 0 12px #bd91ff99,
+    0 0 30px #9b5cff66,
+    0 15px 35px #00000055 !important;
+}
+
+.world-card:hover .world-icon,
+.world-card:active .world-icon {
+  box-shadow:
+    0 0 18px #d6aaff,
+    0 0 35px #a66cffcc;
+}
+ 
+ 
  
  
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                }
