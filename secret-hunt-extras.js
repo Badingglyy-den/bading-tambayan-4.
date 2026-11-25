@@ -1,3 +1,4 @@
+
 /* Bading Tambayan 4.2 — Secret Hunt add-on
  * Keep this file separate from lounge.js.
  * The answer is never stored or sent by this frontend.
@@ -57,36 +58,38 @@
       }
 
       .secret-hunt-treasure {
-        display: flex;
+        display: inline-flex;
         align-items: center;
         justify-content: center;
-        gap: 9px;
-        width: 100%;
-        margin-top: 12px;
-        padding: 13px;
-        border: 1px solid rgba(215, 165, 255, .65);
-        border-radius: 14px;
-        background: linear-gradient(
-          135deg,
-          rgba(155, 105, 220, .24),
-          rgba(215, 165, 255, .13)
-        );
+        align-self: flex-end;
+        width: 38px;
+        height: 38px;
+        margin: 10px 0 0;
+        padding: 0;
+        border: 1px solid rgba(215, 165, 255, .3);
+        border-radius: 50%;
+        background: rgba(155, 105, 220, .12);
         color: inherit;
-        font: inherit;
-        font-weight: 700;
         cursor: pointer;
+        opacity: .8;
+        transition: opacity .2s, transform .2s;
+      }
+
+      .secret-hunt-treasure:hover {
+        opacity: 1;
+        transform: scale(1.12);
       }
 
       .secret-hunt-treasure:disabled {
-        opacity: .65;
+        opacity: .5;
         cursor: wait;
       }
 
       .secret-hunt-purple-star {
-        font-size: 2rem;
+        font-size: 1.15rem;
         line-height: 1;
         filter: drop-shadow(
-          0 0 8px rgba(190, 130, 255, .8)
+          0 0 5px rgba(190, 130, 255, .65)
         );
       }
 
@@ -208,8 +211,7 @@
     button.className = "secret-hunt-treasure";
 
     button.innerHTML =
-      '<span class="secret-hunt-purple-star" aria-hidden="true">💜⭐</span>' +
-      '<span>Tap the hidden Purple Star</span>';
+      '<span class="secret-hunt-purple-star" aria-hidden="true">💜⭐</span>';
 
     button.setAttribute(
       "aria-label",
@@ -426,3 +428,4 @@
     start();
   }
 })();
+  
