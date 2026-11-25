@@ -864,6 +864,83 @@ body {
     0 0 18px #d6aaff,
     0 0 35px #a66cffcc;
 }
+
+/* =====================================
+   TAMBAYANVERSE — MAGICAL STATS DASHBOARD
+   ===================================== */
+
+.stat {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid #c6a5ff33;
+  border-radius: 18px;
+  background:
+    radial-gradient(circle at 100% 0%, #c6a5ff20, transparent 60%),
+    linear-gradient(145deg, #211832, #151020);
+  box-shadow: 0 8px 22px #00000030;
+  transition: transform .25s ease, box-shadow .25s ease;
+}
+
+.stat:before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 12%;
+  width: 76%;
+  height: 2px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    #d9b5ff,
+    #ffb6dc,
+    transparent
+  );
+  opacity: .85;
+}
+
+.stat:nth-child(2):before {
+  background: linear-gradient(90deg, transparent, #a9d7ff, #c6a5ff, transparent);
+}
+
+.stat:nth-child(3):before {
+  background: linear-gradient(90deg, transparent, #9ff0d0, #a9d7ff, transparent);
+}
+
+.stat:nth-child(4):before {
+  background: linear-gradient(90deg, transparent, #ffd18d, #ffadd5, transparent);
+}
+
+.stat strong {
+  position: relative;
+  z-index: 1;
+  text-shadow: 0 0 16px #c6a5ff55;
+}
+
+.stat:hover,
+.stat:active {
+  transform: translateY(-4px);
+  box-shadow:
+    0 12px 28px #00000044,
+    0 0 18px #bd91ff33;
+}
+
+.stat .progress {
+  height: 7px;
+  background: #ffffff18;
+  border-radius: 20px;
+}
+
+.stat .progress i {
+  box-shadow: 0 0 10px #c6a5ff99;
+  transition: width .5s ease;
+}
+
+@media (max-width: 560px) {
+  .stat {
+    border-radius: 15px;
+    padding: 14px;
+  }
+ }
  
  
  
