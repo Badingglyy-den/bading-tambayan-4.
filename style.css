@@ -1479,6 +1479,113 @@ body {
     animation: none !important;
   }
  }
+ 
+/* =====================================
+   STAR SHOP — CELESTIAL BOUTIQUE
+   ===================================== */
+
+.shop-panel,
+.collection-panel {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid #e7c27a55;
+  border-radius: 22px;
+  background:
+    radial-gradient(circle at 100% 0%, #ffd98b20, transparent 50%),
+    linear-gradient(145deg, #292039, #171220);
+  box-shadow: 0 10px 28px #00000035;
+}
+
+.shop-heading h3,
+.collection-panel h3 {
+  color: #ffe5ad;
+  text-shadow: 0 0 14px #ffd98b55;
+}
+
+.currency {
+  border: 1px solid #ffd98b77;
+  background: #ffd98b18;
+  box-shadow: 0 0 14px #ffd98b22;
+}
+
+.currency b {
+  color: #ffe5ad;
+  text-shadow: 0 0 10px #ffd98b88;
+}
+
+.shop-item {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid #ffd98b44;
+  border-radius: 16px;
+  background:
+    radial-gradient(circle at 50% 0%, #ffd98b18, transparent 65%),
+    #ffffff08;
+  transition:
+    transform .25s ease,
+    border-color .25s ease,
+    box-shadow .25s ease;
+}
+
+.shop-item>span {
+  display: inline-block;
+  filter: drop-shadow(0 0 10px #ffd98b88);
+  transition: transform .25s ease;
+}
+
+.shop-item:hover {
+  transform: translateY(-5px);
+  border-color: #ffe5ad;
+  box-shadow:
+    0 0 18px #ffd98b44,
+    0 10px 22px #00000044;
+}
+
+.shop-item:hover>span {
+  transform: scale(1.15) rotate(-7deg);
+}
+
+.shop-item h4 {
+  color: #ffe5ad;
+}
+
+.shop-item button {
+  border: 1px solid #ffe0a0;
+  box-shadow: 0 0 12px #ffd98b33;
+  transition: transform .2s ease, box-shadow .2s ease;
+}
+
+.shop-item button:active {
+  transform: scale(.96);
+  box-shadow: 0 0 18px #ffd98b77;
+}
+
+.shop-item button:disabled {
+  filter: grayscale(.5);
+  box-shadow: none;
+}
+
+.collection-pill {
+  border: 1px solid #ffd98b55;
+  background: #ffd98b14;
+  color: #ffe5ad;
+  box-shadow: 0 0 10px #ffd98b18;
+  transition: transform .2s ease, box-shadow .2s ease;
+}
+
+.collection-pill:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0 14px #ffd98b55;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .shop-item,
+  .shop-item>span,
+  .collection-pill {
+    transition: none !important;
+  }
+ }
+ 
                     
                               
  
