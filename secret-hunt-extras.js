@@ -92,12 +92,11 @@
       }
 
       .secret-hunt-purple-star {
-        display: block;
-        font-size: 13px !important;
-        line-height: 1 !important;
-        filter: drop-shadow(
-          0 0 4px rgba(190, 130, 255, .65)
-        );
+  display: block;
+  color: #bd8cff !important;
+  font-size: 17px !important;
+  line-height: 1 !important;
+  text-shadow: 0 0 7px rgba(189, 140, 255, .8);
       }
 
       .secret-hunt-treasure-status {
@@ -218,12 +217,11 @@
     button.className = "secret-hunt-treasure";
 
     button.innerHTML =
-      '<span class="secret-hunt-purple-star" aria-hidden="true">💜⭐</span>';
+  '<span class="secret-hunt-purple-star" aria-hidden="true">★</span>';
 
-    button.setAttribute(
-      "aria-label",
-      "Discover the hidden Purple Star"
-    );
+    button.title = "Secret Hunt hint — tap to reveal";
+
+    button.title = "Secret Hunt hint — tap to reveal";
 
     const status = document.createElement("p");
     status.id = STATUS_ID;
