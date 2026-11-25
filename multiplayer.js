@@ -1,3 +1,4 @@
+
 (() => {
   "use strict";
 
@@ -111,7 +112,7 @@
       min-height: 22px; font-size: .86rem; color: #cbbaff;
       font-style: italic; margin: 3px 0 8px;
     }
-    
+
     /* ONLINE TAMBAYAN — VISUAL REFRESH */
 
     #onlineTambayan {
@@ -349,7 +350,7 @@
         transition: none;
       }
     }
-
+  `;
   document.head.appendChild(style);
 
   const section = document.createElement("section");
@@ -426,9 +427,13 @@
     </div>
   `;
 
+  // Place Online Tambayan inside the Lounge instead of after it.
   const anchor = document.querySelector(".hangout-layout");
-  if (anchor) anchor.insertAdjacentElement("afterend", section);
-  else document.querySelector("main")?.appendChild(section);
+  if (anchor) {
+    anchor.appendChild(section);
+  } else {
+    document.querySelector("main")?.appendChild(section);
+  }
 
   const $ = id => document.getElementById(id);
   let client = null;
