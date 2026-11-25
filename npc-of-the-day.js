@@ -249,6 +249,21 @@
     addStyles();
 
     const npc = NPCS[getManilaDay()];
+
+const todayKey = new Intl.DateTimeFormat("en-CA", {
+  timeZone: "Asia/Manila"
+}).format(new Date());
+
+const visitKey = `tambayan_npc_visit_${todayKey}_${npc.id}`;
+
+let isReturningVisitor = false;
+
+try {
+  isReturningVisitor = localStorage.getItem(visitKey) === "visited";
+  localStorage.setItem(visitKey, "visited");
+} catch (error) {
+  console.warn("NPC visit tracking unavailable:", error);
+}
     const oldButton = card.querySelector("button");
     const oldDescription = card.querySelector("p");
 
