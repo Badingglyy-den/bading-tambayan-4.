@@ -1,45 +1,126 @@
 
 /* Bading Tambayan 4.2 — Secret Hunt add-on
+ * Four independent discoveries with individual hints and rewards.
  * Keep this file separate from lounge.js.
- * The answer is never stored or sent by this frontend.
  */
 (() => {
   "use strict";
 
-  const HINTS = [
+  const DISCOVERIES = [
     {
-      text: "I belong to the color family of lavender.",
-      location: "Community Garden · Mood Garden"
+      key: "purple star",
+      name: "Purple Star",
+      icon: "★",
+      iconClass: "secret-hunt-purple-star",
+      location: "Spin & Win",
+      hints: [
+        {
+          text: "Sometimes, a little luck leads to an unexpected discovery.",
+          location: "Where chance plays a part."
+        },
+        {
+          text: "A little spin might bring you more than the reward you're expecting.",
+          location: "Look among the games of chance."
+        },
+        {
+          text: "Where you spin for a chance to win, something tiny and purple is waiting.",
+          location: "Spin & Win."
+        }
+      ]
     },
     {
-      text: "I have five points, but I'm not a flower.",
-      location: "NPC of the Day card"
+      key: "golden bell",
+      name: "Golden Bell",
+      icon: "🔔",
+      iconClass: "secret-hunt-object-icon",
+      location: "NPC of the Day",
+      hints: [
+        {
+          text: "Some visitors bring a little extra sparkle with them.",
+          location: "Keep an eye on the day's guest."
+        },
+        {
+          text: "The surprise is close to someone who drops by for a daily hello.",
+          location: "Find the featured character."
+        },
+        {
+          text: "Today's visitor has a tiny bell waiting nearby.",
+          location: "NPC of the Day."
+        }
+      ]
     },
     {
-      text: "Look where your Tambayan adventures begin.",
-      location: "Community Spaces section"
+      key: "secret heart",
+      name: "Secret Heart",
+      icon: "💗",
+      iconClass: "secret-hunt-object-icon",
+      location: "Mood Garden",
+      hints: [
+        {
+          text: "A feeling can leave a little trace, even without words.",
+          location: "Look where moods are given a place to grow."
+        },
+        {
+          text: "Somewhere, today's feeling can bloom into a flower.",
+          location: "Find the garden for your mood."
+        },
+        {
+          text: "Look beside the place where you plant a flower for today's mood.",
+          location: "Mood Garden."
+        }
+      ]
+    },
+    {
+      key: "tiny tambayan gem",
+      name: "Tiny Tambayan Gem",
+      icon: "💎",
+      iconClass: "secret-hunt-object-icon",
+      location: "Community Spaces",
+      hints: [
+        {
+          text: "The best little treasures are sometimes found where people meet.",
+          location: "Look around the shared corner."
+        },
+        {
+          text: "Kind words and conversations leave room for something precious.",
+          location: "Find the section that brings everyone together."
+        },
+        {
+          text: "A tiny gem is tucked by the heading for our shared places.",
+          location: "Community Spaces."
+        }
+      ]
     }
   ];
 
   const STYLE_ID = "secretHuntExtrasStyles";
   const HINTS_ID = "secretHuntExtraHints";
-  const TREASURE_ID = "secretHuntPurpleStar";
-  const STATUS_ID = "secretHuntTreasureStatus";
 
   function addStyles() {
     if (document.getElementById(STYLE_ID)) return;
 
     const style = document.createElement("style");
     style.id = STYLE_ID;
+
     style.textContent = `
       .secret-hunt-hints {
         display: grid;
-        gap: 8px;
+        gap: 12px;
         margin-top: 14px;
       }
 
       .secret-hunt-hints h4 {
         margin: 0 0 2px;
+      }
+
+      .secret-hunt-hint-group {
+        display: grid;
+        gap: 7px;
+      }
+
+      .secret-hunt-hint-group h5 {
+        margin: 5px 0 0;
+        font-size: .92em;
       }
 
       .secret-hunt-hint-button {
@@ -92,16 +173,38 @@
       }
 
       .secret-hunt-purple-star {
-  display: block;
-  color: #bd8cff !important;
-  font-size: 17px !important;
-  line-height: 1 !important;
-  text-shadow: 0 0 7px rgba(189, 140, 255, .8);
+        display: block;
+        color: #bd8cff !important;
+        font-size: 17px !important;
+        line-height: 1 !important;
+        text-shadow: 0 0 7px rgba(189, 140, 255, .8);
+      }
+
+      .secret-hunt-object-icon {
+        display: block;
+        font-size: 16px !important;
+        line-height: 1 !important;
       }
 
       .secret-hunt-treasure-status {
         margin: 8px 0 0;
         line-height: 1.45;
+      }
+
+      .secret-hunt-community-anchor {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        margin: 0 0 10px;
+      }
+
+      .secret-hunt-community-anchor .secret-hunt-treasure {
+        margin: 0 !important;
+      }
+
+      .secret-hunt-community-anchor .secret-hunt-treasure-status {
+        width: 100%;
+        text-align: right;
       }
     `;
 
@@ -120,10 +223,19 @@
     }) || null;
   }
 
+  function findCommunitySection() {
+    return Array.from(
+      document.querySelectorAll(".lounge-section")
+    ).find(section => {
+      const eyebrow = section.querySelector(".eyebrow");
+
+      return eyebrow &&
+        eyebrow.textContent.toLowerCase().includes("community spaces");
+    }) || null;
+  }
+
   function makeHints(card) {
-    if (!card || card.querySelector("#" + HINTS_ID)) {
-      return;
-    }
+    if (!card || card.querySelector("#" + HINTS_ID)) return;
 
     const huntBox = card.querySelector(".lounge-hunt-box");
     const host = huntBox || card;
@@ -131,45 +243,56 @@
     const panel = document.createElement("div");
     panel.id = HINTS_ID;
     panel.className = "secret-hunt-hints";
-    panel.setAttribute("aria-label", "Secret Hunt hints");
+    panel.setAttribute("aria-label", "Secret Hunt discovery hints");
 
     const heading = document.createElement("h4");
-    heading.textContent = "💡 Need a little hint?";
+    heading.textContent = "💡 Your Secret Hunt clues";
     panel.appendChild(heading);
 
-    HINTS.forEach((hint, index) => {
-      const item = document.createElement("div");
+    DISCOVERIES.forEach(discovery => {
+      const group = document.createElement("div");
+      group.className = "secret-hunt-hint-group";
 
-      const button = document.createElement("button");
-      button.type = "button";
-      button.className =
-        "small-btn secret-hunt-hint-button";
-      button.textContent = "Reveal hint " + (index + 1);
-      button.setAttribute("aria-expanded", "false");
+      const groupHeading = document.createElement("h5");
+      groupHeading.textContent =
+        discovery.icon + " " + discovery.name;
 
-      const reveal = document.createElement("p");
-      reveal.className = "secret-hunt-hint-reveal";
-      reveal.hidden = true;
-      reveal.textContent =
-        hint.text + " 📍 " + hint.location;
+      group.appendChild(groupHeading);
 
-      button.addEventListener("click", () => {
-        const opening = reveal.hidden;
+      discovery.hints.forEach((hint, index) => {
+        const item = document.createElement("div");
 
-        reveal.hidden = !opening;
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "small-btn secret-hunt-hint-button";
+        button.textContent = "Reveal hint " + (index + 1);
+        button.setAttribute("aria-expanded", "false");
 
-        button.setAttribute(
-          "aria-expanded",
-          String(opening)
-        );
+        const reveal = document.createElement("p");
+        reveal.className = "secret-hunt-hint-reveal";
+        reveal.hidden = true;
+        reveal.textContent =
+          hint.text + " 📍 " + hint.location;
 
-        button.textContent = opening
-          ? "Hide hint " + (index + 1)
-          : "Reveal hint " + (index + 1);
+        button.addEventListener("click", () => {
+          const opening = reveal.hidden;
+          reveal.hidden = !opening;
+
+          button.setAttribute(
+            "aria-expanded",
+            String(opening)
+          );
+
+          button.textContent = opening
+            ? "Hide hint " + (index + 1)
+            : "Reveal hint " + (index + 1);
+        });
+
+        item.append(button, reveal);
+        group.appendChild(item);
       });
 
-      item.append(button, reveal);
-      panel.appendChild(item);
+      panel.appendChild(group);
     });
 
     host.appendChild(panel);
@@ -198,36 +321,43 @@
       : {};
   }
 
-  function setTreasureStatus(element, message, isError) {
+  function setStatus(element, message, isError) {
     element.textContent = message;
     element.style.color = isError ? "#ff9bba" : "";
   }
 
-  function addTreasure(spinCard) {
-    if (
-      !spinCard ||
-      spinCard.querySelector("#" + TREASURE_ID)
-    ) {
-      return;
-    }
+  function addTreasure(target, discovery, isCommunitySection) {
+    if (!target) return;
+
+    const buttonId =
+      "secretHuntTreasure_" +
+      discovery.key.replace(/[^a-z0-9]/g, "_");
+
+    const statusId = buttonId + "Status";
+
+    if (target.querySelector("#" + buttonId)) return;
 
     const button = document.createElement("button");
     button.type = "button";
-    button.id = TREASURE_ID;
+    button.id = buttonId;
     button.className = "secret-hunt-treasure";
+    button.setAttribute(
+      "aria-label",
+      "Discover the hidden " + discovery.name
+    );
 
-    button.innerHTML =
-  '<span class="secret-hunt-purple-star" aria-hidden="true">★</span>';
+    const icon = document.createElement("span");
+    icon.className = discovery.iconClass;
+    icon.setAttribute("aria-hidden", "true");
+    icon.textContent = discovery.icon;
 
-    button.title = "Secret Hunt hint — tap to reveal";
-
-    button.title = "Secret Hunt hint — tap to reveal";
+    button.appendChild(icon);
+    button.title = "A tiny Secret Hunt discovery — tap to reveal";
 
     const status = document.createElement("p");
-    status.id = STATUS_ID;
+    status.id = statusId;
     status.className =
       "form-note secret-hunt-treasure-status";
-
     status.setAttribute("role", "status");
     status.setAttribute("aria-live", "polite");
 
@@ -235,7 +365,7 @@
       const client = window.tambayanSupabaseClient;
 
       if (!client || typeof client.rpc !== "function") {
-        setTreasureStatus(
+        setStatus(
           status,
           "The Lounge connection is still starting. Please try again in a moment.",
           true
@@ -245,15 +375,12 @@
 
       button.disabled = true;
 
-      setTreasureStatus(
-        status,
-        "✨ Checking your discovery...",
-        false
-      );
+      setStatus(status, "✨ Checking your discovery...", false);
 
       try {
         const { data, error } = await client.rpc(
-          "lounge_click_hunt_treasure"
+          "lounge_click_hunt_treasure",
+          { p_object_key: discovery.key }
         );
 
         if (error) throw error;
@@ -266,25 +393,28 @@
           result.status === "already_claimed";
 
         if (already) {
-          setTreasureStatus(
+          setStatus(
             status,
-            "You've already discovered today's Purple Star! Your discovery is safe and recorded. 💜",
+            "You've already discovered the " +
+              discovery.name +
+              "! Your discovery is safe and recorded. 💜",
             false
           );
 
           button.setAttribute(
             "aria-label",
-            "Purple Star already discovered"
+            discovery.name + " already discovered"
           );
 
           return;
         }
 
         if (result.success === false) {
-          setTreasureStatus(
+          setStatus(
             status,
             result.message ||
-              "The Purple Star couldn't be discovered right now. Please try again later.",
+              "The " + discovery.name +
+              " couldn't be discovered right now. Please try again later.",
             true
           );
           return;
@@ -299,8 +429,7 @@
           rewardType === "stars"
         ) {
           if (
-            typeof window.tambayanApplyLoungeReward !==
-            "function"
+            typeof window.tambayanApplyLoungeReward !== "function"
           ) {
             throw new Error(
               "The local reward bridge is unavailable. Please refresh the page."
@@ -310,7 +439,7 @@
           const applied = window.tambayanApplyLoungeReward(
             rewardType,
             rewardAmount,
-            "Secret Hunt reward!"
+            "Secret Hunt — " + discovery.name
           );
 
           if (!applied) {
@@ -320,8 +449,7 @@
           }
         } else if (rewardType === "collectible") {
           if (
-            typeof window.tambayanAddLoungeCollectible !==
-            "function"
+            typeof window.tambayanAddLoungeCollectible !== "function"
           ) {
             throw new Error(
               "The collectible inventory bridge is unavailable. Please refresh the page."
@@ -330,7 +458,7 @@
 
           const applied = window.tambayanAddLoungeCollectible(
             result.collectible_key,
-            "Secret Hunt reward!"
+            "Secret Hunt — " + discovery.name
           );
 
           if (!applied) {
@@ -340,26 +468,25 @@
           }
         }
 
-        let rewardMessage =
-          "Your discovery has been recorded!";
+        let rewardMessage = "Your discovery has been recorded!";
 
         if (rewardType === "xp") {
           rewardMessage =
             "You found it! 🎉 You received " +
-            (rewardAmount ?? 10) + " XP!";
+            rewardAmount + " XP!";
         } else if (
           rewardType === "star" ||
           rewardType === "stars"
         ) {
           rewardMessage =
             "You found it! ⭐ You received " +
-            (rewardAmount ?? "") + " star(s)!";
+            rewardAmount + " star(s)!";
         } else if (rewardType === "collectible") {
           rewardMessage =
-            "You found it! 🎁 Your collectible reward has been added to your collection.";
+            "You found it! 🎁 Your Rare Tambayan Gem has been added to your collection.";
         }
 
-        setTreasureStatus(
+        setStatus(
           status,
           rewardMessage + " See you on the next hunt! 💜",
           false
@@ -367,29 +494,47 @@
 
         button.setAttribute(
           "aria-label",
-          "Purple Star discovered"
+          discovery.name + " discovered"
         );
 
       } catch (error) {
         console.error(
-          "Secret Hunt treasure click error:",
+          "Secret Hunt discovery error:",
           error
         );
 
-        setTreasureStatus(
+        setStatus(
           status,
           "We couldn't record your discovery right now. Please check your connection and try again.",
           true
         );
 
       } finally {
-        if (!/discovered/i.test(button.getAttribute("aria-label") || "")) {
+        if (
+          !/discovered/i.test(
+            button.getAttribute("aria-label") || ""
+          )
+        ) {
           button.disabled = false;
         }
       }
     });
 
-    spinCard.append(button, status);
+    if (isCommunitySection) {
+      const anchor = document.createElement("div");
+      anchor.className = "secret-hunt-community-anchor";
+      anchor.append(button, status);
+
+      const heading = target.querySelector("h3");
+
+      if (heading) {
+        heading.insertAdjacentElement("afterend", anchor);
+      } else {
+        target.appendChild(anchor);
+      }
+    } else {
+      target.append(button, status);
+    }
   }
 
   function enhance() {
@@ -397,15 +542,19 @@
 
     const huntCard = findCard("Secret Hunt");
     const spinCard = findCard("Spin & Win");
+    const moodCard = findCard("Mood Garden");
+    const npcCard = findCard("NPC of the Day");
+    const communitySection = findCommunitySection();
 
     if (huntCard) {
       removeOldAnswerForm(huntCard);
       makeHints(huntCard);
     }
 
-    if (spinCard) {
-      addTreasure(spinCard);
-    }
+    addTreasure(spinCard, DISCOVERIES[0], false);
+    addTreasure(npcCard, DISCOVERIES[1], false);
+    addTreasure(moodCard, DISCOVERIES[2], false);
+    addTreasure(communitySection, DISCOVERIES[3], true);
   }
 
   function start() {
@@ -429,4 +578,4 @@
     start();
   }
 })();
-      
+  
