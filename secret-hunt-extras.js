@@ -393,21 +393,80 @@
           result.status === "already_claimed";
 
         if (already) {
-          setStatus(
-            status,
-            "You've already discovered the " +
-              discovery.name +
-              "! Your discovery is safe and recorded. 💜",
-            false
-          );
+  // One-time recovery for the Secret Heart reward
+  // The discovery is already saved in Supabase.
+  if (
+    discovery.key === "secret heart" &&
+    result.reward_type === "xp" &&
+    Number(result.reward_amount) === 15
+  ) {
+    const recoveryKey =
+      "tambayanverse_secret_heart_xp_recovery_2026_v1";
 
-          button.setAttribute(
-            "aria-label",
-            discovery.name + " already discovered"
-          );
+    const recoveryStatus = localStorage.getItem(recoveryKey);
 
-          return;
+    if (!recoveryStatus) {
+      localStorage.setItem(recoveryKey, "pending");
+
+      try {
+        if (
+          typeof window.tambayanApplyLoungeReward !== "function"
+        ) {
+          throw new Error(
+            "The local XP reward system is unavailable. Please refresh the page."
+          );
         }
+
+        const applied = window.tambayanApplyLoungeReward(
+          "xp",
+          15,
+          "Secret Hunt — Secret Heart reward recovery"
+        );
+
+        if (!applied) {
+          throw new Error(
+            "The 15 XP reward could not be added."
+          );
+        }
+
+        localStorage.setItem(recoveryKey, "applied");
+
+        setStatus(
+          status,
+          "Your Secret Heart discovery was already saved! 💗 Your missing 15 XP has now been added.",
+          false
+        );
+      } catch (recoveryError) {
+        if (localStorage.getItem(recoveryKey) === "pending") {
+          localStorage.removeItem(recoveryKey);
+        }
+
+        throw recoveryError;
+      }
+    } else {
+      setStatus(
+        status,
+        "Your Secret Heart discovery and reward are already recorded. 💗",
+        false
+      );
+    }
+  } else {
+    setStatus(
+      status,
+      "You've already discovered the " +
+        discovery.name +
+        "! Your discovery is safe and recorded. 💜",
+      false
+    );
+  }
+
+  button.setAttribute(
+    "aria-label",
+    discovery.name + " already discovered"
+  );
+
+  return;
+}
 
         if (result.success === false) {
           setStatus(
