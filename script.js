@@ -39,37 +39,6 @@ const defaultState = () => ({
 
 let state = loadState();
 
-const activityKeys = [
-  "entries",
-  "discoveries",
-  "badges",
-  "completedMissions",
-  "achievements",
-  "visited",
-  "completed",
-  "journalEntries",
-  "letters",
-  "memories",
-  "ownedItems",
-  "hangoutPosts",
-  "kindPosts"
-];
-
-const report = {
-  profile: state.profile,
-  xp: state.xp,
-  stars: state.stars,
-  gamesPlayed: state.gamesPlayed,
-  createdAt: state.createdAt,
-  lastMissionDate: state.lastMissionDate,
-  activity: Object.fromEntries(
-    activityKeys.map(key => [
-      key,
-      Array.isArray(state[key]) ? state[key].length : 0
-    ])
-  )
-};
-
 alert(JSON.stringify(report, null, 2));
 let toastTimer = null;
 let reactionTimer = null;
