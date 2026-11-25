@@ -191,71 +191,92 @@
     const style = document.createElement("style");
     style.id = "npcOfDayStyles";
 
-    style.textContent = `
-      .npc-day-card {
-        margin-top: 12px;
-      }
+  style.textContent = `
+  .npc-day-card {
+    margin-top: 14px;
+  }
 
-      .npc-day-profile {
-        padding: 16px;
-        border: 1px solid rgba(215, 165, 255, .5);
-        border-radius: 16px;
-        background: rgba(160, 120, 210, .12);
-        text-align: center;
-      }
+  .npc-day-profile {
+    padding: 20px 16px;
+    border: 1px solid rgba(215, 165, 255, .55);
+    border-radius: 20px;
+    background: linear-gradient(
+      145deg,
+      rgba(174, 132, 230, .20),
+      rgba(120, 95, 180, .10)
+    );
+    text-align: center;
+    box-shadow: 0 8px 24px rgba(100, 65, 150, .12);
+  }
 
-      .npc-day-avatar {
-        width: 86px;
-        height: 86px;
-        display: grid;
-        place-items: center;
-        margin: 0 auto 10px;
-        border-radius: 50%;
-        background: rgba(215, 165, 255, .18);
-        font-size: 3rem;
-      }
+  .npc-day-avatar {
+    width: 100px;
+    height: 100px;
+    display: grid;
+    place-items: center;
+    margin: 0 auto 12px;
+    border: 1px solid rgba(230, 200, 255, .65);
+    border-radius: 50%;
+    background: radial-gradient(
+      circle,
+      rgba(235, 210, 255, .35),
+      rgba(160, 120, 210, .18)
+    );
+    box-shadow: 0 0 22px rgba(200, 155, 255, .22);
+    font-size: 3.5rem;
+  }
 
-      .npc-day-name {
-        margin: 5px 0;
-        font-size: 1.35rem;
-      }
+  .npc-day-name {
+    margin: 6px 0;
+    font-size: 1.5rem;
+    font-weight: 800;
+  }
 
-      .npc-day-title,
-      .npc-day-personality {
-        margin: 4px 0;
-        opacity: .8;
-      }
+  .npc-day-title {
+    margin: 4px 0;
+    font-weight: 600;
+  }
 
-      .npc-day-dialogue {
-        min-height: 75px;
-        margin: 14px 0;
-        padding: 14px;
-        border-radius: 12px;
-        background: rgba(255, 255, 255, .07);
-        line-height: 1.55;
-        text-align: center;
-      }
+  .npc-day-personality {
+    margin: 6px 0 0;
+    font-size: .9rem;
+    opacity: .75;
+  }
 
-      .npc-day-choices {
-        display: grid;
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-        gap: 7px;
-      }
+  .npc-day-dialogue {
+    min-height: 76px;
+    display: grid;
+    place-items: center;
+    margin: 14px 0;
+    padding: 16px;
+    border: 1px solid rgba(215, 165, 255, .22);
+    border-radius: 16px;
+    background: rgba(160, 120, 210, .10);
+    line-height: 1.65;
+    text-align: center;
+  }
 
-      .npc-day-choice {
-        min-width: 0;
-        padding: 10px 5px;
-        white-space: normal;
-        line-height: 1.35;
-      }
+  .npc-day-choices {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 8px;
+  }
 
-      .npc-day-note {
-        margin-top: 10px;
-        font-size: .82rem;
-        opacity: .7;
-        text-align: center;
-      }
-    `;
+  .npc-day-choice {
+    min-width: 0;
+    padding: 11px 5px;
+    border-radius: 12px;
+    white-space: normal;
+    line-height: 1.35;
+  }
+
+  .npc-day-note {
+    margin-top: 12px;
+    font-size: .8rem;
+    opacity: .65;
+    text-align: center;
+  }
+`;
 
     document.head.appendChild(style);
   }
