@@ -136,7 +136,36 @@
       goodbye: "Sleep peacefully, little wanderer. The moon will keep you company."
     }
   ];
-
+   const RARE_DIALOGUE = {
+    lumi: [
+      "A little secret? I saved a special sparkle just for you. ✨",
+      "Sometimes, I make a wish that you'll have a wonderful day."
+    ],
+    bibi: [
+      "Psst! You're my favorite person to bother today. 🐸",
+      "I wasn't supposed to tell you this, but I hid snacks somewhere."
+    ],
+    momo: [
+      "Wait... you can see me? I thought I was being mysterious.",
+      "I'll tell you a secret, but you must gasp dramatically first!"
+    ],
+    pochi: [
+      "Psst... I saved the warmest sleeping spot for you. 🐱",
+      "You're one of the few people I'd wake up for. Don't tell anyone."
+    ],
+    nubi: [
+      "I made a tiny heart-shaped cloud just for you. ☁️",
+      "I hope you know that your presence makes this place brighter."
+    ],
+    ruru: [
+      "I found a shiny little treasure. I was going to keep it, but I thought of you.",
+      "You're officially on my list of trusted treasure hunters. 🦝"
+    ],
+    yuki: [
+      "I made a little wish for you under the moonlight. 🌙",
+      "Even on your quietest days, you are worth celebrating."
+    ]
+  };
   function getManilaDay() {
     const weekday = new Intl.DateTimeFormat("en-US", {
       timeZone: "Asia/Manila",
