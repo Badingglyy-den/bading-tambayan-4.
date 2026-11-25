@@ -587,6 +587,81 @@
   `;
   document.head.appendChild(layoutStyle);
   
+  // ONLINE TAMBAYAN — SEPARATE SECTION CARDS
+  const sectionStyle = document.createElement("style");
+  sectionStyle.textContent = `
+    #onlineTambayan .online-panel {
+      padding: 0;
+      background: transparent;
+      border: 0;
+      box-shadow: none;
+    }
+
+    #onlineTambayan .online-panel > .online-muted:first-child {
+      padding: 15px 18px;
+      margin-bottom: 16px;
+      border-radius: 16px;
+      background: rgba(169,139,255,.09);
+      border: 1px solid rgba(194,158,255,.17);
+    }
+
+    #onlineTambayan .online-grid {
+      margin: 0 0 16px;
+      padding: 16px;
+      border-radius: 21px;
+      background: linear-gradient(145deg, #211735, #171122);
+      border: 1px solid rgba(194,158,255,.2);
+    }
+
+    #onlineTambayan .online-status {
+      padding: 12px 15px;
+      border-radius: 13px;
+      background: rgba(169,139,255,.08);
+      border: 1px solid rgba(194,158,255,.14);
+    }
+
+    #onlineTambayan #onlineMyRoomsBox {
+      margin: 16px 0;
+      padding: 18px;
+      border-radius: 21px;
+      background: linear-gradient(145deg, #211735, #171122);
+      border: 1px solid rgba(194,158,255,.2);
+    }
+
+    #onlineTambayan .online-room {
+      margin-top: 18px;
+      padding: 18px;
+      border-radius: 22px;
+      background: linear-gradient(145deg, #211735, #171122);
+      border: 1px solid rgba(194,158,255,.22);
+    }
+
+    #onlineTambayan .online-room-top {
+      margin-bottom: 14px;
+    }
+
+    #onlineTambayan .online-columns > .online-box {
+      background: rgba(10,7,20,.45);
+      border: 1px solid rgba(194,158,255,.14);
+    }
+
+    @media (max-width: 620px) {
+      #onlineTambayan .online-grid {
+        padding: 12px;
+      }
+
+      #onlineTambayan #onlineMyRoomsBox {
+        padding: 14px;
+      }
+
+      #onlineTambayan .online-room {
+        padding: 12px;
+      }
+    }
+  `;
+  document.head.appendChild(sectionStyle);
+    
+  
 
   const section = document.createElement("section");
   section.id = "onlineTambayan";
