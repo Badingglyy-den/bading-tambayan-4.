@@ -28,6 +28,21 @@
     return undefined;
   }
 
+  function normalizeResult(data) {
+    return Array.isArray(data) ? (data[0] ?? data) : data;
+  }
+
+  async function waitForClient(maxAttempts = 20) {
+    for (let attempt = 0; attempt < maxAttempts; attempt += 1) {
+      const client = getClient();
+      if (client && typeof client.rpc === "function" && typeof client.from === "function") {
+        return client;
+      }
+      await new Promise(resolve => setTimeout(resolve, 250));
+    }
+    return null;
+  }
+
   function formatReward(data, gameName) {
     const status = findValue(data, ["status"]);
     if (status === "already_claimed") {
@@ -72,7 +87,7 @@
       const { data, error } = await client.rpc(functionName);
       if (error) throw error;
 
-      const result = Array.isArray(data) ? (data[0] ?? data) : data;
+      const result = normalizeResult(data);
       setStatus(statusElement, formatReward(result, gameName));
     } catch (error) {
       console.error("Lounge reward error:", error);
@@ -254,15 +269,215 @@
     }
   }
 
+  const MOODS = [
+    { key: "happy", flower: "🌻", name: "Sunflower" },
+    { key: "loved", flower: "🌹", name: "Pink Rose" },
+    { key: "peaceful", flower: "🪻", name: "Lavender" },
+    { key: "sad", flower: "🔵", name: "Bluebell" },
+    { key: "exhausted", flower: "🌼", name: "Daisy" },
+    { key: "motivated", flower: "🌷", name: "Tulip" }
+  ];
+
+  function addMoodStyles() {
+    if (document.getElementById("loungeMoodStyles")) return;
+
+    const style = document.createElement("style");
+    style.id = "loungeMoodStyles";
+    style.textContent = `
+      .lounge-mood-options {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 8px;
+        margin: 12px 0;
+      }
+      .lounge-mood-choice {
+        min-width: 0;
+        white-space: normal;
+        line-height: 1.35;
+      }
+      .lounge-mood-choice[aria-pressed="true"] {
+        outline: 2px solid #d7a5ff;
+        background: rgba(180, 120, 230, .2);
+      }
+      .lounge-mood-section {
+        margin-top: 14px;
+      }
+      .lounge-mood-section h4 {
+        margin: 8px 0;
+      }
+      .lounge-mood-counts {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 6px;
+      }
+      .lounge-mood-count {
+        margin: 0;
+        padding: 7px 9px;
+        border-radius: 10px;
+        background: rgba(160, 120, 210, .1);
+        font-size: .9rem;
+      }
+      @media (min-width: 520px) {
+        .lounge-mood-options,
+        .lounge-mood-counts {
+          grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+      }
+    `;
+    document.head.appendChild(style);
+  }
+
+  function getMoodCount(rows, moodKey) {
+    if (!Array.isArray(rows)) return 0;
+    const row = rows.find(item => findValue(item, ["mood"]) === moodKey);
+    return row ? Number(findValue(row, ["total_count", "count"]) || 0) : 0;
+  }
+
+  function renderMoodCounts(container, rows) {
+    container.replaceChildren();
+    MOODS.forEach(mood => {
+      const count = getMoodCount(rows, mood.key);
+      addText(
+        container,
+        "p",
+        mood.flower + " " + mood.name + ": " + count,
+        "lounge-mood-count"
+      );
+    });
+  }
+
+  async function loadMoodGarden(card) {
+    addMoodStyles();
+
+    const originalButton = card.querySelector("button");
+    if (originalButton) {
+      originalButton.disabled = true;
+      originalButton.textContent = "Loading today's garden...";
+    }
+
+    const description = card.querySelector("p");
+    const garden = document.createElement("div");
+    garden.className = "lounge-mood-garden";
+    garden.setAttribute("aria-live", "polite");
+    if (description) {
+      description.insertAdjacentElement("afterend", garden);
+    } else {
+      card.appendChild(garden);
+    }
+
+    const status = addText(garden, "p", "Connecting to the Mood Garden...", "form-note");
+    const choices = document.createElement("div");
+    choices.className = "lounge-mood-options";
+    choices.setAttribute("role", "group");
+    choices.setAttribute("aria-label", "Choose today's mood");
+    garden.appendChild(choices);
+
+    const dailySection = document.createElement("section");
+    dailySection.className = "lounge-mood-section";
+    addText(dailySection, "h4", "🌱 Today's flowers");
+    const dailyCounts = document.createElement("div");
+    dailyCounts.className = "lounge-mood-counts";
+    dailySection.appendChild(dailyCounts);
+    garden.appendChild(dailySection);
+
+    const totalSection = document.createElement("section");
+    totalSection.className = "lounge-mood-section";
+    addText(totalSection, "h4", "🌸 Garden grown together");
+    const totalCounts = document.createElement("div");
+    totalCounts.className = "lounge-mood-counts";
+    totalSection.appendChild(totalCounts);
+    garden.appendChild(totalSection);
+
+    if (originalButton) originalButton.remove();
+
+    const client = await waitForClient();
+    if (!client) {
+      setStatus(status, "The Lounge connection is unavailable right now. Please refresh and try again.", true);
+      return;
+    }
+
+    async function refreshGarden() {
+      const { data, error } = await client.rpc("lounge_get_mood_garden");
+      if (error) throw error;
+
+      const result = normalizeResult(data) || {};
+      const daily = Array.isArray(result.daily) ? result.daily : [];
+      const totals = Array.isArray(result.totals) ? result.totals : [];
+      const myMood = result.my_mood || null;
+
+      renderMoodCounts(dailyCounts, daily);
+      renderMoodCounts(totalCounts, totals);
+
+      if (myMood) {
+        choices.replaceChildren();
+        setStatus(status, "You've already planted today's flower: " +
+          ((MOODS.find(mood => mood.key === myMood) || {}).flower || "🌷") +
+          " " + ((MOODS.find(mood => mood.key === myMood) || {}).name || myMood) +
+          ". Thank you for sharing your mood! 💜");
+        return true;
+      }
+
+      setStatus(status, "Choose the flower that represents your mood today. Your choice is private. 💜");
+      choices.replaceChildren();
+
+      MOODS.forEach(mood => {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "small-btn lounge-mood-choice";
+        button.textContent = mood.flower + " " + mood.name;
+        button.setAttribute("aria-pressed", "false");
+        button.addEventListener("click", async () => {
+          choices.querySelectorAll("button").forEach(item => {
+            item.disabled = true;
+          });
+          setStatus(status, "🌱 Planting your flower...");
+
+          try {
+            const { data: submitData, error: submitError } = await client.rpc("lounge_submit_mood", {
+              p_mood: mood.key
+            });
+            if (submitError) throw submitError;
+
+            const submitResult = normalizeResult(submitData) || {};
+            if (submitResult.success === false) {
+              setStatus(status, submitResult.message || "You've already selected a mood today. 💜");
+            } else {
+              setStatus(status, "Your " + mood.name + " has been planted! Thank you for sharing. 💜");
+            }
+
+            await refreshGarden();
+          } catch (error) {
+            console.error("Mood Garden submit error:", error);
+            setStatus(status, "We couldn't save your mood right now. Please try again later.", true);
+            choices.querySelectorAll("button").forEach(item => {
+              item.disabled = false;
+            });
+          }
+        });
+        choices.appendChild(button);
+      });
+
+      return false;
+    }
+
+    try {
+      await refreshGarden();
+    } catch (error) {
+      console.error("Mood Garden load error:", error);
+      setStatus(status, "We couldn't load the Mood Garden right now. Please try again later.", true);
+    }
+  }
+
   function setup() {
     const cards = Array.from(document.querySelectorAll(".tool-card"));
     const spinCard = cards.find(card => /spin\s*&\s*win/i.test(card.textContent));
     const boxCard = cards.find(card => /mystery\s*box/i.test(card.textContent));
     const pollCard = cards.find(card => /daily\s*poll/i.test(card.textContent));
+    const moodCard = cards.find(card => /mood\s*garden/i.test(card.textContent));
 
-    if (!spinCard && !boxCard && !pollCard) return;
+    if (!spinCard && !boxCard && !pollCard && !moodCard) return;
 
-    const host = spinCard || boxCard || pollCard;
+    const host = spinCard || boxCard || pollCard || moodCard;
     let statusElement = document.getElementById("loungeGameStatus");
 
     if (!statusElement) {
@@ -297,6 +512,7 @@
     }
 
     if (pollCard) loadPoll(pollCard);
+    if (moodCard) loadMoodGarden(moodCard);
   }
 
   if (document.readyState === "loading") {
@@ -305,4 +521,4 @@
     setup();
   }
 })();
-        
+                                    
