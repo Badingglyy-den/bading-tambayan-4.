@@ -1097,6 +1097,158 @@ body {
     animation: none !important;
   }
 }
+
+/* =====================================
+   EXPERIMENT LAB — COLORFUL SCIENCE
+   ===================================== */
+
+.tool-card {
+  border-color: #a9d7ff44;
+  background:
+    radial-gradient(circle at 100% 0%, #a9d7ff20, transparent 55%),
+    linear-gradient(145deg, #1d2038, #151020);
+}
+
+.tool-card:nth-child(2) {
+  border-color: #ffb6dc55;
+  background:
+    radial-gradient(circle at 100% 0%, #ffb6dc22, transparent 55%),
+    linear-gradient(145deg, #302039, #171020);
+}
+
+.tool-card:nth-child(3) {
+  border-color: #a8f0d055;
+  background:
+    radial-gradient(circle at 100% 0%, #a8f0d022, transparent 55%),
+    linear-gradient(145deg, #1b302e, #151020);
+}
+
+.tool-card input[type="range"] {
+  accent-color: #c6a5ff;
+  cursor: pointer;
+  margin: 13px 0;
+}
+
+.tool-card strong {
+  color: #e0c5ff;
+  text-shadow: 0 0 12px #bd91ff44;
+}
+
+.tool-card:hover {
+  border-color: #d6b5ffbb;
+  box-shadow:
+    0 12px 28px #00000044,
+    0 0 20px #bd91ff33;
+}
+
+.tool-card:focus-within {
+  border-color: #d6b5ff;
+  box-shadow: 0 0 18px #bd91ff44;
+}
+
+.tool-card input,
+.tool-card button {
+  position: relative;
+  z-index: 1;
+}
+
+/* =====================================
+   MYSTERY LIBRARY — ENCHANTED ARCHIVE
+   ===================================== */
+
+#mystery h2 {
+  color: #ead5ff;
+  text-shadow:
+    0 0 12px #bd91ff99,
+    0 0 28px #9b5cff55;
+}
+
+#mystery + .tool-grid .tool-card {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  border: 1px solid #bd91ff66;
+  background:
+    radial-gradient(circle at 90% 0%, #a66cff30, transparent 55%),
+    linear-gradient(145deg, #281b3d, #130f20);
+  box-shadow:
+    0 8px 22px #00000035,
+    0 0 12px #9b5cff18;
+  transition:
+    transform .3s ease,
+    border-color .3s ease,
+    box-shadow .3s ease;
+}
+
+#mystery + .tool-grid .tool-card:before {
+  content: "✦";
+  position: absolute;
+  right: 15px;
+  top: 12px;
+  color: #e2c9ff;
+  font-size: 18px;
+  opacity: .6;
+  animation: archive-twinkle 3s ease-in-out infinite;
+  pointer-events: none;
+}
+
+#mystery + .tool-grid .tool-card > span {
+  display: inline-block;
+  filter: drop-shadow(0 0 10px #c6a5ff99);
+  animation: archive-float 3.5s ease-in-out infinite;
+}
+
+#mystery + .tool-grid .tool-card:nth-child(even) > span {
+  animation-delay: 1s;
+}
+
+#mystery + .tool-grid .tool-card h3 {
+  color: #ead5ff;
+  text-shadow: 0 0 12px #bd91ff44;
+}
+
+#mystery + .tool-grid .tool-card p {
+  line-height: 1.7;
+}
+
+#mystery + .tool-grid .tool-card .small-btn {
+  background: linear-gradient(120deg, #d7b5ff, #f0b9df);
+  color: #24152f;
+  box-shadow: 0 0 14px #bd91ff44;
+  font-weight: 800;
+}
+
+#mystery + .tool-grid .tool-card:hover,
+#mystery + .tool-grid .tool-card:active {
+  transform: translateY(-5px);
+  border-color: #e0c5ff;
+  box-shadow:
+    0 12px 28px #00000055,
+    0 0 24px #bd91ff55;
+}
+
+#mystery + .tool-grid .tool-card:focus-within {
+  border-color: #e0c5ff;
+  box-shadow: 0 0 20px #bd91ff66;
+}
+
+@keyframes archive-float {
+  0%, 100% { transform: translateY(0) rotate(-3deg); }
+  50% { transform: translateY(-6px) rotate(3deg); }
+}
+
+@keyframes archive-twinkle {
+  0%, 100% { opacity: .25; transform: scale(.8); }
+  50% { opacity: .9; transform: scale(1.2); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #mystery + .tool-grid .tool-card:before,
+  #mystery + .tool-grid .tool-card > span {
+    animation: none !important;
+  }
+ }
+ 
  
  
  
