@@ -32,14 +32,32 @@
     return Array.isArray(data) ? (data[0] ?? data) : data;
   }
 
-  async function waitForClient(maxAttempts = 20) {
+  // Wait until Supabase has finished creating or restoring the anonymous session.
+  async function waitForClient(maxAttempts = 40) {
     for (let attempt = 0; attempt < maxAttempts; attempt += 1) {
       const client = getClient();
-      if (client && typeof client.rpc === "function" && typeof client.from === "function") {
-        return client;
+
+      if (
+        client &&
+        typeof client.rpc === "function" &&
+        typeof client.from === "function" &&
+        client.auth &&
+        typeof client.auth.getSession === "function"
+      ) {
+        try {
+          const { data, error } = await client.auth.getSession();
+
+          if (!error && data?.session?.user?.id) {
+            return client;
+          }
+        } catch (error) {
+          console.warn("Waiting for Lounge authentication:", error);
+        }
       }
+
       await new Promise(resolve => setTimeout(resolve, 250));
     }
+
     return null;
   }
 
@@ -565,4 +583,4 @@
     setup();
   }
 })();
-          
+        
