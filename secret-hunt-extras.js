@@ -251,6 +251,22 @@
         const rewardType = result.reward_type;
         const rewardAmount = result.reward_amount;
 
+        if (rewardType === "xp" || rewardType === "star" || rewardType === "stars") {
+          if (typeof window.tambayanApplyLoungeReward !== "function") {
+            throw new Error("The local reward bridge is unavailable. Please refresh the page.");
+          }
+
+          const applied = window.tambayanApplyLoungeReward(
+            rewardType,
+            rewardAmount,
+            "Secret Hunt reward!"
+          );
+
+          if (!applied) {
+            throw new Error("The Secret Hunt reward could not be added to your local profile.");
+          }
+        }
+
         let rewardMessage = "Your discovery has been recorded!";
 
         if (rewardType === "xp") {
@@ -334,4 +350,5 @@
     start();
   }
 })();
-        
+
+      
