@@ -118,18 +118,29 @@ function toast(msg) {
 }
 
 function awardXP(n, reason = "") {
+  const previousXP = state.xp;
   state.xp += n;
 
-  const bonus = Math.floor(n / 10);
+  // Award 1 Star for every new 10-XP milestone reached.
+  const bonus =
+    Math.floor(state.xp / 10) -
+    Math.floor(previousXP / 10);
+
   state.stars += bonus;
 
-  const before = Math.floor((state.xp - n) / 100) + 1;
+  const before = Math.floor(previousXP / 100) + 1;
   const after = Math.floor(state.xp / 100) + 1;
 
   if (after > before) {
-    toast(`LEVEL UP! You're now level ${after} ✨`);
+    toast(
+      `LEVEL UP! You're now level ${after} ✨` +
+      (bonus ? ` +${bonus} ⭐` : "")
+    );
   } else {
-    toast(`${reason || "Nice!"} +${n} XP${bonus ? ` and ${bonus} ⭐` : ""}`);
+    toast(
+      `${reason || "Nice!"} +${n} XP` +
+      (bonus ? ` and ${bonus} ⭐` : "")
+    );
   }
 
   save();
