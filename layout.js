@@ -210,17 +210,17 @@
   }
 }
 
-@media (max-width: 560px) {
+@media (max-width: 850px) {
   body {
     padding-bottom: calc(76px + env(safe-area-inset-bottom));
   }
 
   .app-nav {
-    position: fixed;
-    top: auto;
-    bottom: 0;
-    left: 0;
-    right: 0;
+    position: fixed !important;
+    top: auto !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
     justify-content: flex-start;
     flex-wrap: nowrap;
     gap: 7px;
