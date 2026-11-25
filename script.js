@@ -271,9 +271,11 @@ function render() {
       ? "Certified Main Character"
       : "Certified Tambay";
 
-  $("xpBar").style.width = (state.xp % 100) + "%";
-  $("xpNext").textContent =
-    (state.xp % 100) + " / 100 XP to next level";
+  $("xpValue").textContent = state.xp + " XP";
+
+$("xpBar").style.width = (state.xp % 100) + "%";
+$("xpNext").textContent =
+  (state.xp % 100) + " / 100 XP to next level";
 
   $("discoveryValue").textContent = state.discoveries.length;
   $("badgeValue").textContent = state.badges.length;
