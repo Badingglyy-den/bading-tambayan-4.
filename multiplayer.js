@@ -257,6 +257,7 @@
     try {
       await loadSupabase();
       client = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+      window.tambayanSupabaseClient = client;
       const { data: sessionData, error: sessionError } = await client.auth.getSession();
       if (sessionError) throw sessionError;
       if (sessionData.session) currentUser = sessionData.session.user;
