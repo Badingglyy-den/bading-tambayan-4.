@@ -1,4 +1,3 @@
-
 /* Bading Tambayan 4.2 — Secret Hunt add-on
  * Keep this file separate from lounge.js.
  * The answer is never stored or sent by this frontend.
@@ -37,15 +36,18 @@
         gap: 8px;
         margin-top: 14px;
       }
+
       .secret-hunt-hints h4 {
         margin: 0 0 2px;
       }
+
       .secret-hunt-hint-button {
         width: 100%;
         text-align: left;
         white-space: normal;
         line-height: 1.4;
       }
+
       .secret-hunt-hint-reveal {
         margin: 6px 0 2px;
         padding: 9px 11px;
@@ -53,6 +55,7 @@
         background: rgba(160, 120, 210, .13);
         line-height: 1.45;
       }
+
       .secret-hunt-treasure {
         display: flex;
         align-items: center;
@@ -63,26 +66,36 @@
         padding: 13px;
         border: 1px solid rgba(215, 165, 255, .65);
         border-radius: 14px;
-        background: linear-gradient(135deg, rgba(155, 105, 220, .24), rgba(215, 165, 255, .13));
+        background: linear-gradient(
+          135deg,
+          rgba(155, 105, 220, .24),
+          rgba(215, 165, 255, .13)
+        );
         color: inherit;
         font: inherit;
         font-weight: 700;
         cursor: pointer;
       }
+
       .secret-hunt-treasure:disabled {
         opacity: .65;
         cursor: wait;
       }
+
       .secret-hunt-purple-star {
         font-size: 2rem;
         line-height: 1;
-        filter: drop-shadow(0 0 8px rgba(190, 130, 255, .8));
+        filter: drop-shadow(
+          0 0 8px rgba(190, 130, 255, .8)
+        );
       }
+
       .secret-hunt-treasure-status {
         margin: 8px 0 0;
         line-height: 1.45;
       }
     `;
+
     document.head.appendChild(style);
   }
 
@@ -91,13 +104,17 @@
       document.querySelectorAll(".tool-card, .hangout-card")
     ).find(card => {
       const heading = card.querySelector("h3");
+
       return heading &&
-        heading.textContent.trim().toLowerCase() === title.toLowerCase();
+        heading.textContent.trim().toLowerCase() ===
+          title.toLowerCase();
     }) || null;
   }
 
   function makeHints(card) {
-    if (!card || card.querySelector("#" + HINTS_ID)) return;
+    if (!card || card.querySelector("#" + HINTS_ID)) {
+      return;
+    }
 
     const huntBox = card.querySelector(".lounge-hunt-box");
     const host = huntBox || card;
@@ -116,19 +133,27 @@
 
       const button = document.createElement("button");
       button.type = "button";
-      button.className = "small-btn secret-hunt-hint-button";
+      button.className =
+        "small-btn secret-hunt-hint-button";
       button.textContent = "Reveal hint " + (index + 1);
       button.setAttribute("aria-expanded", "false");
 
       const reveal = document.createElement("p");
       reveal.className = "secret-hunt-hint-reveal";
       reveal.hidden = true;
-      reveal.textContent = hint.text + " 📍 " + hint.location;
+      reveal.textContent =
+        hint.text + " 📍 " + hint.location;
 
       button.addEventListener("click", () => {
         const opening = reveal.hidden;
+
         reveal.hidden = !opening;
-        button.setAttribute("aria-expanded", String(opening));
+
+        button.setAttribute(
+          "aria-expanded",
+          String(opening)
+        );
+
         button.textContent = opening
           ? "Hide hint " + (index + 1)
           : "Reveal hint " + (index + 1);
@@ -158,7 +183,10 @@
 
   function getResultObject(data) {
     if (Array.isArray(data)) return data[0] || {};
-    return data && typeof data === "object" ? data : {};
+
+    return data && typeof data === "object"
+      ? data
+      : {};
   }
 
   function setTreasureStatus(element, message, isError) {
@@ -167,7 +195,10 @@
   }
 
   function addTreasure(spinCard) {
-    if (!spinCard || spinCard.querySelector("#" + TREASURE_ID)) {
+    if (
+      !spinCard ||
+      spinCard.querySelector("#" + TREASURE_ID)
+    ) {
       return;
     }
 
@@ -187,7 +218,9 @@
 
     const status = document.createElement("p");
     status.id = STATUS_ID;
-    status.className = "form-note secret-hunt-treasure-status";
+    status.className =
+      "form-note secret-hunt-treasure-status";
+
     status.setAttribute("role", "status");
     status.setAttribute("aria-live", "polite");
 
@@ -200,10 +233,12 @@
           "The Lounge connection is still starting. Please try again in a moment.",
           true
         );
+
         return;
       }
 
       button.disabled = true;
+
       setTreasureStatus(
         status,
         "✨ Checking your discovery...",
@@ -245,15 +280,26 @@
               "The Purple Star couldn't be discovered right now. Please try again later.",
             true
           );
+
           return;
         }
 
         const rewardType = result.reward_type;
         const rewardAmount = result.reward_amount;
 
-        if (rewardType === "xp" || rewardType === "star" || rewardType === "stars") {
-          if (typeof window.tambayanApplyLoungeReward !== "function") {
-            throw new Error("The local reward bridge is unavailable. Please refresh the page.");
+        // Apply XP and Star rewards.
+        if (
+          rewardType === "xp" ||
+          rewardType === "star" ||
+          rewardType === "stars"
+        ) {
+          if (
+            typeof window.tambayanApplyLoungeReward !==
+            "function"
+          ) {
+            throw new Error(
+              "The local reward bridge is unavailable. Please refresh the page."
+            );
           }
 
           const applied = window.tambayanApplyLoungeReward(
@@ -263,23 +309,52 @@
           );
 
           if (!applied) {
-            throw new Error("The Secret Hunt reward could not be added to your local profile.");
+            throw new Error(
+              "The Secret Hunt reward could not be added to your local profile."
+            );
           }
         }
 
-        let rewardMessage = "Your discovery has been recorded!";
+        // Apply collectible rewards to the user's collection.
+        else if (rewardType === "collectible") {
+          if (
+            typeof window.tambayanAddLoungeCollectible !==
+            "function"
+          ) {
+            throw new Error(
+              "The collectible inventory bridge is unavailable. Please refresh the page."
+            );
+          }
+
+          const applied = window.tambayanAddLoungeCollectible(
+            result.collectible_key,
+            "Secret Hunt reward!"
+          );
+
+          if (!applied) {
+            throw new Error(
+              "The Secret Hunt collectible could not be added to your inventory."
+            );
+          }
+        }
+
+        let rewardMessage =
+          "Your discovery has been recorded!";
 
         if (rewardType === "xp") {
           rewardMessage =
             "You found it! 🎉 You received " +
             (rewardAmount ?? 10) + " XP!";
-        } else if (rewardType === "star") {
+        } else if (
+          rewardType === "star" ||
+          rewardType === "stars"
+        ) {
           rewardMessage =
             "You found it! ⭐ You received " +
             (rewardAmount ?? "") + " star(s)!";
         } else if (rewardType === "collectible") {
           rewardMessage =
-            "You found it! 🎁 Your collectible reward has been recorded.";
+            "You found it! 🎁 Your collectible reward has been added to your collection.";
         }
 
         setTreasureStatus(
@@ -288,7 +363,8 @@
           false
         );
 
-        button.textContent = "💜 Purple Star discovered!";
+        button.textContent =
+          "💜 Purple Star discovered!";
 
       } catch (error) {
         console.error(
@@ -350,5 +426,3 @@
     start();
   }
 })();
-
-      
