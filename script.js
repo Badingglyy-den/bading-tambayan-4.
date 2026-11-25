@@ -536,6 +536,11 @@ $("saveProfile").onclick = () => {
 $("profileOpen").addEventListener("click", () => {
   $("profileName").value = state.profile.name;
   $("profileAvatar").value = state.profile.avatar;
+  $("avatarPreview").textContent = state.profile.avatar;
+});
+
+$("profileAvatar").addEventListener("change", () => {
+  $("avatarPreview").textContent = $("profileAvatar").value;
 });
 
 $("dailyMessage").onclick = () => {
