@@ -533,15 +533,30 @@ $("saveProfile").onclick = () => {
   toast("Profile updated! 💜");
 };
 
+
+function updateAvatarSelection(avatar) {
+  $("profileAvatar").value = avatar;
+  $("avatarPreview").textContent = avatar;
+
+  document.querySelectorAll(".avatar-choice").forEach(button => {
+    button.classList.toggle(
+      "selected",
+      button.dataset.avatar === avatar
+    );
+  });
+}
+
 $("profileOpen").addEventListener("click", () => {
   $("profileName").value = state.profile.name;
-  $("profileAvatar").value = state.profile.avatar;
-  $("avatarPreview").textContent = state.profile.avatar;
+  updateAvatarSelection(state.profile.avatar);
 });
 
-$("profileAvatar").addEventListener("change", () => {
-  $("avatarPreview").textContent = $("profileAvatar").value;
+document.querySelectorAll(".avatar-choice").forEach(button => {
+  button.addEventListener("click", () => {
+    updateAvatarSelection(button.dataset.avatar);
+  });
 });
+
 
 $("dailyMessage").onclick = () => {
   const m = random([
