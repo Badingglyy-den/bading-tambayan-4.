@@ -22,7 +22,7 @@ const defaultState = () => ({
   lastMissionDate: "",
   lastDailyMessage: "A little progress is still progress.",
   createdAt: new Date().toISOString(),
-  achievements: [],
+  achievements: state.achievements,
   visited: [],
   completed: [],
   journalEntries: [],
