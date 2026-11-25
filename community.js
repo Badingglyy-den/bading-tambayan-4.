@@ -7,8 +7,12 @@
   if (!window.supabase || document.getElementById("publicCommunity")) return;
 
   const client = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-  const style = document.createElement("style");
+  const EMOJIS = [
+    "💜", "💗", "💖", "💕", "🌸", "🌷", "🌻", "🌼", "🦋", "🐱",
+    "🐰", "🐻", "🐼", "🐸", "🐥", "⭐", "🌙", "☁️", "🍓", "🍀"
+  ];
 
+  const style = document.createElement("style");
   style.textContent = `
     #publicCommunity { margin: 28px 0 42px; }
     #publicCommunity .community-panel {
@@ -98,6 +102,26 @@
       border: 1px dashed var(--line, #ffffff35); border-radius: 14px;
       padding: 15px; margin-top: 12px;
     }
+    #publicCommunity .community-picker {
+      display: flex; flex-wrap: wrap; gap: 6px; margin: 5px 0 12px;
+    }
+    #publicCommunity .community-picker button {
+      width: 39px; height: 39px; padding: 0; margin: 0;
+      display: inline-grid; place-items: center;
+      background: rgba(255,255,255,.09); color: inherit;
+      border: 1px solid var(--line, #ffffff25); font-size: 20px;
+    }
+    #publicCommunity .community-picker button.selected {
+      background: var(--accent, #c6a5ff); color: #1b1231;
+      outline: 2px solid var(--accent, #c6a5ff);
+    }
+    #publicCommunity .community-field-label {
+      display: block; margin: 10px 0 3px; font-size: 11px;
+      color: var(--muted, #b9aecb); font-weight: 700;
+    }
+    #publicCommunity .community-edit-note {
+      margin: 3px 0 8px; font-size: 11px; color: var(--muted, #b9aecb);
+    }
     @media(max-width:700px) {
       #publicCommunity .community-columns { grid-template-columns: 1fr; }
       #publicCommunity .community-panel { padding: 16px; }
@@ -121,13 +145,23 @@
         <h3 id="communityJoinTitle">Join the Community 💜</h3>
         <p id="communityJoinDescription" class="community-muted">Joining is optional. Choose the nickname and avatar that other members will see.</p>
         <div id="communityJoinFields">
+          <label class="community-field-label" for="communityName">Public nickname</label>
           <input id="communityName" maxlength="24" placeholder="Your public nickname">
-          <input id="communityAvatar" maxlength="8" value="💜" aria-label="Your public avatar emoji">
+          <span class="community-field-label">Add an emoji to your nickname (optional)</span>
+          <div id="communityNicknamePicker" class="community-picker" aria-label="Nickname emoji choices"></div>
+          <span class="community-field-label">Choose your avatar</span>
+          <div id="communityAvatarPicker" class="community-picker" aria-label="Avatar emoji choices"></div>
+          <input id="communityAvatar" type="hidden" value="💜" aria-label="Selected public avatar emoji">
+          <p class="community-edit-note">Tap an emoji to add it to your nickname or choose it as your avatar.</p>
           <button id="communityJoinButton" type="button">Join the Community</button>
+          <button id="communityCancelEdit" class="secondary" type="button" hidden>Cancel</button>
         </div>
         <div id="communityMemberActions" hidden>
           <span class="community-muted">You're a member! You can now post, comment, and react.</span>
-          <button id="communityLeaveButton" class="secondary" type="button">Leave community</button>
+          <div>
+            <button id="communityEditProfileButton" class="secondary" type="button">✏️ Edit Profile</button>
+            <button id="communityLeaveButton" class="secondary" type="button">Leave community</button>
+          </div>
         </div>
         <p id="communityStatus" class="community-status" role="status"></p>
       </div>
@@ -164,6 +198,7 @@
   let currentUser = null;
   let membership = null;
   let busy = false;
+  let editingProfile = false;
 
   function status(message, isError = false) {
     $("communityStatus").textContent = message || "";
@@ -183,19 +218,40 @@
     });
   }
 
+  function renderEmojiPickers() {
+    $("communityNicknamePicker").innerHTML = EMOJIS.map(emoji =>
+      `<button type="button" class="secondary" data-nickname-emoji="${escapeText(emoji)}" aria-label="Add ${escapeText(emoji)} to nickname">${emoji}</button>`
+    ).join("");
+    $("communityAvatarPicker").innerHTML = EMOJIS.map(emoji =>
+      `<button type="button" class="secondary" data-avatar-emoji="${escapeText(emoji)}" aria-label="Choose ${escapeText(emoji)} as avatar">${emoji}</button>`
+    ).join("");
+    updateAvatarPickerSelection();
+  }
+
+  function updateAvatarPickerSelection() {
+    $("communityAvatarPicker").querySelectorAll("[data-avatar-emoji]").forEach(button => {
+      button.classList.toggle("selected", button.dataset.avatarEmoji === $("communityAvatar").value);
+    });
+  }
+
   function setMemberUI() {
     const joined = !!membership;
-    $("communityJoinFields").hidden = joined;
-    $("communityMemberActions").hidden = !joined;
-    $("communityJoinTitle").textContent = joined
-      ? "You're part of the tambayan! 💜"
-      : "Join the Community 💜";
-    $("communityJoinDescription").textContent = joined
-      ? "Your public nickname and avatar are visible in the member directory."
-      : "Joining is optional. Choose the nickname and avatar that other members will see.";
+    $("communityJoinFields").hidden = joined && !editingProfile;
+    $("communityMemberActions").hidden = !joined || editingProfile;
+    $("communityJoinTitle").textContent = editingProfile
+      ? "Edit Your Public Profile ✨"
+      : joined ? "You're part of the tambayan! 💜" : "Join the Community 💜";
+    $("communityJoinDescription").textContent = editingProfile
+      ? "Update the nickname and avatar shown on your community posts and member profile."
+      : joined
+        ? "Your public nickname and avatar are visible in the member directory."
+        : "Joining is optional. Choose the nickname and avatar that other members will see.";
     $("communityComposer").hidden = !joined;
     $("communityName").value = membership?.display_name || "";
     $("communityAvatar").value = membership?.avatar || "💜";
+    $("communityJoinButton").textContent = editingProfile ? "Save Profile" : "Join the Community";
+    $("communityCancelEdit").hidden = !editingProfile;
+    updateAvatarPickerSelection();
   }
 
   async function loadMembership() {
@@ -207,6 +263,7 @@
       .maybeSingle();
     if (error) throw error;
     membership = data || null;
+    editingProfile = false;
     setMemberUI();
   }
 
@@ -305,6 +362,31 @@
     }
   }
 
+  $("communityNicknamePicker").addEventListener("click", event => {
+    const button = event.target.closest("[data-nickname-emoji]");
+    if (!button) return;
+    const input = $("communityName");
+    const emoji = button.dataset.nicknameEmoji;
+    const start = input.selectionStart ?? input.value.length;
+    const end = input.selectionEnd ?? input.value.length;
+    const nextValue = input.value.slice(0, start) + emoji + input.value.slice(end);
+    if (nextValue.length > 24) {
+      status("Nickname must be 24 characters or fewer.", true);
+      return;
+    }
+    input.value = nextValue;
+    const cursor = start + emoji.length;
+    input.focus();
+    input.setSelectionRange(cursor, cursor);
+  });
+
+  $("communityAvatarPicker").addEventListener("click", event => {
+    const button = event.target.closest("[data-avatar-emoji]");
+    if (!button) return;
+    $("communityAvatar").value = button.dataset.avatarEmoji;
+    updateAvatarPickerSelection();
+  });
+
   $("communityJoinButton").addEventListener("click", async () => {
     if (!currentUser || busy) return;
     const name = $("communityName").value.trim();
@@ -320,16 +402,32 @@
         avatar: avatar.slice(0, 8)
       }, { onConflict: "user_id" }).select().single();
       if (error) throw error;
+      const wasEditing = editingProfile;
       membership = data;
+      editingProfile = false;
       setMemberUI();
-      status("Welcome to the community! You can post, comment, and react now. 💜");
+      status(wasEditing ? "Profile updated! 💜" : "Welcome to the community! You can post, comment, and react now. 💜");
       await refreshAll();
     } catch (error) {
-      status(error.message || "Couldn't join the community.", true);
+      status(error.message || "Couldn't save your community profile.", true);
     } finally {
       busy = false;
       $("communityJoinButton").disabled = false;
     }
+  });
+
+  $("communityEditProfileButton").addEventListener("click", () => {
+    if (!membership) return;
+    editingProfile = true;
+    setMemberUI();
+    status("Make your changes, then tap Save Profile.");
+    $("communityName").focus();
+  });
+
+  $("communityCancelEdit").addEventListener("click", () => {
+    editingProfile = false;
+    setMemberUI();
+    status("Profile editing cancelled.");
   });
 
   $("communityLeaveButton").addEventListener("click", async () => {
@@ -341,6 +439,7 @@
         .delete().eq("user_id", currentUser.id);
       if (error) throw error;
       membership = null;
+      editingProfile = false;
       setMemberUI();
       status("You left the community. Your existing posts remain visible.");
       await refreshAll();
@@ -458,6 +557,8 @@
     }
   }
 
+  renderEmojiPickers();
+
   client.auth.onAuthStateChange((_event, session) => {
     if (session?.user) {
       currentUser = session.user;
@@ -471,4 +572,3 @@
     else status("Connecting to the tambayan account…");
   });
 })();
-
