@@ -352,6 +352,241 @@
     }
   `;
   document.head.appendChild(style);
+  
+  // ONLINE TAMBAYAN — CHATROOM REDESIGN
+  const layoutStyle = document.createElement("style");
+  layoutStyle.textContent = `
+    #onlineTambayan {
+      margin: 30px 0 45px;
+    }
+
+    #onlineTambayan .section-heading {
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    #onlineTambayan .online-panel {
+      padding: 20px;
+      border-radius: 24px;
+      background:
+        radial-gradient(ellipse at 10% 0%, rgba(174,130,255,.15), transparent 42%),
+        linear-gradient(145deg, #211735, #151020);
+    }
+
+    /* Compact setup area */
+    #onlineTambayan .online-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+      margin: 16px 0;
+    }
+
+    #onlineTambayan .online-grid > div {
+      padding: 16px;
+      border-radius: 17px;
+      background: rgba(255,255,255,.045);
+      border: 1px solid rgba(194,158,255,.16);
+    }
+
+    #onlineTambayan .online-grid h3 {
+      font-size: 1rem;
+      margin-bottom: 10px;
+    }
+
+    #onlineTambayan .online-grid button {
+      width: 100%;
+      margin: 7px 0 0;
+    }
+
+    /* Status and room list */
+    #onlineTambayan .online-status {
+      margin: 12px 0;
+      font-size: .88rem;
+    }
+
+    #onlineTambayan #onlineMyRoomsBox {
+      margin-top: 14px;
+      padding: 17px;
+      background: rgba(255,255,255,.035);
+    }
+
+    #onlineTambayan #onlineMyRoomsBox h3 {
+      margin-bottom: 4px;
+    }
+
+    #onlineTambayan .online-room-list {
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 9px;
+    }
+
+    #onlineTambayan .online-room-card {
+      min-width: 0;
+      min-height: 64px;
+      padding: 12px;
+      overflow-wrap: anywhere;
+    }
+
+    #onlineTambayan .online-room-card span {
+      min-width: 0;
+    }
+
+    /* Active room */
+    #onlineTambayan .online-room {
+      margin-top: 18px;
+      padding-top: 18px;
+    }
+
+    #onlineTambayan .online-room-top {
+      padding: 15px;
+      border: 1px solid rgba(194,158,255,.18);
+      border-radius: 17px;
+      background: rgba(169,139,255,.07);
+    }
+
+    #onlineTambayan .online-room-top h3 {
+      font-size: 1.2rem;
+      margin: 3px 0 8px;
+    }
+
+    #onlineTambayan .online-columns {
+      grid-template-columns: minmax(0, 1fr) 220px;
+      align-items: start;
+      gap: 13px;
+    }
+
+    #onlineTambayan .online-columns > .online-box {
+      padding: 15px;
+      border-radius: 18px;
+      background: rgba(255,255,255,.035);
+    }
+
+    #onlineTambayan .online-columns > .online-box:first-child {
+      min-width: 0;
+    }
+
+    #onlineTambayan .online-messages {
+      height: 360px;
+      padding: 13px;
+      gap: 11px;
+      border-radius: 15px;
+      background: rgba(8,5,18,.42);
+    }
+
+    #onlineTambayan .online-message {
+      width: fit-content;
+      max-width: 88%;
+      border-radius: 15px 15px 15px 5px;
+    }
+
+    #onlineTambayan .online-compose {
+      margin-top: 12px;
+    }
+
+    #onlineTambayan .online-compose input {
+      min-height: 48px;
+    }
+
+    #onlineTambayan .online-compose button {
+      min-width: 70px;
+      min-height: 48px;
+    }
+
+    #onlineTambayan .online-members {
+      gap: 9px;
+    }
+
+    #onlineTambayan .online-member {
+      overflow-wrap: anywhere;
+    }
+
+    #onlineTambayan .online-reactions {
+      padding-top: 3px;
+    }
+
+    /* Phone layout */
+    @media (max-width: 620px) {
+      #onlineTambayan {
+        margin: 22px 0 32px;
+      }
+
+      #onlineTambayan .online-panel {
+        padding: 12px;
+        border-radius: 19px;
+      }
+
+      #onlineTambayan .online-grid {
+        grid-template-columns: 1fr;
+        gap: 10px;
+      }
+
+      #onlineTambayan .online-grid > div {
+        padding: 14px;
+      }
+
+      #onlineTambayan #onlineMyRoomsBox {
+        padding: 13px;
+      }
+
+      #onlineTambayan .online-room-list {
+        grid-template-columns: 1fr;
+      }
+
+      #onlineTambayan .online-room-top {
+        padding: 13px;
+      }
+
+      #onlineTambayan .online-room-actions {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 7px;
+      }
+
+      #onlineTambayan .online-room-actions button {
+        min-width: 0;
+        margin: 0;
+        padding: 10px 7px;
+        font-size: .82rem;
+      }
+
+      #onlineTambayan .online-columns {
+        grid-template-columns: 1fr;
+        gap: 10px;
+      }
+
+      #onlineTambayan .online-columns > .online-box {
+        padding: 12px;
+      }
+
+      #onlineTambayan .online-messages {
+        height: 310px;
+      }
+
+      #onlineTambayan .online-message {
+        max-width: 94%;
+      }
+
+      #onlineTambayan .online-compose {
+        gap: 6px;
+      }
+
+      #onlineTambayan .online-compose button {
+        min-width: 62px;
+        padding: 9px;
+      }
+
+      #onlineTambayan .online-reactions {
+        gap: 6px;
+      }
+    }
+
+    @media (max-width: 360px) {
+      #onlineTambayan .online-room-actions {
+        grid-template-columns: 1fr;
+      }
+    }
+  `;
+  document.head.appendChild(layoutStyle);
+  
 
   const section = document.createElement("section");
   section.id = "onlineTambayan";
