@@ -341,9 +341,18 @@ try {
     note.textContent = "Today's visitor · Come back tomorrow for someone new.";
 
     function showRandom(lines) {
-      const index = Math.floor(Math.random() * lines.length);
-      dialogue.textContent = lines[index];
-    }
+  const rareLines = RARE_DIALOGUE[npc.id] || [];
+  const isRare = Math.random() < 0.12;
+
+  if (isRare && rareLines.length > 0) {
+    const index = Math.floor(Math.random() * rareLines.length);
+    dialogue.textContent = `🌟 Rare moment! ${rareLines[index]}`;
+    return;
+  }
+
+  const index = Math.floor(Math.random() * lines.length);
+  dialogue.textContent = lines[index];
+}
 
     const actions = [
       {
