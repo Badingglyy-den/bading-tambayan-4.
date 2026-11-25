@@ -32,7 +32,6 @@
     return Array.isArray(data) ? (data[0] ?? data) : data;
   }
 
-  // Wait until Supabase has finished creating or restoring the anonymous session.
   async function waitForClient(maxAttempts = 40) {
     for (let attempt = 0; attempt < maxAttempts; attempt += 1) {
       const client = getClient();
@@ -77,13 +76,15 @@
     if (rewardType === "xp") {
       return "🎉 You received " + (amount ?? "") + " XP!";
     }
-    if (rewardType === "star") {
+
+    if (rewardType === "star" || rewardType === "stars") {
       return "⭐ You received " + (amount ?? "") + " star(s)!";
     }
+
     if (rewardType === "collectible") {
       return "🎁 You found a collectible!" +
         (tier ? " (" + tier + " box)" : "") +
-        " Your reward was recorded.";
+        " Your reward was added to your collection.";
     }
 
     if (tier) {
@@ -97,7 +98,11 @@
     const client = getClient();
 
     if (!client || typeof client.rpc !== "function") {
-      setStatus(statusElement, "The Lounge connection is still starting. Please try again in a moment.", true);
+      setStatus(
+        statusElement,
+        "The Lounge connection is still starting. Please try again in a moment.",
+        true
+      );
       return;
     }
 
@@ -109,41 +114,74 @@
       if (error) throw error;
 
       const result = normalizeResult(data) || {};
+
       const alreadyClaimed =
         result.already_claimed === true ||
         result.status === "already_claimed";
 
-      // Only apply a newly claimed reward. Replayed daily claims must not
-      // award local XP or Stars a second time.
+      // Only apply a newly claimed reward.
+      // Replayed daily claims must not award rewards twice.
       if (!alreadyClaimed && result.success !== false) {
         const rewardType = result.reward_type || result.type;
         const amount = result.reward_amount ?? result.amount;
 
-        if (
-          (rewardType === "xp" || rewardType === "star") &&
-          typeof window.tambayanApplyLoungeReward === "function"
+        if (rewardType === "collectible") {
+          if (typeof window.tambayanAddLoungeCollectible !== "function") {
+            throw new Error(
+              "The collectible inventory bridge is unavailable. Please refresh the page."
+            );
+          }
+
+          const applied = window.tambayanAddLoungeCollectible(
+            result.collectible_key,
+            gameName + " reward!"
+          );
+
+          if (!applied) {
+            throw new Error(
+              "The collectible could not be added to your inventory."
+            );
+          }
+        } else if (
+          rewardType === "xp" ||
+          rewardType === "star" ||
+          rewardType === "stars"
         ) {
-          window.tambayanApplyLoungeReward(
+          if (typeof window.tambayanApplyLoungeReward !== "function") {
+            throw new Error(
+              "The local reward bridge is unavailable. Please refresh the page."
+            );
+          }
+
+          const applied = window.tambayanApplyLoungeReward(
             rewardType,
             amount,
             gameName + " reward!"
           );
-        } else if (
-          (rewardType === "xp" || rewardType === "star") &&
-          typeof window.tambayanApplyLoungeReward !== "function"
-        ) {
-          throw new Error("The local reward bridge is unavailable. Please refresh the page.");
+
+          if (!applied) {
+            throw new Error("The Lounge reward could not be applied.");
+          }
         }
       }
 
       setStatus(statusElement, formatReward(result, gameName));
     } catch (error) {
       console.error("Lounge reward error:", error);
+
       const message = String(error?.message || "");
+
       if (/already|duplicate|unique/i.test(message)) {
-        setStatus(statusElement, "You've already claimed today's " + gameName + ". Come back tomorrow! 💜");
+        setStatus(
+          statusElement,
+          "You've already claimed today's " + gameName + ". Come back tomorrow! 💜"
+        );
       } else {
-        setStatus(statusElement, "We couldn't claim your reward right now. Please try again later.", true);
+        setStatus(
+          statusElement,
+          "We couldn't claim your reward right now. Please try again later.",
+          true
+        );
       }
     } finally {
       button.disabled = false;
@@ -153,13 +191,23 @@
   function addText(parent, tag, text, className) {
     const element = document.createElement(tag);
     element.textContent = text;
-    if (className) element.className = className;
+
+    if (className) {
+      element.className = className;
+    }
+
     parent.appendChild(element);
     return element;
   }
 
   function getPollOptionText(option) {
-    return findValue(option, ["option_text", "option_label", "text", "label", "title"]) || "Option";
+    return findValue(option, [
+      "option_text",
+      "option_label",
+      "text",
+      "label",
+      "title"
+    ]) || "Option";
   }
 
   function getPollOptionId(option) {
@@ -168,6 +216,7 @@
 
   function getPollResultsCard(card) {
     let panel = card.querySelector("#loungePollResults");
+
     if (!panel) {
       panel = document.createElement("div");
       panel.id = "loungePollResults";
@@ -175,12 +224,14 @@
       panel.setAttribute("aria-live", "polite");
       card.appendChild(panel);
     }
+
     return panel;
   }
 
   async function loadPoll(card) {
     const client = getClient();
     const button = card.querySelector("button");
+
     if (!client || !client.from || !client.rpc) {
       if (button) {
         button.disabled = true;
@@ -207,12 +258,24 @@
 
       if (!poll) {
         if (button) button.textContent = "No poll published yet";
-        addText(card, "p", "A new community poll will appear here when one is published. 💜", "form-note");
+
+        addText(
+          card,
+          "p",
+          "A new community poll will appear here when one is published. 💜",
+          "form-note"
+        );
+
         return;
       }
 
       const pollId = findValue(poll, ["id", "poll_id"]);
-      const question = findValue(poll, ["question", "poll_question", "title"]) || "Today's community question";
+
+      const question = findValue(poll, [
+        "question",
+        "poll_question",
+        "title"
+      ]) || "Today's community question";
 
       const { data: options, error: optionsError } = await client
         .from("lounge_poll_options")
@@ -220,14 +283,25 @@
         .eq("poll_id", pollId);
 
       if (optionsError) throw optionsError;
+
       if (!Array.isArray(options) || options.length < 2) {
         if (button) button.textContent = "Poll is being prepared";
-        addText(card, "p", "This poll's choices are still being prepared.", "form-note");
+
+        addText(
+          card,
+          "p",
+          "This poll's choices are still being prepared.",
+          "form-note"
+        );
+
         return;
       }
 
       const oldDescription = card.querySelector("p");
-      if (oldDescription) oldDescription.textContent = question;
+
+      if (oldDescription) {
+        oldDescription.textContent = question;
+      }
 
       const choices = document.createElement("div");
       choices.className = "lounge-poll-choices";
@@ -241,79 +315,144 @@
       const resultsPanel = getPollResultsCard(card);
 
       async function refreshResults() {
-        const { data, error } = await client.rpc("lounge_get_poll_results", {
-          p_poll_id: pollId
-        });
+        const { data, error } = await client.rpc(
+          "lounge_get_poll_results",
+          {
+            p_poll_id: pollId
+          }
+        );
+
         if (error) throw error;
 
         const rows = Array.isArray(data) ? data : (data ? [data] : []);
+
         resultsPanel.replaceChildren();
         addText(resultsPanel, "h4", "Live results");
+
         let total = 0;
 
         rows.forEach(row => {
-          const count = Number(findValue(row, ["vote_count", "votes", "count"]) || 0);
+          const count = Number(
+            findValue(row, ["vote_count", "votes", "count"]) || 0
+          );
+
           total += count;
         });
 
         rows.forEach(row => {
-          const label = findValue(row, ["option_text", "option_label", "text", "label"]) || "Option";
-          const count = Number(findValue(row, ["vote_count", "votes", "count"]) || 0);
-          const rawPercent = findValue(row, ["percentage", "percent"]);
+          const label = findValue(row, [
+            "option_text",
+            "option_label",
+            "text",
+            "label"
+          ]) || "Option";
+
+          const count = Number(
+            findValue(row, ["vote_count", "votes", "count"]) || 0
+          );
+
+          const rawPercent = findValue(row, [
+            "percentage",
+            "percent"
+          ]);
+
           const percent = rawPercent === undefined
             ? (total ? Math.round((count / total) * 100) : 0)
             : Math.round(Number(rawPercent));
+
           const line = document.createElement("p");
           line.className = "lounge-poll-result-line";
-          line.textContent = label + " — " + percent + "% (" + count + ")";
+          line.textContent =
+            label + " — " + percent + "% (" + count + ")";
+
           resultsPanel.appendChild(line);
         });
 
-        addText(resultsPanel, "p", "Total votes: " + total, "form-note");
+        addText(
+          resultsPanel,
+          "p",
+          "Total votes: " + total,
+          "form-note"
+        );
       }
 
       options.forEach(option => {
         const optionId = getPollOptionId(option);
+
         const choice = document.createElement("button");
         choice.type = "button";
         choice.className = "small-btn lounge-poll-option";
         choice.textContent = getPollOptionText(option);
         choice.disabled = !optionId;
+
         choice.addEventListener("click", async () => {
-          choices.querySelectorAll("button").forEach(item => item.disabled = true);
+          choices.querySelectorAll("button").forEach(item => {
+            item.disabled = true;
+          });
+
           setStatus(status, "Submitting your vote...");
+
           try {
-            const { data, error } = await client.rpc("lounge_submit_poll_vote", {
-              p_poll_id: pollId,
-              p_option_id: optionId
-            });
+            const { data, error } = await client.rpc(
+              "lounge_submit_poll_vote",
+              {
+                p_poll_id: pollId,
+                p_option_id: optionId
+              }
+            );
+
             if (error) throw error;
 
             const voteStatus = findValue(data, ["status"]);
+
             if (voteStatus === "already_voted") {
-              setStatus(status, "You've already voted in this poll. Here are the results. 💜");
+              setStatus(
+                status,
+                "You've already voted in this poll. Here are the results. 💜"
+              );
             } else {
-              setStatus(status, "Your vote has been counted! Thank you for joining in. 💜");
+              setStatus(
+                status,
+                "Your vote has been counted! Thank you for joining in. 💜"
+              );
             }
+
             await refreshResults();
           } catch (error) {
             console.error("Daily Poll vote error:", error);
-            setStatus(status, "We couldn't submit your vote. Please try again later.", true);
-            choices.querySelectorAll("button").forEach(item => item.disabled = false);
+
+            setStatus(
+              status,
+              "We couldn't submit your vote. Please try again later.",
+              true
+            );
+
+            choices.querySelectorAll("button").forEach(item => {
+              item.disabled = false;
+            });
           }
         });
+
         choices.appendChild(choice);
       });
 
       if (button) button.remove();
+
       await refreshResults();
     } catch (error) {
       console.error("Daily Poll load error:", error);
+
       if (button) {
         button.disabled = true;
         button.textContent = "Poll temporarily unavailable";
       }
-      addText(card, "p", "We couldn't load the poll right now. Please try again later.", "form-note");
+
+      addText(
+        card,
+        "p",
+        "We couldn't load the poll right now. Please try again later.",
+        "form-note"
+      );
     }
   }
 
@@ -331,6 +470,7 @@
 
     const style = document.createElement("style");
     style.id = "loungeMoodStyles";
+
     style.textContent = `
       .lounge-mood-options {
         display: grid;
@@ -338,26 +478,32 @@
         gap: 8px;
         margin: 12px 0;
       }
+
       .lounge-mood-choice {
         min-width: 0;
         white-space: normal;
         line-height: 1.35;
       }
+
       .lounge-mood-choice[aria-pressed="true"] {
         outline: 2px solid #d7a5ff;
         background: rgba(180, 120, 230, .2);
       }
+
       .lounge-mood-section {
         margin-top: 14px;
       }
+
       .lounge-mood-section h4 {
         margin: 8px 0;
       }
+
       .lounge-mood-counts {
         display: grid;
         grid-template-columns: repeat(2, minmax(0, 1fr));
         gap: 6px;
       }
+
       .lounge-mood-count {
         margin: 0;
         padding: 7px 9px;
@@ -365,6 +511,7 @@
         background: rgba(160, 120, 210, .1);
         font-size: .9rem;
       }
+
       .lounge-mood-indicator {
         margin: 12px 0;
         padding: 12px 14px;
@@ -372,6 +519,7 @@
         border-radius: 14px;
         background: rgba(180, 120, 230, .16);
       }
+
       .lounge-mood-indicator-label {
         display: block;
         margin-bottom: 4px;
@@ -381,10 +529,12 @@
         text-transform: uppercase;
         opacity: .85;
       }
+
       .lounge-mood-indicator-value {
         font-size: 1rem;
         font-weight: 700;
       }
+
       @media (min-width: 520px) {
         .lounge-mood-options,
         .lounge-mood-counts {
@@ -392,19 +542,28 @@
         }
       }
     `;
+
     document.head.appendChild(style);
   }
 
   function getMoodCount(rows, moodKey) {
     if (!Array.isArray(rows)) return 0;
-    const row = rows.find(item => findValue(item, ["mood"]) === moodKey);
-    return row ? Number(findValue(row, ["total_count", "count"]) || 0) : 0;
+
+    const row = rows.find(
+      item => findValue(item, ["mood"]) === moodKey
+    );
+
+    return row
+      ? Number(findValue(row, ["total_count", "count"]) || 0)
+      : 0;
   }
 
   function renderMoodCounts(container, rows) {
     container.replaceChildren();
+
     MOODS.forEach(mood => {
       const count = getMoodCount(rows, mood.key);
+
       addText(
         container,
         "p",
@@ -418,38 +577,49 @@
     addMoodStyles();
 
     const originalButton = card.querySelector("button");
+
     if (originalButton) {
       originalButton.disabled = true;
       originalButton.textContent = "Loading today's garden...";
     }
 
     const description = card.querySelector("p");
+
     const garden = document.createElement("div");
     garden.className = "lounge-mood-garden";
     garden.setAttribute("aria-live", "polite");
+
     if (description) {
       description.insertAdjacentElement("afterend", garden);
     } else {
       card.appendChild(garden);
     }
 
-    const status = addText(garden, "p", "Connecting to the Mood Garden...", "form-note");
+    const status = addText(
+      garden,
+      "p",
+      "Connecting to the Mood Garden...",
+      "form-note"
+    );
 
     const moodIndicator = document.createElement("div");
     moodIndicator.className = "lounge-mood-indicator";
     moodIndicator.hidden = true;
+
     addText(
       moodIndicator,
       "span",
       "Today's Mood",
       "lounge-mood-indicator-label"
     );
+
     const moodIndicatorValue = addText(
       moodIndicator,
       "span",
       "",
       "lounge-mood-indicator-value"
     );
+
     garden.appendChild(moodIndicator);
 
     const choices = document.createElement("div");
@@ -460,7 +630,9 @@
 
     const dailySection = document.createElement("section");
     dailySection.className = "lounge-mood-section";
+
     addText(dailySection, "h4", "🌱 Today's flowers");
+
     const dailyCounts = document.createElement("div");
     dailyCounts.className = "lounge-mood-counts";
     dailySection.appendChild(dailyCounts);
@@ -468,7 +640,9 @@
 
     const totalSection = document.createElement("section");
     totalSection.className = "lounge-mood-section";
+
     addText(totalSection, "h4", "🌸 Garden grown together");
+
     const totalCounts = document.createElement("div");
     totalCounts.className = "lounge-mood-counts";
     totalSection.appendChild(totalCounts);
@@ -477,8 +651,13 @@
     if (originalButton) originalButton.remove();
 
     const client = await waitForClient();
+
     if (!client) {
-      setStatus(status, "The Lounge connection is unavailable right now. Please refresh and try again.", true);
+      setStatus(
+        status,
+        "The Lounge connection is unavailable right now. Please refresh and try again.",
+        true
+      );
       return;
     }
 
@@ -487,66 +666,110 @@
       if (error) throw error;
 
       const result = normalizeResult(data) || {};
-      const daily = Array.isArray(result.daily) ? result.daily : [];
-      const totals = Array.isArray(result.totals) ? result.totals : [];
+
+      const daily = Array.isArray(result.daily)
+        ? result.daily
+        : [];
+
+      const totals = Array.isArray(result.totals)
+        ? result.totals
+        : [];
+
       const myMood = result.my_mood || null;
 
       renderMoodCounts(dailyCounts, daily);
       renderMoodCounts(totalCounts, totals);
 
       if (myMood) {
-        const selectedMood = MOODS.find(mood => mood.key === myMood);
+        const selectedMood = MOODS.find(
+          mood => mood.key === myMood
+        );
+
         const moodLabel = selectedMood
-          ? selectedMood.key.charAt(0).toUpperCase() + selectedMood.key.slice(1)
+          ? selectedMood.key.charAt(0).toUpperCase() +
+            selectedMood.key.slice(1)
           : String(myMood);
 
         moodIndicatorValue.textContent = selectedMood
-          ? moodLabel + " — " + selectedMood.flower + " " + selectedMood.name
+          ? moodLabel + " — " +
+            selectedMood.flower + " " + selectedMood.name
           : moodLabel;
+
         moodIndicator.hidden = false;
         choices.replaceChildren();
-        setStatus(status, "Your mood has been recorded for today. Thank you for sharing! 💜");
+
+        setStatus(
+          status,
+          "Your mood has been recorded for today. Thank you for sharing! 💜"
+        );
+
         return true;
       }
 
       moodIndicator.hidden = true;
-      setStatus(status, "Choose the flower that represents your mood today. Your choice is private. 💜");
+
+      setStatus(
+        status,
+        "Choose the flower that represents your mood today. Your choice is private. 💜"
+      );
+
       choices.replaceChildren();
 
       MOODS.forEach(mood => {
         const button = document.createElement("button");
+
         button.type = "button";
         button.className = "small-btn lounge-mood-choice";
         button.textContent = mood.flower + " " + mood.name;
         button.setAttribute("aria-pressed", "false");
+
         button.addEventListener("click", async () => {
           choices.querySelectorAll("button").forEach(item => {
             item.disabled = true;
           });
+
           setStatus(status, "🌱 Planting your flower...");
 
           try {
-            const { data: submitData, error: submitError } = await client.rpc("lounge_submit_mood", {
-              p_mood: mood.key
-            });
+            const { data: submitData, error: submitError } =
+              await client.rpc("lounge_submit_mood", {
+                p_mood: mood.key
+              });
+
             if (submitError) throw submitError;
 
             const submitResult = normalizeResult(submitData) || {};
+
             if (submitResult.success === false) {
-              setStatus(status, submitResult.message || "You've already selected a mood today. 💜");
+              setStatus(
+                status,
+                submitResult.message ||
+                  "You've already selected a mood today. 💜"
+              );
             } else {
-              setStatus(status, "Your " + mood.name + " has been planted! Thank you for sharing. 💜");
+              setStatus(
+                status,
+                "Your " + mood.name +
+                  " has been planted! Thank you for sharing. 💜"
+              );
             }
 
             await refreshGarden();
           } catch (error) {
             console.error("Mood Garden submit error:", error);
-            setStatus(status, "We couldn't save your mood right now. Please try again later.", true);
+
+            setStatus(
+              status,
+              "We couldn't save your mood right now. Please try again later.",
+              true
+            );
+
             choices.querySelectorAll("button").forEach(item => {
               item.disabled = false;
             });
           }
         });
+
         choices.appendChild(button);
       });
 
@@ -557,7 +780,12 @@
       await refreshGarden();
     } catch (error) {
       console.error("Mood Garden load error:", error);
-      setStatus(status, "We couldn't load the Mood Garden right now. Please try again later.", true);
+
+      setStatus(
+        status,
+        "We couldn't load the Mood Garden right now. Please try again later.",
+        true
+      );
     }
   }
 
@@ -570,8 +798,11 @@
     }).formatToParts(new Date());
 
     const values = {};
+
     parts.forEach(part => {
-      if (part.type !== "literal") values[part.type] = part.value;
+      if (part.type !== "literal") {
+        values[part.type] = part.value;
+      }
     });
 
     return values.year + "-" + values.month + "-" + values.day;
@@ -582,6 +813,7 @@
 
     const style = document.createElement("style");
     style.id = "loungeSecretHuntStyles";
+
     style.textContent = `
       .lounge-hunt-box {
         margin-top: 12px;
@@ -590,17 +822,20 @@
         border-radius: 14px;
         background: rgba(160, 120, 210, .1);
       }
+
       .lounge-hunt-clue {
         margin: 0 0 12px;
         font-weight: 600;
         line-height: 1.55;
       }
+
       .lounge-hunt-form {
         display: flex;
         flex-wrap: wrap;
         gap: 8px;
         align-items: center;
       }
+
       .lounge-hunt-input {
         flex: 1 1 180px;
         min-width: 0;
@@ -612,15 +847,18 @@
         color: inherit;
         font: inherit;
       }
+
       .lounge-hunt-input::placeholder {
         color: inherit;
         opacity: .65;
       }
+
       .lounge-hunt-status {
         margin: 10px 0 0;
         line-height: 1.45;
       }
     `;
+
     document.head.appendChild(style);
   }
 
@@ -628,14 +866,17 @@
     addSecretHuntStyles();
 
     const originalButton = card.querySelector("button");
+
     if (originalButton) {
       originalButton.disabled = true;
       originalButton.textContent = "Looking for today's hunt...";
     }
 
     const description = card.querySelector("p");
+
     const huntBox = document.createElement("div");
     huntBox.className = "lounge-hunt-box";
+
     if (description) {
       description.insertAdjacentElement("afterend", huntBox);
     } else {
@@ -650,14 +891,21 @@
     );
 
     const client = await waitForClient();
+
     if (!client) {
-      setStatus(status, "The Lounge connection is unavailable. Please refresh and try again.", true);
+      setStatus(
+        status,
+        "The Lounge connection is unavailable. Please refresh and try again.",
+        true
+      );
+
       if (originalButton) originalButton.remove();
       return;
     }
 
     try {
       const today = getManilaDate();
+
       const { data: hunt, error } = await client
         .from("lounge_daily_hunts")
         .select("id, clue, hunt_date, status")
@@ -668,21 +916,40 @@
       if (error) throw error;
 
       if (!hunt) {
-        setStatus(status, "🔎 No Secret Hunt has been published for today yet. Check back soon! 💜");
+        setStatus(
+          status,
+          "🔎 No Secret Hunt has been published for today yet. Check back soon! 💜"
+        );
+
         if (originalButton) originalButton.remove();
         return;
       }
 
       const clue = findValue(hunt, ["clue"]);
+
       if (!clue) {
-        setStatus(status, "Today's Secret Hunt is being prepared. Please check back soon.");
+        setStatus(
+          status,
+          "Today's Secret Hunt is being prepared. Please check back soon."
+        );
+
         if (originalButton) originalButton.remove();
         return;
       }
 
       status.textContent = "";
-      const clueText = addText(huntBox, "p", clue, "lounge-hunt-clue");
-      clueText.setAttribute("aria-label", "Today's Secret Hunt clue");
+
+      const clueText = addText(
+        huntBox,
+        "p",
+        clue,
+        "lounge-hunt-clue"
+      );
+
+      clueText.setAttribute(
+        "aria-label",
+        "Today's Secret Hunt clue"
+      );
 
       const form = document.createElement("form");
       form.className = "lounge-hunt-form";
@@ -709,6 +976,7 @@
         event.preventDefault();
 
         const objectKey = answer.value.trim();
+
         if (!objectKey) {
           setStatus(status, "Type your answer first. 💜", true);
           return;
@@ -716,22 +984,31 @@
 
         submit.disabled = true;
         answer.disabled = true;
+
         setStatus(status, "Checking your discovery...");
 
         try {
           const { data, error: discoverError } = await client.rpc(
             "lounge_discover_hunt_object",
-            { p_object_key: objectKey }
+            {
+              p_object_key: objectKey
+            }
           );
 
           if (discoverError) throw discoverError;
 
           const result = normalizeResult(data) || {};
+
           const success = result.success === true;
-          const alreadyDiscovered = result.already_discovered === true;
+          const alreadyDiscovered =
+            result.already_discovered === true;
 
           if (alreadyDiscovered) {
-            setStatus(status, "You've already discovered today's secret. Come back for the next hunt! 💜");
+            setStatus(
+              status,
+              "You've already discovered today's secret. Come back for the next hunt! 💜"
+            );
+
             form.remove();
             return;
           }
@@ -739,8 +1016,10 @@
           if (!success) {
             setStatus(
               status,
-              result.message || "Not quite! Take another look at the clue and try again. 🔎"
+              result.message ||
+                "Not quite! Take another look at the clue and try again. 🔎"
             );
+
             answer.disabled = false;
             answer.value = "";
             answer.focus();
@@ -750,25 +1029,40 @@
 
           const rewardType = result.reward_type;
           const rewardAmount = result.reward_amount;
+
           let rewardText = "Your discovery has been recorded!";
 
           if (rewardType === "xp") {
-            rewardText = "You found it! 🎉 Your discovery reward: " + rewardAmount + " XP.";
+            rewardText =
+              "You found it! 🎉 Your discovery reward: " +
+              rewardAmount + " XP.";
           } else if (rewardType === "star") {
-            rewardText = "You found it! ⭐ Your discovery reward: " + rewardAmount + " star(s).";
+            rewardText =
+              "You found it! ⭐ Your discovery reward: " +
+              rewardAmount + " star(s).";
           } else if (rewardType === "collectible") {
-            rewardText = "You found it! 🎁 A collectible reward has been recorded.";
+            rewardText =
+              "You found it! 🎁 A collectible reward has been recorded.";
           }
 
-          setStatus(status, rewardText + " See you in the next hunt! 💜");
+          setStatus(
+            status,
+            rewardText + " See you in the next hunt! 💜"
+          );
+
           form.remove();
         } catch (discoverError) {
-          console.error("Secret Hunt discovery error:", discoverError);
+          console.error(
+            "Secret Hunt discovery error:",
+            discoverError
+          );
+
           setStatus(
             status,
             "We couldn't check your answer right now. Please try again in a moment.",
             true
           );
+
           answer.disabled = false;
           submit.disabled = false;
         }
@@ -777,7 +1071,13 @@
       if (originalButton) originalButton.remove();
     } catch (error) {
       console.error("Secret Hunt load error:", error);
-      setStatus(status, "We couldn't load today's Secret Hunt. Please try again later.", true);
+
+      setStatus(
+        status,
+        "We couldn't load today's Secret Hunt. Please try again later.",
+        true
+      );
+
       if (originalButton) {
         originalButton.disabled = true;
         originalButton.textContent = "Secret Hunt unavailable";
@@ -786,17 +1086,50 @@
   }
 
   function setup() {
-    const cards = Array.from(document.querySelectorAll(".tool-card"));
-    const spinCard = cards.find(card => /spin\s*&\s*win/i.test(card.textContent));
-    const boxCard = cards.find(card => /mystery\s*box/i.test(card.textContent));
-    const pollCard = cards.find(card => /daily\s*poll/i.test(card.textContent));
-    const moodCard = cards.find(card => /mood\s*garden/i.test(card.textContent));
-    const secretHuntCard = cards.find(card => /secret\s*hunt/i.test(card.textContent));
+    const cards = Array.from(
+      document.querySelectorAll(".tool-card")
+    );
 
-    if (!spinCard && !boxCard && !pollCard && !moodCard && !secretHuntCard) return;
+    const spinCard = cards.find(card =>
+      /spin\s*&\s*win/i.test(card.textContent)
+    );
 
-    const host = spinCard || boxCard || pollCard || moodCard || secretHuntCard;
-    let statusElement = document.getElementById("loungeGameStatus");
+    const boxCard = cards.find(card =>
+      /mystery\s*box/i.test(card.textContent)
+    );
+
+    const pollCard = cards.find(card =>
+      /daily\s*poll/i.test(card.textContent)
+    );
+
+    const moodCard = cards.find(card =>
+      /mood\s*garden/i.test(card.textContent)
+    );
+
+    const secretHuntCard = cards.find(card =>
+      /secret\s*hunt/i.test(card.textContent)
+    );
+
+    if (
+      !spinCard &&
+      !boxCard &&
+      !pollCard &&
+      !moodCard &&
+      !secretHuntCard
+    ) {
+      return;
+    }
+
+    const host =
+      spinCard ||
+      boxCard ||
+      pollCard ||
+      moodCard ||
+      secretHuntCard;
+
+    let statusElement = document.getElementById(
+      "loungeGameStatus"
+    );
 
     if (!statusElement) {
       statusElement = document.createElement("p");
@@ -804,27 +1137,42 @@
       statusElement.className = "form-note";
       statusElement.setAttribute("role", "status");
       statusElement.setAttribute("aria-live", "polite");
+
       host.parentElement?.after(statusElement);
     }
 
     if (spinCard) {
       const button = spinCard.querySelector("button");
+
       if (button) {
         button.disabled = false;
         button.textContent = "🎡 Spin today";
+
         button.addEventListener("click", () => {
-          claim("lounge_spin_and_win", "Spin & Win", button, statusElement);
+          claim(
+            "lounge_spin_and_win",
+            "Spin & Win",
+            button,
+            statusElement
+          );
         });
       }
     }
 
     if (boxCard) {
       const button = boxCard.querySelector("button");
+
       if (button) {
         button.disabled = false;
         button.textContent = "🎁 Open today's box";
+
         button.addEventListener("click", () => {
-          claim("lounge_open_mystery_box", "Mystery Box", button, statusElement);
+          claim(
+            "lounge_open_mystery_box",
+            "Mystery Box",
+            button,
+            statusElement
+          );
         });
       }
     }
@@ -835,7 +1183,11 @@
   }
 
   if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", setup, { once: true });
+    document.addEventListener(
+      "DOMContentLoaded",
+      setup,
+      { once: true }
+    );
   } else {
     setup();
   }
