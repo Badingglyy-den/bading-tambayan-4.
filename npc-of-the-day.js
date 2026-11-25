@@ -300,7 +300,9 @@ try {
     dialogue.className = "npc-day-dialogue";
     dialogue.setAttribute("role", "status");
     dialogue.setAttribute("aria-live", "polite");
-    dialogue.textContent = npc.greeting;
+    dialogue.textContent = isReturningVisitor
+  ? `You're back! ${npc.name} is happy to see you again. 💜`
+  : npc.greeting;
 
     const choices = document.createElement("div");
     choices.className = "npc-day-choices";
