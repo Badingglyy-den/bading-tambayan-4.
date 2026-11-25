@@ -1586,6 +1586,61 @@ body {
   }
  }
  
+/* =====================================
+   ACHIEVEMENTS — TROPHY COLLECTION
+   ===================================== */
+
+.achievements-panel {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid #c6a5ff55;
+  border-radius: 22px;
+  background:
+    radial-gradient(circle at 100% 0%, #bd91ff20, transparent 50%),
+    linear-gradient(145deg, #261b38, #151020);
+  box-shadow: 0 10px 26px #00000035;
+}
+
+.achievements-panel h3 {
+  color: #ead5ff;
+  text-shadow: 0 0 12px #bd91ff55;
+}
+
+.achievements-panel .chip-list {
+  gap: 9px;
+}
+
+.achievements-panel .chip {
+  border: 1px solid #d6aaff55;
+  background: #bd91ff16;
+  color: #ead5ff;
+  box-shadow: 0 0 10px #bd91ff18;
+  transition: transform .25s ease, box-shadow .25s ease;
+}
+
+.achievements-panel .chip:not(.locked):hover {
+  transform: translateY(-3px) scale(1.04);
+  border-color: #ead5ff;
+  box-shadow: 0 0 16px #bd91ff66;
+}
+
+.achievements-panel .chip.locked {
+  border-style: dashed;
+  background: #ffffff05;
+  filter: grayscale(.7);
+}
+
+.achievements-panel .chip:not(.locked) {
+  background:
+    linear-gradient(135deg, #bd91ff22, #ffb6dc18);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .achievements-panel .chip {
+    transition: none !important;
+  }
+}
+ 
                     
                               
  
