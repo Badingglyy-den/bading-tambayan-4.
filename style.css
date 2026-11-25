@@ -942,6 +942,84 @@ body {
   }
  }
  
+/* =====================================
+   CHAOS ARCADE — GAME CARD GLOW
+   ===================================== */
+
+.game-card,
+.tool-card {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid #bd91ff44;
+  border-radius: 19px;
+  background:
+    radial-gradient(circle at 100% 0%, #bd91ff18, transparent 55%),
+    linear-gradient(145deg, #211832, #151020);
+  box-shadow: 0 8px 22px #00000030;
+  transition:
+    transform .25s ease,
+    border-color .25s ease,
+    box-shadow .25s ease;
+}
+
+.game-card:before,
+.tool-card:before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 10%;
+  width: 80%;
+  height: 2px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    #d6aaff,
+    #ffb6dc,
+    transparent
+  );
+  opacity: .8;
+}
+
+.game-card:hover,
+.game-card:active,
+.tool-card:hover,
+.tool-card:active {
+  transform: translateY(-5px);
+  border-color: #d6aaffbb;
+  box-shadow:
+    0 12px 28px #00000044,
+    0 0 20px #bd91ff44;
+}
+
+.game-emoji,
+.tool-card>span {
+  display: inline-block;
+  filter: drop-shadow(0 0 8px #bd91ff66);
+  transition: transform .25s ease;
+}
+
+.game-card:hover .game-emoji,
+.tool-card:hover>span {
+  transform: scale(1.15) rotate(-6deg);
+}
+
+.game-card h3,
+.tool-card h3 {
+  position: relative;
+  z-index: 1;
+}
+
+.small-btn {
+  box-shadow: 0 0 12px #bd91ff33;
+  transition: transform .2s ease, box-shadow .2s ease;
+}
+
+.small-btn:active {
+  transform: scale(.96);
+  box-shadow: 0 0 18px #bd91ff88;
+ }
+ 
+ 
  
  
  
