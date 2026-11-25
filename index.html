@@ -402,43 +402,7 @@
     <button type="button" class="avatar-choice" data-avatar="🫧">🫧</button>
   </div>
 </div>
-
-<select id="profileAvatar" hidden>
-  <option>💜</option>
-  <option>🌙</option>
-  <option>⭐</option>
-  <option>🧚</option>
-  <option>🦄</option>
-  <option>🔮</option>
-  <option>🪄</option>
-  <option>🪐</option>
-  <option>🦋</option>
-  <option>🐸</option>
-  <option>🌷</option>
-  <option>🌻</option>
-  <option>🍄</option>
-  <option>🌈</option>
-  <option>🌿</option>
-  <option>🌺</option>
-  <option>🐱</option>
-  <option>🐰</option>
-  <option>🐻</option>
-  <option>🐼</option>
-  <option>🐣</option>
-  <option>🦊</option>
-  <option>🐨</option>
-  <option>🐹</option>
-  <option>🪩</option>
-  <option>🎀</option>
-  <option>💗</option>
-  <option>🩷</option>
-  <option>☁️</option>
-  <option>🧸</option>
-  <option>🍓</option>
-  <option>🫧</option>
-</select>
-
-
+<input type="hidden" id="profileAvatar" value="💜">
   <button class="primary-btn full-btn" id="saveProfile" type="button">Save profile</button>
   </dialog>
   <dialog id="settingsDialog" class="modal"><form method="dialog" class="modal-close"><button aria-label="Close">✕</button></form><p class="eyebrow">TAKE CARE OF YOUR DATA</p><h2>Backup & settings</h2><p>Export a JSON backup before clearing browser data or moving devices. Import the file to restore your progress.</p><div class="settings-actions"><button class="primary-btn" id="exportBtn">⬇ Export backup</button><label class="soft-btn file-label">⬆ Import backup<input type="file" id="importFile" accept=".json,application/json" hidden></label><button class="soft-btn" id="resetBtn">Reset local progress</button></div><p class="form-note" id="backupStatus"></p><p class="form-note">Your data is stored locally in this browser. Export backups regularly. Importing replaces the current local save.</p></dialog>
