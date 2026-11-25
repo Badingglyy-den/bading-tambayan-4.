@@ -282,7 +282,7 @@
 
     const huntReady = !!document.querySelector("#" + HINTS_ID);
     const treasureReady = !!document.querySelector("#" + TREASURE_ID);
-    if (huntReady && treasureReady) observer.disconnect();
+    
   }
 
   if (document.readyState === "loading") {
@@ -291,4 +291,3 @@
     start();
   }
 })();
-      
