@@ -52,7 +52,6 @@
     const rewardType = findValue(data, ["reward_type", "type"]);
     const amount = findValue(data, ["amount"]);
     const tier = findValue(data, ["box_tier", "tier"]);
-    const collectible = findValue(data, ["collectible_key", "collectible"]);
 
     if (rewardType === "xp") {
       return "🎉 You received " + (amount ?? "") + " XP!";
@@ -317,6 +316,26 @@
         background: rgba(160, 120, 210, .1);
         font-size: .9rem;
       }
+      .lounge-mood-indicator {
+        margin: 12px 0;
+        padding: 12px 14px;
+        border: 1px solid rgba(215, 165, 255, .55);
+        border-radius: 14px;
+        background: rgba(180, 120, 230, .16);
+      }
+      .lounge-mood-indicator-label {
+        display: block;
+        margin-bottom: 4px;
+        font-size: .78rem;
+        font-weight: 700;
+        letter-spacing: .08em;
+        text-transform: uppercase;
+        opacity: .85;
+      }
+      .lounge-mood-indicator-value {
+        font-size: 1rem;
+        font-weight: 700;
+      }
       @media (min-width: 520px) {
         .lounge-mood-options,
         .lounge-mood-counts {
@@ -366,6 +385,24 @@
     }
 
     const status = addText(garden, "p", "Connecting to the Mood Garden...", "form-note");
+
+    const moodIndicator = document.createElement("div");
+    moodIndicator.className = "lounge-mood-indicator";
+    moodIndicator.hidden = true;
+    addText(
+      moodIndicator,
+      "span",
+      "Today's Mood",
+      "lounge-mood-indicator-label"
+    );
+    const moodIndicatorValue = addText(
+      moodIndicator,
+      "span",
+      "",
+      "lounge-mood-indicator-value"
+    );
+    garden.appendChild(moodIndicator);
+
     const choices = document.createElement("div");
     choices.className = "lounge-mood-options";
     choices.setAttribute("role", "group");
@@ -409,14 +446,21 @@
       renderMoodCounts(totalCounts, totals);
 
       if (myMood) {
+        const selectedMood = MOODS.find(mood => mood.key === myMood);
+        const moodLabel = selectedMood
+          ? selectedMood.key.charAt(0).toUpperCase() + selectedMood.key.slice(1)
+          : String(myMood);
+
+        moodIndicatorValue.textContent = selectedMood
+          ? moodLabel + " — " + selectedMood.flower + " " + selectedMood.name
+          : moodLabel;
+        moodIndicator.hidden = false;
         choices.replaceChildren();
-        setStatus(status, "You've already planted today's flower: " +
-          ((MOODS.find(mood => mood.key === myMood) || {}).flower || "🌷") +
-          " " + ((MOODS.find(mood => mood.key === myMood) || {}).name || myMood) +
-          ". Thank you for sharing your mood! 💜");
+        setStatus(status, "Your mood has been recorded for today. Thank you for sharing! 💜");
         return true;
       }
 
+      moodIndicator.hidden = true;
       setStatus(status, "Choose the flower that represents your mood today. Your choice is private. 💜");
       choices.replaceChildren();
 
@@ -521,4 +565,4 @@
     setup();
   }
 })();
-                                    
+          
