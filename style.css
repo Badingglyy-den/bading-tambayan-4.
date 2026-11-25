@@ -2256,6 +2256,62 @@ body {
     padding: 21px 17px;
   }
 }
+ /* AVATAR STUDIO — LIVE PREVIEW */
+
+.avatar-preview-wrap {
+  text-align: center;
+  margin: 22px 0 25px;
+  padding: 20px 12px;
+  border: 1px solid rgba(195, 150, 255, .2);
+  border-radius: 20px;
+  background: rgba(160, 100, 255, .07);
+}
+
+.avatar-preview {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 112px;
+  height: 112px;
+  margin: 0 auto 12px;
+  border-radius: 50%;
+  font-size: 55px;
+  background:
+    radial-gradient(circle, rgba(205, 160, 255, .28), rgba(100, 50, 160, .15));
+  border: 2px solid rgba(210, 175, 255, .65);
+  box-shadow:
+    0 0 18px rgba(180, 115, 255, .4),
+    0 0 42px rgba(140, 75, 230, .25),
+    inset 0 0 20px rgba(210, 170, 255, .12);
+  animation: avatarPreviewFloat 3s ease-in-out infinite;
+  transition: transform .2s, box-shadow .2s;
+}
+
+.avatar-preview-wrap p {
+  margin: 8px 0 3px;
+  color: #f0dcff;
+  font-weight: 800;
+}
+
+.avatar-preview-wrap span {
+  color: #bda5d8;
+  font-size: 12px;
+}
+
+@keyframes avatarPreviewFloat {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-7px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .avatar-preview {
+    animation: none;
+  }
+}
  
  
  
