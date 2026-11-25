@@ -547,5 +547,159 @@ body {
   }
  }
  
+/* =====================================
+   TAMBAYANVERSE — MAGICAL HERO UPGRADE
+   ===================================== */
+
+.hero {
+  isolation: isolate;
+  background:
+    radial-gradient(ellipse at 15% 15%, #bd91ff35, transparent 42%),
+    radial-gradient(ellipse at 85% 80%, #ff8bc52b, transparent 38%),
+    linear-gradient(125deg, #30234d, #211832 58%, #17102a);
+  border-color: #d6b5ff66;
+  box-shadow:
+    0 20px 65px #09051266,
+    0 0 35px #a77bff12,
+    inset 0 1px #ffffff16;
+}
+
+.hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: .55;
+  background-image:
+    radial-gradient(circle, #ffffffcc 1px, transparent 1.8px),
+    radial-gradient(circle, #d9b8ff99 1px, transparent 2px);
+  background-size: 57px 57px, 91px 91px;
+  background-position: 8px 12px, 35px 42px;
+  mask-image: linear-gradient(110deg, #000, transparent 85%);
+  animation: hero-stars 24s linear infinite;
+}
+
+.hero::after {
+  content: "";
+  position: absolute;
+  width: 280px;
+  height: 280px;
+  right: 12%;
+  top: 50%;
+  transform: translateY(-50%);
+  border-radius: 50%;
+  pointer-events: none;
+  background: radial-gradient(circle, #c59aff22, #f28bc511 45%, transparent 70%);
+  filter: blur(12px);
+  animation: hero-glow 6s ease-in-out infinite alternate;
+}
+
+.hero-copy {
+  z-index: 2;
+}
+
+.hero .eyebrow {
+  text-shadow: 0 0 16px #c6a5ff66;
+}
+
+.hero h1 {
+  text-shadow: 0 5px 30px #09051266;
+}
+
+.hero h1 em {
+  background: linear-gradient(90deg, #e2caff, #ffb9dc, #c6a5ff);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 0 13px #c6a5ff55);
+}
+
+.hero-orbit {
+  z-index: 1;
+  animation: hero-float 6s ease-in-out infinite;
+}
+
+.hero-orbit .planet {
+  animation: planet-glow 4s ease-in-out infinite alternate;
+}
+
+.hero-orbit .orbit-a {
+  animation: orbit-spin 22s linear infinite;
+}
+
+.hero-orbit .orbit-b {
+  animation: orbit-spin-reverse 28s linear infinite;
+}
+
+.hero-orbit .float {
+  filter: drop-shadow(0 0 9px #d8baff88);
+}
+
+.hero .primary-btn {
+  box-shadow: 0 8px 25px #bd91ff55, 0 0 18px #bd91ff22;
+}
+
+.hero .primary-btn:focus-visible,
+.hero .soft-btn:focus-visible {
+  outline: 2px solid #f4d7ff;
+  outline-offset: 4px;
+}
+
+@keyframes hero-stars {
+  from { background-position: 8px 12px, 35px 42px; }
+  to { background-position: 65px 69px, -56px 133px; }
+}
+
+@keyframes hero-glow {
+  from { opacity: .55; scale: .9; }
+  to { opacity: 1; scale: 1.12; }
+}
+
+@keyframes hero-float {
+  0%, 100% { translate: 0 0; }
+  50% { translate: 0 -9px; }
+}
+
+@keyframes planet-glow {
+  from { box-shadow: 0 0 65px #bd91ff66, inset -12px -12px 25px #28144555; }
+  to { box-shadow: 0 0 100px #d8aaffaa, inset -12px -12px 25px #28144555; }
+}
+
+@keyframes orbit-spin {
+  from { rotate: 0deg; }
+  to { rotate: 360deg; }
+}
+
+@keyframes orbit-spin-reverse {
+  from { rotate: 0deg; }
+  to { rotate: -360deg; }
+}
+
+@media (max-width: 560px) {
+  .hero::after {
+    right: -12%;
+    top: 60%;
+    width: 230px;
+    height: 230px;
+  }
+
+  .hero-orbit {
+    opacity: .42;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero::before,
+  .hero::after,
+  .hero-orbit,
+  .hero-orbit .planet,
+  .hero-orbit .orbit-a,
+  .hero-orbit .orbit-b {
+    animation: none !important;
+  }
+ }
+ 
+ 
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                }
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   
