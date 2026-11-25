@@ -1,3 +1,4 @@
+
 (() => {
   "use strict";
 
@@ -32,7 +33,8 @@
     return Array.isArray(data) ? (data[0] ?? data) : data;
   }
 
-  async function waitForClient(maxAttempts = 40) {
+  // Wait up to 30 seconds for the online account to initialize.
+  async function waitForClient(maxAttempts = 120) {
     for (let attempt = 0; attempt < maxAttempts; attempt += 1) {
       const client = getClient();
 
@@ -119,8 +121,6 @@
         result.already_claimed === true ||
         result.status === "already_claimed";
 
-      // Only apply a newly claimed reward.
-      // Replayed daily claims must not award rewards twice.
       if (!alreadyClaimed && result.success !== false) {
         const rewardType = result.reward_type || result.type;
         const amount = result.reward_amount ?? result.amount;
