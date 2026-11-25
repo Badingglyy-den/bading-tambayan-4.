@@ -160,6 +160,32 @@ window.tambayanAwardXP = function (amount, reason = "Lounge reward!") {
   return true;
 };
 
+// Shared reward bridge for Lounge add-ons.
+// XP uses the normal milestone system; direct Stars are added separately.
+window.tambayanApplyLoungeReward = function (rewardType, amount, reason = "Lounge reward!") {
+  const n = Number(amount);
+
+  if (!Number.isFinite(n) || n <= 0 || !Number.isInteger(n)) {
+    console.warn("Ignored invalid Tambayan Lounge reward:", rewardType, amount);
+    return false;
+  }
+
+  if (rewardType === "xp") {
+    awardXP(n, String(reason || "Lounge reward!"));
+    return true;
+  }
+
+  if (rewardType === "star" || rewardType === "stars") {
+    state.stars += n;
+    toast((reason || "Lounge reward!") + " +" + n + " ⭐");
+    save();
+    return true;
+  }
+
+  console.warn("Unsupported Tambayan Lounge reward type:", rewardType);
+  return false;
+};
+
 function level() {
   return Math.floor(state.xp / 100) + 1;
 }
