@@ -1249,6 +1249,100 @@ body {
   }
  }
  
+/* =====================================
+   CONFESSION ROOM — DREAMY JOURNAL
+   ===================================== */
+
+#diary + .diary-layout .diary-form,
+#diary + .diary-layout .diary-list-panel {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid #e4b9ff55;
+  background:
+    radial-gradient(circle at 100% 0%, #ffb6dc20, transparent 50%),
+    linear-gradient(145deg, #261b35, #171220);
+  box-shadow: 0 10px 28px #00000035;
+}
+
+#diary + .diary-layout h3 {
+  color: #f0dcff;
+  text-shadow: 0 0 12px #bd91ff44;
+}
+
+#diary + .diary-layout .diary-form input,
+#diary + .diary-layout .diary-form textarea,
+#diary + .diary-layout .diary-form select,
+#diary + .diary-layout .diary-list-head input {
+  border: 1px solid #d6aaff55;
+  background: #100b1dcc;
+  transition: border-color .25s ease, box-shadow .25s ease;
+}
+
+#diary + .diary-layout .diary-form input:focus,
+#diary + .diary-layout .diary-form textarea:focus,
+#diary + .diary-layout .diary-form select:focus,
+#diary + .diary-layout .diary-list-head input:focus {
+  outline: none;
+  border-color: #e0c5ff;
+  box-shadow: 0 0 14px #bd91ff55;
+}
+
+#diary + .diary-layout .diary-form label {
+  color: #e2c9ff;
+}
+
+#diary + .diary-layout .diary-entry {
+  padding: 16px;
+  margin: 10px 0;
+  border: 1px solid #d6aaff33;
+  border-radius: 14px;
+  background: #ffffff08;
+  transition: border-color .25s ease, background .25s ease;
+}
+
+#diary + .diary-layout .diary-entry:hover {
+  border-color: #d6aaff88;
+  background: #bd91ff12;
+}
+
+#diary + .diary-layout .diary-entry h4 {
+  color: #f0dcff;
+}
+
+#diary + .diary-layout .entry-meta {
+  color: #c6a5e8;
+}
+
+#diary + .diary-layout .entry-actions button {
+  padding: 7px 10px;
+  border-radius: 8px;
+  background: #bd91ff15;
+  transition: background .2s ease;
+}
+
+#diary + .diary-layout .entry-actions button:active {
+  background: #bd91ff44;
+}
+
+#diary + .diary-layout .full-btn {
+  box-shadow: 0 0 16px #bd91ff44;
+}
+
+#diary + .diary-layout .form-note {
+  color: #c7b5d8;
+}
+
+@media (max-width: 560px) {
+  #diary + .diary-layout .diary-form,
+  #diary + .diary-layout .diary-list-panel {
+    border-radius: 18px;
+  }
+
+  #diary + .diary-layout .diary-entry {
+    padding: 13px;
+  }
+ }
+                              
  
  
  
