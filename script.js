@@ -38,6 +38,10 @@ const defaultState = () => ({
 });
 
 let state = loadState();
+  alert(
+  "Saved XP: " + state.xp +
+  "\nSaved Stars: " + state.stars
+);
 let toastTimer = null;
 let reactionTimer = null;
 let reactionStart = 0;
