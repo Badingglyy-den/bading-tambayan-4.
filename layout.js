@@ -11,6 +11,8 @@
   const findIndex = id =>
     originalNodes.findIndex(node => node.id === id);
 
+  
+  const mapIndex = findIndex("verse-map");
   const gamesIndex = findIndex("games");
   const comfortIndex = findIndex("comfort");
   const labIndex = findIndex("lab");
@@ -19,6 +21,7 @@
   const hangoutIndex = findIndex("hangout");
 
   if (
+    mapIndex < 0 ||
     gamesIndex < 0 ||
     comfortIndex < 0 ||
     labIndex < 0 ||
@@ -29,6 +32,7 @@
     console.error("Tambayan layout: required sections were not found.");
     return;
   }
+
 
   let spaceIndex = -1;
 
@@ -54,9 +58,17 @@
       id: "home",
       label: "🏠 Home",
       start: 0,
-      end: gamesIndex,
+      end: mapIndex,
       routes: ["home", "worlds"]
     },
+    {
+      id: "map",
+      label: "🗺️ Map",
+      start: mapIndex,
+      end: gamesIndex,
+      routes: ["verse-map", "map"]
+    },
+
     {
       id: "arcade",
       label: "🎮 Arcade",
