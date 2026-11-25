@@ -62,13 +62,16 @@
   }
 
   function formatReward(data, gameName) {
-    const status = findValue(data, ["status"]);
-    if (status === "already_claimed") {
+    const alreadyClaimed =
+      findValue(data, ["already_claimed"]) === true ||
+      findValue(data, ["status"]) === "already_claimed";
+
+    if (alreadyClaimed) {
       return "You've already claimed today's " + gameName + ". Come back tomorrow! 💜";
     }
 
     const rewardType = findValue(data, ["reward_type", "type"]);
-    const amount = findValue(data, ["amount"]);
+    const amount = findValue(data, ["reward_amount", "amount"]);
     const tier = findValue(data, ["box_tier", "tier"]);
 
     if (rewardType === "xp") {
@@ -79,7 +82,8 @@
     }
     if (rewardType === "collectible") {
       return "🎁 You found a collectible!" +
-        (tier ? " (" + tier + " box)" : "");
+        (tier ? " (" + tier + " box)" : "") +
+        " Your reward was recorded.";
     }
 
     if (tier) {
@@ -104,7 +108,34 @@
       const { data, error } = await client.rpc(functionName);
       if (error) throw error;
 
-      const result = normalizeResult(data);
+      const result = normalizeResult(data) || {};
+      const alreadyClaimed =
+        result.already_claimed === true ||
+        result.status === "already_claimed";
+
+      // Only apply a newly claimed reward. Replayed daily claims must not
+      // award local XP or Stars a second time.
+      if (!alreadyClaimed && result.success !== false) {
+        const rewardType = result.reward_type || result.type;
+        const amount = result.reward_amount ?? result.amount;
+
+        if (
+          (rewardType === "xp" || rewardType === "star") &&
+          typeof window.tambayanApplyLoungeReward === "function"
+        ) {
+          window.tambayanApplyLoungeReward(
+            rewardType,
+            amount,
+            gameName + " reward!"
+          );
+        } else if (
+          (rewardType === "xp" || rewardType === "star") &&
+          typeof window.tambayanApplyLoungeReward !== "function"
+        ) {
+          throw new Error("The local reward bridge is unavailable. Please refresh the page.");
+        }
+      }
+
       setStatus(statusElement, formatReward(result, gameName));
     } catch (error) {
       console.error("Lounge reward error:", error);
