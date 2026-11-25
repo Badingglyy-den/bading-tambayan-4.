@@ -700,6 +700,51 @@ body {
   }
  }
  
+/* HERO ORBIT VISIBILITY FIX */
+.hero-orbit .orbit {
+  border: 2px solid #e0c5ffbb;
+  box-shadow: 0 0 12px #c6a5ff55;
+  transform-origin: center;
+}
+
+.hero-orbit .orbit-a {
+  animation: orbit-a-visible 22s linear infinite !important;
+}
+
+.hero-orbit .orbit-b {
+  animation: orbit-b-visible 28s linear infinite !important;
+}
+
+@keyframes orbit-a-visible {
+  from { transform: rotate(-25deg); }
+  to { transform: rotate(335deg); }
+}
+
+@keyframes orbit-b-visible {
+  from { transform: rotate(48deg); }
+  to { transform: rotate(408deg); }
+}
+
+@media (max-width: 560px) {
+  .hero-orbit {
+    right: -25px !important;
+    bottom: -30px !important;
+    opacity: .85 !important;
+    transform: scale(.72) !important;
+    transform-origin: center;
+    z-index: 1;
+  }
+
+  .hero-orbit .planet {
+    opacity: 1;
+  }
+
+  .hero-orbit .orbit {
+    border-color: #ead8ffdd;
+  }
+}
+ 
+ 
  
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                }
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   
