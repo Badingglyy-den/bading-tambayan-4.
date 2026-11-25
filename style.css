@@ -2504,6 +2504,61 @@ body {
     border-radius: 12px;
   }
    }
+ 
+/* HOMEPAGE CLEANUP — BETTER SPACING */
+
+#view-home > .hero {
+  margin-bottom: 22px;
+}
+
+#view-home > .stats-grid {
+  margin: 20px 0 34px;
+}
+
+#view-home > .section-heading {
+  margin: 36px 0 14px;
+}
+
+#view-home .world-grid {
+  gap: 12px;
+}
+
+#view-home .world-card {
+  min-height: 185px;
+  padding: 20px;
+}
+
+#view-home .world-card p {
+  line-height: 1.55;
+}
+
+@media (max-width: 560px) {
+  #view-home > .hero {
+    margin-bottom: 16px;
+  }
+
+  #view-home > .stats-grid {
+    margin: 16px 0 28px;
+  }
+
+  #view-home > .section-heading {
+    margin: 30px 0 12px;
+  }
+
+  #view-home .world-grid {
+    gap: 10px;
+  }
+
+  #view-home .world-card {
+    min-height: 170px;
+    padding: 13px;
+  }
+
+  #view-home .world-card p {
+    line-height: 1.45;
+  }
+}
+ 
    
  
  
