@@ -1019,6 +1019,86 @@ body {
   box-shadow: 0 0 18px #bd91ff88;
  }
  
+/* =====================================
+   COMFORT CORNER — COZY SANCTUARY
+   ===================================== */
+
+.comfort-panel {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  border: 1px solid #d4b5ff55;
+  border-radius: 25px;
+  background:
+    radial-gradient(circle at 10% 20%, #c6a5ff30, transparent 38%),
+    radial-gradient(circle at 90% 90%, #ffb6dc20, transparent 40%),
+    linear-gradient(135deg, #261b38, #171222);
+  box-shadow:
+    0 12px 30px #00000035,
+    0 0 20px #bd91ff18;
+}
+
+.comfort-panel:after {
+  content: "✦";
+  position: absolute;
+  right: 25px;
+  top: 15px;
+  color: #e2c9ff;
+  font-size: 25px;
+  opacity: .65;
+  animation: comfort-twinkle 3s ease-in-out infinite;
+  pointer-events: none;
+}
+
+.comfort-art {
+  border: 1px solid #e0c5ff66;
+  background:
+    radial-gradient(circle, #d8b5ff44, #9b72c733);
+  box-shadow:
+    0 0 20px #bd91ff55,
+    inset 0 0 18px #ffffff12;
+  animation: comfort-float 4s ease-in-out infinite;
+}
+
+.comfort-panel h3 {
+  color: #f1e2ff;
+  text-shadow: 0 0 18px #bd91ff55;
+  line-height: 1.3;
+}
+
+.comfort-panel p:not(.eyebrow) {
+  line-height: 1.8;
+}
+
+.comfort-panel .soft-btn {
+  border: 1px solid #d6b5ff66;
+  box-shadow: 0 0 14px #bd91ff22;
+  transition: transform .2s ease, box-shadow .2s ease;
+}
+
+.comfort-panel .soft-btn:active {
+  transform: scale(.97);
+  box-shadow: 0 0 20px #bd91ff77;
+}
+
+@keyframes comfort-float {
+  0%, 100% { transform: translateY(0) rotate(-2deg); }
+  50% { transform: translateY(-7px) rotate(2deg); }
+}
+
+@keyframes comfort-twinkle {
+  0%, 100% { opacity: .3; transform: scale(.8) rotate(0); }
+  50% { opacity: 1; transform: scale(1.2) rotate(25deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .comfort-art,
+  .comfort-panel:after {
+    animation: none !important;
+  }
+}
+ 
+ 
  
  
  
