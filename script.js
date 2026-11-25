@@ -146,6 +146,20 @@ function awardXP(n, reason = "") {
   save();
 }
 
+// Public reward bridge for Lounge add-ons.
+// Keeps all XP, Star milestones, saving, and rendering in this file.
+window.tambayanAwardXP = function (amount, reason = "Lounge reward!") {
+  const n = Number(amount);
+
+  if (!Number.isFinite(n) || n <= 0 || !Number.isInteger(n)) {
+    console.warn("Ignored invalid Tambayan XP reward:", amount);
+    return false;
+  }
+
+  awardXP(n, String(reason || "Lounge reward!"));
+  return true;
+};
+
 function level() {
   return Math.floor(state.xp / 100) + 1;
 }
