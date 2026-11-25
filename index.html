@@ -350,17 +350,94 @@
   <label for="profileName">Nickname</label>
   <input id="profileName" maxlength="24" placeholder="Your nickname">
 
-  <label for="profileAvatar">Choose an avatar</label>
-  <select id="profileAvatar">
-    <option>💜</option>
-    <option>🦋</option>
-    <option>🐸</option>
-    <option>🌙</option>
-    <option>🪩</option>
-    <option>🌷</option>
-    <option>⭐</option>
-    <option>🧚</option>
-  </select>
+  
+<label>Choose your avatar</label>
+
+<div class="avatar-gallery">
+  <p class="avatar-category">✨ Magical</p>
+  <div class="avatar-grid">
+    <button type="button" class="avatar-choice" data-avatar="💜">💜</button>
+    <button type="button" class="avatar-choice" data-avatar="🌙">🌙</button>
+    <button type="button" class="avatar-choice" data-avatar="⭐">⭐</button>
+    <button type="button" class="avatar-choice" data-avatar="🧚">🧚</button>
+    <button type="button" class="avatar-choice" data-avatar="🦄">🦄</button>
+    <button type="button" class="avatar-choice" data-avatar="🔮">🔮</button>
+    <button type="button" class="avatar-choice" data-avatar="🪄">🪄</button>
+    <button type="button" class="avatar-choice" data-avatar="🪐">🪐</button>
+  </div>
+
+  <p class="avatar-category">🌸 Nature</p>
+  <div class="avatar-grid">
+    <button type="button" class="avatar-choice" data-avatar="🦋">🦋</button>
+    <button type="button" class="avatar-choice" data-avatar="🐸">🐸</button>
+    <button type="button" class="avatar-choice" data-avatar="🌷">🌷</button>
+    <button type="button" class="avatar-choice" data-avatar="🌻">🌻</button>
+    <button type="button" class="avatar-choice" data-avatar="🍄">🍄</button>
+    <button type="button" class="avatar-choice" data-avatar="🌈">🌈</button>
+    <button type="button" class="avatar-choice" data-avatar="🌿">🌿</button>
+    <button type="button" class="avatar-choice" data-avatar="🌺">🌺</button>
+  </div>
+
+  <p class="avatar-category">🐾 Cute Animals</p>
+  <div class="avatar-grid">
+    <button type="button" class="avatar-choice" data-avatar="🐱">🐱</button>
+    <button type="button" class="avatar-choice" data-avatar="🐰">🐰</button>
+    <button type="button" class="avatar-choice" data-avatar="🐻">🐻</button>
+    <button type="button" class="avatar-choice" data-avatar="🐼">🐼</button>
+    <button type="button" class="avatar-choice" data-avatar="🐣">🐣</button>
+    <button type="button" class="avatar-choice" data-avatar="🦊">🦊</button>
+    <button type="button" class="avatar-choice" data-avatar="🐨">🐨</button>
+    <button type="button" class="avatar-choice" data-avatar="🐹">🐹</button>
+  </div>
+
+  <p class="avatar-category">🎀 Aesthetic & Extra</p>
+  <div class="avatar-grid">
+    <button type="button" class="avatar-choice" data-avatar="🪩">🪩</button>
+    <button type="button" class="avatar-choice" data-avatar="🎀">🎀</button>
+    <button type="button" class="avatar-choice" data-avatar="💗">💗</button>
+    <button type="button" class="avatar-choice" data-avatar="🩷">🩷</button>
+    <button type="button" class="avatar-choice" data-avatar="☁️">☁️</button>
+    <button type="button" class="avatar-choice" data-avatar="🧸">🧸</button>
+    <button type="button" class="avatar-choice" data-avatar="🍓">🍓</button>
+    <button type="button" class="avatar-choice" data-avatar="🫧">🫧</button>
+  </div>
+</div>
+
+<select id="profileAvatar" hidden>
+  <option>💜</option>
+  <option>🌙</option>
+  <option>⭐</option>
+  <option>🧚</option>
+  <option>🦄</option>
+  <option>🔮</option>
+  <option>🪄</option>
+  <option>🪐</option>
+  <option>🦋</option>
+  <option>🐸</option>
+  <option>🌷</option>
+  <option>🌻</option>
+  <option>🍄</option>
+  <option>🌈</option>
+  <option>🌿</option>
+  <option>🌺</option>
+  <option>🐱</option>
+  <option>🐰</option>
+  <option>🐻</option>
+  <option>🐼</option>
+  <option>🐣</option>
+  <option>🦊</option>
+  <option>🐨</option>
+  <option>🐹</option>
+  <option>🪩</option>
+  <option>🎀</option>
+  <option>💗</option>
+  <option>🩷</option>
+  <option>☁️</option>
+  <option>🧸</option>
+  <option>🍓</option>
+  <option>🫧</option>
+</select>
+
 
   <button class="primary-btn full-btn" id="saveProfile" type="button">Save profile</button>
   </dialog>
