@@ -10,6 +10,7 @@
   const photoDetail = document.getElementById("attic-photo-detail");
   const photoCaption = document.getElementById("attic-photo-caption");
   const photoSecret = document.getElementById("attic-photo-secret");
+  const photoClueLink = document.querySelector(".attic-photo-clue-link");
 
   const dailyPhotoClues = [
     { image: "🖼️", detail: "A shadow appears behind the person in the photograph." },
