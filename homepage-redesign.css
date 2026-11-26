@@ -1,0 +1,26 @@
+
+/* ==========================================
+   BADING TAMBAYAN — NEW VISUAL IDENTITY
+   Homepage redesign foundation
+   ========================================== */
+
+:root {
+  --bt-ink: #21172c;
+  --bt-plum: #352344;
+  --bt-violet: #76529a;
+  --bt-lilac: #d9c3f0;
+  --bt-cream: #fbf4e9;
+  --bt-gold: #e9c88d;
+  --bt-line: rgba(255, 255, 255, 0.14);
+}
+
+/* Homepage design foundation */
+#view-home {
+  isolation: isolate;
+}
+
+#view-home .hero {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
