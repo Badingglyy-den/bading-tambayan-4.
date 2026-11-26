@@ -3397,6 +3397,36 @@
     display: none;
   }
 }
+/* Daily Tambayan completion celebration */
+#home .daily-tambayan-panel.daily-just-completed .daily-mission {
+  animation: dailyMissionCelebrate .8s ease both;
+  border-color: rgba(238, 204, 145, .8);
+  box-shadow: 0 0 22px rgba(238, 204, 145, .18);
+}
+
+#home .daily-tambayan-panel.daily-just-completed .daily-mission-icon {
+  animation: dailyStarPop .65s ease both;
+}
+
+@keyframes dailyMissionCelebrate {
+  0% { transform: scale(1); }
+  35% { transform: scale(1.025); }
+  65% { transform: scale(.995); }
+  100% { transform: scale(1); }
+}
+
+@keyframes dailyStarPop {
+  0% { transform: rotate(0) scale(1); }
+  45% { transform: rotate(-12deg) scale(1.2); }
+  100% { transform: rotate(0) scale(1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #home .daily-tambayan-panel.daily-just-completed .daily-mission,
+  #home .daily-tambayan-panel.daily-just-completed .daily-mission-icon {
+    animation: none;
+  }
+}
 
 
 
