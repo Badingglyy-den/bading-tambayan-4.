@@ -1135,6 +1135,36 @@
     line-height: 1.5;
   }
 }
+/* PHASE 9 — CENTER-SCREEN MESSAGE POPUP */
+.toast {
+  position: fixed !important;
+  top: 50% !important;
+  left: 50% !important;
+  bottom: auto !important;
+  z-index: 99999 !important;
+
+  width: max-content;
+  max-width: calc(100% - 36px);
+  padding: 22px 25px;
+  border: 1px solid #e9c88d;
+  border-radius: 5px 20px 5px 20px;
+  background: #f7eafa;
+  color: #281b36;
+  font-size: 15px;
+  font-weight: 800;
+  line-height: 1.6;
+  text-align: center;
+  white-space: normal;
+
+  box-shadow: 0 15px 60px rgba(0,0,0,.55);
+  transform: translate(-50%, -40%) !important;
+  transition: opacity .25s ease, transform .25s ease !important;
+}
+
+.toast.show {
+  opacity: 1 !important;
+  transform: translate(-50%, -50%) !important;
+}
 
 
 
