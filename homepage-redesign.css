@@ -1050,6 +1050,59 @@
   }
 }
 
+/* ==========================================
+   PHASE 6 — RESPONSIVE POLISH
+   ========================================== */
+
+/* Improve heading contrast */
+#home > .section-heading#worlds .eyebrow {
+  color: var(--bt-gold);
+}
+
+/* Mobile: prevent the arcade from occupying
+   an unnecessary second grid row */
+@media (max-width: 700px) {
+  #home .world-card.arcade {
+    grid-column: span 2;
+    grid-row: span 1;
+    min-height: 235px;
+  }
+
+  #home .world-card.arcade .world-icon {
+    margin-bottom: 18px;
+  }
+
+  #home .world-card.arcade::before {
+    width: 170px;
+    height: 170px;
+    right: -25px;
+  }
+
+  #home .world-card.arcade::after {
+    right: 20px;
+    width: 75px;
+    height: 75px;
+  }
+}
+
+/* Very narrow screens */
+@media (max-width: 360px) {
+  #home > .section-heading#worlds {
+    flex-direction: column;
+    gap: 7px;
+  }
+
+  #home > .section-heading#worlds .section-note {
+    max-width: none;
+    text-align: left;
+  }
+
+  #home .world-card.arcade {
+    min-height: 215px;
+  }
+}
+
+
 
      
 
