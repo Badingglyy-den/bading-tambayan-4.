@@ -1150,9 +1150,6 @@
   <span id="onlineNotificationStatus" role="status">
     Get alerts when new messages arrive
   </span>
-  <button type="button" id="onlineTestNotification">
-    🧪 Test notification
-  </button>
 </div>
       <div class="online-box" id="onlineMyRoomsBox">
         <h3>🗂️ My Chatrooms</h3>
@@ -1807,43 +1804,6 @@
   };
 
     updateNotificationControl();
-
-  $("onlineTestNotification").onclick = async () => {
-    const label = $("onlineNotificationStatus");
-    const testButton = $("onlineTestNotification");
-
-    testButton.disabled = true;
-    label.textContent = "Checking notification service...";
-
-    try {
-      if (!("serviceWorker" in navigator)) {
-        throw new Error("Service workers are not supported.");
-      }
-
-      if (Notification.permission !== "granted") {
-        throw new Error("Notification permission is not granted.");
-      }
-
-      const registration = await navigator.serviceWorker.ready;
-
-      if (!registration.active) {
-        throw new Error("Service worker is not active yet. Reload the page and try again.");
-      }
-
-      await registration.showNotification("Online Tambayan test 💜", {
-        body: "Your browser notification test is working!",
-        tag: "tambayan-test",
-        renotify: true
-      });
-
-      label.textContent = "Notification sent! Check your phone's notification panel.";
-    } catch (error) {
-      console.error("Notification test error:", error);
-      label.textContent = "Test error: " + error.message;
-    } finally {
-      testButton.disabled = false;
-    }
-  };
 
   $("onlineCreateRoom").onclick = createRoom;
   $("onlineJoinRoom").onclick = joinRoom;
