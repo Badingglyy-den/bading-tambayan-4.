@@ -1210,8 +1210,7 @@
   <button type="submit">Send</button>
 </form>
       
-              <button type="submit">Send</button>
-            </form>
+              
             <div class="online-reactions">
               <button type="button" data-reaction="💜">💜</button>
               <button type="button" data-reaction="😂">😂</button>
