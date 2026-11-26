@@ -3500,6 +3500,61 @@
     font-size: 12px;
   }
    }
+/* Daily Tambayan streak tracker */
+#home .daily-streak-strip {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 13px;
+  padding: 10px 12px;
+  border: 1px solid rgba(232, 201, 158, .2);
+  border-radius: 10px;
+  background: rgba(232, 201, 158, .07);
+}
+
+#home .daily-streak-icon {
+  flex: 0 0 auto;
+  font-size: 21px;
+}
+
+#home .daily-streak-info {
+  display: flex;
+  flex: 1;
+  min-width: 0;
+  flex-direction: column;
+  gap: 3px;
+}
+
+#home .daily-streak-info strong {
+  color: #f5e5d1;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+#home .daily-streak-info span {
+  color: #cbb9cd;
+  font-size: 10px;
+  line-height: 1.4;
+}
+
+#home .daily-streak-goal {
+  flex: 0 0 auto;
+  color: #e8c99e;
+  font-size: 10px;
+  letter-spacing: .4px;
+  white-space: nowrap;
+}
+
+@media (max-width: 380px) {
+  #home .daily-streak-strip {
+    gap: 8px;
+    padding: 9px;
+  }
+
+  #home .daily-streak-goal {
+    font-size: 9px;
+  }
+}
 
 
 
