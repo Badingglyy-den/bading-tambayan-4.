@@ -2769,6 +2769,108 @@
   line-height: 1.6;
 }
 
+/* ==========================================
+   PHASE 17 — FINAL RESPONSIVE POLISH
+   ALL WORLDS / ALL SCREEN SIZES
+   ========================================== */
+
+/* Prevent grid children and long content from forcing overflow */
+#home .world-grid > *,
+#home .tool-grid > *,
+#home .hangout-layout > *,
+#home .diary-layout > *,
+#home .verse-map-panel,
+#home .panel {
+  min-width: 0;
+}
+
+#home p,
+#home h1,
+#home h2,
+#home h3,
+#home strong,
+#home small {
+  overflow-wrap: break-word;
+}
+
+#home img,
+#home svg,
+#home video {
+  max-width: 100%;
+}
+
+#home input,
+#home select,
+#home textarea,
+#home button {
+  box-sizing: border-box;
+  max-width: 100%;
+}
+
+/* Clear keyboard focus without changing the visual theme */
+#home a:focus-visible,
+#home button:focus-visible,
+#home input:focus-visible,
+#home select:focus-visible,
+#home textarea:focus-visible {
+  outline: 2px solid #e8c77f;
+  outline-offset: 3px;
+}
+
+/* Tablet and phone refinements */
+@media (max-width: 850px) {
+  #home .world-grid,
+  #home .tool-grid {
+    min-width: 0;
+  }
+
+  #home .world-grid > *,
+  #home .tool-grid > * {
+    min-width: 0;
+  }
+
+  #home button {
+    white-space: normal;
+    line-height: 1.4;
+  }
+}
+
+/* Smaller phones */
+@media (max-width: 380px) {
+  #home .world-grid,
+  #home .tool-grid {
+    column-gap: 8px;
+    row-gap: 9px;
+  }
+
+  #home .section-heading {
+    padding-left: 13px;
+    padding-right: 10px;
+  }
+
+  #home .verse-map-panel {
+    padding: 9px;
+  }
+
+  #home button {
+    padding-left: 9px;
+    padding-right: 9px;
+  }
+}
+
+/* Respect device motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  #home *,
+  #home *::before,
+  #home *::after {
+    scroll-behavior: auto !important;
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+  }
+}
+
+
 
 
    
