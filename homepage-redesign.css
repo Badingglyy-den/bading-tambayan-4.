@@ -808,5 +808,132 @@
     margin-bottom: 35px;
   }
    }
+
+/* ==========================================
+   PHASE 4 — TAMBAYANVERSE TRAVELER STATUS
+   ========================================== */
+
+#home > .stats-grid {
+  display: grid;
+  grid-template-columns: .8fr 1.4fr 1fr 1fr;
+  gap: 0;
+  margin: 25px 0 42px;
+  overflow: hidden;
+  border: 1px solid rgba(233,200,141,.22);
+  border-radius: 4px 18px 4px 18px;
+  background: linear-gradient(110deg, #241a31, #30213b 55%, #21182d);
+  box-shadow: 0 12px 35px rgba(0,0,0,.16);
+}
+
+#home > .stats-grid .stat {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-width: 0;
+  min-height: 112px;
+  padding: 19px 21px;
+  overflow: hidden;
+  border: 0;
+  border-right: 1px solid rgba(233,200,141,.16);
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+#home > .stats-grid .stat:last-child {
+  border-right: 0;
+}
+
+#home > .stats-grid .stat::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 20px;
+  width: 32px;
+  height: 2px;
+  background: var(--bt-gold);
+  opacity: .75;
+}
+
+#home > .stats-grid .stat::after {
+  content: "";
+  position: absolute;
+  right: -22px;
+  bottom: -35px;
+  width: 90px;
+  height: 90px;
+  border: 1px solid rgba(217,195,240,.10);
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+#home > .stats-grid .stat > span {
+  color: #d7bd91;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: .19em;
+}
+
+#home > .stats-grid .stat > strong {
+  margin: 9px 0 3px;
+  color: #fff5e8;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 29px;
+  font-weight: 500;
+  line-height: 1;
+}
+
+#home > .stats-grid .stat > small {
+  color: rgba(251,244,233,.58);
+  font-size: 10px;
+  line-height: 1.5;
+}
+
+#home > .stats-grid .stat .progress {
+  height: 4px;
+  margin: 10px 0 7px;
+  border-radius: 0;
+  background: rgba(255,255,255,.12);
+}
+
+#home > .stats-grid .stat .progress i {
+  border-radius: 0;
+  background: linear-gradient(90deg, #a98acb, #e9c88d);
+  box-shadow: 0 0 9px rgba(233,200,141,.3);
+}
+
+/* XP gets a little extra breathing room */
+#home > .stats-grid .stat:nth-child(2) > strong {
+  font-size: 25px;
+}
+
+/* MOBILE STATUS STRIP */
+@media (max-width: 700px) {
+  #home > .stats-grid {
+    grid-template-columns: 1fr 1fr;
+    margin: 18px 0 34px;
+  }
+
+  #home > .stats-grid .stat {
+    min-height: 100px;
+    padding: 16px;
+    border-right: 1px solid rgba(233,200,141,.16);
+    border-bottom: 1px solid rgba(233,200,141,.16);
+  }
+
+  #home > .stats-grid .stat:nth-child(2n) {
+    border-right: 0;
+  }
+
+  #home > .stats-grid .stat:nth-last-child(-n+2) {
+    border-bottom: 0;
+  }
+
+  #home > .stats-grid .stat > strong {
+    font-size: 25px;
+  }
+}
+
      
 
