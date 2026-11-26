@@ -219,8 +219,7 @@
     if (bonus && !claimedMilestones.includes(streak)) {
       const bonusAwarded = window.tambayanApplyLoungeReward(
         "stars",
-        bonus,
-        streak + "-day Daily Tambayan streak bonus!"
+        bonus,streak + "-day streak milestone unlocked! 🎉"
       );
 
       if (bonusAwarded) {
