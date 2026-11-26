@@ -935,5 +935,121 @@
   }
 }
 
+/* ==========================================
+   PHASE 5 — TAMBAYANVERSE ATMOSPHERE
+   ========================================== */
+
+#home {
+  position: relative;
+  color: var(--bt-cream);
+}
+
+#home > .hero,
+#home > .stats-grid,
+#home > .section-heading,
+#home > .world-grid,
+#home > #verse-map {
+  position: relative;
+  z-index: 1;
+}
+
+/* Subtle universe backdrop */
+#home::before {
+  content: "";
+  position: absolute;
+  z-index: 0;
+  top: 160px;
+  right: -80px;
+  width: 280px;
+  height: 280px;
+  border: 1px solid rgba(217,195,240,.07);
+  border-radius: 50%;
+  box-shadow:
+    0 0 0 28px rgba(217,195,240,.018),
+    0 0 0 58px rgba(217,195,240,.014),
+    0 0 0 92px rgba(217,195,240,.01);
+  pointer-events: none;
+}
+
+/* Refined page rhythm */
+#home.shell {
+  padding-top: 24px;
+  padding-bottom: 65px;
+}
+
+#home > .hero {
+  margin-bottom: 0;
+}
+
+#home > .section-heading:not(#worlds) {
+  margin-top: 52px;
+}
+
+/* More deliberate text rendering */
+#home h1,
+#home h2,
+#home h3 {
+  text-wrap: balance;
+}
+
+#home p {
+  text-wrap: pretty;
+}
+
+/* Selection detail */
+#home ::selection {
+  color: #21172c;
+  background: #e9c88d;
+}
+
+/* Elegant focus states */
+#home a:focus-visible,
+#home button:focus-visible {
+  outline: 2px solid var(--bt-gold);
+  outline-offset: 4px;
+}
+
+/* Avoid unwanted horizontal overflow */
+#home {
+  min-width: 0;
+  overflow-x: clip;
+}
+
+#home .world-card {
+  overflow-wrap: anywhere;
+}
+
+/* Responsive spacing */
+@media (max-width: 700px) {
+  #home.shell {
+    padding-top: 13px;
+    padding-bottom: 42px;
+  }
+
+  #home > .section-heading:not(#worlds) {
+    margin-top: 38px;
+  }
+
+  #home::before {
+    top: 230px;
+    right: -170px;
+    width: 230px;
+    height: 230px;
+  }
+}
+
+/* Respect accessibility preferences */
+@media (prefers-reduced-motion: reduce) {
+  #home *,
+  #home *::before,
+  #home *::after {
+    scroll-behavior: auto !important;
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+  }
+}
+
+
      
 
