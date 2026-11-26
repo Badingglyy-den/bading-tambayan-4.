@@ -2715,6 +2715,61 @@
   margin-top: 12px;
 }
 
+/* PHASE 16 — NPC CARD SPACING FIX */
+
+#home #hangout .tool-card[data-npc-ready="true"] {
+  grid-column: 1 / -1;
+  min-height: 0;
+  padding: 15px;
+}
+
+#home #hangout .npc-day-card {
+  width: 100%;
+  margin-top: 12px;
+}
+
+#home #hangout .npc-day-profile {
+  padding: 16px 12px;
+}
+
+#home #hangout .npc-day-avatar {
+  position: relative;
+  z-index: 1;
+  width: 76px;
+  height: 76px;
+  margin-bottom: 10px;
+  font-size: 2.8rem;
+}
+
+#home #hangout .npc-day-dialogue {
+  position: relative;
+  min-height: 65px;
+  margin: 12px 0;
+  overflow-wrap: anywhere;
+}
+
+#home #hangout .npc-day-choices {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+
+#home #hangout .npc-day-choice {
+  min-width: 0;
+  min-height: 42px;
+  margin: 0;
+  padding: 9px 5px;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  line-height: 1.35;
+}
+
+#home #hangout .npc-day-note {
+  line-height: 1.6;
+}
+
+
 
    
 
