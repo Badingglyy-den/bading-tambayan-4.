@@ -1571,15 +1571,19 @@
       "Notification" in window &&
       Notification.permission === "granted"
     ) {
-      const alert = new Notification(currentRoom?.name || "Online Tambayan", {
-        body: `${who}: ${message.content}`,
-        tag: "tambayan-" + id
-      });
-
-      alert.onclick = () => {
-        window.focus();
-        alert.close();
-      };
+            navigator.serviceWorker.ready
+        .then(registration => {
+          return registration.showNotification(
+            currentRoom?.name || "Online Tambayan",
+            {
+              body: `${who}: ${message.content}`,
+              tag: "tambayan-" + id
+            }
+          );
+        })
+        .catch(error => {
+          console.warn("Could not show notification:", error);
+        });
     }
 
     const avatar = mine ? profile.avatar : sender.avatar;
