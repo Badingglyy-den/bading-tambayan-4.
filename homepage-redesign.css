@@ -3671,6 +3671,195 @@
     font-size: 9px;
   }
 }
+/* =========================================
+   FORGOTTEN ATTIC — ROOM DESIGN
+   ========================================= */
+
+#home .hidden-room {
+  position: relative;
+  margin: 30px 0 48px;
+  padding: 25px;
+  overflow: hidden;
+  border: 1px solid rgba(190, 164, 135, .22);
+  background:
+    radial-gradient(ellipse at 85% 5%, rgba(151, 113, 78, .15), transparent 40%),
+    linear-gradient(145deg, #211d1b, #302720 55%, #211d1b);
+  color: #e8d9c5;
+}
+
+#home .hidden-room-heading {
+  max-width: 540px;
+  margin-bottom: 25px;
+}
+
+#home .hidden-room-heading .eyebrow {
+  color: #c6a77e;
+  font-size: 9px;
+  letter-spacing: 2px;
+}
+
+#home .hidden-room-heading h2 {
+  margin: 8px 0;
+  color: #f0dfc8;
+  font-family: Georgia, serif;
+  font-size: 29px;
+  font-weight: 500;
+}
+
+#home .hidden-room-heading p:not(.eyebrow) {
+  color: #b9a995;
+  font-size: 12px;
+  line-height: 1.7;
+}
+
+#home .attic-discovery {
+  display: flex;
+  align-items: center;
+  gap: 17px;
+  margin-bottom: 20px;
+  padding: 17px;
+  border: 1px solid rgba(194, 164, 126, .2);
+  background: rgba(12, 10, 9, .25);
+}
+
+#home .attic-object {
+  display: grid;
+  flex: 0 0 58px;
+  place-items: center;
+  width: 58px;
+  height: 58px;
+  border: 1px solid rgba(205, 174, 128, .25);
+  border-radius: 50%;
+  background: rgba(185, 145, 91, .08);
+  font-size: 29px;
+}
+
+#home .attic-discovery .eyebrow {
+  color: #b99a70;
+  font-size: 8px;
+  letter-spacing: 1.5px;
+}
+
+#home .attic-discovery h3 {
+  margin: 5px 0;
+  color: #f0dfc8;
+  font-family: Georgia, serif;
+  font-size: 18px;
+  font-weight: 500;
+}
+
+#home .attic-discovery p {
+  margin: 4px 0;
+  color: #b9a995;
+  font-size: 11px;
+  line-height: 1.6;
+}
+
+#home .attic-discovery .attic-note {
+  color: #d1b58e;
+  font-family: Georgia, serif;
+  font-style: italic;
+}
+
+#home .attic-drawers {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+#home .attic-drawer {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 7px;
+  padding: 14px 11px;
+  border: 1px solid rgba(194, 164, 126, .2);
+  background: rgba(10, 9, 8, .3);
+  color: #e8d9c5;
+  text-align: left;
+  cursor: pointer;
+}
+
+#home .attic-drawer > span {
+  font-size: 23px;
+}
+
+#home .attic-drawer strong {
+  font-family: Georgia, serif;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+#home .attic-drawer small {
+  color: #aa9985;
+  font-size: 10px;
+  line-height: 1.5;
+}
+
+#home .attic-drawer b {
+  margin-top: 4px;
+  color: #d2b58e;
+  font-size: 10px;
+  font-weight: 500;
+}
+
+#home .attic-result {
+  margin-top: 15px;
+  padding: 15px;
+  border-left: 2px solid #a98760;
+  background: rgba(10, 9, 8, .24);
+}
+
+#home .attic-result p {
+  margin: 0 0 6px;
+  color: #d2b58e;
+  font-size: 9px;
+  letter-spacing: 1.5px;
+}
+
+#home .attic-result span {
+  color: #c0b09d;
+  font-size: 11px;
+  line-height: 1.6;
+}
+
+@media (max-width: 500px) {
+  #home .hidden-room {
+    padding: 18px 14px;
+  }
+
+  #home .hidden-room-heading h2 {
+    font-size: 25px;
+  }
+
+  #home .attic-drawers {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  #home .attic-drawer {
+    display: grid;
+    grid-template-columns: 34px minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 3px 9px;
+    padding: 11px;
+  }
+
+  #home .attic-drawer > span {
+    grid-row: span 2;
+  }
+
+  #home .attic-drawer strong,
+  #home .attic-drawer small {
+    grid-column: 2;
+  }
+
+  #home .attic-drawer b {
+    grid-column: 3;
+    grid-row: 1 / span 2;
+  }
+     }
 
 
 
