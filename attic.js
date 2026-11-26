@@ -27,14 +27,13 @@
     today.getDate()
   ) / 86400000);
 
-  const today'sClue = dailyPhotoClues[
+  const todaysClue = dailyPhotoClues[
     dayNumber % dailyPhotoClues.length
   ];
 
   if (photoImage && photoDetail && photoCaption) {
-    photoImage.textContent = today'sClue.image;
-    photoDetail.textContent = today'sClue.detail;
-    photoCaption.textContent = "The photograph has changed today. Come back tomorrow to discover what appears next.";
+photoImage.textContent = todaysClue.image;
+photoDetail.textContent = todaysClue.detail;
       }
 
   const KEY = "tambayan_attic_discoveries_v1";
