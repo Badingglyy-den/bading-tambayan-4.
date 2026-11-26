@@ -82,6 +82,35 @@
       console.warn("Daily Tambayan could not save progress:", error);
     }
   }
+    function addDays(dateString, amount) {
+    const date = new Date(dateString + "T12:00:00");
+    date.setDate(date.getDate() + amount);
+
+    return [
+      date.getFullYear(),
+      String(date.getMonth() + 1).padStart(2, "0"),
+      String(date.getDate()).padStart(2, "0")
+    ].join("-");
+  }
+
+  function updateStreakDisplay(streak, lastCompletedDate) {
+    const count = document.getElementById("dailyStreakCount");
+    const hint = document.getElementById("dailyStreakHint");
+
+    if (count) {
+      count.textContent = streak + (streak === 1 ? " day streak" : " day streak");
+    }
+
+    if (hint) {
+      if (lastCompletedDate === date) {
+        hint.textContent = "Today's mission is complete. Keep it going tomorrow!";
+      } else if (streak > 0) {
+        hint.textContent = "Complete today's mission to keep your streak alive.";
+      } else {
+        hint.textContent = "Complete a mission to begin your streak.";
+      }
+    }
+  }
 
   function updateDisplay(completed) {
     const title = document.getElementById("dailyMissionTitle");
@@ -131,11 +160,22 @@
     tomorrowDescription.textContent = "Tomorrow's mission: " + tomorrowMission.description;
   }
 
-  const saved = readProgress();
+    const saved = readProgress();
 
   let completed = saved.date === date && saved.completed === true;
 
+  const lastCompletedDate = saved.lastCompletedDate || "";
+  let streak = Number(saved.streak) || 0;
+
+  if (
+    lastCompletedDate !== date &&
+    lastCompletedDate !== addDays(date, -1)
+  ) {
+    streak = 0;
+  }
+
   updateDisplay(completed);
+  updateStreakDisplay(streak, lastCompletedDate);
 
   document.addEventListener("click", (event) => {
     if (completed) return;
