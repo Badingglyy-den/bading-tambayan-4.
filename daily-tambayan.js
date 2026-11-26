@@ -134,12 +134,20 @@
 
     if (!rewarded) return;
 
-    completed = true;
+        completed = true;
     saveProgress({
       date,
       completed: true,
       mission: mission.id
     });
+
+    const panel = document.getElementById("dailyTambayanPanel");
+
+    if (panel) {
+      panel.classList.remove("daily-just-completed");
+      void panel.offsetWidth;
+      panel.classList.add("daily-just-completed");
+    }
 
     updateDisplay(true);
   }, true);
