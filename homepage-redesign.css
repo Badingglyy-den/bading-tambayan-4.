@@ -2870,6 +2870,260 @@
   }
 }
 
+/* =========================================
+   MY SPACE — PERSONAL KEEPSAKE ROOM
+   ========================================= */
+
+#home .shop-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(250px, .85fr);
+  gap: 18px;
+  align-items: stretch;
+  margin-top: 14px;
+}
+
+#home .shop-panel,
+#home .collection-panel,
+#home .theme-panel,
+#home .achievements-panel {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(190, 157, 210, .24);
+  border-radius: 19px;
+  box-shadow: 0 12px 34px rgba(29, 18, 44, .12);
+}
+
+/* Star Shop — celestial boutique */
+#home .shop-panel {
+  padding: 23px;
+  background:
+    radial-gradient(ellipse at 90% 5%, rgba(226, 194, 255, .2), transparent 36%),
+    linear-gradient(145deg, #29203d, #403052 58%, #30253f);
+  color: #fff5e8;
+}
+
+#home .shop-panel::before {
+  content: "✦";
+  position: absolute;
+  top: 62px;
+  right: 24px;
+  color: rgba(255, 225, 166, .55);
+  font-size: 25px;
+  pointer-events: none;
+}
+
+#home .shop-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding-bottom: 17px;
+  border-bottom: 1px solid rgba(255,255,255,.15);
+}
+
+#home .shop-heading h3 {
+  margin: 3px 0 0;
+  color: #fff4df;
+  font-family: Georgia, serif;
+  font-size: clamp(22px, 3vw, 30px);
+  letter-spacing: -.5px;
+}
+
+#home .shop-panel .eyebrow {
+  color: #e8c9a2;
+  letter-spacing: 2px;
+}
+
+#home .shop-panel .currency {
+  padding: 9px 13px;
+  border: 1px solid rgba(255, 222, 163, .35);
+  border-radius: 30px;
+  background: rgba(255, 231, 187, .1);
+  color: #ffe2a9;
+  white-space: nowrap;
+}
+
+/* Collection — personal display shelf */
+#home .collection-panel {
+  padding: 23px;
+  background:
+    radial-gradient(ellipse at 10% 0%, rgba(255,255,255,.9), transparent 45%),
+    linear-gradient(150deg, #f6e9dc, #ead8d0 55%, #e5d8e9);
+  color: #49374c;
+}
+
+#home .collection-panel::after {
+  content: "♡";
+  position: absolute;
+  right: 18px;
+  top: 10px;
+  color: rgba(148, 102, 139, .2);
+  font-family: Georgia, serif;
+  font-size: 56px;
+  pointer-events: none;
+}
+
+#home .collection-panel h3 {
+  position: relative;
+  z-index: 1;
+  margin: 5px 0 18px;
+  color: #49374c;
+  font-family: Georgia, serif;
+  font-size: 23px;
+}
+
+#home .collection-panel .eyebrow {
+  color: #9a6685;
+  letter-spacing: 2px;
+}
+
+/* Theme wardrobe */
+#home .theme-panel {
+  padding: 24px;
+  background:
+    linear-gradient(115deg, rgba(255,255,255,.94), rgba(248,235,244,.92)),
+    #f6eaf1;
+  color: #49384c;
+}
+
+#home .theme-panel > div {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 22px;
+}
+
+#home .theme-panel h3 {
+  margin: 0 0 6px;
+  color: #513c55;
+  font-family: Georgia, serif;
+  font-size: 22px;
+}
+
+#home .theme-panel p {
+  margin: 0;
+  color: #846f82;
+}
+
+#home .theme-options {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 9px;
+}
+
+#home .theme-choice {
+  min-height: 42px;
+  padding: 9px 14px;
+  border: 1px solid rgba(133, 100, 139, .25);
+  border-radius: 9px;
+  background: rgba(255,255,255,.72);
+  color: #59445e;
+  transition: transform .2s ease, background .2s ease, border-color .2s ease;
+}
+
+#home .theme-choice:hover {
+  transform: translateY(-2px);
+  border-color: #b58bb7;
+}
+
+#home .theme-choice.active {
+  border-color: #9671a4;
+  background: #e9d9ef;
+  box-shadow: inset 0 -3px 0 rgba(130, 91, 151, .2);
+  color: #493052;
+}
+
+/* Achievement wall */
+#home .achievements-panel {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+  padding: 0;
+  background: #eee5d9;
+  color: #493c3b;
+}
+
+#home .achievements-panel > div {
+  min-width: 0;
+  padding: 23px;
+}
+
+#home .achievements-panel > div + div {
+  border-left: 1px solid rgba(115, 83, 91, .16);
+  background: rgba(255,255,255,.25);
+}
+
+#home .achievements-panel h3 {
+  margin: 0 0 16px;
+  color: #594354;
+  font-family: Georgia, serif;
+  font-size: 21px;
+}
+
+/* Gentle lift for interactive shop items */
+#home .shop-grid > *,
+#home .collection-list > *,
+#home .chip-list > * {
+  transition: transform .2s ease, box-shadow .2s ease;
+}
+
+#home .shop-grid > *:hover,
+#home .collection-list > *:hover {
+  transform: translateY(-3px);
+}
+
+/* Mobile layout */
+@media (max-width: 700px) {
+  #home .shop-layout {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 12px;
+  }
+
+  #home .shop-panel,
+  #home .collection-panel {
+    padding: 18px;
+  }
+
+  #home .theme-panel {
+    padding: 19px;
+  }
+
+  #home .theme-panel > div {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 17px;
+  }
+
+  #home .theme-options {
+    justify-content: flex-start;
+    width: 100%;
+  }
+
+  #home .theme-choice {
+    flex: 1 1 calc(50% - 9px);
+  }
+
+  #home .achievements-panel > div {
+    padding: 17px 13px;
+  }
+
+  #home .achievements-panel h3 {
+    font-size: 18px;
+  }
+}
+
+@media (max-width: 380px) {
+  #home .achievements-panel {
+    grid-template-columns: 1fr;
+  }
+
+  #home .achievements-panel > div + div {
+    border-left: 0;
+    border-top: 1px solid rgba(115, 83, 91, .16);
+  }
+}
+
 
 
 
