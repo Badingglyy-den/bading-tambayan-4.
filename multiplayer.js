@@ -1579,14 +1579,14 @@ renderRoomList();
 
   async function loadMessages() {
     $("onlineMessages").innerHTML = '<span class="online-muted">Loading chat…</span>';
-    const { data, error } = await client.from("messages")
+        const { data, error } = await client.from("messages")
       .select("id,user_id,content,created_at")
       .eq("room_id", currentRoom.id)
-      .order("created_at", { ascending: true }).limit(100);
+      .order("created_at", { ascending: false }).limit(100);
     if (error) throw error;
 
     $("onlineMessages").innerHTML = "";
-    const messages = data || [];
+        const messages = (data || []).reverse();
     for (const message of messages) {
       if (message.user_id !== currentUser.id) continue;
       const { data: reads, error: readsError } = await client
