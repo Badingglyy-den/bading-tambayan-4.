@@ -1209,7 +1209,7 @@
   <input id="onlineMessageInput" maxlength="1000" placeholder="Say something...">
   <button type="submit">Send</button>
 </form>
-              <input id="onlineMessageInput" maxlength="1000" placeholder="Say something..." required>
+      
               <button type="submit">Send</button>
             </form>
             <div class="online-reactions">
