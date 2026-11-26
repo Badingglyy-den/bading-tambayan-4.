@@ -4031,6 +4031,44 @@
     padding: 28px 17px;
   }
 }
+/* MYSTERY LIBRARY — ARCHIVE CARDS */
+
+#view-mystery .tool-grid {
+  gap: 18px;
+}
+
+#view-mystery .tool-card {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(193, 157, 104, .25);
+  background:
+    linear-gradient(145deg, rgba(55, 40, 32, .96), rgba(27, 22, 20, .98));
+  box-shadow: 0 8px 22px rgba(0, 0, 0, .2);
+  transition: transform .25s ease, border-color .25s ease;
+}
+
+#view-mystery .tool-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(201, 169, 119, .65);
+}
+
+#view-mystery .tool-card > span {
+  filter: sepia(.35);
+}
+
+#view-mystery .tool-card h3 {
+  color: #e7d4b5;
+  font-family: Georgia, serif;
+}
+
+#view-mystery .tool-card p {
+  color: #b9a58c;
+  line-height: 1.7;
+}
+
+#view-mystery .tool-card button {
+  border-color: rgba(201, 169, 119, .4);
+}
 
 
 
