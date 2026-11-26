@@ -1553,6 +1553,7 @@
       console.warn("Could not mark message as seen:", error);
     }
   }
+  
   async function appendMessage(message, notify = false) {
     if (!message) return;
     const id = String(message.id);
@@ -1560,10 +1561,8 @@
     messageIds.add(id);
 
     const mine = message.user_id === currentUser.id;
-    const sender = await getMessageProfile(message.user_id);
-    const who = mine ? profile.display_name : sender.display_name;
 
-    // Notify only for new messages received while the site is in the background
+    // Start the notification before waiting for the sender profile.
     if (
       notify &&
       !mine &&
@@ -1571,12 +1570,15 @@
       "Notification" in window &&
       Notification.permission === "granted"
     ) {
-            navigator.serviceWorker.ready
+      const cachedSender = profileCache.get(message.user_id);
+      const notificationName = cachedSender?.display_name || "New message";
+
+      navigator.serviceWorker.ready
         .then(registration => {
           return registration.showNotification(
             currentRoom?.name || "Online Tambayan",
             {
-              body: `${who}: ${message.content}`,
+              body: `${notificationName}: ${message.content}`,
               tag: "tambayan-" + id
             }
           );
@@ -1586,7 +1588,10 @@
         });
     }
 
+    const sender = await getMessageProfile(message.user_id);
+    const who = mine ? profile.display_name : sender.display_name;
     const avatar = mine ? profile.avatar : sender.avatar;
+
     const item = document.createElement("div");
     item.className = "online-message" + (mine ? " is-mine" : " is-other");
     item.dataset.messageId = id;
