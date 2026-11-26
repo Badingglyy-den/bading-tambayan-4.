@@ -1124,6 +1124,17 @@
     padding-bottom: calc(125px + env(safe-area-inset-bottom)) !important;
   }
 }
+/* PHASE 8 — LIFT NOTIFICATIONS ABOVE MOBILE NAV */
+@media (max-width: 850px) {
+  .toast {
+    bottom: calc(105px + env(safe-area-inset-bottom)) !important;
+    z-index: 200 !important;
+    width: max-content;
+    max-width: calc(100% - 30px);
+    white-space: normal;
+    line-height: 1.5;
+  }
+}
 
 
 
