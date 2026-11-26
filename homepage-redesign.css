@@ -3860,6 +3860,80 @@
     grid-row: 1 / span 2;
   }
      }
+/* =========================================
+   THE PHOTOGRAPH THAT CHANGES
+   ========================================= */
+
+#view-map .attic-changing-photo {
+  position: relative;
+  max-width: 460px;
+  margin: 28px auto;
+  padding: 20px;
+  overflow: hidden;
+  border: 1px solid rgba(201, 169, 119, .35);
+  background:
+    radial-gradient(circle at 50% 20%, rgba(179, 135, 83, .16), transparent 65%),
+    linear-gradient(145deg, #211b19, #33271f, #1d1918);
+  box-shadow: 0 12px 35px rgba(0, 0, 0, .28);
+}
+
+#view-map .attic-photo-top {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 17px;
+  color: #c6a77e;
+  font-size: 9px;
+  letter-spacing: 1.5px;
+}
+
+#view-map .attic-photo-frame {
+  padding: 12px;
+  border: 1px solid rgba(205, 174, 128, .35);
+  background: #171413;
+  box-shadow: inset 0 0 18px rgba(0, 0, 0, .5);
+}
+
+#view-map .attic-photo-image {
+  display: grid;
+  min-height: 190px;
+  place-items: center;
+  border: 7px solid #b49a78;
+  background:
+    radial-gradient(circle at 50% 35%, #8b7863, #3c3530 65%, #211d1b);
+  color: #e7d4b5;
+  font-size: 76px;
+  text-shadow: 0 4px 15px rgba(0, 0, 0, .5);
+}
+
+#view-map .attic-photo-frame p {
+  margin: 13px 2px 3px;
+  color: #e0c9a7;
+  font-family: Georgia, serif;
+  font-size: 13px;
+  font-style: italic;
+  line-height: 1.7;
+  text-align: center;
+}
+
+#view-map .attic-photo-caption {
+  margin: 15px 0 0;
+  color: #b9a58c;
+  font-size: 10px;
+  line-height: 1.6;
+  text-align: center;
+}
+
+@media (max-width: 500px) {
+  #view-map .attic-changing-photo {
+    padding: 14px;
+  }
+
+  #view-map .attic-photo-image {
+    min-height: 160px;
+    font-size: 65px;
+  }
+}
 
 
 
