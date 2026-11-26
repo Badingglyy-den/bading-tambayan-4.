@@ -286,3 +286,421 @@
     animation: none !important;
   }
 }
+
+/* ==========================================
+   PHASE 2 — SIX WORLDS, SIX PERSONALITIES
+   ========================================== */
+
+#home .world-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-auto-rows: minmax(175px, auto);
+  gap: 13px;
+  margin-top: 20px;
+}
+
+#home .world-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  min-width: 0;
+  min-height: 190px;
+  padding: 23px;
+  overflow: hidden;
+  isolation: isolate;
+  border: 1px solid rgba(255,255,255,.13);
+  border-radius: 5px 22px 5px 22px;
+  text-decoration: none;
+  transition: transform .3s ease, border-color .3s ease, filter .3s ease;
+}
+
+#home .world-card::before,
+#home .world-card::after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  pointer-events: none;
+  transition: transform .5s ease, opacity .5s ease;
+}
+
+#home .world-card:hover {
+  transform: translateY(-5px);
+  filter: brightness(1.09);
+}
+
+#home .world-card .world-icon {
+  align-self: flex-start;
+  display: grid;
+  place-items: center;
+  width: 54px;
+  height: 54px;
+  margin-bottom: auto;
+  border: 1px solid rgba(255,255,255,.2);
+  border-radius: 16px 5px 16px 5px;
+  font-size: 27px;
+}
+
+#home .world-card .world-kicker {
+  margin-top: 24px;
+  font-size: 9px;
+  letter-spacing: .22em;
+}
+
+#home .world-card h3 {
+  position: relative;
+  margin: 7px 0 5px;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(18px, 2vw, 25px);
+  font-weight: 600;
+  line-height: 1.08;
+}
+
+#home .world-card p {
+  position: relative;
+  min-height: 0;
+  margin: 0 0 13px;
+  font-size: 11px;
+  line-height: 1.65;
+}
+
+#home .world-card b {
+  position: relative;
+  font-size: 10px;
+  letter-spacing: .04em;
+}
+
+/* 01 — CHAOS ARCADE: neon cabinet */
+#home .world-card.arcade {
+  grid-column: span 2;
+  grid-row: span 2;
+  min-height: 370px;
+  border-color: #ff4fc455;
+  background:
+    linear-gradient(145deg, transparent 35%, rgba(15,5,35,.92) 100%),
+    repeating-linear-gradient(90deg, transparent 0 24px, #ff4fc40b 25px 26px),
+    linear-gradient(135deg, #351052, #170d31 70%);
+  box-shadow: inset 0 0 55px #ff3fc41c;
+}
+
+#home .world-card.arcade::before {
+  width: 220px;
+  height: 220px;
+  top: 15px;
+  right: -45px;
+  border: 1px solid #ff62d766;
+  border-radius: 50%;
+  box-shadow: 0 0 0 18px #ff62d711, 0 0 0 38px #46eaff0b;
+}
+
+#home .world-card.arcade::after {
+  width: 100px;
+  height: 100px;
+  top: 55px;
+  right: 22px;
+  border: 2px solid #4beaff88;
+  transform: rotate(45deg);
+}
+
+#home .world-card.arcade .world-icon {
+  color: #fff;
+  background: #ff4fc422;
+  box-shadow: 0 0 25px #ff4fc444;
+}
+
+#home .world-card.arcade .world-kicker,
+#home .world-card.arcade b {
+  color: #ff83df;
+}
+
+#home .world-card.arcade h3 {
+  color: #fff0fc;
+  font-size: clamp(25px, 3vw, 38px);
+}
+
+#home .world-card.arcade p {
+  color: #d9c0ed;
+}
+
+/* 02 — COMFORT CORNER: soft paper and garden */
+#home .world-card.comfort {
+  border-color: #b8c9a477;
+  background:
+    radial-gradient(circle at 85% 15%, #ffffff88, transparent 38%),
+    linear-gradient(145deg, #e8e6cc, #b8c9a4);
+  color: #344735;
+}
+
+#home .world-card.comfort::before {
+  width: 125px;
+  height: 125px;
+  top: -55px;
+  right: -25px;
+  border: 1px solid #718b6b66;
+  border-radius: 50%;
+  box-shadow: 0 0 0 15px #ffffff25, 0 0 0 30px #ffffff18;
+}
+
+#home .world-card.comfort .world-icon {
+  background: #ffffff55;
+  border-color: #718b6b55;
+}
+
+#home .world-card.comfort .world-kicker,
+#home .world-card.comfort b {
+  color: #526e4e;
+}
+
+#home .world-card.comfort h3 {
+  color: #2c4934;
+}
+
+#home .world-card.comfort p {
+  color: #50634d;
+}
+
+/* 03 — EXPERIMENT LAB: technical specimen label */
+#home .world-card.lab {
+  border: 1px solid #b5ef5277;
+  border-radius: 3px;
+  background:
+    linear-gradient(0deg, #18251c 0%, #18251c 48%, transparent 100%),
+    repeating-linear-gradient(0deg, #b5ef520a 0 1px, transparent 1px 17px),
+    linear-gradient(135deg, #304a28, #15251d);
+  color: #eaffcf;
+}
+
+#home .world-card.lab::before {
+  top: 17px;
+  right: 18px;
+  width: 70px;
+  height: 70px;
+  border: 1px dashed #c4f76a99;
+  border-radius: 50%;
+}
+
+#home .world-card.lab::after {
+  top: 36px;
+  right: 37px;
+  width: 32px;
+  height: 32px;
+  border: 1px solid #f5a34d99;
+  transform: rotate(45deg);
+}
+
+#home .world-card.lab .world-icon {
+  background: #b5ef521a;
+  border-color: #b5ef5266;
+  border-radius: 3px;
+}
+
+#home .world-card.lab .world-kicker,
+#home .world-card.lab b {
+  color: #c6f76a;
+}
+
+#home .world-card.lab h3 {
+  color: #f0ffd9;
+}
+
+#home .world-card.lab p {
+  color: #c1d5b2;
+}
+
+/* 04 — MYSTERY LIBRARY: midnight and antique gold */
+#home .world-card.library {
+  grid-column: span 2;
+  border-color: #c5a66b66;
+  background:
+    radial-gradient(ellipse at 80% 10%, #8d6caa33, transparent 45%),
+    linear-gradient(110deg, #171a35, #302344 75%, #19172b);
+  color: #f7e9c8;
+}
+
+#home .world-card.library::before {
+  top: -45px;
+  right: 32px;
+  width: 130px;
+  height: 180px;
+  border: 1px solid #d8b97866;
+  border-radius: 4px 18px 4px 18px;
+  transform: rotate(18deg);
+  box-shadow: 12px 8px 0 -1px #171a35, 13px 8px 0 0 #d8b97844;
+}
+
+#home .world-card.library .world-icon {
+  background: #d8b97816;
+  border-color: #d8b97855;
+}
+
+#home .world-card.library .world-kicker,
+#home .world-card.library b {
+  color: #e7c98c;
+}
+
+#home .world-card.library h3 {
+  color: #fff1d2;
+}
+
+#home .world-card.library p {
+  color: #d2c5dc;
+}
+
+/* 05 — CONFESSION ROOM: handwritten diary */
+#home .world-card.diary {
+  border-color: #d99aa477;
+  background:
+    repeating-linear-gradient(0deg, transparent 0 27px, #8d40551b 28px 29px),
+    linear-gradient(145deg, #f0c9c5, #d89da8);
+  color: #542c3b;
+  border-radius: 3px 20px 3px 20px;
+}
+
+#home .world-card.diary::before {
+  top: 20px;
+  right: 23px;
+  width: 54px;
+  height: 68px;
+  border: 1px solid #9e586a88;
+  background: #fff2e455;
+  transform: rotate(9deg);
+  box-shadow: 5px 5px 0 #9e586a22;
+}
+
+#home .world-card.diary::after {
+  top: 40px;
+  right: 41px;
+  width: 20px;
+  height: 20px;
+  border: 1px solid #9e586a99;
+  transform: rotate(45deg);
+}
+
+#home .world-card.diary .world-icon {
+  background: #fff4e655;
+  border-color: #9e586a55;
+}
+
+#home .world-card.diary .world-kicker,
+#home .world-card.diary b {
+  color: #8c4359;
+}
+
+#home .world-card.diary h3 {
+  color: #512b3c;
+}
+
+#home .world-card.diary p {
+  color: #704252;
+}
+
+/* 06 — TAMBAYAN LOUNGE: little digital town */
+#home .world-card.community {
+  border-color: #76c8c477;
+  background:
+    radial-gradient(circle at 85% 18%, #f7d77c55, transparent 25%),
+    linear-gradient(145deg, #174b50, #1c343f);
+  color: #e8fff3;
+}
+
+#home .world-card.community::before {
+  right: 18px;
+  top: 22px;
+  width: 80px;
+  height: 65px;
+  border: 1px solid #f7d77c88;
+  border-bottom: 0;
+  background: #f7d77c18;
+  clip-path: polygon(50% 0, 100% 35%, 100% 100%, 0 100%, 0 35%);
+}
+
+#home .world-card.community::after {
+  right: 51px;
+  top: 51px;
+  width: 15px;
+  height: 28px;
+  border: 1px solid #f7d77c88;
+  background: #f7d77c22;
+}
+
+#home .world-card.community .world-icon {
+  background: #7ed7c51c;
+  border-color: #7ed7c577;
+}
+
+#home .world-card.community .world-kicker,
+#home .world-card.community b {
+  color: #f7d77c;
+}
+
+#home .world-card.community h3 {
+  color: #effff5;
+}
+
+#home .world-card.community p {
+  color: #b9d9d2;
+}
+
+/* RESPONSIVE WORLD LAYOUT */
+@media (max-width: 700px) {
+  #home .world-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-auto-rows: minmax(165px, auto);
+    gap: 10px;
+  }
+
+  #home .world-card {
+    min-height: 185px;
+    padding: 15px;
+  }
+
+  #home .world-card.arcade {
+    min-height: 290px;
+  }
+
+  #home .world-card.library {
+    min-height: 185px;
+  }
+
+  #home .world-card h3 {
+    font-size: 18px;
+  }
+
+  #home .world-card.arcade h3 {
+    font-size: 27px;
+  }
+
+  #home .world-card p {
+    font-size: 10px;
+  }
+}
+
+@media (max-width: 390px) {
+  #home .world-grid {
+    gap: 8px;
+  }
+
+  #home .world-card {
+    padding: 12px;
+    min-height: 175px;
+  }
+
+  #home .world-card .world-icon {
+    width: 43px;
+    height: 43px;
+    font-size: 23px;
+  }
+
+  #home .world-card h3 {
+    font-size: 16px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #home .world-card,
+  #home .world-card::before,
+  #home .world-card::after {
+    transition: none !important;
+  }
+}
+
