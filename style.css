@@ -2559,6 +2559,94 @@ body {
   }
 }
  
+/* =====================================
+   TAMBAYANVERSE MAP — DESKTOP RESTORE
+===================================== */
+
+@media (min-width: 601px) {
+  .verse-map-panel {
+    padding: 28px !important;
+    border: 1px solid rgba(190, 135, 255, 0.4) !important;
+    border-radius: 25px !important;
+    background:
+      radial-gradient(ellipse at 50% 45%, rgba(133, 75, 220, 0.28), transparent 60%),
+      linear-gradient(145deg, #231440, #0d0c23) !important;
+    box-shadow:
+      0 0 35px rgba(135, 75, 220, 0.2),
+      inset 0 0 35px rgba(190, 135, 255, 0.06) !important;
+  }
+
+  .map-sky {
+    min-height: 650px !important;
+    border: 1px solid rgba(190, 145, 255, 0.12);
+    background:
+      radial-gradient(circle at 50% 50%, rgba(139, 82, 225, 0.25), transparent 38%),
+      radial-gradient(circle at 15% 20%, rgba(75, 100, 190, 0.18), transparent 32%),
+      radial-gradient(circle at 85% 80%, rgba(190, 80, 190, 0.18), transparent 32%) !important;
+  }
+
+  .map-center {
+    width: 155px !important;
+    height: 155px !important;
+    border: 1px solid rgba(220, 180, 255, 0.8) !important;
+    background: radial-gradient(circle, #68409c, #21123d 75%) !important;
+    box-shadow:
+      0 0 25px rgba(177, 112, 255, 0.7),
+      0 0 65px rgba(135, 75, 220, 0.4),
+      inset 0 0 25px rgba(220, 180, 255, 0.2) !important;
+  }
+
+  .orbit-one {
+    width: 370px !important;
+    height: 370px !important;
+  }
+
+  .orbit-two {
+    width: 540px !important;
+    height: 540px !important;
+  }
+
+  .map-location {
+    width: 155px !important;
+    min-height: 105px !important;
+    padding: 14px !important;
+    border: 1px solid rgba(215, 180, 255, 0.5) !important;
+    border-radius: 20px !important;
+    background: linear-gradient(145deg, rgba(65, 39, 100, 0.96), rgba(28, 18, 52, 0.96)) !important;
+    box-shadow:
+      0 10px 30px rgba(0, 0, 0, 0.35),
+      0 0 15px rgba(160, 100, 255, 0.12) !important;
+    backdrop-filter: blur(12px);
+  }
+
+  .map-location > span {
+    font-size: 30px !important;
+  }
+
+  .map-location strong {
+    font-size: 13px !important;
+    color: #fff !important;
+  }
+
+  .map-location small {
+    font-size: 10px !important;
+    color: #d8baff !important;
+  }
+
+  .map-location:hover {
+    transform: translateY(-8px) scale(1.06);
+    border-color: #e0c2ff !important;
+    box-shadow: 0 0 30px rgba(183, 119, 255, 0.5) !important;
+  }
+
+  .map-caption {
+    color: #d8baff !important;
+    font-size: 13px !important;
+    letter-spacing: 0.3px;
+  }
+}
+ 
+ 
    
  
  
