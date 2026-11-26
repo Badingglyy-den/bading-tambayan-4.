@@ -815,6 +815,75 @@
     }
   `;
   document.head.appendChild(composerStyle);
+  
+  // ONLINE TAMBAYAN — STRONGER COMPOSER DESIGN
+  const composerHighlightStyle = document.createElement("style");
+  composerHighlightStyle.textContent = `
+    #onlineTambayan .online-compose {
+      margin-top: 18px;
+      padding: 10px;
+      border-radius: 19px;
+      background: rgba(169,139,255,.19);
+      border: 1px solid rgba(205,177,255,.42);
+      box-shadow: 0 0 18px rgba(169,139,255,.09);
+    }
+
+    #onlineTambayan .online-compose input {
+      min-height: 48px;
+      background: rgba(255,255,255,.09);
+      border: 1px solid rgba(220,200,255,.25);
+      border-radius: 13px;
+      color: #fff;
+    }
+
+    #onlineTambayan .online-compose input:focus {
+      border: 1px solid #d7baff;
+      box-shadow: 0 0 0 3px rgba(190,150,255,.18);
+    }
+
+    #onlineTambayan .online-compose button {
+      min-width: 82px;
+      background: linear-gradient(135deg, #e0caff, #b18aff);
+      color: #24143d;
+      box-shadow: 0 4px 14px rgba(177,138,255,.3);
+      font-weight: 800;
+    }
+
+    #onlineTambayan .online-compose button:hover {
+      filter: brightness(1.12);
+      box-shadow: 0 5px 18px rgba(177,138,255,.4);
+    }
+
+    #onlineTambayan .online-reactions {
+      padding-top: 14px;
+      border-top: 1px solid rgba(194,158,255,.2);
+    }
+
+    #onlineTambayan .online-reactions button {
+      min-width: 46px;
+      min-height: 43px;
+      background: rgba(169,139,255,.17);
+      border: 1px solid rgba(205,177,255,.3);
+      box-shadow: 0 3px 9px rgba(0,0,0,.12);
+    }
+
+    #onlineTambayan .online-reactions button:active {
+      transform: scale(.92);
+      background: rgba(190,150,255,.35);
+    }
+
+    @media (max-width: 620px) {
+      #onlineTambayan .online-compose {
+        padding: 7px;
+      }
+
+      #onlineTambayan .online-compose button {
+        min-width: 68px;
+      }
+    }
+  `;
+  document.head.appendChild(composerHighlightStyle);
+  
         
 
 
