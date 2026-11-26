@@ -884,7 +884,120 @@
   `;
   document.head.appendChild(composerHighlightStyle);
   
-        
+  // ONLINE TAMBAYAN — ROOM LIST & HEADER POLISH
+  const roomPolishStyle = document.createElement("style");
+  roomPolishStyle.textContent = `
+    /* My Chatrooms */
+    #onlineTambayan #onlineMyRoomsBox h3 {
+      color: #eadcff;
+      font-size: 1.12rem;
+      margin-bottom: 6px;
+    }
+
+    #onlineTambayan #onlineMyRoomsBox > .online-muted {
+      display: block;
+      line-height: 1.5;
+      margin-bottom: 14px;
+    }
+
+    #onlineTambayan .online-room-list {
+      gap: 10px;
+    }
+
+    #onlineTambayan .online-room-card {
+      min-height: 72px;
+      padding: 14px 16px;
+      border-radius: 16px;
+      background: linear-gradient(135deg, rgba(169,139,255,.12), rgba(255,255,255,.035));
+      border: 1px solid rgba(194,158,255,.2);
+      transition: background .2s ease, border-color .2s ease, transform .2s ease;
+    }
+
+    #onlineTambayan .online-room-card span:first-child {
+      line-height: 1.5;
+    }
+
+    #onlineTambayan .online-room-card strong {
+      color: #f0e5ff;
+      font-size: .98rem;
+    }
+
+    #onlineTambayan .online-room-card small {
+      display: block;
+      margin-top: 4px;
+      color: #cbbaff;
+      font-size: .78rem;
+      letter-spacing: .04em;
+    }
+
+    #onlineTambayan .online-room-card.active {
+      background: linear-gradient(135deg, rgba(169,139,255,.27), rgba(116,83,170,.18));
+      border-color: #c5a7ff;
+      box-shadow: 0 0 16px rgba(169,139,255,.13);
+    }
+
+    #onlineTambayan .online-room-card:hover {
+      transform: translateY(-2px);
+      border-color: rgba(205,177,255,.55);
+    }
+
+    /* Active room header */
+    #onlineTambayan .online-room-top {
+      padding: 18px;
+      border-radius: 19px;
+      background:
+        radial-gradient(ellipse at top left, rgba(190,150,255,.2), transparent 65%),
+        linear-gradient(135deg, rgba(169,139,255,.13), rgba(255,255,255,.035));
+      border: 1px solid rgba(205,177,255,.28);
+      gap: 14px;
+    }
+
+    #onlineTambayan .online-room-top .online-muted {
+      margin: 0 0 5px;
+      color: #cbbaff;
+      font-size: .76rem;
+      font-weight: 800;
+      letter-spacing: .12em;
+    }
+
+    #onlineTambayan .online-room-top h3 {
+      color: #f1e5ff;
+      font-size: 1.3rem;
+      overflow-wrap: anywhere;
+    }
+
+    #onlineTambayan .online-code {
+      margin-top: 8px;
+      padding: 8px 13px;
+      border-radius: 11px;
+      background: rgba(10,7,20,.4);
+      border: 1px dashed rgba(205,177,255,.4);
+      color: #e0caff;
+    }
+
+    @media (max-width: 620px) {
+      #onlineTambayan .online-room-card {
+        min-height: 68px;
+        padding: 12px 13px;
+      }
+
+      #onlineTambayan .online-room-top {
+        padding: 14px;
+      }
+
+      #onlineTambayan .online-room-top h3 {
+        font-size: 1.15rem;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      #onlineTambayan .online-room-card {
+        transition: none;
+      }
+    }
+  `;
+  document.head.appendChild(roomPolishStyle);
+   
 
 
   const section = document.createElement("section");
