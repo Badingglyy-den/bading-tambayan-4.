@@ -57,8 +57,7 @@
     return `${year}-${month}-${day}`;
   }
 
-  function getTodayMission() {
-    const date = todayKey();
+    function getTodayMission(date = todayKey()) {
     let hash = 0;
 
     for (let i = 0; i < date.length; i++) {
@@ -107,9 +106,32 @@
     if (mystery) mystery.textContent = mission.mystery;
   }
 
-  const mission = getTodayMission();
+    const date = todayKey();
+  const mission = getTodayMission(date);
+
+  const tomorrowDate = new Date();
+  tomorrowDate.setDate(tomorrowDate.getDate() + 1);
+
+  const tomorrowKey = [
+    tomorrowDate.getFullYear(),
+    String(tomorrowDate.getMonth() + 1).padStart(2, "0"),
+    String(tomorrowDate.getDate()).padStart(2, "0")
+  ].join("-");
+
+  const tomorrowMission = getTodayMission(tomorrowKey);
+
+  const tomorrowTitle = document.getElementById("dailyTomorrowTitle");
+  const tomorrowDescription = document.getElementById("dailyTomorrowDescription");
+
+  if (tomorrowTitle) {
+    tomorrowTitle.textContent = tomorrowMission.title;
+  }
+
+  if (tomorrowDescription) {
+    tomorrowDescription.textContent = "Tomorrow's mission: " + tomorrowMission.description;
+  }
+
   const saved = readProgress();
-  const date = todayKey();
 
   let completed = saved.date === date && saved.completed === true;
 
