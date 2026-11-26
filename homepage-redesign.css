@@ -3923,6 +3923,17 @@
   line-height: 1.6;
   text-align: center;
 }
+#view-map .attic-photo-secret {
+  margin: 14px 0 0;
+  padding: 13px;
+  border: 1px dashed rgba(201, 169, 119, .45);
+  background: rgba(10, 9, 8, .35);
+  color: #e0c9a7;
+  font-family: Georgia, serif;
+  font-size: 12px;
+  line-height: 1.7;
+  text-align: center;
+   }
 
 @media (max-width: 500px) {
   #view-map .attic-changing-photo {
