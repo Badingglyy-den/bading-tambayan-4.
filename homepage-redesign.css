@@ -1101,6 +1101,29 @@
     min-height: 215px;
   }
 }
+/* PHASE 7 — KEEP HERO ACTIONS CLEAR OF MOBILE NAV */
+@media (max-width: 850px) {
+  #home .hero-orbit {
+    min-height: 135px;
+    margin-top: 0;
+  }
+
+  #home .hero-orbit::before {
+    width: 125px;
+  }
+
+  #home .hero-orbit::after {
+    width: 175px;
+  }
+
+  #home .hero {
+    padding-bottom: 12px;
+  }
+
+  body {
+    padding-bottom: calc(125px + env(safe-area-inset-bottom)) !important;
+  }
+}
 
 
 
