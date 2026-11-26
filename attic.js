@@ -37,7 +37,25 @@ photoImage.textContent = todaysClue.image;
 photoDetail.textContent = todaysClue.detail;
 photoCaption.textContent = "The photograph has changed today. Come back tomorrow to discover what appears next.";
       }
+    if (photoImage && photoSecret) {
+    photoImage.style.cursor = "pointer";
+    photoImage.setAttribute("role", "button");
+    photoImage.setAttribute("tabindex", "0");
+    photoImage.setAttribute("aria-label", "Reveal the hidden message");
 
+    const revealPhotoSecret = () => {
+      photoSecret.hidden = !photoSecret.hidden;
+    };
+
+    photoImage.addEventListener("click", revealPhotoSecret);
+
+    photoImage.addEventListener("keydown", event => {
+      if (event.key === "Enter" || event.key === " ") {
+        event.preventDefault();
+        revealPhotoSecret();
+      }
+    });
+    }
   const KEY = "tambayan_attic_discoveries_v1";
 
   const stories = {
