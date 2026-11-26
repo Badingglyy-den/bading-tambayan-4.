@@ -3934,6 +3934,30 @@
   line-height: 1.7;
   text-align: center;
    }
+#view-map .attic-photo-clue-link {
+  display: block;
+  width: fit-content;
+  margin: 12px auto 0;
+  padding: 9px 13px;
+  border: 1px solid rgba(201, 169, 119, .45);
+  border-radius: 999px;
+  color: #e8c99b;
+  font-size: 11px;
+  text-align: center;
+  text-decoration: none;
+  transition: background .2s ease, border-color .2s ease;
+}
+
+#view-map .attic-photo-clue-link:hover,
+#view-map .attic-photo-clue-link:focus-visible {
+  background: rgba(201, 169, 119, .12);
+  border-color: rgba(201, 169, 119, .8);
+  outline: none;
+}
+
+#view-map .attic-photo-clue-link[hidden] {
+  display: none;
+}
 
 @media (max-width: 500px) {
   #view-map .attic-changing-photo {
