@@ -1216,6 +1216,14 @@
   let typingTimer = null;
   let isTyping = false;
   let joinedRooms = [];
+  let backgroundNotificationCount = 0;
+let notificationQueue = Promise.resolve();
+
+document.addEventListener("visibilitychange", () => {
+  if (!document.hidden) {
+    backgroundNotificationCount = 0;
+  }
+});
 
   // Keep the last active room per anonymous Supabase account on this device.
   const ACTIVE_ROOM_KEY = () => "tambayan_active_room_" + (currentUser?.id || "guest");
@@ -1562,7 +1570,6 @@
 
     const mine = message.user_id === currentUser.id;
 
-    // Start the notification before waiting for the sender profile.
     if (
       notify &&
       !mine &&
@@ -1570,16 +1577,26 @@
       "Notification" in window &&
       Notification.permission === "granted"
     ) {
+      backgroundNotificationCount++;
+
       const cachedSender = profileCache.get(message.user_id);
       const notificationName = cachedSender?.display_name || "New message";
+      const messagePreview = String(message.content || "").slice(0, 180);
+      const count = backgroundNotificationCount;
 
-      navigator.serviceWorker.ready
-        .then(registration => {
-          return registration.showNotification(
+      notificationQueue = notificationQueue
+        .then(async () => {
+          const registration = await navigator.serviceWorker.ready;
+
+          await registration.showNotification(
             currentRoom?.name || "Online Tambayan",
             {
-              body: `${notificationName}: ${message.content}`,
-              tag: "tambayan-" + id
+              body: count === 1
+                ? `${notificationName}: ${messagePreview}`
+                : `${count} new messages · Latest: ${notificationName}: ${messagePreview}`,
+              tag: "tambayan-room-" + (currentRoom?.id || "chat"),
+              renotify: true,
+              timestamp: Date.now()
             }
           );
         })
@@ -1597,7 +1614,8 @@
     item.dataset.messageId = id;
 
     const time = message.created_at ? new Date(message.created_at).toLocaleTimeString([], {
-      hour: "2-digit", minute: "2-digit"
+      hour: "2-digit",
+      minute: "2-digit"
     }) : "";
 
     item.innerHTML = `
@@ -1613,7 +1631,7 @@
     $("onlineMessages").scrollTop = $("onlineMessages").scrollHeight;
     if (!mine) await markMessageRead(message);
   }
-
+  
   function renderMembers() {
     if (!roomChannel) return;
     const state = roomChannel.presenceState();
