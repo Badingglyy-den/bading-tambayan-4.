@@ -1078,7 +1078,38 @@
     }
   `;
   document.head.appendChild(responsiveStyle);
-  
+    // ONLINE TAMBAYAN — NOTIFICATION CONTROL
+  const notificationStyle = document.createElement("style");
+  notificationStyle.textContent = `
+    #onlineTambayan .online-notification-settings {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin: 10px 0 18px;
+      padding: 12px 15px;
+      border-radius: 14px;
+      background: rgba(169,139,255,.08);
+      border: 1px solid rgba(194,158,255,.18);
+    }
+
+    #onlineTambayan .online-notification-settings button {
+      margin: 0;
+    }
+
+    #onlineTambayan #onlineNotificationStatus {
+      color: #cbbaff;
+      font-size: .85rem;
+    }
+
+    @media (max-width: 480px) {
+      #onlineTambayan .online-notification-settings {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+    }
+  `;
+  document.head.appendChild(notificationStyle);
 
 
   const section = document.createElement("section");
@@ -1112,6 +1143,14 @@
         </div>
       </div>
       <p class="online-status" id="onlineStatus" role="status" aria-live="polite">Connecting to the online tambayan…</p>
+      <div class="online-notification-settings">
+  <button type="button" id="onlineNotificationButton">
+    🔔 Enable notifications
+  </button>
+  <span id="onlineNotificationStatus" role="status">
+    Get alerts when new messages arrive
+  </span>
+</div>
       <div class="online-box" id="onlineMyRoomsBox">
         <h3>🗂️ My Chatrooms</h3>
         <p class="online-muted">Your joined rooms are saved here. Choose one to switch conversations.</p>
