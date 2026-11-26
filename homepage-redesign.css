@@ -1490,6 +1490,190 @@
   }
 }
 
+/* ==========================================
+   PHASE 12 — COMFORT CORNER
+   THE COZY SOFT SANCTUARY
+   ========================================== */
+
+#home #comfort {
+  position: relative;
+  margin-top: 65px;
+  padding: 20px 0 17px 19px;
+  border-left: 3px solid #b8c9a4;
+  background: linear-gradient(90deg, rgba(184,201,164,.09), transparent 75%);
+}
+
+#home #comfort .eyebrow {
+  color: #b8c9a4;
+  letter-spacing: .22em;
+}
+
+#home #comfort h2 {
+  color: #f5ead8;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(32px, 5vw, 47px);
+  font-weight: 500;
+}
+
+#home #comfort + .comfort-panel {
+  position: relative;
+  display: grid;
+  grid-template-columns: .7fr 1.3fr;
+  align-items: center;
+  gap: 30px;
+  min-height: 270px;
+  padding: clamp(22px, 4vw, 42px);
+  overflow: hidden;
+  isolation: isolate;
+  border: 1px solid #c8c9a8;
+  border-radius: 5px 32px 5px 32px;
+  background:
+    radial-gradient(ellipse at 18% 15%, rgba(255,255,255,.8), transparent 40%),
+    radial-gradient(ellipse at 90% 90%, rgba(215,170,169,.28), transparent 42%),
+    linear-gradient(130deg, #f3eedf, #e1e6d2 58%, #d6dfc9);
+  box-shadow:
+    0 18px 40px rgba(0,0,0,.16),
+    inset 0 0 35px rgba(255,255,255,.35);
+}
+
+#home #comfort + .comfort-panel::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  top: -75px;
+  right: -35px;
+  width: 230px;
+  height: 230px;
+  border: 1px solid rgba(93,125,89,.19);
+  border-radius: 50%;
+  box-shadow:
+    0 0 0 22px rgba(93,125,89,.045),
+    0 0 0 48px rgba(93,125,89,.035);
+  pointer-events: none;
+}
+
+#home #comfort + .comfort-panel::after {
+  content: "a little place to breathe";
+  position: absolute;
+  right: 25px;
+  bottom: 17px;
+  color: rgba(66,91,67,.55);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 11px;
+  font-style: italic;
+  letter-spacing: .04em;
+}
+
+#home #comfort + .comfort-panel .comfort-art {
+  display: grid;
+  place-items: center;
+  width: min(100%, 190px);
+  aspect-ratio: 1;
+  margin: auto;
+  border: 1px solid rgba(107,135,100,.4);
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 35% 28%, #fff9e8, transparent 42%),
+    linear-gradient(145deg, #d5dfc4, #a9bd9c);
+  color: #4f7053;
+  font-size: clamp(55px, 8vw, 82px);
+  box-shadow:
+    0 12px 30px rgba(83,107,75,.15),
+    inset 0 0 30px rgba(255,255,255,.45);
+  animation: comfortSanctuaryFloat 6s ease-in-out infinite;
+}
+
+#home #comfort + .comfort-panel > div:last-child {
+  position: relative;
+  z-index: 1;
+}
+
+#home #comfort + .comfort-panel .eyebrow {
+  color: #71886a;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: .23em;
+}
+
+#home #comfort + .comfort-panel h3 {
+  max-width: 570px;
+  margin: 12px 0;
+  color: #344b39;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(25px, 3.5vw, 39px);
+  font-weight: 500;
+  line-height: 1.2;
+  text-shadow: none;
+}
+
+#home #comfort + .comfort-panel p:not(.eyebrow) {
+  max-width: 480px;
+  color: #62735d;
+  font-size: 13px;
+  line-height: 1.9;
+}
+
+#home #comfort + .comfort-panel .soft-btn {
+  margin-top: 12px;
+  padding: 12px 18px;
+  border: 1px solid #8da184;
+  border-radius: 3px 14px 3px 14px;
+  background: #71886a;
+  color: #fff9ed;
+  font-weight: 700;
+  box-shadow: 4px 4px 0 rgba(113,136,106,.15);
+  transition: transform .2s ease, background .2s ease;
+}
+
+#home #comfort + .comfort-panel .soft-btn:hover {
+  transform: translateY(-2px);
+  background: #5f785a;
+}
+
+@keyframes comfortSanctuaryFloat {
+  0%, 100% { transform: translateY(0) rotate(-3deg); }
+  50% { transform: translateY(-8px) rotate(3deg); }
+}
+
+@media (max-width: 700px) {
+  #home #comfort {
+    margin-top: 43px;
+  }
+
+  #home #comfort + .comfort-panel {
+    grid-template-columns: 1fr;
+    gap: 16px;
+    min-height: auto;
+    padding: 24px 20px 38px;
+  }
+
+  #home #comfort + .comfort-panel .comfort-art {
+    width: 115px;
+    font-size: 54px;
+  }
+
+  #home #comfort + .comfort-panel h3 {
+    font-size: 27px;
+  }
+
+  #home #comfort + .comfort-panel p:not(.eyebrow) {
+    font-size: 12px;
+  }
+
+  #home #comfort + .comfort-panel::after {
+    right: 16px;
+    bottom: 12px;
+    font-size: 10px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #home #comfort + .comfort-panel .comfort-art {
+    animation: none !important;
+  }
+   }
+   
+
 
 
 
