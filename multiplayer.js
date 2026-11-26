@@ -1216,12 +1216,15 @@
   let typingTimer = null;
   let isTyping = false;
   let joinedRooms = [];
+  const backgroundRoomChannels = new Map();
+const backgroundNotificationCounts = new Map();
   let backgroundNotificationCount = 0;
 let notificationQueue = Promise.resolve();
 
 document.addEventListener("visibilitychange", () => {
   if (!document.hidden) {
     backgroundNotificationCount = 0;
+    backgroundNotificationCounts.clear();
   }
 });
 
@@ -1359,6 +1362,12 @@ document.addEventListener("visibilitychange", () => {
     const ids = [...new Set((memberships || []).map(row => row.room_id).filter(Boolean))];
     if (!ids.length) {
       joinedRooms = [];
+      if (!ids.length) {
+  joinedRooms = [];
+  syncBackgroundRoomListeners();
+  renderRoomList();
+  return;
+      }
       renderRoomList();
       return;
     }
@@ -1375,7 +1384,8 @@ document.addEventListener("visibilitychange", () => {
     }
 
     joinedRooms = rooms || [];
-    renderRoomList();
+syncBackgroundRoomListeners();
+renderRoomList();
   }
 
   function renderRoomList() {
@@ -1411,6 +1421,78 @@ document.addEventListener("visibilitychange", () => {
       };
     });
   }
+    function syncBackgroundRoomListeners() {
+    if (!client || !currentUser) return;
+
+    const joinedIds = new Set(joinedRooms.map(room => String(room.id)));
+
+    for (const [roomId, channel] of backgroundRoomChannels) {
+      if (!joinedIds.has(roomId)) {
+        client.removeChannel(channel);
+        backgroundRoomChannels.delete(roomId);
+        backgroundNotificationCounts.delete(roomId);
+      }
+    }
+
+    for (const room of joinedRooms) {
+      const roomId = String(room.id);
+      if (backgroundRoomChannels.has(roomId)) continue;
+
+      const channel = client.channel("background-room-" + roomId);
+
+      channel
+        .on("postgres_changes", {
+          event: "INSERT",
+          schema: "public",
+          table: "messages",
+          filter: "room_id=eq." + room.id
+        }, async payload => {
+          const message = payload.new;
+          if (!message || message.user_id === currentUser.id) return;
+          if (!document.hidden && currentRoom?.id === roomId) return;
+          if (!("Notification" in window) || Notification.permission !== "granted") return;
+
+          const count = (backgroundNotificationCounts.get(roomId) || 0) + 1;
+          backgroundNotificationCounts.set(roomId, count);
+
+          let senderName = "Someone";
+          try {
+            const { data } = await client.from("profiles")
+              .select("display_name")
+              .eq("user_id", message.user_id)
+              .maybeSingle();
+            if (data?.display_name) senderName = data.display_name;
+          } catch (error) {
+            console.warn("Could not load notification sender:", error);
+          }
+
+          const preview = String(message.content || "").slice(0, 160);
+          const roomName = room.room_name || "Online Tambayan";
+
+          notificationQueue = notificationQueue.then(async () => {
+            const registration = await navigator.serviceWorker.ready;
+            await registration.showNotification(roomName, {
+              body: count === 1
+                ? senderName + ": " + preview
+                : count + " new messages · Latest: " + senderName + ": " + preview,
+              tag: "tambayan-room-" + roomId,
+              renotify: true,
+              timestamp: Date.now(),
+              data: { roomId }
+            });
+          }).catch(error => {
+            console.warn("Could not show background room notification:", error);
+          });
+        })
+        .subscribe(state => {
+          if (state === "CHANNEL_ERROR") {
+            console.warn("Background listener connection error for room:", roomId);
+          }
+        });
+
+      backgroundRoomChannels.set(roomId, channel);
+    }
+            }
 
   async function createRoom() {
     if (!client) return status("Still connecting. Please wait.", true);
@@ -1476,7 +1558,7 @@ document.addEventListener("visibilitychange", () => {
       .on("postgres_changes", {
         event: "INSERT", schema: "public", table: "messages",
         filter: "room_id=eq." + roomId
-      }, async payload => { await appendMessage(payload.new, true); })
+      }, async payload => { await appendMessage(payload.new); })
       .on("postgres_changes", {
         event: "INSERT", schema: "public", table: "message_reads"
       }, payload => { handleReadReceipt(payload.new); })
