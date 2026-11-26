@@ -1609,27 +1609,59 @@ renderRoomList();
       });
   }
   async function loadMessages() {
-    $("onlineMessages").innerHTML = '<span class="online-muted">Loading chat…</span>';
-        const { data, error } = await client.from("messages")
-      .select("id,user_id,content,created_at")
-      .eq("room_id", currentRoom.id)
-      .order("created_at", { ascending: false }).limit(100);
-    if (error) throw error;
+  const messagesBox = $("onlineMessages");
 
-    $("onlineMessages").innerHTML = "";
-        const messages = (data || []).reverse();
-    for (const message of messages) {
-      if (message.user_id !== currentUser.id) continue;
+  messagesBox.innerHTML = '<span class="online-muted">Loading chat…</span>';
+
+  oldestMessageCursor = null;
+  hasMoreMessages = true;
+  loadingOlderMessages = false;
+  messageIds = new Set();
+
+  const olderStatus = $("onlineOlderMessagesStatus");
+  if (olderStatus) olderStatus.style.display = "none";
+
+  const { data, error } = await client.from("messages")
+    .select("id,user_id,content,created_at")
+    .eq("room_id", currentRoom.id)
+    .order("created_at", { ascending: false })
+    .order("id", { ascending: false })
+    .limit(50);
+
+  if (error) throw error;
+
+  const messages = (data || []).reverse();
+
+  messagesBox.innerHTML = "";
+  hasMoreMessages = messages.length === 50;
+
+  if (messages.length) {
+    const oldest = messages[0];
+    oldestMessageCursor = {
+      created_at: oldest.created_at,
+      id: oldest.id
+    };
+  }
+
+  for (const message of messages) {
+    if (message.user_id === currentUser.id) {
       const { data: reads, error: readsError } = await client
-        .from("message_reads").select("message_id,user_id")
+        .from("message_reads")
+        .select("message_id,user_id")
         .eq("message_id", message.id);
-      if (readsError) console.warn("Could not load read receipts:", readsError);
+
+      if (readsError) {
+        console.warn("Could not load read receipts:", readsError);
+      }
+
       if ((reads || []).some(read => read.user_id !== currentUser.id)) {
         receiptMessageIds.add(String(message.id));
       }
     }
-    for (const message of messages) await appendMessage(message);
+
+    await appendMessage(message);
   }
+}
     async function catchUpRoomMessages() {
     if (!currentRoom) return;
 
@@ -1665,6 +1697,7 @@ renderRoomList();
       }
     } catch (error) {
       console.warn("Could not catch up on room messages:", error);
+        }
         }
       async function loadOlderMessages() {
   if (
