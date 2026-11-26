@@ -1171,7 +1171,10 @@
         <div class="online-columns">
           <div class="online-box">
             <h3>💬 Live chat</h3>
-            <div class="online-messages" id="onlineMessages" aria-live="polite"></div>
+            <p id="onlineOlderMessagesStatus" class="online-muted" style="display:none;text-align:center;margin:8px 0;">
+  Loading older messages...
+</p>
+<div class="online-messages" id="onlineMessages" aria-live="polite"></div>
             <p class="online-typing" id="onlineTypingIndicator" aria-live="polite"></p>
             <form class="online-compose" id="onlineMessageForm">
               <input id="onlineMessageInput" maxlength="1000" placeholder="Say something..." required>
@@ -1209,6 +1212,9 @@
   let roomChannel = null;
   let profile = { display_name: "Tambay", avatar: "💜" };
   let messageIds = new Set();
+  let oldestMessageCursor = null;
+let hasMoreMessages = true;
+let loadingOlderMessages = false;
   const profileCache = new Map();
   const typingUsers = new Map();
   const seenMessageIds = new Set();
@@ -1602,7 +1608,6 @@ renderRoomList();
         }
       });
   }
-
   async function loadMessages() {
     $("onlineMessages").innerHTML = '<span class="online-muted">Loading chat…</span>';
         const { data, error } = await client.from("messages")
@@ -1660,8 +1665,108 @@ renderRoomList();
       }
     } catch (error) {
       console.warn("Could not catch up on room messages:", error);
+        }
+      async function loadOlderMessages() {
+  if (
+    !currentRoom ||
+    !oldestMessageCursor ||
+    !hasMoreMessages ||
+    loadingOlderMessages
+  ) return;
+
+  loadingOlderMessages = true;
+
+  const messagesBox = $("onlineMessages");
+  const olderStatus = $("onlineOlderMessagesStatus");
+
+  const roomId = currentRoom.id;
+  const oldScrollHeight = messagesBox.scrollHeight;
+  const oldScrollTop = messagesBox.scrollTop;
+  const originalFirstMessage = messagesBox.firstElementChild;
+  const prependedMessages = [];
+
+  if (olderStatus) {
+    olderStatus.textContent = "Loading older messages...";
+    olderStatus.style.display = "block";
+  }
+
+  try {
+    const cursor = oldestMessageCursor;
+
+    const { data, error } = await client.from("messages")
+      .select("id,user_id,content,created_at")
+      .eq("room_id", roomId)
+      .or(
+        `created_at.lt.${cursor.created_at},and(created_at.eq.${cursor.created_at},id.lt.${cursor.id})`
+      )
+      .order("created_at", { ascending: false })
+      .order("id", { ascending: false })
+      .limit(50);
+
+    if (error) throw error;
+
+    if (!currentRoom || currentRoom.id !== roomId) return;
+
+    const messages = (data || []).reverse();
+
+    if (!messages.length) {
+      hasMoreMessages = false;
+      return;
     }
-                             }
+
+    hasMoreMessages = messages.length === 50;
+
+    const oldest = messages[0];
+
+    oldestMessageCursor = {
+      created_at: oldest.created_at,
+      id: oldest.id
+    };
+
+    for (const message of messages) {
+  const alreadyLoaded = messageIds.has(String(message.id));
+
+  if (message.user_id === currentUser.id) {
+    const { data: reads, error: readsError } = await client
+      .from("message_reads")
+      .select("message_id,user_id")
+      .eq("message_id", message.id);
+
+    if (readsError) {
+      console.warn("Could not load read receipts:", readsError);
+    }
+
+    if ((reads || []).some(read => read.user_id !== currentUser.id)) {
+      receiptMessageIds.add(String(message.id));
+    }
+  }
+
+  await appendMessage(message);
+
+  if (!alreadyLoaded && messagesBox.lastElementChild) {
+    prependedMessages.push(messagesBox.lastElementChild);
+  }
+}
+
+for (const messageElement of prependedMessages) {
+  messagesBox.insertBefore(messageElement, originalFirstMessage);
+}
+
+    const newScrollHeight = messagesBox.scrollHeight;
+
+    messagesBox.scrollTop =
+      oldScrollTop + (newScrollHeight - oldScrollHeight);
+
+  } catch (error) {
+    console.warn("Could not load older messages:", error);
+  } finally {
+    loadingOlderMessages = false;
+
+    if (olderStatus) {
+      olderStatus.style.display = "none";
+    }
+  }
+    }
 
   async function getMessageProfile(userId) {
     if (!userId) return { display_name: "Tambay", avatar: "💜" };
@@ -1988,6 +2093,11 @@ renderRoomList();
     event.target.value = event.target.value.toUpperCase()
       .replace(/[^A-Z0-9]/g, "").slice(0, 6);
   };
+  $("onlineMessages").addEventListener("scroll", () => {
+  if ($("onlineMessages").scrollTop <= 40) {
+    loadOlderMessages();
+  }
+});
 
   $("onlineMessageInput").addEventListener("input", handleMessageTyping);
   $("onlineMessageForm").onsubmit = async event => {
