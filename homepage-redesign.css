@@ -3555,6 +3555,122 @@
     font-size: 9px;
   }
 }
+/* =========================================
+   HIDDEN ROOMS — BEYOND THE MAP
+   ========================================= */
+
+#home .hidden-entrance {
+  position: relative;
+  margin: 42px 0 20px;
+  padding: 1px;
+  overflow: hidden;
+  border: 1px solid rgba(194, 164, 218, .25);
+  background:
+    linear-gradient(110deg, #211a30, #30223b 55%, #211a30);
+}
+
+#home .hidden-entrance-inner {
+  position: relative;
+  display: grid;
+  grid-template-columns: 58px minmax(0, 1fr);
+  align-items: center;
+  gap: 17px;
+  padding: 23px 25px;
+  overflow: hidden;
+  background:
+    radial-gradient(ellipse at 95% 50%, rgba(151, 111, 177, .18), transparent 40%);
+}
+
+#home .hidden-entrance-inner::after {
+  content: "✧";
+  position: absolute;
+  right: 35px;
+  top: -38px;
+  color: rgba(226, 198, 241, .08);
+  font-size: 145px;
+  pointer-events: none;
+}
+
+#home .hidden-entrance-mark {
+  display: grid;
+  place-items: center;
+  width: 54px;
+  height: 54px;
+  border: 1px solid rgba(220, 192, 239, .35);
+  border-radius: 50%;
+  color: #e4c9f4;
+  font-size: 28px;
+  box-shadow: 0 0 25px rgba(180, 133, 208, .13);
+}
+
+#home .hidden-entrance-copy {
+  position: relative;
+  z-index: 1;
+  min-width: 0;
+}
+
+#home .hidden-entrance-copy .eyebrow {
+  margin: 0 0 7px;
+  color: #c4a4d9;
+  font-size: 9px;
+  letter-spacing: 2px;
+}
+
+#home .hidden-entrance-copy h2 {
+  margin: 0 0 6px;
+  color: #f4e8f7;
+  font-family: Georgia, serif;
+  font-size: 26px;
+  font-weight: 500;
+}
+
+#home .hidden-entrance-copy p:not(.eyebrow) {
+  max-width: 470px;
+  margin: 0;
+  color: #c8b9d1;
+  font-size: 12px;
+  line-height: 1.7;
+}
+
+#home .hidden-entrance-hint {
+  position: relative;
+  z-index: 1;
+  grid-column: 2;
+  margin-top: -8px;
+  color: #d6b6e8;
+  font-size: 10px;
+  letter-spacing: .7px;
+}
+
+@media (max-width: 500px) {
+  #home .hidden-entrance {
+    margin-top: 32px;
+  }
+
+  #home .hidden-entrance-inner {
+    grid-template-columns: 43px minmax(0, 1fr);
+    gap: 12px;
+    padding: 17px 14px;
+  }
+
+  #home .hidden-entrance-mark {
+    width: 42px;
+    height: 42px;
+    font-size: 23px;
+  }
+
+  #home .hidden-entrance-copy h2 {
+    font-size: 22px;
+  }
+
+  #home .hidden-entrance-copy p:not(.eyebrow) {
+    font-size: 11px;
+  }
+
+  #home .hidden-entrance-hint {
+    font-size: 9px;
+  }
+}
 
 
 
