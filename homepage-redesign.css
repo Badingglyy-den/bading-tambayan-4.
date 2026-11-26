@@ -2684,6 +2684,38 @@
   }
 }
 
+/* PHASE 16 — COMPACT COMMUNITY & DISCOVERY TILES */
+
+#home #hangout + .hangout-layout > .lounge-section:nth-of-type(3) .tool-card,
+#home #hangout + .hangout-layout > .lounge-section:nth-of-type(4) .tool-card {
+  min-height: 0;
+  padding: 13px;
+}
+
+#home #hangout + .hangout-layout > .lounge-section:nth-of-type(3) .tool-card > span,
+#home #hangout + .hangout-layout > .lounge-section:nth-of-type(4) .tool-card > span {
+  width: 37px;
+  height: 37px;
+  margin-bottom: 9px;
+  font-size: 20px;
+}
+
+#home #hangout + .hangout-layout > .lounge-section:nth-of-type(3) .tool-card h3,
+#home #hangout + .hangout-layout > .lounge-section:nth-of-type(4) .tool-card h3 {
+  font-size: 15px;
+}
+
+#home #hangout + .hangout-layout > .lounge-section:nth-of-type(3) .tool-card p,
+#home #hangout + .hangout-layout > .lounge-section:nth-of-type(4) .tool-card p {
+  margin-top: 5px;
+}
+
+#home #hangout + .hangout-layout > .lounge-section:nth-of-type(3) .tool-card button,
+#home #hangout + .hangout-layout > .lounge-section:nth-of-type(4) .tool-card button {
+  margin-top: 12px;
+}
+
+
    
 
 
