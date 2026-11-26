@@ -1,7 +1,7 @@
 
 /* ==========================================
    BADING TAMBAYAN — NEW VISUAL IDENTITY
-   Homepage redesign foundation
+   Homepage redesign · Phase 1
    ========================================== */
 
 :root {
@@ -14,13 +14,275 @@
   --bt-line: rgba(255, 255, 255, 0.14);
 }
 
-/* Homepage design foundation */
-#view-home {
+/* HOMEPAGE FOUNDATION */
+#home {
   isolation: isolate;
 }
 
-#view-home .hero {
+#home .hero {
   position: relative;
+  display: grid;
+  grid-template-columns: 1.05fr .95fr;
+  align-items: center;
+  gap: 24px;
+  min-height: 430px;
+  padding: clamp(28px, 5vw, 68px);
   overflow: hidden;
   isolation: isolate;
+  border: 1px solid rgba(233, 200, 141, .32);
+  border-radius: 8px 34px 8px 34px;
+  background:
+    radial-gradient(ellipse at 78% 48%, rgba(126, 78, 157, .42), transparent 37%),
+    radial-gradient(ellipse at 10% 100%, rgba(92, 55, 116, .34), transparent 42%),
+    linear-gradient(112deg, #21172c 0%, #30203d 55%, #191426 100%);
+  box-shadow: 0 24px 70px rgba(12, 7, 20, .28);
+}
+
+#home .hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  opacity: .22;
+  background-image:
+    radial-gradient(rgba(255,255,255,.7) .7px, transparent .7px);
+  background-size: 27px 27px;
+  mask-image: linear-gradient(90deg, transparent, #000 75%);
+}
+
+#home .hero::after {
+  content: "TAMBAYANVERSE";
+  position: absolute;
+  right: -12px;
+  bottom: 12px;
+  z-index: -1;
+  color: rgba(255,255,255,.035);
+  font-size: clamp(42px, 9vw, 118px);
+  font-weight: 900;
+  letter-spacing: .12em;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+#home .hero-copy {
+  position: relative;
+  z-index: 2;
+  max-width: 590px;
+}
+
+#home .hero .eyebrow {
+  color: var(--bt-gold);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: .23em;
+}
+
+#home .hero h1 {
+  margin: 18px 0;
+  color: var(--bt-cream);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(38px, 6vw, 70px);
+  font-weight: 500;
+  line-height: .99;
+  letter-spacing: -.055em;
+}
+
+#home .hero h1 em {
+  display: inline-block;
+  margin-top: 9px;
+  color: var(--bt-gold);
+  font-size: .72em;
+  font-weight: 400;
+  letter-spacing: -.04em;
+}
+
+#home .hero-text {
+  max-width: 420px;
+  color: rgba(251,244,233,.76);
+  font-size: 14px;
+  line-height: 1.9;
+}
+
+#home .hero-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  margin-top: 27px;
+}
+
+#home .hero .primary-btn {
+  border: 1px solid var(--bt-gold);
+  border-radius: 3px 15px 3px 15px;
+  background: var(--bt-gold);
+  color: var(--bt-ink);
+  font-weight: 800;
+  box-shadow: 5px 5px 0 rgba(233,200,141,.18);
+  transition: transform .22s ease, box-shadow .22s ease;
+}
+
+#home .hero .primary-btn:hover {
+  transform: translate(-2px, -3px);
+  box-shadow: 8px 9px 0 rgba(233,200,141,.16);
+}
+
+#home .hero .soft-btn {
+  border: 1px solid rgba(251,244,233,.3);
+  border-radius: 3px 13px 3px 13px;
+  background: rgba(255,255,255,.06);
+  color: var(--bt-cream);
+  backdrop-filter: blur(8px);
+}
+
+/* CUSTOM CSS-ILLUSTRATED UNIVERSE */
+#home .hero-orbit {
+  position: relative;
+  display: grid;
+  place-items: center;
+  min-height: 300px;
+  isolation: isolate;
+}
+
+#home .hero-orbit::before {
+  content: "";
+  position: absolute;
+  width: min(29vw, 310px);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 34% 28%, #f5dfc0 0 2%, transparent 3%),
+    radial-gradient(circle at 65% 70%, rgba(255,255,255,.16) 0 1%, transparent 2%),
+    radial-gradient(circle at 38% 35%, #c99edc, #78528e 48%, #382548 75%);
+  box-shadow:
+    0 0 45px rgba(202,158,220,.25),
+    0 0 110px rgba(146,99,177,.2),
+    inset -25px -22px 45px rgba(20,12,29,.5);
+  animation: btPlanetFloat 7s ease-in-out infinite;
+}
+
+#home .hero-orbit::after {
+  content: "";
+  position: absolute;
+  width: min(38vw, 390px);
+  aspect-ratio: 1;
+  border: 1px solid rgba(233,200,141,.5);
+  border-radius: 50%;
+  transform: rotate(-24deg) scaleY(.36);
+  box-shadow: 0 0 18px rgba(233,200,141,.12);
+}
+
+#home .hero-orbit .planet {
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  width: 78px;
+  height: 78px;
+  border: 1px solid rgba(255,255,255,.45);
+  border-radius: 50%;
+  background: rgba(35,23,46,.65);
+  font-size: 35px;
+  box-shadow: 0 0 35px rgba(233,200,141,.22);
+}
+
+#home .hero-orbit .orbit {
+  position: absolute;
+  border: 1px solid rgba(217,195,240,.2);
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+#home .hero-orbit .orbit-a {
+  width: 78%;
+  height: 48%;
+  transform: rotate(35deg);
+}
+
+#home .hero-orbit .orbit-b {
+  width: 95%;
+  height: 62%;
+  transform: rotate(-35deg);
+}
+
+#home .hero-orbit .float {
+  position: absolute;
+  z-index: 3;
+  filter: drop-shadow(0 0 10px rgba(233,200,141,.4));
+  animation: btSparkFloat 5s ease-in-out infinite;
+}
+
+#home .hero-orbit .f1 {
+  top: 12%;
+  left: 18%;
+}
+
+#home .hero-orbit .f2 {
+  right: 10%;
+  top: 28%;
+  animation-delay: -1.5s;
+}
+
+#home .hero-orbit .f3 {
+  bottom: 13%;
+  left: 20%;
+  animation-delay: -3s;
+}
+
+@keyframes btPlanetFloat {
+  0%, 100% { transform: translateY(0) rotate(-5deg); }
+  50% { transform: translateY(-12px) rotate(5deg); }
+}
+
+@keyframes btSparkFloat {
+  0%, 100% { transform: translateY(0) rotate(0); }
+  50% { transform: translateY(-10px) rotate(12deg); }
+}
+
+/* MOBILE HERO */
+@media (max-width: 700px) {
+  #home .hero {
+    grid-template-columns: 1fr;
+    gap: 0;
+    min-height: auto;
+    padding: 32px 23px 18px;
+    border-radius: 7px 25px 7px 25px;
+  }
+
+  #home .hero-copy {
+    order: 1;
+  }
+
+  #home .hero-orbit {
+    order: 2;
+    min-height: 205px;
+    margin-top: 4px;
+  }
+
+  #home .hero-orbit::before {
+    width: 165px;
+  }
+
+  #home .hero-orbit::after {
+    width: 225px;
+  }
+
+  #home .hero h1 {
+    font-size: clamp(39px, 11vw, 58px);
+  }
+
+  #home .hero-text {
+    font-size: 13px;
+  }
+
+  #home .hero::after {
+    font-size: 45px;
+    bottom: 5px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #home .hero-orbit *,
+  #home .hero-orbit::before {
+    animation: none !important;
+  }
 }
