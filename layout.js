@@ -373,9 +373,14 @@
   const route = location.hash.replace(/^#/, "");
   const viewId = routeMap[route];
 
-  if (!viewId) return;
+  if (viewId) {
+    activate(viewId);
+    return;
+  }
 
-  activate(viewId);
+  if (!document.querySelector(".app-view.active")) {
+    activate("home");
+  }
 }
 
   window.addEventListener("popstate", activateFromHash);
