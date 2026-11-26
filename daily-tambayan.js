@@ -98,7 +98,7 @@
     const hint = document.getElementById("dailyStreakHint");
 
     if (count) {
-      count.textContent = streak + (streak === 1 ? " day streak" : " day streak");
+      count.textContent = streak + (streak === 1 ? " day streak" : " days streak");
     }
 
     if (hint) {
@@ -194,13 +194,47 @@
       "Daily Tambayan mission completed!"
     );
 
-    if (!rewarded) return;
+         if (!rewarded) return;
 
-        completed = true;
+    completed = true;
+
+    // Continue yesterday's streak or start a new one.
+    streak = lastCompletedDate === addDays(date, -1)
+      ? streak + 1
+      : 1;
+
+    const milestones = {
+      3: 15,
+      7: 35,
+      14: 75,
+      30: 150
+    };
+
+    const claimedMilestones = Array.isArray(saved.claimedMilestones)
+      ? saved.claimedMilestones
+      : [];
+
+    const bonus = milestones[streak];
+
+    if (bonus && !claimedMilestones.includes(streak)) {
+      const bonusAwarded = window.tambayanApplyLoungeReward(
+        "stars",
+        bonus,
+        streak + "-day Daily Tambayan streak bonus!"
+      );
+
+      if (bonusAwarded) {
+        claimedMilestones.push(streak);
+      }
+    }
+
     saveProgress({
       date,
       completed: true,
-      mission: mission.id
+      mission: mission.id,
+      streak,
+      lastCompletedDate: date,
+      claimedMilestones
     });
 
     const panel = document.getElementById("dailyTambayanPanel");
@@ -212,6 +246,7 @@
     }
 
     updateDisplay(true);
+    updateStreakDisplay(streak, date);
   }, true);
 })();
     
