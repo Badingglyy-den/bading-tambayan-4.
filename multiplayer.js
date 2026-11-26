@@ -1301,26 +1301,10 @@ document.addEventListener("visibilitychange", () => {
       await refreshRoomList();
       status("You're connected! Create a room or join with a code. 💜");
 
-      // Restore the last room only if this account is still a member.
-      const savedRoom = getSavedActiveRoom();
-      if (savedRoom?.id) {
-        const room = joinedRooms.find(item => item.id === savedRoom.id);
-        if (room) {
-          try {
-            await enterRoom(room.id, room.room_code, room.room_name);
-          } catch (restoreError) {
-            console.warn("Could not restore previous room:", restoreError);
-            status("Connected! Choose a room from My Chatrooms to continue.");
-          }
-        } else {
-          saveActiveRoom(null);
-        }
-      }
-    } catch (error) {
-      console.error(error);
-      status(error.message || "Connection failed.", true);
-    }
-  }
+            // Always show the chatroom list when the page opens.
+      saveActiveRoom(null);
+      $("onlineRoom").style.display = "none";
+      renderRoomList();
 
   async function saveProfile(showNotice = true) {
     if (!client || !currentUser) return;
