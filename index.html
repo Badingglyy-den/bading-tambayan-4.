@@ -396,7 +396,51 @@
     <span class="hidden-entrance-hint">Something is waiting here ↓</span>
     <a class="hidden-entrance-link" href="#forgotten-attic">Look closer ↗</a>
   </div>                                                                                                                                                                                                                               </section>
-    
+    <section class="hidden-room" id="forgotten-attic">
+  <div class="hidden-room-heading">
+    <p class="eyebrow">HIDDEN ROOM 01 · SOMETHING WAS LEFT BEHIND</p>
+    <h2>The Forgotten Attic</h2>
+    <p>An old room. A few locked drawers. And things nobody remembers putting here.</p>
+  </div>
+
+  <div class="attic-discovery">
+    <div class="attic-object">🗝️</div>
+    <div>
+      <span class="eyebrow">FIRST THING YOU NOTICE</span>
+      <h3>A brass key</h3>
+      <p>It is warm to the touch. A tiny label is tied around it.</p>
+      <p class="attic-note">"Not every door wants to be opened."</p>
+    </div>
+  </div>
+
+  <div class="attic-drawers">
+    <button class="attic-drawer" type="button" data-attic="box">
+      <span>📦</span>
+      <strong>The dusty box</strong>
+      <small>Something is rattling inside.</small>
+      <b>Open ↗</b>
+    </button>
+
+    <button class="attic-drawer" type="button" data-attic="photo">
+      <span>🖼️</span>
+      <strong>Old photograph</strong>
+      <small>Someone has scratched out a face.</small>
+      <b>Inspect ↗</b>
+    </button>
+
+    <button class="attic-drawer" type="button" data-attic="letter">
+      <span>✉️</span>
+      <strong>Unsent letter</strong>
+      <small>The envelope has no name.</small>
+      <b>Read ↗</b>
+    </button>
+  </div>
+
+  <div class="attic-result" id="attic-result" aria-live="polite">
+    <p>THE ATTIC IS QUIET</p>
+    <span>Choose something to investigate. You never know what might be hiding inside.</span>
+  </div>
+    </section>
     <section class="section-heading" id="games">
       <div><p class="eyebrow">WORLD 01 · PLAY SOMETHING</p><h2>Chaos Arcade</h2></div><span class="section-note">Win stars. Lose dignity.</span>
     </section>
