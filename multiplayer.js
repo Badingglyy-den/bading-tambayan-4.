@@ -1566,10 +1566,13 @@ renderRoomList();
       .on("broadcast", { event: "typing" }, event => { handleTyping(event?.payload); })
       .subscribe(async state => {
         if (state === "SUBSCRIBED") {
-          await roomChannel.track({
+                    await roomChannel.track({
             user_id: currentUser.id, display_name: profile.display_name,
             avatar: profile.avatar, online_at: new Date().toISOString()
           });
+
+          await catchUpRoomMessages();
+
           status("You're in " + roomName + ". Share code " + code + " with friends!");
         } else if (state === "CHANNEL_ERROR") {
           status("Room connection error. Please rejoin.", true);
@@ -1599,6 +1602,43 @@ renderRoomList();
     }
     for (const message of messages) await appendMessage(message);
   }
+    async function catchUpRoomMessages() {
+    if (!currentRoom) return;
+
+    try {
+      const { data, error } = await client.from("messages")
+        .select("id,user_id,content,created_at")
+        .eq("room_id", currentRoom.id)
+        .order("created_at", { ascending: false })
+        .limit(100);
+
+      if (error) throw error;
+
+      const messages = (data || []).reverse();
+
+      for (const message of messages) {
+        if (message.user_id === currentUser.id) {
+          const { data: reads, error: readsError } = await client
+            .from("message_reads")
+            .select("message_id,user_id")
+            .eq("message_id", message.id);
+
+          if (readsError) {
+            console.warn("Could not refresh read receipts:", readsError);
+          }
+
+          if ((reads || []).some(read => read.user_id !== currentUser.id)) {
+            receiptMessageIds.add(String(message.id));
+            updateReceiptDisplay(message.id);
+          }
+        }
+
+        await appendMessage(message);
+      }
+    } catch (error) {
+      console.warn("Could not catch up on room messages:", error);
+    }
+                             }
 
   async function getMessageProfile(userId) {
     if (!userId) return { display_name: "Tambay", avatar: "💜" };
@@ -1709,8 +1749,15 @@ renderRoomList();
       <div>${safeText(message.content)}</div>
       ${mine ? `<span class="online-message-receipt">${receiptMessageIds.has(id) ? "✓✓ Seen" : "✓ Sent"}</span>` : ""}
     `;
-    $("onlineMessages").appendChild(item);
-    $("onlineMessages").scrollTop = $("onlineMessages").scrollHeight;
+        const messageList = $("onlineMessages");
+    const wasNearBottom =
+      messageList.scrollHeight - messageList.scrollTop - messageList.clientHeight < 80;
+
+    messageList.appendChild(item);
+
+    if (wasNearBottom) {
+      messageList.scrollTop = messageList.scrollHeight;
+    }
     if (!mine) await markMessageRead(message);
   }
   
