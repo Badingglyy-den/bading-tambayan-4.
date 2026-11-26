@@ -370,9 +370,13 @@
   });
 
   function activateFromHash() {
-    const route = location.hash.replace(/^#/, "");
-    activate(routeMap[route] || "home");
-  }
+  const route = location.hash.replace(/^#/, "");
+  const viewId = routeMap[route];
+
+  if (!viewId) return;
+
+  activate(viewId);
+}
 
   window.addEventListener("popstate", activateFromHash);
   window.addEventListener("hashchange", activateFromHash);
