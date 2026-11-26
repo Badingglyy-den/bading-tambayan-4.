@@ -422,5 +422,20 @@
 <script src="layout.js?v=20261126-6"></script>
   <script src="secret-hunt-extras.js"></script>
  <script src="npc-of-the-day.js?v=3"></script>
-</body>
-                                                       </html>
+
+<!-- Register notification service worker -->
+<script>
+  if ("serviceWorker" in navigator) {
+    window.addEventListener("load", () => {
+      navigator.serviceWorker.register("./sw.js")
+        .then(registration => {
+          console.log("Notification service worker ready:", registration.scope);
+        })
+        .catch(error => {
+          console.error("Service worker registration failed:", error);
+        });
+    });
+  }
+</script>
+
+</body>                                                       </html>
