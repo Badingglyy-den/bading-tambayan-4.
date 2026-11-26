@@ -1377,6 +1377,8 @@ document.addEventListener("visibilitychange", () => {
 await refreshUnreadCounts();
 syncBackgroundRoomListeners();
 renderRoomList();
+  }
+
   async function refreshUnreadCounts() {
     const { data, error } = await client.rpc("get_my_room_unread_counts");
 
