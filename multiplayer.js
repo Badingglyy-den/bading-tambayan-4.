@@ -112,6 +112,26 @@
       min-height: 22px; font-size: .86rem; color: #cbbaff;
       font-style: italic; margin: 3px 0 8px;
     }
+    .online-photo-button {
+  cursor: pointer;
+  padding: 8px;
+  font-size: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.online-chat-photo {
+  display: block;
+  max-width: 220px;
+  max-height: 220px;
+  width: auto;
+  height: auto;
+  object-fit: cover;
+  border-radius: 12px;
+  margin-top: 6px;
+  cursor: zoom-in;
+}
 
     /* ONLINE TAMBAYAN — VISUAL REFRESH */
 
@@ -1177,6 +1197,18 @@
 <div class="online-messages" id="onlineMessages" aria-live="polite"></div>
             <p class="online-typing" id="onlineTypingIndicator" aria-live="polite"></p>
             <form class="online-compose" id="onlineMessageForm">
+  <label for="onlinePhotoInput" class="online-photo-button" title="Send a photo">
+    📷
+  </label>
+  <input
+    id="onlinePhotoInput"
+    type="file"
+    accept="image/jpeg,image/png,image/webp,image/gif"
+    hidden
+  >
+  <input id="onlineMessageInput" maxlength="1000" placeholder="Say something...">
+  <button type="submit">Send</button>
+</form>
               <input id="onlineMessageInput" maxlength="1000" placeholder="Say something..." required>
               <button type="submit">Send</button>
             </form>
@@ -1847,7 +1879,39 @@ for (const messageElement of prependedMessages) {
       console.warn("Could not mark message as seen:", error);
     }
   }
-  
+  function showPhotoPreview(url) {
+  let preview = document.getElementById("onlinePhotoPreview");
+
+  if (!preview) {
+    preview = document.createElement("div");
+    preview.id = "onlinePhotoPreview";
+    preview.style.cssText = `
+      position:fixed;
+      inset:0;
+      background:rgba(0,0,0,.9);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      z-index:99999;
+      padding:20px;
+      cursor:pointer;
+    `;
+
+    preview.innerHTML = `
+      <img style="max-width:100%;max-height:90vh;object-fit:contain;border-radius:12px;">
+      <span style="position:absolute;top:20px;right:24px;color:white;font-size:32px;">×</span>
+    `;
+
+    preview.addEventListener("click", () => {
+      preview.style.display = "none";
+    });
+
+    document.body.appendChild(preview);
+  }
+
+  preview.querySelector("img").src = url;
+  preview.style.display = "flex";
+      }
   async function appendMessage(message, notify = false) {
     if (!message) return;
     const id = String(message.id);
@@ -1910,9 +1974,31 @@ for (const messageElement of prependedMessages) {
         <strong>${safeText(who || "Tambay")}</strong>
         · ${safeText(time)}
       </small>
-      <div>${safeText(message.content)}</div>
+      <div class="online-message-content">${safeText(message.content)}</div>
       ${mine ? `<span class="online-message-receipt">${receiptMessageIds.has(id) ? "✓✓ Seen" : "✓ Sent"}</span>` : ""}
     `;
+    const contentEl = item.querySelector(".online-message-content");
+
+if (String(message.content || "").startsWith("[[PHOTO]]")) {
+  const path = message.content.slice(9);
+
+  const { data, error } = await client.storage
+    .from("chat-photos")
+    .createSignedUrl(path, 3600);
+
+  contentEl.textContent = "";
+
+  if (!error && data?.signedUrl) {
+    const img = document.createElement("img");
+    img.src = data.signedUrl;
+    img.alt = "Chat photo";
+    img.className = "online-chat-photo";
+    img.onclick = () => showPhotoPreview(data.signedUrl);
+    contentEl.appendChild(img);
+  } else {
+    contentEl.textContent = "📷 Photo unavailable";
+  }
+}
         const messageList = $("onlineMessages");
     const wasNearBottom =
       messageList.scrollHeight - messageList.scrollTop - messageList.clientHeight < 80;
@@ -2018,6 +2104,37 @@ for (const messageElement of prependedMessages) {
       broadcastTyping(false);
     }, 1800);
   }
+  async function sendPhoto(file) {
+  if (!client || !currentRoom || !currentUser) return;
+
+  if (!file.type.startsWith("image/")) {
+    throw new Error("Please select an image.");
+  }
+
+  if (file.size > 5 * 1024 * 1024) {
+    throw new Error("Photo must be 5MB or smaller.");
+  }
+
+  const extension = file.type.split("/")[1].replace("jpeg", "jpg");
+  const path = `${currentRoom.id}/${currentUser.id}/${crypto.randomUUID()}.${extension}`;
+
+  const { error: uploadError } = await client.storage
+    .from("chat-photos")
+    .upload(path, file, {
+      contentType: file.type,
+      upsert: false
+    });
+
+  if (uploadError) throw uploadError;
+
+  const { error } = await client.from("messages").insert({
+    room_id: currentRoom.id,
+    user_id: currentUser.id,
+    content: `[[PHOTO]]${path}`
+  });
+
+  if (error) throw error;
+      }
 
   async function sendMessage(content) {
     if (!client || !currentRoom) return;
@@ -2134,7 +2251,19 @@ for (const messageElement of prependedMessages) {
     loadOlderMessages();
   }
 });
+$("onlinePhotoInput").addEventListener("change", async event => {
+  const file = event.target.files[0];
+  if (!file) return;
 
+  try {
+    await sendPhoto(file);
+    status("Photo sent!");
+  } catch (error) {
+    status(error.message || "Photo couldn't be sent.", true);
+  }
+
+  event.target.value = "";
+});
   $("onlineMessageInput").addEventListener("input", handleMessageTyping);
   $("onlineMessageForm").onsubmit = async event => {
     event.preventDefault();
