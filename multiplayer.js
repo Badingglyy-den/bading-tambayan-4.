@@ -729,6 +729,93 @@
     }
   `;
   document.head.appendChild(chatStyle);
+  
+  // ONLINE TAMBAYAN — MESSAGE COMPOSER POLISH
+  const composerStyle = document.createElement("style");
+  composerStyle.textContent = `
+    #onlineTambayan .online-compose {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: 14px;
+      padding: 7px;
+      border-radius: 17px;
+      background: rgba(169,139,255,.09);
+      border: 1px solid rgba(194,158,255,.2);
+    }
+
+    #onlineTambayan .online-compose input {
+      flex: 1;
+      min-width: 0;
+      min-height: 46px;
+      margin: 0;
+      padding: 11px 14px;
+      border: 0;
+      border-radius: 12px;
+      background: transparent;
+      box-shadow: none;
+    }
+
+    #onlineTambayan .online-compose input:focus {
+      border: 0;
+      box-shadow: none;
+      outline: 2px solid rgba(194,158,255,.3);
+    }
+
+    #onlineTambayan .online-compose button {
+      flex-shrink: 0;
+      min-width: 76px;
+      min-height: 44px;
+      margin: 0;
+      border-radius: 12px;
+      background: linear-gradient(135deg, #d2b5ff, #a17bea);
+      color: #211432;
+      font-weight: 800;
+    }
+
+    #onlineTambayan .online-reactions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 13px;
+    }
+
+    #onlineTambayan .online-reactions button {
+      min-width: 43px;
+      min-height: 40px;
+      margin: 0;
+      padding: 7px 11px;
+      border-radius: 13px;
+      background: rgba(169,139,255,.1);
+      border: 1px solid rgba(194,158,255,.2);
+      box-shadow: none;
+      font-size: 1.15rem;
+      transition: background .18s ease, transform .18s ease;
+    }
+
+    #onlineTambayan .online-reactions button:hover {
+      background: rgba(169,139,255,.25);
+      transform: translateY(-2px);
+    }
+
+    @media (max-width: 620px) {
+      #onlineTambayan .online-compose {
+        gap: 6px;
+        padding: 5px;
+      }
+
+      #onlineTambayan .online-compose button {
+        min-width: 62px;
+        padding: 9px;
+      }
+
+      #onlineTambayan .online-reactions {
+        gap: 6px;
+      }
+    }
+  `;
+  document.head.appendChild(composerStyle);
+        
 
 
   const section = document.createElement("section");
