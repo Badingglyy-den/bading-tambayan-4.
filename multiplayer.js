@@ -1310,6 +1310,11 @@ document.addEventListener("visibilitychange", () => {
       saveActiveRoom(null);
       $("onlineRoom").style.display = "none";
       renderRoomList();
+    } catch (error) {
+      console.error("Online Tambayan initialization failed:", error);
+      status(error.message || "Could not connect to Online Tambayan. Please refresh.", true);
+    }
+  }
 
   async function saveProfile(showNotice = true) {
     if (!client || !currentUser) return;
@@ -1350,14 +1355,9 @@ document.addEventListener("visibilitychange", () => {
 
     const ids = [...new Set((memberships || []).map(row => row.room_id).filter(Boolean))];
     if (!ids.length) {
-  roomUnreadCounts.clear();
-  joinedRooms = [];
-      if (!ids.length) {
-  joinedRooms = [];
-  syncBackgroundRoomListeners();
-  renderRoomList();
-  return;
-      }
+      roomUnreadCounts.clear();
+      joinedRooms = [];
+      syncBackgroundRoomListeners();
       renderRoomList();
       return;
     }
