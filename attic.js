@@ -6,6 +6,36 @@
   const drawers = document.querySelectorAll(".attic-drawer");
 
   if (!result || !drawers.length) return;
+    const photoImage = document.getElementById("attic-photo-image");
+  const photoDetail = document.getElementById("attic-photo-detail");
+  const photoCaption = document.getElementById("attic-photo-caption");
+
+  const dailyPhotoClues = [
+    { image: "🖼️", detail: "A shadow appears behind the person in the photograph." },
+    { image: "🌙", detail: "Someone has drawn a tiny moon in the upper corner." },
+    { image: "🗝️", detail: "A small brass key is visible beside the frame." },
+    { image: "👁️", detail: "The person's eyes seem to be looking somewhere else." },
+    { image: "✧", detail: "A mysterious symbol has appeared on the back." },
+    { image: "🕰️", detail: "The clock in the background shows a different time." },
+    { image: "📜", detail: "A folded note is tucked behind the photograph." }
+  ];
+
+  const today = new Date();
+  const dayNumber = Math.floor(Date.UTC(
+    today.getFullYear(),
+    today.getMonth(),
+    today.getDate()
+  ) / 86400000);
+
+  const today'sClue = dailyPhotoClues[
+    dayNumber % dailyPhotoClues.length
+  ];
+
+  if (photoImage && photoDetail && photoCaption) {
+    photoImage.textContent = today'sClue.image;
+    photoDetail.textContent = today'sClue.detail;
+    photoCaption.textContent = "The photograph has changed today. Come back tomorrow to discover what appears next.";
+      }
 
   const KEY = "tambayan_attic_discoveries_v1";
 
