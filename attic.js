@@ -34,6 +34,7 @@
   if (photoImage && photoDetail && photoCaption) {
 photoImage.textContent = todaysClue.image;
 photoDetail.textContent = todaysClue.detail;
+photoCaption.textContent = "The photograph has changed today. Come back tomorrow to discover what appears next.";
       }
 
   const KEY = "tambayan_attic_discoveries_v1";
