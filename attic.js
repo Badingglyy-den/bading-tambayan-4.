@@ -6,12 +6,14 @@
   const drawers = document.querySelectorAll(".attic-drawer");
 
   if (!result || !drawers.length) return;
-    const photoImage = document.getElementById("attic-photo-image");
+
+  const photoImage = document.getElementById("attic-photo-image");
   const photoDetail = document.getElementById("attic-photo-detail");
   const photoCaption = document.getElementById("attic-photo-caption");
   const photoSecret = document.getElementById("attic-photo-secret");
   const photoClueLink = document.querySelector(".attic-photo-clue-link");
 
+  // DAILY PHOTOGRAPH CLUES
   const dailyPhotoClues = [
     { image: "🖼️", detail: "A shadow appears behind the person in the photograph." },
     { image: "🌙", detail: "Someone has drawn a tiny moon in the upper corner." },
@@ -34,22 +36,26 @@
   ];
 
   if (photoImage && photoDetail && photoCaption) {
-photoImage.textContent = todaysClue.image;
-photoDetail.textContent = todaysClue.detail;
-photoCaption.textContent = "The photograph has changed today. Come back tomorrow to discover what appears next.";
-      }
-    if (photoImage && photoSecret) {
+    photoImage.textContent = todaysClue.image;
+    photoDetail.textContent = todaysClue.detail;
+    photoCaption.textContent =
+      "The photograph has changed today. Come back tomorrow to discover what appears next.";
+  }
+
+  // PHOTOGRAPH SECRET REVEAL
+  if (photoImage && photoSecret) {
     photoImage.style.cursor = "pointer";
     photoImage.setAttribute("role", "button");
     photoImage.setAttribute("tabindex", "0");
     photoImage.setAttribute("aria-label", "Reveal the hidden message");
 
     const revealPhotoSecret = () => {
-    photoSecret.hidden = !photoSecret.hidden;
+      photoSecret.hidden = !photoSecret.hidden;
 
       if (photoClueLink) {
         photoClueLink.hidden = photoSecret.hidden;
       }
+    };
 
     photoImage.addEventListener("click", revealPhotoSecret);
 
@@ -59,7 +65,9 @@ photoCaption.textContent = "The photograph has changed today. Come back tomorrow
         revealPhotoSecret();
       }
     });
-    }
+  }
+
+  // DRAWER DISCOVERIES AND REWARDS
   const KEY = "tambayan_attic_discoveries_v1";
 
   const stories = {
