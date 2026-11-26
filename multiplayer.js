@@ -1217,6 +1217,7 @@
   let isTyping = false;
   let joinedRooms = [];
   const backgroundRoomChannels = new Map();
+  const roomUnreadCounts = new Map();
 const backgroundNotificationCounts = new Map();
   let backgroundNotificationCount = 0;
 let notificationQueue = Promise.resolve();
@@ -1225,6 +1226,10 @@ document.addEventListener("visibilitychange", () => {
   if (!document.hidden) {
     backgroundNotificationCount = 0;
     backgroundNotificationCounts.clear();
+
+    if (client && currentUser) {
+      refreshUnreadCounts().then(() => renderRoomList());
+    }
   }
 });
 
@@ -1345,7 +1350,8 @@ document.addEventListener("visibilitychange", () => {
 
     const ids = [...new Set((memberships || []).map(row => row.room_id).filter(Boolean))];
     if (!ids.length) {
-      joinedRooms = [];
+  roomUnreadCounts.clear();
+  joinedRooms = [];
       if (!ids.length) {
   joinedRooms = [];
   syncBackgroundRoomListeners();
@@ -1368,8 +1374,25 @@ document.addEventListener("visibilitychange", () => {
     }
 
     joinedRooms = rooms || [];
+await refreshUnreadCounts();
 syncBackgroundRoomListeners();
 renderRoomList();
+  async function refreshUnreadCounts() {
+    const { data, error } = await client.rpc("get_my_room_unread_counts");
+
+    if (error) {
+      console.warn("Could not load unread counts:", error);
+      return;
+    }
+
+    roomUnreadCounts.clear();
+
+    const counts = data && typeof data === "object" ? data : {};
+
+    Object.entries(counts).forEach(([roomId, count]) => {
+      const unread = Number(count);
+      if (unread > 0) roomUnreadCounts.set(String(roomId), unread);
+    });
   }
 
   function renderRoomList() {
@@ -1385,7 +1408,13 @@ renderRoomList();
       <button type="button"
         class="online-room-card ${currentRoom?.id === room.id ? "active" : ""}"
         data-open-room="${safeText(room.id)}">
-        <span>💬 <strong>${safeText(room.room_name || "Tambayan Room")}</strong>
+                <span>💬 <strong>${safeText(room.room_name || "Tambayan Room")}</strong>
+          ${(roomUnreadCounts.get(String(room.id)) || 0) > 0
+            ? '<span style="display:inline-flex;align-items:center;justify-content:center;min-width:20px;height:20px;padding:0 6px;margin-left:6px;border-radius:20px;background:#e85d91;color:white;font-size:11px;font-weight:800;">' +
+              Math.min(roomUnreadCounts.get(String(room.id)), 99) +
+              (roomUnreadCounts.get(String(room.id)) > 99 ? "+" : "") +
+              '</span>'
+            : ""}
           <small>Code: ${safeText(room.room_code || "")}</small>
         </span>
         <span aria-hidden="true">›</span>
@@ -1432,9 +1461,16 @@ renderRoomList();
           filter: "room_id=eq." + room.id
         }, async payload => {
           const message = payload.new;
-          if (!message || message.user_id === currentUser.id) return;
-          if (!document.hidden && currentRoom?.id === roomId) return;
-          if (!("Notification" in window) || Notification.permission !== "granted") return;
+if (!message || message.user_id === currentUser.id) return;
+
+if (currentRoom?.id !== roomId) {
+  const unread = (roomUnreadCounts.get(roomId) || 0) + 1;
+  roomUnreadCounts.set(roomId, unread);
+  renderRoomList();
+}
+
+if (!document.hidden && currentRoom?.id === roomId) return;
+if (!("Notification" in window) || Notification.permission !== "granted") return;
 
           const count = (backgroundNotificationCounts.get(roomId) || 0) + 1;
           backgroundNotificationCounts.set(roomId, count);
@@ -1518,9 +1554,10 @@ renderRoomList();
   async function enterRoom(roomId, code, roomName) {
     await leaveRoom(false);
     currentRoom = { id: roomId, code, name: roomName };
-    saveActiveRoom(currentRoom);
-    $("onlineRoom").style.display = "block";
-    renderRoomList();
+saveActiveRoom(currentRoom);
+roomUnreadCounts.delete(String(roomId));
+$("onlineRoom").style.display = "block";
+renderRoomList();
     $("onlineRoomTitle").textContent = roomName;
     $("onlineRoomCode").textContent = code;
     $("onlineTypingIndicator").textContent = "";
