@@ -1464,11 +1464,11 @@
       config: { presence: { key: currentUser.id }, broadcast: { self: false, ack: true } }
     });
 
-    roomChannel
+        roomChannel
       .on("postgres_changes", {
         event: "INSERT", schema: "public", table: "messages",
         filter: "room_id=eq." + roomId
-      }, async payload => { await appendMessage(payload.new); })
+      }, async payload => { await appendMessage(payload.new, true); })
       .on("postgres_changes", {
         event: "INSERT", schema: "public", table: "message_reads"
       }, payload => { handleReadReceipt(payload.new); })
@@ -1553,8 +1553,7 @@
       console.warn("Could not mark message as seen:", error);
     }
   }
-
-  async function appendMessage(message) {
+  async function appendMessage(message, notify = false) {
     if (!message) return;
     const id = String(message.id);
     if (messageIds.has(id)) return;
@@ -1563,6 +1562,26 @@
     const mine = message.user_id === currentUser.id;
     const sender = await getMessageProfile(message.user_id);
     const who = mine ? profile.display_name : sender.display_name;
+
+    // Notify only for new messages received while the site is in the background
+    if (
+      notify &&
+      !mine &&
+      document.hidden &&
+      "Notification" in window &&
+      Notification.permission === "granted"
+    ) {
+      const alert = new Notification(currentRoom?.name || "Online Tambayan", {
+        body: `${who}: ${message.content}`,
+        tag: "tambayan-" + id
+      });
+
+      alert.onclick = () => {
+        window.focus();
+        alert.close();
+      };
+    }
+
     const avatar = mine ? profile.avatar : sender.avatar;
     const item = document.createElement("div");
     item.className = "online-message" + (mine ? " is-mine" : " is-other");
