@@ -45,8 +45,11 @@ photoCaption.textContent = "The photograph has changed today. Come back tomorrow
     photoImage.setAttribute("aria-label", "Reveal the hidden message");
 
     const revealPhotoSecret = () => {
-      photoSecret.hidden = !photoSecret.hidden;
-    };
+    photoSecret.hidden = !photoSecret.hidden;
+
+      if (photoClueLink) {
+        photoClueLink.hidden = photoSecret.hidden;
+      }
 
     photoImage.addEventListener("click", revealPhotoSecret);
 
