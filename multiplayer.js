@@ -997,7 +997,88 @@
     }
   `;
   document.head.appendChild(roomPolishStyle);
-   
+  
+  // ONLINE TAMBAYAN — FINAL RESPONSIVE POLISH
+  const responsiveStyle = document.createElement("style");
+  responsiveStyle.textContent = `
+    #onlineTambayan,
+    #onlineTambayan * {
+      box-sizing: border-box;
+    }
+
+    #onlineTambayan .online-columns,
+    #onlineTambayan .online-box {
+      min-width: 0;
+    }
+
+    /* Tablet layout */
+    @media (max-width: 820px) {
+      #onlineTambayan .online-columns {
+        grid-template-columns: 1fr;
+      }
+
+      #onlineTambayan .online-members {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      }
+    }
+
+    /* Phone layout */
+    @media (max-width: 620px) {
+      #onlineTambayan .online-messages {
+        height: 300px;
+        padding: 10px;
+      }
+
+      #onlineTambayan .online-compose {
+        width: 100%;
+        gap: 7px;
+      }
+
+      #onlineTambayan .online-compose input {
+        font-size: 16px;
+        min-width: 0;
+      }
+
+      #onlineTambayan .online-compose button {
+        min-width: 65px;
+        padding-left: 10px;
+        padding-right: 10px;
+      }
+
+      #onlineTambayan .online-members {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      #onlineTambayan .online-member {
+        min-width: 0;
+        overflow-wrap: anywhere;
+      }
+
+      #onlineTambayan .online-reactions button {
+        min-width: 42px;
+      }
+    }
+
+    /* Very narrow phones */
+    @media (max-width: 380px) {
+      #onlineTambayan .online-members {
+        grid-template-columns: 1fr;
+      }
+
+      #onlineTambayan .online-compose {
+        gap: 5px;
+        padding: 6px;
+      }
+
+      #onlineTambayan .online-compose button {
+        min-width: 58px;
+        font-size: .82rem;
+      }
+    }
+  `;
+  document.head.appendChild(responsiveStyle);
+  
 
 
   const section = document.createElement("section");
