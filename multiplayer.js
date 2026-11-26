@@ -660,8 +660,76 @@
     }
   `;
   document.head.appendChild(sectionStyle);
-    
   
+  // ONLINE TAMBAYAN — CHAT BUBBLE POLISH
+  const chatStyle = document.createElement("style");
+  chatStyle.textContent = `
+    #onlineTambayan .online-messages {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 13px;
+      scroll-behavior: smooth;
+    }
+
+    #onlineTambayan .online-message {
+      width: fit-content;
+      max-width: 82%;
+      padding: 12px 15px;
+      border-radius: 17px 17px 17px 5px;
+      background: rgba(169,139,255,.13);
+      border: 1px solid rgba(194,158,255,.2);
+      box-shadow: 0 3px 12px rgba(0,0,0,.12);
+    }
+
+    #onlineTambayan .online-message.is-mine {
+      align-self: flex-end;
+      border-radius: 17px 17px 5px 17px;
+      background: linear-gradient(135deg, #7655ae, #594080);
+      border-color: rgba(220,195,255,.28);
+    }
+
+    #onlineTambayan .online-message.is-other {
+      align-self: flex-start;
+    }
+
+    #onlineTambayan .online-message small {
+      font-size: .78rem;
+      opacity: .85;
+    }
+
+    #onlineTambayan .online-message-receipt {
+      font-size: .72rem;
+      opacity: .85;
+    }
+
+    #onlineTambayan .online-members {
+      gap: 10px;
+    }
+
+    #onlineTambayan .online-member {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      padding: 11px 13px;
+      border-radius: 13px;
+      background: rgba(169,139,255,.1);
+      border: 1px solid rgba(194,158,255,.16);
+    }
+
+    #onlineTambayan .online-member small {
+      margin-left: auto;
+      opacity: .7;
+    }
+
+    @media (max-width: 620px) {
+      #onlineTambayan .online-message {
+        max-width: 91%;
+      }
+    }
+  `;
+  document.head.appendChild(chatStyle);
+
 
   const section = document.createElement("section");
   section.id = "onlineTambayan";
@@ -1108,7 +1176,7 @@
     const who = mine ? profile.display_name : sender.display_name;
     const avatar = mine ? profile.avatar : sender.avatar;
     const item = document.createElement("div");
-    item.className = "online-message";
+    item.className = "online-message" + (mine ? " is-mine" : " is-other");
     item.dataset.messageId = id;
 
     const time = message.created_at ? new Date(message.created_at).toLocaleTimeString([], {
