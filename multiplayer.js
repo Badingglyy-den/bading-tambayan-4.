@@ -1739,6 +1739,48 @@
     try { await saveProfile(true); }
     catch (error) { status(error.message, true); }
   };
+    // ONLINE TAMBAYAN — BROWSER NOTIFICATION PERMISSION
+  function updateNotificationControl() {
+    const button = $("onlineNotificationButton");
+    const label = $("onlineNotificationStatus");
+
+    if (!button || !label) return;
+
+    if (!("Notification" in window)) {
+      button.disabled = true;
+      button.textContent = "Notifications unavailable";
+      label.textContent = "This browser doesn't support notifications.";
+    } else if (Notification.permission === "granted") {
+      button.textContent = "🔔 Notifications enabled";
+      button.disabled = true;
+      label.textContent = "You'll get alerts when the site is in the background.";
+    } else if (Notification.permission === "denied") {
+      button.textContent = "🔕 Notifications blocked";
+      button.disabled = true;
+      label.textContent = "Allow notifications in your browser's site settings.";
+    } else {
+      button.textContent = "🔔 Enable notifications";
+      button.disabled = false;
+      label.textContent = "Get alerts when new messages arrive.";
+    }
+  }
+
+  $("onlineNotificationButton").onclick = async () => {
+    if (!("Notification" in window)) {
+      updateNotificationControl();
+      return;
+    }
+
+    try {
+      await Notification.requestPermission();
+    } catch (error) {
+      console.warn("Notification permission request failed:", error);
+    }
+
+    updateNotificationControl();
+  };
+
+  updateNotificationControl();
   $("onlineCreateRoom").onclick = createRoom;
   $("onlineJoinRoom").onclick = joinRoom;
   $("onlineLeaveRoom").onclick = () => leaveRoom();
