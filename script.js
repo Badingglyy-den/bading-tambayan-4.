@@ -261,6 +261,10 @@ function render() {
   $("starCount").textContent = state.stars;
   $("shopStars").textContent = state.stars;
   $("welcomeName").textContent = state.profile.name || "Sis";
+  const headerAvatar = $("headerAvatar");
+if (headerAvatar) {
+  headerAvatar.textContent = state.profile.avatar || "💜";
+}
 
   $("levelValue").textContent = level();
 
