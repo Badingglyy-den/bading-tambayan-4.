@@ -2455,35 +2455,29 @@ $("gateSignup").onclick = () => {
   try {
     message.textContent = "Creating your account...";
 
-    if (currentUser?.is_anonymous) {
-      const { error } = await client.auth.updateUser({
-        email,
-        password
-      });
+    // A signup must create a separate Supabase user.
+    // Sign out any current guest/account first so its identity and progress
+    // are never converted into, or carried into, the new email account.
+    const { error: signOutError } = await client.auth.signOut();
+    if (signOutError) throw signOutError;
+    currentUser = null;
 
-      if (error) throw error;
-
-      message.textContent =
-        "Verification email sent! Confirm your email to secure your account. Your chatroom identity is being preserved. 💜";
-
-    } else {
-      const { data, error } = await client.auth.signUp({
-        email,
-        password,
-        options: {
-          emailRedirectTo: "https://badingglyy-den.github.io/bading-tambayan-4./"
-        }
-      });
-
-      if (error) throw error;
-
-      if (data.session) {
-        message.textContent = "Account created! Welcome to Bading Tambayan! 💜";
-        window.location.reload();
-      } else {
-        message.textContent =
-          "Verification email sent! Please confirm your email before logging in. 💜";
+    const { data, error } = await client.auth.signUp({
+      email,
+      password,
+      options: {
+        emailRedirectTo: "https://badingglyy-den.github.io/bading-tambayan-4./"
       }
+    });
+
+    if (error) throw error;
+
+    if (data.session) {
+      message.textContent = "Account created! Welcome to Bading Tambayan! 💜";
+      window.location.reload();
+    } else {
+      message.textContent =
+        "Verification email sent! Please confirm your email before logging in. 💜";
     }
   } catch (error) {
     message.textContent = error.message;
