@@ -3220,3 +3220,75 @@ html.auth-locked #authGate {
     font-size:13px;
   }
 }
+
+
+/* LIGHT ATMOSPHERES — soft palettes with readable contrast */
+body[data-theme="cloud"]{
+  --bg:#f4f0f8;--panel:#fffdfd;--panel2:#eee7f5;--text:#332b3d;
+  --muted:#756b7d;--accent:#8566a8;--accent2:#a58ac2;--line:#55436b24;
+  --shadow:0 12px 35px #47365714;
+  background:radial-gradient(ellipse at 12% 0%,#e4d7f266,transparent 38%),radial-gradient(ellipse at 95% 35%,#f4ddeb88,transparent 34%),var(--bg);
+}
+body[data-theme="peach"]{
+  --bg:#fff3e9;--panel:#fffaf5;--panel2:#f8e5d8;--text:#49342d;
+  --muted:#856e63;--accent:#b96f56;--accent2:#d99578;--line:#79503b26;
+  --shadow:0 12px 35px #79503b14;
+  background:radial-gradient(ellipse at 12% 0%,#f8d9c766,transparent 38%),radial-gradient(ellipse at 95% 35%,#f6dce088,transparent 34%),var(--bg);
+}
+body[data-theme="matcha"]{
+  --bg:#f0f4e9;--panel:#fbfdf6;--panel2:#e5edd9;--text:#303d30;
+  --muted:#6e7b68;--accent:#66845d;--accent2:#91a77d;--line:#435d3c29;
+  --shadow:0 12px 35px #34452d14;
+  background:radial-gradient(ellipse at 12% 0%,#dce9cc88,transparent 38%),radial-gradient(ellipse at 95% 35%,#e9efd988,transparent 34%),var(--bg);
+}
+body[data-theme="cloud"] .panel,
+body[data-theme="peach"] .panel,
+body[data-theme="matcha"] .panel{
+  background:var(--panel);border-color:var(--line);box-shadow:var(--shadow);
+}
+body[data-theme="cloud"] .world-card,
+body[data-theme="peach"] .world-card,
+body[data-theme="matcha"] .world-card,
+body[data-theme="cloud"] .game-card,
+body[data-theme="peach"] .game-card,
+body[data-theme="matcha"] .game-card,
+body[data-theme="cloud"] .tool-card,
+body[data-theme="peach"] .tool-card,
+body[data-theme="matcha"] .tool-card{
+  background:var(--panel2);border-color:var(--line);color:var(--text);
+}
+body[data-theme="cloud"] .soft-btn,
+body[data-theme="peach"] .soft-btn,
+body[data-theme="matcha"] .soft-btn,
+body[data-theme="cloud"] .theme-choice,
+body[data-theme="peach"] .theme-choice,
+body[data-theme="matcha"] .theme-choice{
+  background:var(--panel2);border-color:var(--line);color:var(--text);
+}
+body[data-theme="cloud"] .topbar,
+body[data-theme="peach"] .topbar,
+body[data-theme="matcha"] .topbar{
+  background:color-mix(in srgb,var(--panel) 92%,transparent);
+  border-color:var(--line);
+}
+body[data-theme="cloud"] .modal input,
+body[data-theme="peach"] .modal input,
+body[data-theme="matcha"] .modal input,
+body[data-theme="cloud"] .modal select,
+body[data-theme="peach"] .modal select,
+body[data-theme="matcha"] .modal select,
+body[data-theme="cloud"] textarea,
+body[data-theme="peach"] textarea,
+body[data-theme="matcha"] textarea{
+  background:var(--panel);color:var(--text);border-color:var(--line);
+}
+body[data-theme="cloud"] .primary-btn,
+body[data-theme="peach"] .primary-btn,
+body[data-theme="matcha"] .primary-btn{
+  color:#fff;
+}
+@media(max-width:700px){
+  .theme-panel>div{align-items:flex-start;flex-direction:column}
+  .theme-options{width:100%}
+  .theme-choice{flex:1 1 auto}
+}
