@@ -1272,6 +1272,15 @@ newEmojiPuzzle();
 newHigherNumber();
 newColorSequence();
 
+const breathSteps = ["Breathe in gently for 4 counts.", "Hold softly for 4 counts. No strain.", "Breathe out slowly for 6 counts.", "Rest for a moment. You can begin again whenever you want."];
+let breathIndex = 0;
+$("breathNext").onclick = () => { breathIndex = (breathIndex + 1) % breathSteps.length; $("breathStep").textContent = breathSteps[breathIndex]; $("breathProgress").textContent = "STEP " + (breathIndex + 1) + " OF 4"; $("breathNext").textContent = breathIndex === 3 ? "Start another round" : "Next breathing step"; };
+const groundingSteps = ["Notice 5 things you can see around you.", "Notice 4 things you can physically feel.", "Notice 3 things you can hear.", "Notice 2 things you can smell.", "Notice 1 thing you can taste, or one slow breath."];
+let groundingIndex = 0;
+$("groundingNext").onclick = () => { groundingIndex = (groundingIndex + 1) % groundingSteps.length; $("groundingList").textContent = groundingSteps[groundingIndex]; $("groundingNext").textContent = groundingIndex === 4 ? "Begin again" : "Next grounding step"; };
+$("kindNoteBtn").onclick = () => { $("kindNoteText").textContent = random(["You are allowed to take up space, even on days you feel small.", "You do not have to solve tomorrow tonight.", "Being tired does not mean you are failing.", "You can be a work in progress and still be worthy of love.", "One difficult day cannot define your whole story.", "You deserve kindness even when you have not been productive.", "It is okay if all you did today was make it through."]); };
+$("comfortJournal").oninput = () => { $("comfortCharCount").textContent = $("comfortJournal").value.length + " / 1000"; };
+$("comfortClear").onclick = () => { $("comfortJournal").value = ""; $("comfortCharCount").textContent = "0 / 1000"; };
 $("comfortBtn").onclick = () => {
   $("comfortText").textContent = random([
     "You don't have to earn rest.",
