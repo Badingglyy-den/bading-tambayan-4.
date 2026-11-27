@@ -4163,6 +4163,41 @@
   font-weight: 800;
   box-shadow: 0 0 14px rgba(189, 145, 255, .3);
 }
+/* MYSTERY LIBRARY — BADING COURT */
+
+#view-mystery .tool-card:nth-child(2) {
+  border-color: rgba(190, 151, 91, .55);
+  background:
+    radial-gradient(
+      circle at 50% 0%,
+      rgba(139, 78, 57, .2),
+      transparent 65%
+    ),
+    linear-gradient(145deg, #35251f, #211815);
+  box-shadow: 0 8px 25px rgba(20, 10, 5, .35);
+}
+
+#view-mystery .tool-card:nth-child(2) > span {
+  border-color: rgba(211, 177, 119, .65);
+  background: rgba(153, 111, 66, .16);
+  box-shadow: 0 0 18px rgba(190, 151, 91, .15);
+}
+
+#view-mystery .tool-card:nth-child(2) h3 {
+  color: #ead2a6;
+}
+
+#view-mystery .tool-card:nth-child(2) p {
+  color: #c9b69e;
+}
+
+#view-mystery .tool-card:nth-child(2) button {
+  border: 1px solid #d5b77f;
+  background: linear-gradient(120deg, #d9bd88, #b98c61);
+  color: #2c1c15;
+  font-weight: 800;
+  box-shadow: 0 0 14px rgba(190, 151, 91, .2);
+}
 
 
 
