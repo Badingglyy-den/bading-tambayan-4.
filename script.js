@@ -517,9 +517,6 @@ function random(a) {
 $("profileOpen").onclick = () =>
   $("profileDialog").showModal();
 
-$("settingsOpen").onclick = () =>
-  $("settingsDialog").showModal();
-
 $("backupOpen").onclick = () =>
   $("settingsDialog").showModal();
 
