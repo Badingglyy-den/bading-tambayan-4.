@@ -551,11 +551,14 @@ $("profileOpen").addEventListener("click", () => {
   updateAvatarSelection(state.profile.avatar);
 });
 
-document.querySelectorAll(".avatar-choice").forEach(button => {
-  button.addEventListener("click", () => {
-    updateAvatarSelection(button.dataset.avatar);
-  });
-});
+document.addEventListener("click", event => {
+  const button = event.target.closest(".avatar-choice");
+
+  if (!button) return;
+
+  event.preventDefault();
+  updateAvatarSelection(button.dataset.avatar);
+}, true);
 
 
 $("dailyMessage").onclick = () => {
