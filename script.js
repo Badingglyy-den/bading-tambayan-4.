@@ -413,17 +413,17 @@ function render() {
   const profileTitle = $("equippedProfileTitle");
   if (profileTitle) profileTitle.textContent = titleItem ? titleItem.name : "";
   const headerAvatar = $("headerAvatar");
-  if (headerAvatar) {
-    headerAvatar.dataset.frame = equipped.frame || "";
-    headerAvatar.dataset.aura = equipped.aura || "";
-    headerAvatar.dataset.decoration = equipped.avatar || "";
-  }
   const preview = $("avatarPreview");
-  if (preview) {
-    preview.dataset.frame = equipped.frame || "";
-    preview.dataset.aura = equipped.aura || "";
-    preview.dataset.decoration = equipped.avatar || "";
-  }
+  [headerAvatar, preview].forEach(el => {
+    if (!el) return;
+    el.dataset.frame = equipped.frame || "";
+    el.dataset.aura = equipped.aura || "";
+    el.dataset.decoration = equipped.avatar || "";
+    renderAvatarDisplay(el);
+  });
+  const badgeItem = shopItems.find(item => item.id === equipped.badge);
+  const badgeLabel = $("equippedProfileBadge");
+  if (badgeLabel) badgeLabel.textContent = badgeItem ? badgeItem.icon + " " + badgeItem.name : "";
   const showcase = $("equippedShowcase");
   if (showcase) {
     const slots = ["title","avatar","frame","aura","badge"];
@@ -433,10 +433,6 @@ function render() {
     }).filter(Boolean).join("") || '<span class="empty-state">No treasures equipped yet.</span>';
   }
   renderEquipmentOptions();
-  if (headerAvatar) {
-    headerAvatar.textContent = state.profile.avatar || "💜";
-  }
-
   $("levelValue").textContent = level();
 
   $("titleValue").textContent =
@@ -621,6 +617,20 @@ function renderShop() {
   }
 }
 
+function renderAvatarDisplay(element) {
+  if (!element) return;
+  const photo = state.profile?.photo || "";
+  if (photo && /^data:image\\/(jpeg|png|webp);base64,/.test(photo)) {
+    const img = document.createElement("img");
+    img.src = photo;
+    img.alt = "Profile photo";
+    img.className = "profile-photo-image";
+    element.replaceChildren(img);
+  } else {
+    element.textContent = state.profile?.avatar || "💜";
+  }
+}
+
 function renderEquipmentOptions() {
   const slots = {
     title: ["Titles", "Choose a title"],
@@ -710,18 +720,61 @@ $("backupOpen").onclick = () =>
 
 $("saveProfile").onclick = () => {
   state.profile.name = $("profileName").value.trim() || "Sis";
-  state.profile.avatar = $("profileAvatar").value;
-
+  state.profile.avatar = $("profileAvatar").value || state.profile.avatar || "💜";
   save();
-
   $("profileDialog").close();
   toast("Profile updated! 💜");
+};
+
+$("profilePhotoInput").addEventListener("change", event => {
+  const file = event.target.files?.[0];
+  if (!file) return;
+  if (!file.type.startsWith("image/")) {
+    toast("Please choose an image file.");
+    event.target.value = "";
+    return;
+  }
+  if (file.size > 8 * 1024 * 1024) {
+    toast("Please choose a photo under 8 MB.");
+    event.target.value = "";
+    return;
+  }
+  const reader = new FileReader();
+  reader.onload = () => {
+    const source = new Image();
+    source.onload = () => {
+      const max = 420;
+      const scale = Math.min(1, max / Math.max(source.width, source.height));
+      const canvas = document.createElement("canvas");
+      canvas.width = Math.max(1, Math.round(source.width * scale));
+      canvas.height = Math.max(1, Math.round(source.height * scale));
+      const ctx = canvas.getContext("2d");
+      ctx.drawImage(source, 0, 0, canvas.width, canvas.height);
+      state.profile.photo = canvas.toDataURL("image/jpeg", 0.76);
+      renderAvatarDisplay($("avatarPreview"));
+      const status = $("profilePhotoStatus");
+      if (status) status.textContent = "Photo ready! Tap Save profile to keep it.";
+      toast("Profile photo ready! Save your profile to keep it. 📸");
+    };
+    source.onerror = () => toast("This photo format could not be opened. Try JPG or PNG.");
+    source.src = reader.result;
+  };
+  reader.onerror = () => toast("Could not read that photo. Please try again.");
+  reader.readAsDataURL(file);
+});
+
+$("removeProfilePhoto").onclick = () => {
+  state.profile.photo = "";
+  renderAvatarDisplay($("avatarPreview"));
+  $("profilePhotoStatus").textContent = "Photo removed. Your selected emoji will be used.";
+  $("profilePhotoInput").value = "";
 };
 
 
 function updateAvatarSelection(avatar) {
   $("profileAvatar").value = avatar;
-  $("avatarPreview").textContent = avatar;
+  state.profile.avatar = avatar;
+  renderAvatarDisplay($("avatarPreview"));
 
   document.querySelectorAll(".avatar-choice").forEach(button => {
     button.classList.toggle(
@@ -734,6 +787,8 @@ function updateAvatarSelection(avatar) {
 $("profileOpen").addEventListener("click", () => {
   $("profileName").value = state.profile.name;
   updateAvatarSelection(state.profile.avatar);
+  const photoStatus = $("profilePhotoStatus");
+  if (photoStatus) photoStatus.textContent = state.profile.photo ? "A profile photo is saved to your account." : "No profile photo uploaded yet.";
 });
 
 document.addEventListener("click", event => {
@@ -1498,6 +1553,13 @@ $("equipmentOptions").onchange = e => {
   const slot = select.dataset.equipSlot;
   const itemId = select.value;
   if (itemId && !state.ownedItems.includes(itemId)) return;
+  const item = itemId ? shopItems.find(entry => entry.id === itemId) : null;
+  const expectedCategory = { title:"Titles", avatar:"Avatars", frame:"Frames", aura:"Auras", badge:"Badges" }[slot];
+  if (itemId && (!item || item.category !== expectedCategory)) {
+    toast("That collectible cannot be equipped in this slot.");
+    renderEquipmentOptions();
+    return;
+  }
   state.equippedItems = state.equippedItems || {};
   if (itemId) state.equippedItems[slot] = itemId;
   else delete state.equippedItems[slot];
