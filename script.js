@@ -32,6 +32,7 @@ const defaultState = () => ({
   reducedMotion: false,
   theme: "violet",
   ownedItems: [],
+  completedCollections: [],
   hangoutPosts: [],
   kindPosts: [],
   lastHangoutQuestion: ""
@@ -94,6 +95,7 @@ function normalize(x) {
     visited: Array.isArray(x.visited) ? x.visited : [],
     completed: Array.isArray(x.completed) ? x.completed : [],
     ownedItems: Array.isArray(x.ownedItems) ? x.ownedItems : [],
+    completedCollections: Array.isArray(x.completedCollections) ? x.completedCollections : [],
     hangoutPosts: Array.isArray(x.hangoutPosts) ? x.hangoutPosts : [],
     kindPosts: Array.isArray(x.kindPosts) ? x.kindPosts : []
   };
@@ -518,92 +520,80 @@ function renderHangout() {
 }
 
 const shopItems = [
-  {
-    id: "title_star",
-    icon: "🌟",
-    name: "Star Child title",
-    desc: "A tiny celestial flex.",
-    cost: 25
-  },
-  {
-    id: "title_delulu",
-    icon: "🤡",
-    name: "Delulu Royalty title",
-    desc: "Delusion with distinction.",
-    cost: 30
-  },
-  {
-    id: "badge_frog",
-    icon: "🐸",
-    name: "Frog Bestie badge",
-    desc: "Official frog confidante.",
-    cost: 35
-  },
-  {
-    id: "badge_chaos",
-    icon: "🪩",
-    name: "Chaos Icon badge",
-    desc: "You are the plot twist.",
-    cost: 40
-  },
-  {
-    id: "avatar_crown",
-    icon: "👑",
-    name: "Golden crown",
-    desc: "A royal profile collectible.",
-    cost: 50
-  },
-  {
-    id: "title_soft",
-    icon: "🧸",
-    name: "Softie Supreme title",
-    desc: "Gentle but iconic.",
-    cost: 30
-  }
+  { id:"title_star", icon:"🌟", name:"Star Child Title", desc:"A tiny celestial flex beside your name.", cost:60, rarity:"Common", category:"Titles" },
+  { id:"title_delulu", icon:"🤡", name:"Delulu Royalty Title", desc:"For the proudly unserious and beautifully delusional.", cost:60, rarity:"Common", category:"Titles" },
+  { id:"title_soft", icon:"🧸", name:"Softie Supreme Title", desc:"Gentle heart, legendary presence.", cost:60, rarity:"Common", category:"Titles" },
+  { id:"badge_frog", icon:"🐸", name:"Frog Bestie Badge", desc:"Official confidante of the pond.", cost:100, rarity:"Rare", category:"Badges" },
+  { id:"badge_chaos", icon:"🪩", name:"Chaos Icon Badge", desc:"Proof that you are the plot twist.", cost:120, rarity:"Rare", category:"Badges" },
+  { id:"charm_lucky", icon:"🍀", name:"Lucky Little Charm", desc:"A pocket-sized reminder that luck finds you.", cost:90, rarity:"Rare", category:"Charms" },
+  { id:"key_mystery", icon:"🗝️", name:"Mystery Library Key", desc:"A keepsake from the shelves that whisper.", cost:120, rarity:"Rare", category:"Charms" },
+  { id:"avatar_aurora", icon:"🦋", name:"Aurora Butterfly", desc:"A dreamy profile collectible in shifting colors.", cost:130, rarity:"Rare", category:"Avatars" },
+  { id:"avatar_moonhalo", icon:"🌙", name:"Moon Halo", desc:"A moonlit halo for your profile showcase.", cost:190, rarity:"Epic", category:"Avatars" },
+  { id:"frame_cloud", icon:"☁️", name:"Cloud Nine Frame", desc:"A soft, floating frame for your profile.", cost:220, rarity:"Epic", category:"Frames" },
+  { id:"aura_nebula", icon:"🌌", name:"Nebula Aura", desc:"A cosmic glow for your collection showcase.", cost:260, rarity:"Epic", category:"Auras" },
+  { id:"avatar_crown", icon:"👑", name:"Golden Crown", desc:"A royal profile collectible fit for a legend.", cost:400, rarity:"Legendary", category:"Avatars" },
+  { id:"wings_phoenix", icon:"🔥", name:"Phoenix Wings", desc:"A once-in-a-universe treasure. Rise iconic.", cost:480, rarity:"Legendary", category:"Auras" },
+  { id:"frame_galaxy", icon:"💫", name:"Galaxy Frame", desc:"A whole little universe around your profile.", cost:500, rarity:"Legendary", category:"Frames" }
 ];
 
-function renderShop() {
-  $("shopGrid").innerHTML = shopItems.map(i => {
-    let owned = state.ownedItems.includes(i.id);
+const shopSets = [
+  { id:"celestial", name:"Celestial Dreamer Set", icon:"🌙", items:["title_star","avatar_moonhalo","frame_galaxy"], reward:"A complete moon-to-stars collection." },
+  { id:"chaos", name:"Certified Chaos Set", icon:"🪩", items:["title_delulu","badge_frog","badge_chaos"], reward:"A collection for the wonderfully chaotic." },
+  { id:"soft", name:"Soft Hours Set", icon:"🧸", items:["title_soft","avatar_aurora","frame_cloud"], reward:"A little collection of gentle things." }
+];
 
+let shopFilter = "All";
+
+function renderShop() {
+  const visibleItems = shopItems.filter(i => shopFilter === "All" || i.rarity === shopFilter);
+  $("shopGrid").innerHTML = visibleItems.map(i => {
+    const owned = state.ownedItems.includes(i.id);
     return `
-      <article class="shop-item">
-        <span>${i.icon}</span>
+      <article class="shop-item shop-item-${i.rarity.toLowerCase()}">
+        <div class="shop-item-top"><span>${i.icon}</span><small class="shop-rarity">${i.rarity}</small></div>
         <h4>${i.name}</h4>
         <p>${i.desc}</p>
-
-        <button
-          class="small-btn"
-          data-buy="${i.id}"
-          ${owned || state.stars < i.cost ? "disabled" : ""}
-        >
-          ${owned ? "Owned" : `⭐ ${i.cost} · Unlock`}
+        <small class="shop-category">${i.category}</small>
+        <button class="small-btn" data-buy="${i.id}" ${owned || state.stars < i.cost ? "disabled" : ""}>
+          ${owned ? "✓ Collected" : `⭐ ${i.cost} · Unlock`}
         </button>
       </article>
     `;
   }).join("");
 
-  // Show both shop purchases and Lounge-earned collectibles.
-  // Lounge collectibles remain separate from the purchasable shop.
+  document.querySelectorAll("[data-shop-filter]").forEach(button => {
+    button.classList.toggle("active", button.dataset.shopFilter === shopFilter);
+  });
+
   $("collectionList").innerHTML = state.ownedItems.length
     ? state.ownedItems.map(id => {
         const shopItem = shopItems.find(x => x.id === id);
-        const loungeItem = Object.prototype.hasOwnProperty.call(
-          loungeCollectibles,
-          id
-        )
-          ? loungeCollectibles[id]
-          : null;
-
+        const loungeItem = Object.prototype.hasOwnProperty.call(loungeCollectibles, id) ? loungeCollectibles[id] : null;
         const item = shopItem || loungeItem;
-
-        return item
-          ? `<span class="collection-pill">${item.icon} ${item.name}</span>`
-          : "";
+        return item ? `<span class="collection-pill">${item.icon} ${item.name}</span>` : "";
       }).join("")
-    : '<span class="empty-state">Your collection starts here.</span>';
-}
+    : '<span class="empty-state">Your collection starts here. Pick a treasure!</span>';
 
+  const setsRoot = $("collectionSets");
+  if (setsRoot) {
+    setsRoot.innerHTML = shopSets.map(set => {
+      const count = set.items.filter(id => state.ownedItems.includes(id)).length;
+      const complete = count === set.items.length;
+      const names = set.items.map(id => {
+        const item = shopItems.find(x => x.id === id);
+        return item ? `${state.ownedItems.includes(id) ? "✓" : "○"} ${item.name}` : "";
+      }).join(" · ");
+      return `
+        <article class="shop-set ${complete ? "is-complete" : ""}">
+          <div class="shop-set-head"><span>${set.icon}</span><strong>${set.name}</strong><b>${count}/${set.items.length}</b></div>
+          <p>${set.reward}</p><small>${names}</small>
+          <div class="shop-set-track"><i style="width:${count / set.items.length * 100}%"></i></div>
+          <em>${complete ? "✦ SET COMPLETE" : "Collect all three to complete this set"}</em>
+        </article>
+      `;
+    }).join("");
+  }
+}
 function renderAchievements() {
   const ach = [
     ["first", "First steps"],
@@ -1450,6 +1440,13 @@ $("diaryList").onclick = e => {
 /* The old local-only Hangout form and daily-question handlers are retired.
    The shared Kindness Wall is managed by kindness.js, so script.js must not
    attach a competing local-only handler to its button. */
+
+$("shopFilters").onclick = e => {
+  const button = e.target.closest("[data-shop-filter]");
+  if (!button) return;
+  shopFilter = button.dataset.shopFilter;
+  renderShop();
+};
 
 $("shopGrid").onclick = e => {
   const b = e.target.closest("[data-buy]");
