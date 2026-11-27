@@ -1098,10 +1098,10 @@ $("complimentBtn").onclick = () => {
 
 $("fortuneBtn").onclick = () => {
   $("fortuneText").textContent = random([
-    "A plot twist is coming, but this time you brought boundaries.",
-    "Your next era involves peace, good food, and better decisions.",
-    "The stars say: stop checking their profile. Focus, sis.",
-    "A small opportunity will ask you to be brave. Say hello."
+        "Someone's silence is about to tell you everything you need to know.",
+    "An unexpected invitation may lead to a story worth remembering. Don't dismiss it too quickly.",
+    "The thing you've been waiting for is taking its time. Thankfully, so are you.",
+    "A familiar name may cross your path again. This time, you'll see things differently."
   ]);
     $("fortuneText").classList.remove("revealed");
   void $("fortuneText").offsetWidth;
