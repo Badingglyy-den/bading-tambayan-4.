@@ -1163,20 +1163,20 @@
         </div>
       </div>
             <div class="online-box" id="onlineAccountBox">
-        <h3>🔐 Your Tambayan Account</h3>
-        <p class="online-muted">Save your account so you can return from another device.</p>
+  <h3>💜 My Tambayan Account</h3>
+  <p class="online-muted">Your account is connected to Bading Tambayan.</p>
 
-        <label for="onlineAccountEmail">Email address</label>
-        <input id="onlineAccountEmail" type="email" placeholder="Your email address" autocomplete="email">
+  <p class="online-muted">Signed in as:</p>
+  <strong id="onlineAccountEmailDisplay">Loading account...</strong>
 
-        <label for="onlineAccountPassword">Password</label>
-        <input id="onlineAccountPassword" type="password" placeholder="At least 8 characters" autocomplete="new-password">
+  <button type="button" id="onlineManageAccount">
+    Manage account & security
+  </button>
 
-        <button type="button" id="onlineCreateAccount">Create account</button>
-        <button type="button" id="onlineLogin">Log in</button>
-
-        <p class="online-muted" id="onlineAccountStatus" role="status" aria-live="polite"></p>
-      </div>
+  <p class="online-muted">
+    Manage your login details or log out securely.
+  </p>
+</div>
       <p class="online-status" id="onlineStatus" role="status" aria-live="polite">Connecting to the online tambayan…</p>
       <div class="online-notification-settings">
   <button type="button" id="onlineNotificationButton">
@@ -1350,6 +1350,11 @@ if (accountButton) {
   accountButton.textContent = currentUser.is_anonymous
     ? "Log in"
     : "My Account";
+}
+      const accountEmailDisplay = $("onlineAccountEmailDisplay");
+if (accountEmailDisplay) {
+  accountEmailDisplay.textContent =
+    currentUser.email || "Email not available";
 }
 
       const localName = document.getElementById("welcomeName")?.textContent || "Tambay";
@@ -2220,8 +2225,16 @@ if (String(message.content || "").startsWith("[[PHOTO]]")) {
     try { await saveProfile(true); }
     catch (error) { status(error.message, true); }
   };
-    
-  // ONLINE TAMBAYAN — CREATE ACCOUNT
+  $("onlineSaveProfile").onclick = async () => {
+  try { await saveProfile(true); }
+  catch (error) { status(error.message, true); }
+};
+
+$("onlineManageAccount").onclick = () => {
+  $("accountOpen").click();
+};
+
+    /// ONLINE TAMBAYAN — CREATE ACCOUNT
   $("onlineCreateAccount").onclick = async () => {
     const email = $("onlineAccountEmail").value.trim();
     const password = $("onlineAccountPassword").value;
@@ -2271,37 +2284,8 @@ if (String(message.content || "").startsWith("[[PHOTO]]")) {
     } catch (error) {
       message.textContent = error.message;
     }
-  };
-
-    // ONLINE TAMBAYAN — LOG IN
-  $("onlineLogin").onclick = async () => {
-    const email = $("onlineAccountEmail").value.trim();
-    const password = $("onlineAccountPassword").value;
-
-    if (!email || !password) {
-      $("onlineAccountStatus").textContent =
-        "Please enter your email and password.";
-      return;
-    }
-
-    try {
-      $("onlineAccountStatus").textContent = "Logging in...";
-
-      const { error } = await client.auth.signInWithPassword({
-        email,
-        password
-      });
-
-      if (error) throw error;
-
-      $("onlineAccountStatus").textContent =
-        "Welcome back! Reconnecting to your tambayan... 💜";
-
-      window.location.reload();
-    } catch (error) {
-      $("onlineAccountStatus").textContent = error.message;
-    }
-  };
+  }; 
+  
     // BADING TAMBAYAN — OPEN MAIN ACCOUNT WINDOW
   $("accountOpen").onclick = () => {
   const message = $("accountStatus");
@@ -2343,9 +2327,36 @@ if (String(message.content || "").startsWith("[[PHOTO]]")) {
     $("accountLogin").style.display = "";
     $("accountSignup").style.display = "";
     $("accountForgot").style.display = "";
+    $("accountNewPasswordLabel").style.display = "none";
+$("accountNewPassword").style.display = "none";
+$("accountChangePassword").style.display = "none";
+    $("accountNewPasswordLabel").style.display = "";
+$("accountNewPassword").style.display = "";
+$("accountChangePassword").style.display = "";
+$("accountNewPassword").value = "";
 
     message.textContent = "";
     $("accountDialog").showModal();
+  }
+};
+  $("accountChangePassword").onclick = async () => {
+  const password = $("accountNewPassword").value;
+  const message = $("accountStatus");
+
+  if (!password || password.length < 8) {
+    message.textContent = "Your new password must be at least 8 characters.";
+    return;
+  }
+
+  try {
+    message.textContent = "Updating password...";
+    const { error } = await client.auth.updateUser({ password });
+    if (error) throw error;
+
+    $("accountNewPassword").value = "";
+    message.textContent = "Password updated successfully! 💜";
+  } catch (error) {
+    message.textContent = error.message;
   }
 };
   // LOGIN GATE BUTTONS
@@ -2360,6 +2371,7 @@ $("gateSignup").onclick = () => {
   $("accountTitle").textContent = "Join Bading Tambayan! 💜";
   $("accountDescription").textContent = "Create your account and come on in.";
 };
+  
     // BADING TAMBAYAN — MAIN ACCOUNT LOGIN
   $("accountLogin").onclick = async () => {
   const email = $("accountEmail").value.trim();
