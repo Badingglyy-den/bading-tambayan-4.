@@ -425,9 +425,10 @@
       loungeView.querySelector(".section-heading#hangout")?.scrollIntoView({ behavior: "smooth", block: "start" });
     }
 
-    hub.addEventListener("click", event => {
+    // One delegated handler powers both the overview tiles and the Shared Spaces shortcuts.
+    loungeView.addEventListener("click", event => {
       const button = event.target.closest("[data-lounge-open]");
-      if (button) openLoungePanel(button.dataset.loungeOpen);
+      if (button && loungeView.contains(button)) openLoungePanel(button.dataset.loungeOpen);
     });
 
     showLoungeHub();
