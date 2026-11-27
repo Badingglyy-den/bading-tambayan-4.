@@ -4268,6 +4268,41 @@
   font-weight: 800;
   box-shadow: 0 0 14px rgba(157, 169, 232, .25);
 }
+/* MYSTERY LIBRARY — SAMPAL O LAMBING MACHINE */
+
+#view-mystery .tool-card:nth-child(5) {
+  border-color: rgba(207, 151, 93, .55);
+  background:
+    radial-gradient(
+      circle at 50% 0%,
+      rgba(166, 73, 67, .3),
+      transparent 65%
+    ),
+    linear-gradient(145deg, #3a2225, #211719);
+  box-shadow: 0 8px 25px rgba(25, 8, 10, .4);
+}
+
+#view-mystery .tool-card:nth-child(5) > span {
+  border-color: rgba(225, 178, 116, .7);
+  background: rgba(170, 91, 67, .2);
+  box-shadow: 0 0 18px rgba(220, 153, 91, .2);
+}
+
+#view-mystery .tool-card:nth-child(5) h3 {
+  color: #f0c99f;
+}
+
+#view-mystery .tool-card:nth-child(5) p {
+  color: #d0b3a4;
+}
+
+#view-mystery .tool-card:nth-child(5) button {
+  border: 1px solid #e0b77d;
+  background: linear-gradient(120deg, #e7bd83, #c77b69);
+  color: #321c1b;
+  font-weight: 800;
+  box-shadow: 0 0 14px rgba(220, 153, 91, .25);
+}
 
 
 
