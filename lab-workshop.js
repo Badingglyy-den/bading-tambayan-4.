@@ -204,7 +204,8 @@
     ["Power", "Body", "Output"].forEach(part => {
       const select = $("machine" + part);
       const option = select.options[select.selectedIndex];
-      $("machine" + part.toLowerCase() + "Icon").textContent = option.dataset.icon;
+      const iconId = { Power: "machinePowerIcon", Body: "machineBodyIcon", Output: "machineOutputIcon" }[part];
+      $(iconId).textContent = option.dataset.icon;
     });
   }
   ["machinePower", "machineBody", "machineOutput"].forEach(id => $(id).addEventListener("change", updateMachineIcons));
