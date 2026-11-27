@@ -5221,6 +5221,22 @@ a:focus-visible,
     transform: none;
   }
 }
+/* ===== MOBILE PERFORMANCE POLISH ===== */
+
+@media (max-width: 700px) {
+  .hero::before {
+    animation: none !important;
+  }
+
+  .hero-orbit .orbit-a,
+  .hero-orbit .orbit-b {
+    animation: none !important;
+  }
+
+  .hero-orbit {
+    animation-duration: 9s;
+  }
+}
 
 
 
