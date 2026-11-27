@@ -4597,6 +4597,41 @@
 #view-mystery .tool-card:nth-child(4) p.revealed {
   animation: cosmicReveal .8s ease both;
    }
+/* ASK THE UNIVERSE — COSMIC STAMP */
+
+#view-mystery .universe-stamp {
+  margin: 8px 0 10px;
+  color: #c4c2ff;
+  font-family: Georgia, serif;
+  font-size: 9px;
+  font-weight: bold;
+  letter-spacing: 2px;
+  text-align: center;
+  text-shadow: 0 0 12px rgba(160, 155, 255, .5);
+}
+/* ASK THE UNIVERSE — FLOATING STAR */
+
+#view-mystery .tool-card:nth-child(4)::after {
+  content: "✦";
+  position: absolute;
+  top: 13px;
+  right: 17px;
+  color: rgba(196, 194, 255, .75);
+  font-size: 22px;
+  pointer-events: none;
+  animation: universeStar 3s ease-in-out infinite;
+}
+
+@keyframes universeStar {
+  0%, 100% {
+    opacity: .35;
+    transform: scale(.85) rotate(0deg);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.2) rotate(35deg);
+  }
+}
 
 
 
