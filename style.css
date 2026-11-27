@@ -2645,6 +2645,24 @@ body {
     letter-spacing: 0.3px;
   }
 }
+ /* AUTH SESSION RESTORATION */
+html.auth-checking #authGate {
+  display: grid !important;
+}
+
+html.auth-checking #authGate .auth-gate-actions,
+html.auth-checking #authGate .auth-gate-footer {
+  display: none !important;
+}
+
+html.auth-checking #authGate .auth-gate-description {
+  font-size: 0;
+}
+
+html.auth-checking #authGate .auth-gate-description::after {
+  content: "Restoring your Tambayan... 💜";
+  font-size: 15px;
+   }
  /* MANDATORY LOGIN GATE */
 html.auth-locked,
 html.auth-locked body {
