@@ -459,7 +459,8 @@ function render() {
   $("starCount").textContent = state.stars;
   $("shopStars").textContent = state.stars;
   const profileName = state.profile.name || "Sis";
-  $("welcomeName").textContent = profileName;
+  const welcomeNameEl = $("welcomeName");
+  if (welcomeNameEl) welcomeNameEl.textContent = profileName;
   const heroName = $("profileHeroName"); if (heroName) heroName.textContent = profileName;
   const heroBio = $("profileHeroBio"); if (heroBio) heroBio.textContent = (state.profile.bio || "").trim() || "Your introduction will live here. Tell the tambayan a little about yourself.";
   const heroAvatar = $("profileHeroAvatar");
@@ -797,14 +798,24 @@ $("profileHeroEdit")?.addEventListener("click", () => $("profileDialog").showMod
 $("backupOpen").onclick = () =>
   $("settingsDialog").showModal();
 
-$("saveProfile").onclick = () => {
+$("saveProfile").onclick = async () => {
   state.profile.name = $("profileName").value.trim() || "Sis";
   state.profile.avatar = $("profileAvatar").value || state.profile.avatar || "💜";
   state.profile.bio = $("profileBio").value.trim().slice(0, 180);
   save();
-  render();
-  $("profileDialog").close();
-  toast("Profile updated! 💜");
+  try {
+    if (typeof window.tambayanSyncPublicProfile === "function") {
+      await window.tambayanSyncPublicProfile({
+        name: state.profile.name,
+        avatar: state.profile.avatar
+      });
+    }
+    $("profileDialog").close();
+    toast("Profile updated and synced! 💜");
+  } catch (error) {
+    console.error("Could not sync public profile:", error);
+    toast("Saved on this device. Online profile sync failed — please try again.");
+  }
 };
 
 $("profilePhotoInput").addEventListener("change", event => {
@@ -882,6 +893,38 @@ document.addEventListener("click", event => {
   event.preventDefault();
   updateAvatarSelection(button.dataset.avatar);
 }, true);
+
+// Collectible equipment is account-specific and only allows owned items.
+document.addEventListener("change", event => {
+  const select = event.target.closest("[data-equip-slot]");
+  if (!select) return;
+
+  const slot = select.dataset.equipSlot;
+  const categories = {
+    title: "Titles", avatar: "Avatars", frame: "Frames",
+    aura: "Auras", badge: "Badges"
+  };
+  if (!Object.prototype.hasOwnProperty.call(categories, slot)) return;
+
+  const itemId = select.value;
+  const item = itemId
+    ? shopItems.find(entry =>
+        entry.id === itemId &&
+        entry.category === categories[slot] &&
+        state.ownedItems.includes(entry.id)
+      )
+    : null;
+
+  if (itemId && !item) {
+    select.value = state.equippedItems?.[slot] || "";
+    toast("That collectible is not in this account's collection.");
+    return;
+  }
+
+  state.equippedItems = { ...(state.equippedItems || {}), [slot]: itemId };
+  save();
+  toast(item ? item.name + " equipped! ✨" : "Equipment updated.");
+});
 
 
 $("dailyMessage").onclick = () => {
