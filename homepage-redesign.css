@@ -4482,6 +4482,43 @@
     transform: rotate(8deg);
   }
 }
+/* PALAKANG MARITES — GOSSIP PANEL */
+
+#view-mystery .tool-card:nth-child(3) p {
+  min-height: 76px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 14px 0;
+  padding: 14px;
+  border: 1px solid rgba(173, 194, 130, .25);
+  border-left: 3px solid #a8c47e;
+  border-radius: 8px;
+  background: rgba(10, 22, 14, .4);
+  color: #d5e5c4;
+  font-family: Georgia, serif;
+  font-size: 13px;
+  line-height: 1.8;
+  text-align: center;
+}
+/* PALAKANG MARITES — GOSSIP REVEAL */
+
+@keyframes gossipReveal {
+  0% {
+    opacity: 0;
+    transform: translateY(8px) scale(.97);
+    filter: blur(3px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    filter: blur(0);
+  }
+}
+
+#view-mystery .tool-card:nth-child(3) p.revealed {
+  animation: gossipReveal .6s ease both;
+   }
 
 
 
