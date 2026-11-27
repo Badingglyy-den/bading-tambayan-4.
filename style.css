@@ -2972,3 +2972,140 @@ html.auth-locked #authGate {
     max-width: none;
   }
 }
+
+
+/* Avatar Studio equipment + profile photo polish */
+.profile-photo-uploader {
+  margin: 17px 0 20px;
+  padding: 15px;
+  border: 1px solid rgba(210,178,255,.28);
+  border-radius: 15px;
+  background: rgba(166,119,255,.08);
+}
+.profile-photo-uploader .eyebrow {
+  color: #e5caff;
+  font-weight: 900;
+  letter-spacing: 1.5px;
+}
+.profile-photo-pick {
+  display: block;
+  width: 100%;
+  margin-top: 9px;
+  padding: 12px 14px;
+  border: 1px solid rgba(220,190,255,.4);
+  border-radius: 11px;
+  background: rgba(181,133,255,.18);
+  color: #fff8ff !important;
+  text-align: center;
+  font-size: 12px !important;
+  font-weight: 800 !important;
+  cursor: pointer;
+}
+.profile-photo-remove {
+  width: 100%;
+  margin-top: 8px;
+  font-size: 11px;
+}
+.profile-photo-image {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: inherit;
+}
+#headerAvatar .profile-photo-image {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+}
+#avatarPreview .profile-photo-image {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+}
+#headerAvatar {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+}
+#avatarPreview {
+  overflow: visible;
+}
+.equipped-profile-title {
+  display: inline-block;
+  margin: 0 0 0 8px;
+  padding: 5px 10px;
+  border: 1px solid rgba(222,190,255,.48);
+  border-radius: 999px;
+  background: linear-gradient(135deg, rgba(173,120,255,.28), rgba(255,255,255,.1));
+  color: #fff4ff;
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 850;
+  line-height: 1.3;
+  vertical-align: middle;
+  box-shadow: 0 0 12px rgba(176,125,255,.18);
+}
+.equipped-profile-badge {
+  display: inline-block;
+  margin-left: 5px;
+  color: #ffe7a6;
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 800;
+  vertical-align: middle;
+}
+.equipment-slot {
+  padding: 10px;
+  border: 1px solid rgba(207,174,255,.2);
+  border-radius: 12px;
+  background: rgba(255,255,255,.045);
+  color: #e9dcf7;
+  font-size: 11px;
+}
+.equipment-slot select {
+  min-height: 42px;
+  background: #171027;
+  border-color: rgba(220,192,255,.34);
+  color: #fffaff;
+  font-size: 12px;
+}
+.equipped-chip {
+  color: #fffaff;
+  font-size: 11px;
+  font-weight: 750;
+  padding: 8px 11px;
+  background: linear-gradient(135deg, rgba(176,126,255,.24), rgba(255,255,255,.08));
+  border-color: rgba(220,192,255,.38);
+}
+#headerAvatar[data-frame="frame_cloud"],#avatarPreview[data-frame="frame_cloud"] {
+  outline: 3px solid #b9e7ff;
+  outline-offset: 3px;
+  border-radius: 50%;
+}
+#headerAvatar[data-frame="frame_galaxy"],#avatarPreview[data-frame="frame_galaxy"] {
+  outline: 3px solid #d4a7ff;
+  outline-offset: 3px;
+  border-radius: 50%;
+  box-shadow: 0 0 15px #bd7cff88;
+}
+#headerAvatar[data-decoration="avatar_moonhalo"]::after,
+#avatarPreview[data-decoration="avatar_moonhalo"]::after { content:"🌙"; top:-8px; right:-7px; transform:none; }
+#headerAvatar[data-decoration="avatar_aurora"]::after,
+#avatarPreview[data-decoration="avatar_aurora"]::after { content:"🦋"; top:-8px; right:-7px; transform:none; }
+#headerAvatar[data-decoration="avatar_crown"]::after,
+#avatarPreview[data-decoration="avatar_crown"]::after { content:"👑"; top:-8px; right:-7px; transform:none; }
+#headerAvatar[data-decoration]::after,
+#avatarPreview[data-decoration]::after {
+  position: absolute;
+  font-size: 15px;
+  line-height: 1;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,.45));
+  pointer-events: none;
+}
+@media(max-width:560px) {
+  .profile-photo-uploader { padding: 12px; }
+  .equipped-profile-title { font-size: 9px; padding: 4px 7px; }
+  .equipped-profile-badge { font-size: 10px; }
+}
