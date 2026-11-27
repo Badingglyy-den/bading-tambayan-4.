@@ -64,7 +64,7 @@
           </div>
           <div class="daily-challenge-action">
             <span class="daily-challenge-status">${done ? "✓ DONE" : "READY"}</span>
-            <button type="button" class="small-btn daily-go-button" data-scroll-to="${item.action}" ${done ? "disabled" : ""}>${done ? "Completed" : "Go explore"}</button>
+            ${done ? `<span class="small-btn daily-go-button is-disabled" aria-disabled="true">Completed</span>` : `<a class="small-btn daily-go-button" href="#${item.action}">Go explore</a>`}
           </div>
         </article>`;
     }).join("");
@@ -120,17 +120,6 @@
 
   const panel = $("dailyTambayanPanel");
   if (!panel) return;
-
-  panel.addEventListener("click", event => {
-    const go = event.target.closest("[data-scroll-to]");
-    if (go) {
-      const target = $(go.dataset.scrollTo);
-      if (target) {
-        target.scrollIntoView({ behavior: "smooth", block: "center" });
-        target.focus?.({ preventScroll: true });
-      }
-    }
-  });
 
   document.addEventListener("click", event => {
     const button = event.target.closest("button");
