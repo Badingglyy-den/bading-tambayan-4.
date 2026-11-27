@@ -4132,6 +4132,34 @@
     letter-spacing: 1.3px;
   }
 }
+/* MYSTERY LIBRARY — FORTUNE TELLER */
+
+#view-mystery .tool-card:nth-child(1) {
+  border-color: rgba(173, 139, 205, .45);
+  background:
+    radial-gradient(
+      circle at 50% 0%,
+      rgba(116, 76, 153, .25),
+      transparent 65%
+    ),
+    linear-gradient(145deg, #30243a, #1d1925);
+  box-shadow: 0 8px 25px rgba(20, 10, 30, .35);
+}
+
+#view-mystery .tool-card:nth-child(1) > span {
+  border-color: rgba(201, 169, 119, .65);
+  background: rgba(137, 94, 166, .18);
+  box-shadow: 0 0 18px rgba(153, 112, 190, .18);
+}
+
+#view-mystery .tool-card:nth-child(1) h3 {
+  color: #e3c9ef;
+}
+
+#view-mystery .tool-card:nth-child(1) button {
+  border-color: rgba(190, 151, 218, .55);
+  background: rgba(105, 72, 129, .35);
+}
 
 
 
