@@ -64,7 +64,7 @@
           </div>
           <div class="daily-challenge-action">
             <span class="daily-challenge-status">${done ? "✓ DONE" : "READY"}</span>
-            ${done ? `<span class="small-btn daily-go-button is-disabled" aria-disabled="true">Completed</span>` : `<a class="small-btn daily-go-button" href="#${item.action}">Go explore</a>`}
+            ${done ? `<span class="small-btn daily-go-button is-disabled" aria-disabled="true">Completed</span>` : `<button class="small-btn daily-go-button" type="button" data-daily-target="${item.action}" aria-label="Go explore: ${item.title}">Go explore</button>`}
           </div>
         </article>`;
     }).join("");
@@ -121,7 +121,20 @@
   const panel = $("dailyTambayanPanel");
   if (!panel) return;
 
+  // Capture Daily Dispatch navigation before other page-level click handlers.
   document.addEventListener("click", event => {
+    const go = event.target.closest(".daily-go-button[data-daily-target]");
+    if (go) {
+      event.preventDefault();
+      event.stopPropagation();
+      const target = $(go.dataset.dailyTarget);
+      if (target) {
+        target.scrollIntoView({ behavior: "smooth", block: "center" });
+        window.setTimeout(() => target.focus?.({ preventScroll: true }), 350);
+      }
+      return;
+    }
+
     const button = event.target.closest("button");
     if (!button) return;
     const challenge = challenges.find(item => item.action === button.id);
