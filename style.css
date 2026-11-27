@@ -2780,3 +2780,31 @@ html.auth-locked #authGate {
 .attic-photo-secret { padding: 12px; border: 1px dashed var(--line); border-radius: 12px; background: #ffffff0a; line-height: 1.7; }
 .attic-photo-clue-link { display: inline-block; margin: 8px 0 14px; }
 @media (max-width:560px) { .difference-row { font-size: 19px; } .expansion-game:after { font-size: 7px; } }
+
+
+/* Star Shop — Treasure Exchange expansion */
+.shop-season-note{font-size:12px;line-height:1.6;color:var(--muted);margin:12px 0}
+.shop-filters{display:flex;gap:7px;overflow-x:auto;padding:3px 0 10px;scrollbar-width:thin}
+.shop-filter{flex:0 0 auto;border:1px solid var(--line);background:#ffffff0b;color:var(--text);border-radius:30px;padding:8px 12px;font-size:10px;font-weight:800}
+.shop-filter.active{background:var(--accent);border-color:var(--accent);color:#21152e}
+.shop-item-top{display:flex;align-items:center;justify-content:space-between;gap:6px}
+.shop-rarity{font-size:9px;text-transform:uppercase;letter-spacing:1px;font-weight:900;padding:5px 7px;border-radius:20px;background:#ffffff12}
+.shop-item-common{border-color:#ffffff25}
+.shop-item-rare{border-color:#65b9ed66;background:linear-gradient(145deg,#2375a51c,#ffffff05)}
+.shop-item-epic{border-color:#b68bff77;background:linear-gradient(145deg,#8952c52b,#ffffff05)}
+.shop-item-legendary{border-color:#e9bd6c99;background:linear-gradient(145deg,#b47b2529,#ffffff05);box-shadow:inset 0 0 18px #e9bd6c0c}
+.shop-category{display:block;color:var(--muted);font-size:9px;text-transform:uppercase;letter-spacing:1px;margin:0 0 9px}
+.shop-set{padding:12px;border:1px solid var(--line);border-radius:13px;background:#ffffff08;margin-top:9px}
+.shop-set.is-complete{border-color:#78d6a477;background:#78d6a40c}
+.shop-set-head{display:flex;align-items:center;gap:8px;font-size:11px}
+.shop-set-head>span{font-size:20px}
+.shop-set-head strong{flex:1}
+.shop-set-head b{font-variant-numeric:tabular-nums;color:var(--accent)}
+.shop-set p{font-size:10px;color:var(--muted);margin:7px 0}
+.shop-set small{display:block;font-size:9px;line-height:1.7;color:var(--muted)}
+.shop-set-track{height:5px;background:#ffffff12;border-radius:8px;overflow:hidden;margin:9px 0 6px}
+.shop-set-track i{display:block;height:100%;background:var(--accent);border-radius:8px}
+.shop-set em{font-style:normal;font-size:9px;font-weight:900;letter-spacing:.7px;color:var(--accent)}
+.collection-sets-wrap{margin-top:20px;padding-top:16px;border-top:1px solid var(--line)}
+.collection-sets-wrap h3{font-size:15px;margin:0 0 8px}
+@media(max-width:560px){.shop-filters{margin-right:-4px}.shop-item{padding:11px}.shop-item h4{font-size:11px}.shop-item p{min-height:48px}.shop-set{padding:10px}}
