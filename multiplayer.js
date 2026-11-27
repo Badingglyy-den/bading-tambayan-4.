@@ -1347,9 +1347,10 @@ document.documentElement.classList.remove("auth-locked");
 
 const accountButton = $("accountOpen");
 if (accountButton) {
-  accountButton.textContent = currentUser.is_anonymous
-    ? "Log in"
-    : "My Account";
+  const accountName = accountButton.querySelector(".account-chip-name");
+  if (accountName) {
+    accountName.textContent = "Tambay";
+  }
 }
       const accountEmailDisplay = $("onlineAccountEmailDisplay");
 if (accountEmailDisplay) {
