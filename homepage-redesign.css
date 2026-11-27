@@ -5621,3 +5621,39 @@ body[data-theme="matcha"] #home .footer{color:var(--muted)}
     grid-template-columns: minmax(0, 1fr) !important;
   }
 }
+
+
+/* Shared Spaces cards are direct, accessible shortcuts to their own destinations. */
+#view-community .shared-space-card {
+  appearance: none;
+  width: 100%;
+  color: var(--text);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: border-color .18s ease, transform .18s ease, background .18s ease;
+}
+#view-community .shared-space-card:hover {
+  border-color: var(--accent);
+  background: var(--panel2);
+  transform: translateY(-2px);
+}
+#view-community .shared-space-card:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 3px;
+}
+#view-community .shared-space-card .shared-space-action {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+  margin-top: auto;
+  padding-top: 10px;
+  color: var(--accent);
+  font-size: 12px;
+  letter-spacing: .02em;
+}
+#view-community .shared-space-card .shared-space-action span {
+  font-size: 17px;
+}
