@@ -135,9 +135,12 @@ function mergeProgress(local, cloud) {
       ...Object.keys(local)
     ])) {
       if (key in local && key in cloud) {
-        merged[key] = mergeProgress(local[key], cloud[key]);
-      }
-    }
+  if (key === "profile") {
+    merged[key] = { ...local[key], ...cloud[key] };
+  } else {
+    merged[key] = mergeProgress(local[key], cloud[key]);
+  }
+}
     return merged;
   }
 
