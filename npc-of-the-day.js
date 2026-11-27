@@ -134,9 +134,67 @@
         "I believe tomorrow deserves a chance, no matter how today went."
       ],
       goodbye: "Sleep peacefully, little wanderer. The moon will keep you company."
+    },
+    {
+      id: "tavi", name: "Tavi", emoji: "📚", title: "The Study Buddy",
+      personality: "Patient, curious, and quietly competitive",
+      greeting: "Got a subject to tackle? Let's make it less intimidating.",
+      talk: ["Small study sessions add up faster than you think.", "Try explaining a topic in your own words. That's how you find the gaps."],
+      ask: ["My trick? I turn big chapters into tiny questions.", "I celebrate understanding one thing properly, not rushing ten things."],
+      goodbye: "One page, one problem, one step. You've got this."
+    },
+    {
+      id: "kiko", name: "Kiko", emoji: "🧺", title: "The Little Organizer",
+      personality: "Neat, practical, and fond of clear spaces",
+      greeting: "Let's give those scattered thoughts somewhere to go.",
+      talk: ["A list is useful when it helps you decide what matters.", "You don't need to organize everything. Start with one corner."],
+      ask: ["I sort things into now, later, and let go.", "My favorite tool is a tiny checklist."],
+      goodbye: "A little order can make room for a lot of breathing space."
+    },
+    {
+      id: "sora", name: "Sora", emoji: "🪁", title: "The Idea Architect",
+      personality: "Inventive, imaginative, and encouraging",
+      greeting: "Tell me the idea that's been floating around your head.",
+      talk: ["An idea becomes real when you give it a first step.", "Messy drafts are allowed. They're how good plans begin."],
+      ask: ["I start with what, why, and what happens next.", "Keep the first version small enough to actually finish."],
+      goodbye: "Go make a little room for that idea to grow."
+    },
+    {
+      id: "pippa", name: "Pippa", emoji: "⏳", title: "The Timekeeper",
+      personality: "Cheerful, focused, and gently firm",
+      greeting: "Ready for a little focus sprint? I'll keep an eye on the clock.",
+      talk: ["Pick one task before you start the timer.", "A real break is part of a good work session."],
+      ask: ["I like short sprints with a clear finish line.", "Put distractions somewhere out of reach for a while."],
+      goodbye: "Time well spent is better than time perfectly planned."
+    },
+    {
+      id: "remy", name: "Remy", emoji: "🧭", title: "The Curious Researcher",
+      personality: "Inquisitive, thoughtful, and detail-loving",
+      greeting: "What have you been curious about lately?",
+      talk: ["Write down what you know before searching for what you don't.", "Good questions make learning easier."],
+      ask: ["I keep a question, a few findings, and a source note.", "Curiosity is useful when you follow it somewhere."],
+      goodbye: "Keep asking good questions. They open interesting doors."
+    },
+    {
+      id: "olli", name: "Olli", emoji: "🌱", title: "The Goal Gardener",
+      personality: "Steady, patient, and quietly determined",
+      greeting: "What are we growing little by little?",
+      talk: ["A goal needs a next action, not just a deadline.", "Progress is easier to see when you mark the small milestones."],
+      ask: ["I water goals with consistency, not pressure.", "Try choosing one milestone you can reach this week."],
+      goodbye: "Keep tending to it. Growth doesn't need to be loud."
+    },
+    {
+      id: "aki", name: "Aki", emoji: "🎯", title: "The Challenge Maker",
+      personality: "Energetic, resourceful, and playful",
+      greeting: "Want a small challenge that leaves you with something done?",
+      talk: ["A useful challenge should end with a real result.", "Make it small enough to finish today."],
+      ask: ["I like challenges that teach a skill or clear a task.", "You can make progress without turning everything into a competition."],
+      goodbye: "Go finish one tiny challenge. I'll be cheering."
     }
   ];
-   const RARE_DIALOGUE = {
+   window.tambayanNPCs = NPCS.map(npc => ({ id: npc.id, name: npc.name, emoji: npc.emoji, title: npc.title, personality: npc.personality }));
+
+  const RARE_DIALOGUE = {
     lumi: [
       "A little secret? I saved a special sparkle just for you. ✨",
       "Sometimes, I make a wish that you'll have a wonderful day."
@@ -167,22 +225,13 @@
     ]
   };
   function getManilaDay() {
-    const weekday = new Intl.DateTimeFormat("en-US", {
-      timeZone: "Asia/Manila",
-      weekday: "long"
-    }).format(new Date());
-
-    const days = [
-      "Sunday",
-      "Monday",
-      "Tuesday",
-      "Wednesday",
-      "Thursday",
-      "Friday",
-      "Saturday"
-    ];
-
-    return days.indexOf(weekday);
+    const parts = new Intl.DateTimeFormat("en-US", {
+      timeZone: "Asia/Manila", year: "numeric", month: "numeric", day: "numeric"
+    }).formatToParts(new Date());
+    const part = key => Number(parts.find(item => item.type === key)?.value || 1);
+    const year = part("year"), month = part("month"), day = part("day");
+    const dayOfYear = Math.floor((Date.UTC(year, month - 1, day) - Date.UTC(year, 0, 1)) / 86400000);
+    return dayOfYear % NPCS.length;
   }
 
   function addStyles() {
