@@ -433,10 +433,9 @@ function render() {
     }).filter(Boolean).join("") || '<span class="empty-state">No treasures equipped yet.</span>';
   }
   renderEquipmentOptions();
-  const headerAvatar = $("headerAvatar");
-if (headerAvatar) {
-  headerAvatar.textContent = state.profile.avatar || "💜";
-}
+  if (headerAvatar) {
+    headerAvatar.textContent = state.profile.avatar || "💜";
+  }
 
   $("levelValue").textContent = level();
 
