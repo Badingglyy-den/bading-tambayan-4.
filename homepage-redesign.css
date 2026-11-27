@@ -5186,6 +5186,41 @@
     max-width: 84px;
   }
 }
+/* ===== SMOOTH INTERACTION FOUNDATION ===== */
+
+button,
+a,
+[role="button"] {
+  -webkit-tap-highlight-color: transparent;
+}
+
+button:active,
+[role="button"]:active {
+  transform: scale(.97);
+}
+
+button:focus-visible,
+a:focus-visible,
+[role="button"]:focus-visible {
+  outline: 2px solid rgba(217, 195, 240, .9);
+  outline-offset: 3px;
+}
+
+/* Desktop hover feedback */
+@media (hover: hover) and (pointer: fine) {
+  button:hover,
+  [role="button"]:hover {
+    filter: brightness(1.08);
+  }
+}
+
+/* Respect reduced-motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  button:active,
+  [role="button"]:active {
+    transform: none;
+  }
+}
 
 
 
