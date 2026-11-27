@@ -4198,6 +4198,41 @@
   font-weight: 800;
   box-shadow: 0 0 14px rgba(190, 151, 91, .2);
 }
+/* MYSTERY LIBRARY — PALAKANG MARITES */
+
+#view-mystery .tool-card:nth-child(3) {
+  border-color: rgba(133, 174, 125, .5);
+  background:
+    radial-gradient(
+      circle at 50% 0%,
+      rgba(83, 133, 82, .25),
+      transparent 65%
+    ),
+    linear-gradient(145deg, #24352a, #17231c);
+  box-shadow: 0 8px 25px rgba(5, 20, 10, .35);
+}
+
+#view-mystery .tool-card:nth-child(3) > span {
+  border-color: rgba(173, 194, 130, .65);
+  background: rgba(112, 153, 91, .18);
+  box-shadow: 0 0 18px rgba(126, 176, 108, .18);
+}
+
+#view-mystery .tool-card:nth-child(3) h3 {
+  color: #c9dfb2;
+}
+
+#view-mystery .tool-card:nth-child(3) p {
+  color: #b5c6aa;
+}
+
+#view-mystery .tool-card:nth-child(3) button {
+  border: 1px solid #b4c98c;
+  background: linear-gradient(120deg, #c3d49b, #8eae78);
+  color: #1c2b1c;
+  font-weight: 800;
+  box-shadow: 0 0 14px rgba(126, 176, 108, .2);
+}
 
 
 
