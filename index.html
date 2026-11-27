@@ -273,7 +273,7 @@
     <section class="hero panel">
       <div class="hero-copy">
         <p class="eyebrow">WELCOME BACK TO YOUR SAFE SPACE</p>
-        <h1>Hi, <span id="welcomeName">Sis</span><small id="equippedProfileTitle" class="equipped-profile-title"></small>!<br><em>Kalma. Kalat. Kilig.</em></h1>
+        <h1>Hi, <span id="welcomeName">Sis</span><small id="equippedProfileTitle" class="equipped-profile-title"></small><small id="equippedProfileBadge" class="equipped-profile-badge"></small>!<br><em>Kalma. Kalat. Kilig.</em></h1>
         <p class="hero-text">A little universe for your big feelings, random thoughts, questionable decisions, and iconic moments.</p>
         <div class="hero-buttons">
           <a class="primary-btn" href="#worlds">Explore the tambayan <span>↗</span></a>
@@ -834,6 +834,14 @@
     <p>Your current avatar</p>
     <span>Pick a look that feels like you!</span>
   </div>
+
+  <section class="profile-photo-uploader">
+    <p class="eyebrow">YOUR OWN PROFILE PHOTO</p>
+    <label class="profile-photo-pick" for="profilePhotoInput">📷 Choose a photo from your gallery</label>
+    <input id="profilePhotoInput" type="file" accept="image/*" hidden>
+    <button id="removeProfilePhoto" class="soft-btn profile-photo-remove" type="button">Use my emoji instead</button>
+    <p id="profilePhotoStatus" class="equipment-help">Your photo is resized before saving and syncs with your account.</p>
+  </section>
 
   <label for="profileName">Nickname</label>
   <input id="profileName" maxlength="24" placeholder="Your nickname">
