@@ -190,19 +190,10 @@ window.tambayanProgress = {
       state = normalize(accountSave?.data || accountSave);
       localSaveExists = true;
     } else {
-      const ownerId = localStorage.getItem(ACCOUNT_OWNER_KEY);
-
-      // The first authenticated account may claim the pre-account save.
-      // Every later account receives a separate fresh save.
-      if (!ownerId && localSaveExists) {
-        state = normalize(state);
-        localStorage.setItem(accountKey, JSON.stringify(state));
-        localStorage.setItem(ACCOUNT_OWNER_KEY, userId);
-        localSaveExists = true;
-      } else {
-        state = defaultState();
-        localSaveExists = false;
-      }
+      // Never assign an old shared/device save to a newly seen account.
+      // Existing accounts restore their own account-specific or cloud save.
+      state = defaultState();
+      localSaveExists = false;
     }
 
     render();
