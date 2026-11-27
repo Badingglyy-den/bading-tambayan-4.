@@ -36,6 +36,7 @@ const defaultState = () => ({
   equippedItems: {},
   hangoutPosts: [],
   kindPosts: [],
+  labWorkshop: { creatures: [] },
   lastHangoutQuestion: ""
 });
 
@@ -99,7 +100,10 @@ function normalize(x) {
     completedCollections: Array.isArray(x.completedCollections) ? x.completedCollections : [],
     equippedItems: x.equippedItems && typeof x.equippedItems === "object" && !Array.isArray(x.equippedItems) ? x.equippedItems : {},
     hangoutPosts: Array.isArray(x.hangoutPosts) ? x.hangoutPosts : [],
-    kindPosts: Array.isArray(x.kindPosts) ? x.kindPosts : []
+    kindPosts: Array.isArray(x.kindPosts) ? x.kindPosts : [],
+    labWorkshop: x.labWorkshop && typeof x.labWorkshop === "object" && !Array.isArray(x.labWorkshop)
+      ? { creatures: Array.isArray(x.labWorkshop.creatures) ? x.labWorkshop.creatures.slice(0, 24) : [] }
+      : { creatures: [] }
   };
 }
 
@@ -214,6 +218,21 @@ window.tambayanProgress = {
 
   getDailyDispatch() {
     return JSON.parse(JSON.stringify(state.dailyDispatch || {}));
+  },
+
+  getLabWorkshop() {
+    return JSON.parse(JSON.stringify(state.labWorkshop || { creatures: [] }));
+  },
+
+  setLabWorkshop(progress) {
+    if (!progress || typeof progress !== "object" || Array.isArray(progress)) {
+      return this.getLabWorkshop();
+    }
+    state.labWorkshop = {
+      creatures: Array.isArray(progress.creatures) ? progress.creatures.slice(0, 24) : []
+    };
+    save();
+    return this.getLabWorkshop();
   },
 
   setDailyDispatch(progress) {
