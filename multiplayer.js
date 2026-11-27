@@ -2323,8 +2323,8 @@ if (String(message.content || "").startsWith("[[PHOTO]]")) {
       message.textContent = error.message;
     }
   };
-    // BADING TAMBAYAN — MAIN ACCOUNT SIGNUP
-  $(  // BADING TAMBAYAN — MAIN ACCOUNT SIGNUP
+      
+  // BADING TAMBAYAN — MAIN ACCOUNT SIGNUP
   $("accountSignup").onclick = async () => {
     const email = $("accountEmail").value.trim();
     const password = $("accountPassword").value;
@@ -2341,40 +2341,31 @@ if (String(message.content || "").startsWith("[[PHOTO]]")) {
     }
 
     try {
-      message.textContent = "Checking your account...";
+      message.textContent = "Creating your account...";
 
       const { data, error } = await client.auth.getUser();
       if (error) throw error;
 
-      if (!data.user.is_anonymous) {
+      if (!data.user?.is_anonymous) {
         message.textContent =
           "You're already logged in with an account. 💜";
         return;
       }
 
-      if (data.user.email === email && data.user.email_confirmed_at) {
-        const { error: passwordError } =
-          await client.auth.updateUser({ password });
+      const { error: updateError } = await client.auth.updateUser({
+        email,
+        password
+      });
 
-        if (passwordError) throw passwordError;
-
-        message.textContent =
-          "Your account is ready! Welcome to Bading Tambayan. 💜";
-        return;
-      }
-
-      const { error: emailError } =
-        await client.auth.updateUser({ email });
-
-      if (emailError) throw emailError;
+      if (updateError) throw updateError;
 
       message.textContent =
-        "Verification email sent! Confirm your email, then return here and tap Create an account again to set your password. 💜";
-
+        "Verification email sent! Confirm your email to finish securing your account. Your chatroom identity is being preserved. 💜";
     } catch (error) {
       message.textContent = error.message;
     }
   };
+
     // BADING TAMBAYAN — PASSWORD RECOVERY
   $("accountForgot").onclick = async () => {
     const email = $("accountEmail").value.trim();
