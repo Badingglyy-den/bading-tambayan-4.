@@ -302,6 +302,164 @@
 
   header.insertAdjacentElement("afterend", nav);
 
+
+  // Tambayan Lounge: keep its overview compact and reveal one destination at a time.
+  const loungeView = views.community;
+  const loungeLayout = loungeView?.querySelector(".hangout-layout");
+
+  if (loungeView && loungeLayout && !loungeView.querySelector(".lounge-hub")) {
+    const welcome = loungeLayout.querySelector(".lounge-welcome");
+    const destinations = [
+      {
+        id: "games",
+        label: "Game Corner",
+        icon: "🎡",
+        description: "Daily spins and mystery rewards",
+        panel: loungeLayout.querySelectorAll(".lounge-section")[0]
+      },
+      {
+        id: "garden",
+        label: "Community Garden",
+        icon: "🌷",
+        description: "Polls and shared moods",
+        panel: loungeLayout.querySelectorAll(".lounge-section")[1]
+      },
+      {
+        id: "discover",
+        label: "Discovery Corner",
+        icon: "🔎",
+        description: "Secret hunts and daily characters",
+        panel: loungeLayout.querySelectorAll(".lounge-section")[2]
+      },
+      {
+        id: "spaces",
+        label: "Community Spaces",
+        icon: "💌",
+        description: "Leave a little kindness",
+        panel: loungeLayout.querySelectorAll(".lounge-section")[3]
+      },
+      {
+        id: "public",
+        label: "Public Tambayan",
+        icon: "🌍",
+        description: "Posts, comments, and members",
+        panel: loungeView.querySelector("#publicCommunity")
+      },
+      {
+        id: "online",
+        label: "Online Tambayan",
+        icon: "🪩",
+        description: "Private rooms and live chat",
+        panel: loungeLayout.querySelector("#onlineTambayan")
+      }
+    ].filter(item => item.panel);
+
+    const hub = document.createElement("section");
+    hub.className = "lounge-hub";
+    hub.innerHTML = `
+      <div class="lounge-hub-heading">
+        <p class="eyebrow">YOUR LOUNGE, YOUR PACE</p>
+        <h3>Where would you like to go?</h3>
+        <p>Pick a corner. The rest can wait until you need it.</p>
+      </div>
+      <div class="lounge-hub-grid" role="group" aria-label="Tambayan Lounge destinations">
+        ${destinations.map(item => `
+          <button class="lounge-hub-tile" type="button" data-lounge-open="${item.id}" aria-controls="lounge-panel-${item.id}">
+            <span class="lounge-hub-icon" aria-hidden="true">${item.icon}</span>
+            <span class="lounge-hub-copy"><strong>${item.label}</strong><small>${item.description}</small></span>
+            <span class="lounge-hub-arrow" aria-hidden="true">↗</span>
+          </button>
+        `).join("")}
+      </div>
+    `;
+
+    const back = document.createElement("button");
+    back.type = "button";
+    back.className = "lounge-back-button";
+    back.textContent = "← Back to Lounge";
+    back.hidden = true;
+    back.addEventListener("click", () => showLoungeHub());
+
+    loungeLayout.insertBefore(hub, welcome?.nextSibling || loungeLayout.firstChild);
+    loungeView.querySelector(".section-heading#hangout")?.appendChild(back);
+
+    destinations.forEach(item => {
+      item.panel.id = item.panel.id || "lounge-panel-" + item.id;
+      item.panel.dataset.loungePanel = item.id;
+      item.panel.hidden = true;
+    });
+
+    // The public community module creates its own section beside the Lounge.
+    // Bring it into the Lounge layout so it can use the same compact navigation.
+    const publicPanel = loungeView.querySelector("#publicCommunity");
+    if (publicPanel && publicPanel.parentElement !== loungeLayout) {
+      loungeLayout.appendChild(publicPanel);
+    }
+
+    // The chat module inserts this section into the Lounge layout before this file runs.
+    const onlinePanel = loungeLayout.querySelector("#onlineTambayan");
+    if (onlinePanel) {
+      onlinePanel.dataset.loungePanel = "online";
+      onlinePanel.hidden = true;
+    }
+
+    function showLoungeHub() {
+      if (welcome) welcome.hidden = false;
+      hub.hidden = false;
+      back.hidden = true;
+      destinations.forEach(item => { item.panel.hidden = true; });
+      loungeView.dataset.loungeOpen = "hub";
+    }
+
+    function openLoungePanel(id) {
+      const item = destinations.find(destination => destination.id === id);
+      if (!item) return;
+      if (welcome) welcome.hidden = true;
+      hub.hidden = true;
+      destinations.forEach(destination => {
+        destination.panel.hidden = destination.id !== id;
+      });
+      back.hidden = false;
+      loungeView.dataset.loungeOpen = id;
+      loungeView.querySelector(".section-heading#hangout")?.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+
+    hub.addEventListener("click", event => {
+      const button = event.target.closest("[data-lounge-open]");
+      if (button) openLoungePanel(button.dataset.loungeOpen);
+    });
+
+    showLoungeHub();
+  }
+
+  const loungeStyle = document.createElement("style");
+  loungeStyle.id = "lounge-hub-navigation-styles";
+  loungeStyle.textContent = `
+    #view-community .lounge-hub { margin: 18px 0 32px; }
+    #view-community .lounge-hub-heading { margin: 0 0 16px; }
+    #view-community .lounge-hub-heading h3 { margin: 5px 0; font-size: clamp(21px,3vw,27px); }
+    #view-community .lounge-hub-heading > p:last-child { margin: 5px 0; color: var(--muted); font-size: 13px; }
+    #view-community .lounge-hub-grid { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 11px; }
+    #view-community .lounge-hub-tile { display: grid; grid-template-columns: 44px minmax(0,1fr) 18px; align-items: center; gap: 12px; min-width: 0; min-height: 82px; padding: 15px; border: 1px solid var(--line); border-radius: 16px; background: var(--panel); color: var(--text); text-align: left; cursor: pointer; }
+    #view-community .lounge-hub-tile:hover { border-color: var(--accent); background: var(--panel2); }
+    #view-community .lounge-hub-icon { display: grid; place-items: center; width: 42px; height: 42px; border-radius: 13px; background: var(--panel2); font-size: 23px; }
+    #view-community .lounge-hub-copy { display: grid; gap: 4px; min-width: 0; }
+    #view-community .lounge-hub-copy strong { font-size: 13px; }
+    #view-community .lounge-hub-copy small { color: var(--muted); font-size: 10px; line-height: 1.4; }
+    #view-community .lounge-hub-arrow { color: var(--accent); font-size: 17px; }
+    #view-community .lounge-back-button { display: inline-flex; align-items: center; min-height: 40px; margin: 14px 0 4px; padding: 9px 13px; border: 1px solid var(--line); border-radius: 11px; background: var(--panel); color: var(--text); font: inherit; font-size: 12px; font-weight: 800; cursor: pointer; }
+    #view-community [data-lounge-panel][hidden], #view-community .lounge-hub[hidden], #view-community .lounge-back-button[hidden], #view-community .lounge-welcome[hidden] { display: none !important; }
+    #view-community .lounge-section[data-lounge-panel] { margin-top: 18px; }
+    #view-community #publicCommunity[data-lounge-panel], #view-community #onlineTambayan[data-lounge-panel] { margin-top: 18px; }
+    #view-community .section-heading#hangout { scroll-margin-top: 16px; }
+    @media(max-width:560px) {
+      #view-community .lounge-hub-grid { grid-template-columns: 1fr; gap: 9px; }
+      #view-community .lounge-hub-tile { min-height: 72px; padding: 12px; }
+    }
+    @media(prefers-reduced-motion:reduce) { #view-community .lounge-hub-tile { transition: none; } }
+  `;
+  document.head.appendChild(loungeStyle);
+
   const routeMap = {};
 
   definitions.forEach(definition => {
