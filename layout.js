@@ -386,6 +386,7 @@
     destinations.forEach(item => {
       item.panel.id = item.panel.id || "lounge-panel-" + item.id;
       item.panel.dataset.loungePanel = item.id;
+      if (item.id === "garden") item.panel.classList.add("lounge-community-garden");
       item.panel.hidden = true;
     });
 
@@ -450,6 +451,21 @@
     #view-community .lounge-back-button { display: inline-flex; align-items: center; min-height: 40px; margin: 14px 0 4px; padding: 9px 13px; border: 1px solid var(--line); border-radius: 11px; background: var(--panel); color: var(--text); font: inherit; font-size: 12px; font-weight: 800; cursor: pointer; }
     #view-community [data-lounge-panel][hidden], #view-community .lounge-hub[hidden], #view-community .lounge-back-button[hidden], #view-community .lounge-welcome[hidden] { display: none !important; }
     #view-community .lounge-section[data-lounge-panel] { margin-top: 18px; }
+    /* Give Daily Poll and Mood Garden their own full-width space. */
+    #view-community .lounge-community-garden .tool-grid {
+      grid-template-columns: minmax(0,1fr);
+      gap: 18px;
+    }
+    #view-community .lounge-community-garden .tool-card {
+      min-height: 150px;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+    }
+    #view-community .lounge-community-garden .tool-card > span { font-size: 32px; }
+    #view-community .lounge-community-garden .tool-card h3 { margin: 12px 0 7px; font-size: 18px; }
+    #view-community .lounge-community-garden .tool-card p { max-width: 48ch; line-height: 1.65; }
     #view-community #publicCommunity[data-lounge-panel], #view-community #onlineTambayan[data-lounge-panel] { margin-top: 18px; }
     #view-community .section-heading#hangout { scroll-margin-top: 16px; }
     @media(max-width:560px) {
