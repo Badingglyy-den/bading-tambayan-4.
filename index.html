@@ -725,7 +725,29 @@
 
     <footer class="footer"><span>✦ BADING TAMBAYAN 4.2 ✦</span><p>Made for the soft-hearted, the chaotic, and everyone in between.</p><button class="tiny-link" id="backupOpen">Backup & settings</button></footer>
   </main>
+  
+<dialog id="accountDialog" class="modal">
+  <form method="dialog" class="modal-close">
+    <button aria-label="Close">✕</button>
+  </form>
 
+  <p class="eyebrow">WELCOME TO YOUR SAFE SPACE</p>
+  <h2 id="accountTitle">Welcome back! 💜</h2>
+  <p id="accountDescription">Log in to continue your Bading Tambayan journey.</p>
+
+  <label for="accountEmail">Email address</label>
+  <input id="accountEmail" type="email" placeholder="Enter your email" autocomplete="email">
+
+  <label for="accountPassword">Password</label>
+  <input id="accountPassword" type="password" placeholder="Enter your password" autocomplete="current-password">
+
+  <button class="primary-btn full-btn" id="accountLogin" type="button">Log in</button>
+  <button class="soft-btn full-btn" id="accountSignup" type="button">Create an account</button>
+  <button class="tiny-link" id="accountForgot" type="button">Forgot password?</button>
+
+  <p class="form-note" id="accountStatus" role="status" aria-live="polite"></p>
+</dialog>
+  
   <dialog id="profileDialog" class="modal">
   <form method="dialog" class="modal-close"><button aria-label="Close">✕</button></form>
   <p class="eyebrow">YOUR PLAYER CARD</p>
