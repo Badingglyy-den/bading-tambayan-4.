@@ -99,9 +99,14 @@ function normalize(x) {
   };
 }
 
+let activeStorageKey = KEY;
+let localSaveExists = Boolean(localStorage.getItem(KEY));
+const ACCOUNT_OWNER_KEY = "tambayanverse_42_account_owner";
+
 function save() {
   state.version = 42;
-  localStorage.setItem(KEY, JSON.stringify(state));
+  localStorage.setItem(activeStorageKey, JSON.stringify(state));
+  localSaveExists = true;
   render();
 
   window.dispatchEvent(new CustomEvent("tambayan:progress-saved", {
@@ -167,6 +172,77 @@ function mergeProgress(local, cloud) {
 
   return cloud !== undefined ? cloud : local;
         }
+
+// Account-aware progress bridge used by multiplayer.js.
+// Each authenticated account gets a separate localStorage save.
+window.tambayanProgress = {
+  useAccount(userId) {
+    if (!userId || typeof userId !== "string") {
+      throw new Error("A valid account ID is required to load progress.");
+    }
+
+    const accountKey = KEY + "_user_" + encodeURIComponent(userId);
+    const accountSave = safeParse(localStorage.getItem(accountKey));
+
+    activeStorageKey = accountKey;
+
+    if (accountSave && typeof accountSave === "object") {
+      state = normalize(accountSave?.data || accountSave);
+      localSaveExists = true;
+    } else {
+      const ownerId = localStorage.getItem(ACCOUNT_OWNER_KEY);
+
+      // The first authenticated account may claim the pre-account save.
+      // Every later account receives a separate fresh save.
+      if (!ownerId && localSaveExists) {
+        state = normalize(state);
+        localStorage.setItem(accountKey, JSON.stringify(state));
+        localStorage.setItem(ACCOUNT_OWNER_KEY, userId);
+        localSaveExists = true;
+      } else {
+        state = defaultState();
+        localSaveExists = false;
+      }
+    }
+
+    render();
+    return JSON.parse(JSON.stringify(state));
+  },
+
+  hasLocalSave() {
+    return localSaveExists && Boolean(localStorage.getItem(activeStorageKey));
+  },
+
+  getState() {
+    return JSON.parse(JSON.stringify(state));
+  },
+
+  setProfile(profile) {
+    if (!profile || typeof profile !== "object") return this.getState();
+    state.profile = {
+      ...state.profile,
+      name: String(profile.display_name || state.profile.name || "Tambay").trim().slice(0, 24),
+      avatar: String(profile.avatar || state.profile.avatar || "💜").slice(0, 8)
+    };
+    save();
+    return this.getState();
+  },
+
+  applyCloudProgress(cloudProgress) {
+    if (!cloudProgress || typeof cloudProgress !== "object" || Array.isArray(cloudProgress)) {
+      return this.getState();
+    }
+
+    state = localSaveExists
+      ? normalize(mergeProgress(state, cloudProgress))
+      : normalize(cloudProgress);
+
+    localStorage.setItem(activeStorageKey, JSON.stringify(state));
+    localSaveExists = true;
+    render();
+    return this.getState();
+  }
+};
 
 function toast(msg) {
   const t = $("toast");
