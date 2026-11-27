@@ -5582,3 +5582,42 @@ body[data-theme="matcha"] #home .footer{color:var(--muted)}
   #view-community .shared-spaces-grid { grid-template-columns: 1fr; gap: 13px; }
   #view-community .shared-space-card { min-height: 0; padding: 20px; }
 }
+
+
+/* FINAL LOUNGE GRID OVERRIDES — full-width cards, no squeezed side-by-side tiles. */
+#view-community .hangout-layout > .lounge-community-garden > .tool-grid,
+#view-community .hangout-layout > .lounge-discovery-corner > .tool-grid {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) !important;
+  width: 100% !important;
+  gap: 18px !important;
+}
+#view-community .hangout-layout > .lounge-community-garden > .tool-grid > .tool-card,
+#view-community .hangout-layout > .lounge-discovery-corner > .tool-grid > .tool-card {
+  width: 100% !important;
+  min-width: 0 !important;
+  min-height: 0 !important;
+  box-sizing: border-box !important;
+  padding: clamp(20px, 3vw, 30px) !important;
+}
+#view-community .hangout-layout > .lounge-community-garden > .tool-grid > .tool-card p,
+#view-community .hangout-layout > .lounge-discovery-corner > .tool-grid > .tool-card p {
+  max-width: 58ch;
+  line-height: 1.7;
+}
+#view-community .hangout-layout > .lounge-discovery-corner > .tool-grid > .tool-card > span {
+  font-size: 32px;
+  line-height: 1.2;
+}
+#view-community .hangout-layout > .lounge-discovery-corner > .tool-grid > .tool-card h3 {
+  margin: 10px 0 4px;
+  font-size: 19px;
+}
+#view-community .hangout-layout > .shared-spaces-intro .shared-spaces-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+}
+@media (max-width: 560px) {
+  #view-community .hangout-layout > .shared-spaces-intro .shared-spaces-grid {
+    grid-template-columns: minmax(0, 1fr) !important;
+  }
+}
