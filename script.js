@@ -103,7 +103,81 @@ function save() {
   state.version = 42;
   localStorage.setItem(KEY, JSON.stringify(state));
   render();
+
+  window.dispatchEvent(new CustomEvent("tambayan:progress-saved", {
+    detail: { progress: JSON.parse(JSON.stringify(state)) }
+  }));
 }
+
+function mergeProgress(local, cloud) {
+  if (Array.isArray(local) || Array.isArray(cloud)) {
+    const combined = [
+      ...(Array.isArray(local) ? local : []),
+      ...(Array.isArray(cloud) ? cloud : [])
+    ];
+    const seen = new Set();
+    return combined.filter(item => {
+      const key = JSON.stringify(item);
+      if (seen.has(key)) return false;
+      seen.add(key);
+      return true;
+    });
+  }
+
+  if (
+    local && cloud &&
+    typeof local === "object" &&
+    typeof cloud === "object"
+  ) {
+    const merged = { ...cloud, ...local };
+    for (const key of new Set([
+      ...Object.keys(cloud),
+      ...Object.keys(local)
+    ])) {
+      if (key in local && key in cloud) {
+        merged[key] = mergeProgress(local[key], cloud[key]);
+      }
+    }
+    return merged;
+  }
+
+  if (typeof local === "number" && typeof cloud === "number") {
+    return Math.max(local, cloud);
+  }
+
+  if (local !== undefined && local !== null && local !== "") {
+    return local;
+  }
+
+  return cloud !== undefined ? cloud : local;
+}
+
+window.tambayanProgress = {
+  getState() {
+    return JSON.parse(JSON.stringify(state));
+  },
+
+  hasLocalSave() {
+    return [KEY, ...LEGACY_KEYS].some(key =>
+      localStorage.getItem(key) !== null
+    );
+  },
+
+  applyCloudProgress(cloudProgress) {
+    if (
+      !cloudProgress ||
+      typeof cloudProgress !== "object" ||
+      Array.isArray(cloudProgress)
+    ) {
+      return this.getState();
+    }
+
+    state = normalize(mergeProgress(state, cloudProgress));
+    localStorage.setItem(KEY, JSON.stringify(state));
+    render();
+    return this.getState();
+  }
+};
 
 function toast(msg) {
   const t = $("toast");
