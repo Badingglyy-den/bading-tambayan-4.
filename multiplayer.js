@@ -2469,8 +2469,33 @@ $("onlinePhotoInput").addEventListener("change", async event => {
         font-size: 16px;
       }
 
-      #onlineTambayan .online-room-top {
+            #onlineTambayan .online-room-top {
         gap: 12px;
+      }
+
+      /* Bigger mobile chatroom */
+      #onlineTambayan .online-panel {
+        padding: 8px;
+      }
+
+      #onlineTambayan .online-room {
+        padding-left: 0;
+        padding-right: 0;
+      }
+
+      #onlineTambayan .online-columns > .online-box {
+        padding: 10px;
+      }
+
+      #onlineTambayan .online-messages {
+        height: min(48vh, 480px);
+        min-height: 340px;
+        max-height: 480px;
+      }
+
+      #onlineTambayan .online-compose input {
+        flex: 1;
+        width: 100%;
       }
     }
   `;
