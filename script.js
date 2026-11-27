@@ -1103,6 +1103,9 @@ $("fortuneBtn").onclick = () => {
     "The stars say: stop checking their profile. Focus, sis.",
     "A small opportunity will ask you to be brave. Say hello."
   ]);
+    $("fortuneText").classList.remove("revealed");
+  void $("fortuneText").offsetWidth;
+  $("fortuneText").classList.add("revealed");
 
   visit("library");
   state.achievements.push("library");
