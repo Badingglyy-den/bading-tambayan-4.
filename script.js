@@ -1113,12 +1113,19 @@ $("fortuneBtn").onclick = () => {
 };
 
 $("courtBtn").onclick = () => {
-  $("courtText").textContent = random([
+  const verdict = $("courtText");
+
+  verdict.classList.remove("revealed");
+  void verdict.offsetWidth;
+
+  verdict.textContent = random([
     "VERDICT: Not guilty. You were just being iconic.",
     "VERDICT: Guilty of entertaining nonsense. Sentence: log off.",
     "The court finds you innocent, but your screenshots are suspicious.",
     "Case dismissed. The judge needs a snack break."
   ]);
+
+  verdict.classList.add("revealed");
 
   visit("library");
 };
