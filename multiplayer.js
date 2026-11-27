@@ -2380,7 +2380,7 @@ if (String(message.content || "").startsWith("[[PHOTO]]")) {
       message.textContent = "Sending password reset email...";
 
       const { error } = await client.auth.resetPasswordForEmail(email, {
-        redirectTo: window.location.origin
+        redirectTo: "https://badingglyy-den.github.io/bading-tambayan-4./"
       });
 
       if (error) throw error;
