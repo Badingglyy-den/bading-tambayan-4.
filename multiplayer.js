@@ -2233,59 +2233,7 @@ if (String(message.content || "").startsWith("[[PHOTO]]")) {
 $("onlineManageAccount").onclick = () => {
   $("accountOpen").click();
 };
-
-    /// ONLINE TAMBAYAN — CREATE ACCOUNT
-  $("onlineCreateAccount").onclick = async () => {
-    const email = $("onlineAccountEmail").value.trim();
-    const password = $("onlineAccountPassword").value;
-    const message = $("onlineAccountStatus");
-
-    if (!email || !password) {
-      message.textContent = "Please enter your email and password.";
-      return;
-    }
-
-    if (password.length < 8) {
-      message.textContent = "Password must be at least 8 characters.";
-      return;
-    }
-
-    try {
-      message.textContent = "Checking your account...";
-
-      const { data, error: userError } = await client.auth.getUser();
-      if (userError) throw userError;
-
-      if (data.user.is_anonymous) {
-        const { error } = await client.auth.updateUser({ email });
-        if (error) throw error;
-
-        message.textContent =
-          "Verification email sent! Confirm your email, return to this site, then tap Create account again to set your password.";
-      } else {
-        if (data.user.email !== email) {
-          message.textContent =
-            "This account is linked to a different email. Please use your verified email.";
-          return;
-        }
-
-        if (!data.user.email_confirmed_at) {
-          message.textContent =
-            "Please confirm your email first, then try again.";
-          return;
-        }
-
-        const { error } = await client.auth.updateUser({ password });
-        if (error) throw error;
-
-        message.textContent =
-          "Your password is saved! Your account is ready. 💜";
-      }
-    } catch (error) {
-      message.textContent = error.message;
-    }
-  }; 
-  
+    
     // BADING TAMBAYAN — OPEN MAIN ACCOUNT WINDOW
   $("accountOpen").onclick = () => {
   const message = $("accountStatus");
@@ -2327,13 +2275,13 @@ $("onlineManageAccount").onclick = () => {
     $("accountLogin").style.display = "";
     $("accountSignup").style.display = "";
     $("accountForgot").style.display = "";
-    $("accountNewPasswordLabel").style.display = "none";
-$("accountNewPassword").style.display = "none";
-$("accountChangePassword").style.display = "none";
     $("accountNewPasswordLabel").style.display = "";
 $("accountNewPassword").style.display = "";
 $("accountChangePassword").style.display = "";
 $("accountNewPassword").value = "";
+    $("accountNewPasswordLabel").style.display = "none";
+$("accountNewPassword").style.display = "none";
+$("accountChangePassword").style.display = "none";
 
     message.textContent = "";
     $("accountDialog").showModal();
