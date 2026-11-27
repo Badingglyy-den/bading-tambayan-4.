@@ -4519,6 +4519,18 @@
 #view-mystery .tool-card:nth-child(3) p.revealed {
   animation: gossipReveal .6s ease both;
    }
+/* PALAKANG MARITES — GOSSIP STAMP */
+
+#view-mystery .frog-stamp {
+  margin: 8px 0 10px;
+  color: #b9d49a;
+  font-family: Georgia, serif;
+  font-size: 9px;
+  font-weight: bold;
+  letter-spacing: 2px;
+  text-align: center;
+  text-shadow: 0 0 10px rgba(153, 190, 120, .35);
+}
 
 
 
