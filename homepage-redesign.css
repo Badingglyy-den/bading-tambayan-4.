@@ -4458,6 +4458,30 @@
   text-align: center;
   text-shadow: 0 0 10px rgba(213, 183, 127, .3);
 }
+/* BADING COURT — COURTROOM SEAL */
+
+#view-mystery .tool-card:nth-child(2)::after {
+  content: "§";
+  position: absolute;
+  top: 12px;
+  right: 17px;
+  color: rgba(213, 183, 127, .45);
+  font-family: Georgia, serif;
+  font-size: 25px;
+  pointer-events: none;
+  animation: courtSeal 4s ease-in-out infinite;
+}
+
+@keyframes courtSeal {
+  0%, 100% {
+    opacity: .35;
+    transform: rotate(-8deg);
+  }
+  50% {
+    opacity: .9;
+    transform: rotate(8deg);
+  }
+}
 
 
 
