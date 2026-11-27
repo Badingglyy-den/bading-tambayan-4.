@@ -9,7 +9,7 @@
   <meta name="theme-color" content="#17112f">
   <title>Bading Tambayan 4.2 — The Tambayanverse</title>
   <link rel="stylesheet" href="style.css?v=20261128-lightthemes1">
-  <link rel="stylesheet" href="homepage-redesign.css?v=27-atticchapter1">
+  <link rel="stylesheet" href="homepage-redesign.css?v=28-labworkshop1">
   <style id="tambayanverse-map-desktop-fix">
 @media (min-width: 601px) {
 
@@ -666,7 +666,68 @@
       <article class="tool-card panel"><span>🎭</span><h3>Drama Queen Button</h3><p id="dramaText">The situation is not that deep...</p><button class="small-btn" id="dramaBtn">Activate drama</button></article>
       <article class="tool-card panel"><span>💅</span><h3>Compliment or Roast</h3><p id="complimentText">Ready ka na ba sa truth?</p><button class="small-btn" id="complimentBtn">Reveal my fate</button></article>
     </section>
-    
+
+    <section class="lab-workshop" aria-label="Creative laboratory workstations">
+      <div class="lab-workshop-heading">
+        <span class="lab-file-tag">FIELD NOTES · 03A</span>
+        <h3>After-hours workshop</h3>
+        <p>Three benches. No grades, no timers, and absolutely no responsible supervision.</p>
+      </div>
+
+      <article class="lab-bench creature-bench">
+        <div class="lab-bench-top"><span>01 / CREATURE BENCH</span><span>SPECIMEN DESIGN</span></div>
+        <div class="lab-bench-heading"><span class="lab-bench-icon">🧬</span><div><h3>Create-a-Creature</h3><p>Build a tiny being that has no business existing. Keep the ones you like.</p></div></div>
+        <div class="creature-workspace">
+          <div class="creature-preview-wrap"><div id="creaturePreview" class="creature-preview" aria-live="polite">🐸</div><span id="creatureSpecimenLabel">UNNAMED SPECIMEN</span></div>
+          <div class="creature-controls">
+            <label>Body <select id="creatureBody"><option value="🐸">Frog-ish</option><option value="🐱">Cat-ish</option><option value="🐙">Octopus-ish</option><option value="👾">Little alien</option><option value="👻">Friendly ghost</option><option value="🐲">Tiny dragon</option><option value="🦇">Night creature</option><option value="🪼">Jelly friend</option></select></label>
+            <label>Expression <select id="creatureFace"><option value="👀">Curious</option><option value="😴">Sleepy</option><option value="😈">Mischievous</option><option value="🥹">Soft-hearted</option><option value="🤨">Suspicious</option><option value="🤩">Starry-eyed</option></select></label>
+            <label>Accessory <select id="creatureAccessory"><option value="🎀">Tiny bow</option><option value="👑">Wonky crown</option><option value="🪴">Leaf hat</option><option value="🕶️">Cool shades</option><option value="✨">Sparkles</option><option value="🧢">Little cap</option><option value="🫧">Bubbles</option><option value="">No accessory</option></select></label>
+            <label>Personality <select id="creaturePersonality"><option>Polite menace</option><option>Professional napper</option><option>Overly curious</option><option>Secretly sentimental</option><option>Chaotic good</option><option>Shy but observant</option></select></label>
+            <label>Name your specimen <input id="creatureName" maxlength="22" placeholder="e.g. Sir Ribbit III"></label>
+            <button class="lab-action" id="saveCreature" type="button">Add to specimen shelf</button>
+            <p id="creatureStatus" class="lab-feedback" aria-live="polite">Your specimen is waiting for a name.</p>
+          </div>
+        </div>
+        <div class="specimen-shelf"><div class="lab-subhead"><strong>Your specimen shelf</strong><span id="creatureCount">0 saved</span></div><div id="creatureCollection" class="specimen-list"><p class="lab-empty">Nothing in the jars yet.</p></div><p class="lab-local-note">Saved on this device only.</p></div>
+      </article>
+
+      <article class="lab-bench craft-bench">
+        <div class="lab-bench-top"><span>02 / DESIGN DESK</span><span>VISUAL COMPOSITIONS</span></div>
+        <div class="lab-bench-heading"><span class="lab-bench-icon">✂️</span><div><h3>Digital Craft Table</h3><p>Make a sticker or mini poster. Arrange a few things, then export the finished design.</p></div></div>
+        <div class="craft-workspace">
+          <div class="craft-preview" id="craftPreview" data-paper="lilac">
+            <span class="craft-preview-decoration" id="craftDecoration">✦ ✿ ✦</span>
+            <span class="craft-preview-icon" id="craftIconPreview">🫧</span>
+            <strong id="craftTitlePreview">little reminder</strong>
+            <span class="craft-preview-footer" id="craftFooterPreview">MADE IN THE LAB</span>
+          </div>
+          <div class="craft-controls">
+            <label>What should it say? <input id="craftTitle" maxlength="32" value="little reminder"></label>
+            <label>Little picture <select id="craftIcon"><option>🫧</option><option>🐸</option><option>💜</option><option>🌷</option><option>⭐</option><option>🪩</option><option>🍓</option><option>🦋</option><option>🎀</option><option>👾</option></select></label>
+            <label>Paper color <select id="craftPaper"><option value="lilac">Soft lilac</option><option value="peach">Peach milk</option><option value="matcha">Matcha cream</option><option value="night">Night sky</option><option value="pink">Bubblegum</option></select></label>
+            <label>Decoration <select id="craftDecorationChoice"><option value="✦ ✿ ✦">Little stars & flowers</option><option value="♡ ♡ ♡">Tiny hearts</option><option value="☁︎ ✧ ☁︎">Cloudy day</option><option value="✳︎ ✳︎ ✳︎">Retro sparkles</option><option value="〰︎ 〰︎ 〰︎">Wavy lines</option></select></label>
+            <button class="lab-action" id="downloadCraft" type="button">Save design as PNG</button>
+            <p id="craftStatus" class="lab-feedback" aria-live="polite">Your preview updates as you edit.</p>
+          </div>
+        </div>
+      </article>
+
+      <article class="lab-bench machine-bench">
+        <div class="lab-bench-top"><span>03 / INVENTION BENCH</span><span>MECHANICAL NONSENSE</span></div>
+        <div class="lab-bench-heading"><span class="lab-bench-icon">⚙️</span><div><h3>Build-a-Machine</h3><p>Pick three parts and see what your questionable invention actually does.</p></div></div>
+        <div class="machine-workspace">
+          <div class="machine-visual" aria-hidden="true"><span id="machinePowerIcon">🔋</span><span class="machine-join">＋</span><span id="machineBodyIcon">🛞</span><span class="machine-join">＋</span><span id="machineOutputIcon">🎈</span></div>
+          <div class="machine-controls">
+            <label>Power source <select id="machinePower"><option value="battery" data-icon="🔋">Borrowed battery</option><option value="sun" data-icon="☀️">Pocket sunshine</option><option value="hamster" data-icon="🐹">Very busy hamster</option><option value="scream" data-icon="📣">One dramatic scream</option><option value="wind" data-icon="💨">Tiny windmill</option></select></label>
+            <label>Main body <select id="machineBody"><option value="wheel" data-icon="🛞">Three suspicious wheels</option><option value="toaster" data-icon="🍞">Retired toaster</option><option value="umbrella" data-icon="☂️">Upside-down umbrella</option><option value="box" data-icon="📦">Cardboard box</option><option value="fan" data-icon="🪭">Overworked fan</option></select></label>
+            <label>Output <select id="machineOutput"><option value="balloons" data-icon="🎈">Balloons</option><option value="toast" data-icon="🍞">Perfect toast</option><option value="confetti" data-icon="🎊">Confetti</option><option value="soap" data-icon="🫧">Soap bubbles</option><option value="flowers" data-icon="🌼">Tiny flowers</option></select></label>
+            <button class="lab-action" id="testMachine" type="button">Run the invention</button>
+          </div>
+        </div>
+        <div id="machineResult" class="machine-result" aria-live="polite"><span class="machine-result-label">TEST RESULT</span><p>Your machine is currently three parts and a dream.</p></div>
+      </article>
+    </section>
 
     <section class="section-heading" id="mystery"><div><p class="eyebrow">WORLD 04 · OPEN AT YOUR OWN RISK</p><h2>Mystery Library</h2></div></section>
     <div class="mystery-library-intro">
@@ -987,6 +1048,7 @@
   <script src="daily-tambayan.js?v=5"></script>
   <script src="attic.js?v=6"></script>
   <script src="arcade-expansion.js?v=1"></script>
+  <script src="lab-workshop.js?v=1"></script>
 
 <!-- Register notification service worker -->
 <script>
