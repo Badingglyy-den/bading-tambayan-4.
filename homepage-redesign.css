@@ -5066,6 +5066,126 @@
   font-size: 8px;
   letter-spacing: 1.5px;
 }
+/* ===== COSMIC PLAYER HUD ===== */
+
+.top-actions {
+  gap: 8px;
+}
+
+.star-wallet {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 11px;
+  border: 1px solid rgba(255, 215, 130, .28);
+  border-radius: 999px;
+  background: linear-gradient(135deg, rgba(255, 210, 115, .17), rgba(255, 255, 255, .045));
+  color: #ffe5a4;
+  box-shadow: 0 5px 18px rgba(0, 0, 0, .15);
+}
+
+.star-wallet-icon {
+  color: #ffd36e;
+  font-size: 17px;
+}
+
+.star-wallet-label {
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 1px;
+}
+
+.star-wallet b {
+  font-size: 14px;
+  font-variant-numeric: tabular-nums;
+}
+
+.account-chip {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  max-width: 150px;
+  min-height: 40px;
+  padding: 8px 12px;
+  border: 1px solid rgba(190, 160, 255, .3);
+  border-radius: 999px;
+  background: linear-gradient(135deg, rgba(169, 139, 255, .2), rgba(255, 255, 255, .055));
+  color: var(--text);
+  font: inherit;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.account-chip-name {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.account-chip-icon {
+  color: #d7c5ff;
+}
+
+.profile-avatar-btn {
+  display: grid;
+  place-items: center;
+  width: 42px;
+  min-width: 42px;
+  height: 42px;
+  border: 1px solid rgba(213, 190, 255, .5);
+  border-radius: 50%;
+  background: radial-gradient(circle at 30% 20%, rgba(255, 255, 255, .22), rgba(169, 139, 255, .15));
+  box-shadow: 0 0 0 3px rgba(169, 139, 255, .08), 0 5px 16px rgba(0, 0, 0, .18);
+  font-size: 22px;
+}
+
+#headerAvatar {
+  line-height: 1;
+}
+
+@media (max-width: 560px) {
+  .top-actions {
+    gap: 5px;
+  }
+
+  .star-wallet {
+    gap: 4px;
+    padding: 7px 9px;
+  }
+
+  .star-wallet-label {
+    display: none;
+  }
+
+  .star-wallet b {
+    font-size: 13px;
+  }
+
+  .account-chip {
+    max-width: 105px;
+    min-height: 38px;
+    padding: 7px 9px;
+    font-size: 11px;
+  }
+
+  .account-chip-icon {
+    display: none;
+  }
+
+  .profile-avatar-btn {
+    width: 38px;
+    min-width: 38px;
+    height: 38px;
+    font-size: 20px;
+  }
+}
+
+@media (max-width: 380px) {
+  .account-chip {
+    max-width: 84px;
+  }
+}
 
 
 
