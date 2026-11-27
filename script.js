@@ -33,6 +33,7 @@ const defaultState = () => ({
   theme: "violet",
   ownedItems: [],
   completedCollections: [],
+  equippedItems: {},
   hangoutPosts: [],
   kindPosts: [],
   lastHangoutQuestion: ""
@@ -96,6 +97,7 @@ function normalize(x) {
     completed: Array.isArray(x.completed) ? x.completed : [],
     ownedItems: Array.isArray(x.ownedItems) ? x.ownedItems : [],
     completedCollections: Array.isArray(x.completedCollections) ? x.completedCollections : [],
+    equippedItems: x.equippedItems && typeof x.equippedItems === "object" && !Array.isArray(x.equippedItems) ? x.equippedItems : {},
     hangoutPosts: Array.isArray(x.hangoutPosts) ? x.hangoutPosts : [],
     kindPosts: Array.isArray(x.kindPosts) ? x.kindPosts : []
   };
@@ -406,6 +408,31 @@ function render() {
   $("starCount").textContent = state.stars;
   $("shopStars").textContent = state.stars;
   $("welcomeName").textContent = state.profile.name || "Sis";
+  const equipped = state.equippedItems || {};
+  const titleItem = shopItems.find(item => item.id === equipped.title);
+  const profileTitle = $("equippedProfileTitle");
+  if (profileTitle) profileTitle.textContent = titleItem ? titleItem.name : "";
+  const headerAvatar = $("headerAvatar");
+  if (headerAvatar) {
+    headerAvatar.dataset.frame = equipped.frame || "";
+    headerAvatar.dataset.aura = equipped.aura || "";
+    headerAvatar.dataset.decoration = equipped.avatar || "";
+  }
+  const preview = $("avatarPreview");
+  if (preview) {
+    preview.dataset.frame = equipped.frame || "";
+    preview.dataset.aura = equipped.aura || "";
+    preview.dataset.decoration = equipped.avatar || "";
+  }
+  const showcase = $("equippedShowcase");
+  if (showcase) {
+    const slots = ["title","avatar","frame","aura","badge"];
+    showcase.innerHTML = slots.map(slot => {
+      const item = shopItems.find(x => x.id === equipped[slot]);
+      return item ? `<span class="equipped-chip">${item.icon} ${item.name}</span>` : "";
+    }).filter(Boolean).join("") || '<span class="empty-state">No treasures equipped yet.</span>';
+  }
+  renderEquipmentOptions();
   const headerAvatar = $("headerAvatar");
 if (headerAvatar) {
   headerAvatar.textContent = state.profile.avatar || "💜";
@@ -594,6 +621,31 @@ function renderShop() {
     }).join("");
   }
 }
+
+function renderEquipmentOptions() {
+  const slots = {
+    title: ["Titles", "Choose a title"],
+    avatar: ["Avatars", "Choose an avatar decoration"],
+    frame: ["Frames", "Choose a frame"],
+    aura: ["Auras", "Choose an aura"],
+    badge: ["Badges", "Choose a badge"]
+  };
+  const root = $("equipmentOptions");
+  if (!root) return;
+  root.innerHTML = Object.entries(slots).map(([slot, config]) => {
+    const items = shopItems.filter(item => item.category === config[0] && state.ownedItems.includes(item.id));
+    const selected = state.equippedItems?.[slot] || "";
+    return `
+      <label class="equipment-slot"><span>${config[1]}</span>
+        <select data-equip-slot="${slot}">
+          <option value="">Nothing equipped</option>
+          ${items.map(item => `<option value="${item.id}" ${selected === item.id ? "selected" : ""}>${item.icon} ${item.name}</option>`).join("")}
+        </select>
+      </label>
+    `;
+  }).join("");
+}
+
 function renderAchievements() {
   const ach = [
     ["first", "First steps"],
@@ -1440,6 +1492,19 @@ $("diaryList").onclick = e => {
 /* The old local-only Hangout form and daily-question handlers are retired.
    The shared Kindness Wall is managed by kindness.js, so script.js must not
    attach a competing local-only handler to its button. */
+
+$("equipmentOptions").onchange = e => {
+  const select = e.target.closest("[data-equip-slot]");
+  if (!select) return;
+  const slot = select.dataset.equipSlot;
+  const itemId = select.value;
+  if (itemId && !state.ownedItems.includes(itemId)) return;
+  state.equippedItems = state.equippedItems || {};
+  if (itemId) state.equippedItems[slot] = itemId;
+  else delete state.equippedItems[slot];
+  save();
+  toast(itemId ? "Treasure equipped! ✨" : "Equipment updated.");
+};
 
 $("shopFilters").onclick = e => {
   const button = e.target.closest("[data-shop-filter]");
