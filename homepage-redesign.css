@@ -4554,6 +4554,49 @@
     opacity: 1;
   }
 }
+/* ASK THE UNIVERSE — COSMIC MESSAGE PANEL */
+
+#view-mystery .tool-card:nth-child(4) p {
+  min-height: 76px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 14px 0;
+  padding: 14px;
+  border: 1px solid rgba(171, 174, 235, .28);
+  border-left: 3px solid #aaa8ef;
+  border-radius: 8px;
+  background: rgba(12, 13, 35, .5);
+  color: #d9d8ff;
+  font-family: Georgia, serif;
+  font-size: 13px;
+  line-height: 1.8;
+  text-align: center;
+  text-shadow: 0 0 12px rgba(150, 145, 230, .2);
+}
+/* ASK THE UNIVERSE — COSMIC REVEAL */
+
+@keyframes cosmicReveal {
+  0% {
+    opacity: 0;
+    transform: scale(.94);
+    filter: blur(5px);
+  }
+  60% {
+    opacity: .8;
+    transform: scale(1.02);
+    filter: blur(1px);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+    filter: blur(0);
+  }
+}
+
+#view-mystery .tool-card:nth-child(4) p.revealed {
+  animation: cosmicReveal .8s ease both;
+   }
 
 
 
