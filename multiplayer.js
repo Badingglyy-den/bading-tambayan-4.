@@ -2361,6 +2361,32 @@ $("gateSignup").onclick = () => {
   $("accountDescription").textContent = "Create your account and come on in.";
 };
     // BADING TAMBAYAN — MAIN ACCOUNT LOGIN
+  $("accountLogin").onclick = async () => {
+  const email = $("accountEmail").value.trim();
+  const password = $("accountPassword").value;
+  const message = $("accountStatus");
+
+  if (!email || !password) {
+    message.textContent = "Please enter your email and password.";
+    return;
+  }
+
+  try {
+    message.textContent = "Logging in...";
+
+    const { error } = await client.auth.signInWithPassword({
+      email,
+      password
+    });
+
+    if (error) throw error;
+
+    message.textContent = "Welcome back! Reconnecting... 💜";
+    window.location.reload();
+  } catch (error) {
+    message.textContent = error.message;
+  }
+};
   $("accountSignup").onclick = async () => {
   const email = $("accountEmail").value.trim();
   const password = $("accountPassword").value;
@@ -2413,48 +2439,7 @@ $("gateSignup").onclick = () => {
     message.textContent = error.message;
   }
 };
-      
-  // BADING TAMBAYAN — MAIN ACCOUNT SIGNUP
-  $("accountSignup").onclick = async () => {
-    const email = $("accountEmail").value.trim();
-    const password = $("accountPassword").value;
-    const message = $("accountStatus");
-
-    if (!email || !password) {
-      message.textContent = "Please enter your email and password.";
-      return;
-    }
-
-    if (password.length < 8) {
-      message.textContent = "Password must be at least 8 characters.";
-      return;
-    }
-
-    try {
-      message.textContent = "Creating your account...";
-
-      const { data, error } = await client.auth.getUser();
-      if (error) throw error;
-
-      if (!data.user?.is_anonymous) {
-        message.textContent =
-          "You're already logged in with an account. 💜";
-        return;
-      }
-
-      const { error: updateError } = await client.auth.updateUser({
-        email,
-        password
-      });
-
-      if (updateError) throw updateError;
-
-      message.textContent =
-        "Verification email sent! Confirm your email to finish securing your account. Your chatroom identity is being preserved. 💜";
-    } catch (error) {
-      message.textContent = error.message;
-    }
-  };
+    
 
     // BADING TAMBAYAN — PASSWORD RECOVERY
   $("accountForgot").onclick = async () => {
