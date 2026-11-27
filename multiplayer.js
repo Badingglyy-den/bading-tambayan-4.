@@ -2209,6 +2209,68 @@ if (String(message.content || "").startsWith("[[PHOTO]]")) {
     try { await saveProfile(true); }
     catch (error) { status(error.message, true); }
   };
+    // ONLINE TAMBAYAN — CREATE ACCOUNT
+  $("onlineCreateAccount").onclick = async () => {
+    const email = $("onlineAccountEmail").value.trim();
+    const password = $("onlineAccountPassword").value;
+
+    if (!email || !password) {
+      $("onlineAccountStatus").textContent = "Please enter your email and password.";
+      return;
+    }
+
+    if (password.length < 8) {
+      $("onlineAccountStatus").textContent = "Password must be at least 8 characters.";
+      return;
+    }
+
+    try {
+      if (currentUser.is_anonymous) {
+        const { error } = await client.auth.updateUser({ email });
+        if (error) throw error;
+
+        $("onlineAccountStatus").textContent =
+          "Verification email sent! Confirm your email, return here, enter your password, then tap Create account again.";
+      } else {
+        const { error } = await client.auth.updateUser({ password });
+        if (error) throw error;
+
+        $("onlineAccountStatus").textContent =
+          "Your password has been saved! Your account is ready. 💜";
+      }
+    } catch (error) {
+      $("onlineAccountStatus").textContent = error.message;
+    }
+  };
+    // ONLINE TAMBAYAN — LOG IN
+  $("onlineLogin").onclick = async () => {
+    const email = $("onlineAccountEmail").value.trim();
+    const password = $("onlineAccountPassword").value;
+
+    if (!email || !password) {
+      $("onlineAccountStatus").textContent =
+        "Please enter your email and password.";
+      return;
+    }
+
+    try {
+      $("onlineAccountStatus").textContent = "Logging in...";
+
+      const { error } = await client.auth.signInWithPassword({
+        email,
+        password
+      });
+
+      if (error) throw error;
+
+      $("onlineAccountStatus").textContent =
+        "Welcome back! Reconnecting to your tambayan... 💜";
+
+      window.location.reload();
+    } catch (error) {
+      $("onlineAccountStatus").textContent = error.message;
+    }
+  };
     // ONLINE TAMBAYAN — BROWSER NOTIFICATION PERMISSION
   function updateNotificationControl() {
     const button = $("onlineNotificationButton");
