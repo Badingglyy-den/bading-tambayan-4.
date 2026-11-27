@@ -270,19 +270,19 @@
   </header>
 
   <main id="home" class="shell">
-    <section class="hero panel">
-      <div class="hero-copy">
-        <p class="eyebrow">WELCOME BACK TO YOUR SAFE SPACE</p>
-        <h1>Hi, <span id="welcomeName">Sis</span><small id="equippedProfileTitle" class="equipped-profile-title"></small><small id="equippedProfileBadge" class="equipped-profile-badge"></small>!<br><em>Kalma. Kalat. Kilig.</em></h1>
-        <p class="hero-text">A little universe for your big feelings, random thoughts, questionable decisions, and iconic moments.</p>
-        <div class="hero-buttons">
-          <a class="primary-btn" href="#worlds">Explore the tambayan <span>↗</span></a>
-          <button class="soft-btn" id="dailyMessage">Give me a message ✨</button>
+    <section class="hero panel profile-hero" aria-label="Your player profile">
+      <div class="profile-hero-top">
+        <div class="profile-hero-avatar-wrap"><div id="profileHeroAvatar" class="profile-hero-avatar">💜</div><span class="profile-online-mark" aria-hidden="true"></span></div>
+        <div class="profile-hero-identity">
+          <p class="eyebrow">YOUR TAMBAYAN IDENTITY</p><h1 id="profileHeroName">Sis</h1>
+          <p id="profileHeroGreeting" class="profile-hero-greeting">A little universe for your big feelings, random thoughts, and iconic moments.</p>
+          <div id="profileHeroEquipped" class="profile-hero-equipped" aria-label="Equipped profile items"></div>
         </div>
       </div>
-      <div class="hero-orbit">
-        <div class="orbit orbit-a"></div><div class="orbit orbit-b"></div><div class="planet">💜</div>
-        <span class="float f1">⭐</span><span class="float f2">🪩</span><span class="float f3">🦋</span>
+      <div class="profile-hero-bio"><span class="profile-hero-bio-label">A LITTLE ABOUT ME</span><p id="profileHeroBio">Your introduction will live here. Tell the tambayan a little about yourself.</p></div>
+      <div class="profile-hero-bottom">
+        <div class="profile-hero-stats"><span><b id="profileHeroLevel">1</b><small>LEVEL</small></span><span><b id="profileHeroStars">0</b><small>STARS</small></span><span><b id="profileHeroBadges">0</b><small>BADGES</small></span></div>
+        <button class="soft-btn profile-edit-btn" id="profileHeroEdit" type="button">Edit my profile ✎</button>
       </div>
     </section>
 
@@ -1036,6 +1036,9 @@
 
   <label for="profileName">Nickname</label>
   <input id="profileName" maxlength="24" placeholder="Your nickname">
+  <label for="profileBio">Your bio / introduction</label>
+  <textarea id="profileBio" maxlength="180" rows="3" placeholder="A little about you, your interests, or your current era..."></textarea>
+  <p class="equipment-help">Up to 180 characters. This appears on your homepage profile card.</p>
 
   
 <label>Choose your avatar</label>
