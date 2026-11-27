@@ -1412,7 +1412,7 @@ try {
   console.error("Player progress sync failed:", progressError);
   status("Cloud sync couldn't load. Your local progress is safe. 💜", true);
 }
-
+document.documentElement.classList.remove("auth-checking");
 document.documentElement.classList.remove("auth-locked");
 
 const accountButton = $("accountOpen");
