@@ -822,19 +822,52 @@
       <div class="lounge-section">
         <p class="eyebrow">01 · GAME CORNER</p>
         <h3>Play & Win</h3>
-        <div class="tool-grid">
-          <article class="tool-card panel">
-            <span>🎡</span>
-            <h3>Spin & Win</h3>
-            <p>Try your luck with a daily spin.</p>
-            <button class="small-btn" type="button" disabled>Coming soon</button>
-          </article>
-          <article class="tool-card panel">
-            <span>🎁</span>
-            <h3>Mystery Box</h3>
-            <p>Open a mystery box and discover what's inside.</p>
-            <button class="small-btn" type="button" disabled>Coming soon</button>
-          </article>
+        <div id="gameCornerSocial" class="game-corner-social" aria-live="polite">
+          <div class="gc-intro">A little room for group chaos. Pick an activity, prepare a round, then bring it to the Tambayan chat.</div>
+          <div class="gc-activity-tabs" role="group" aria-label="Game Corner activities">
+            <button type="button" class="gc-tab active" data-gc-tab="alibi">🕵️ The Alibi Room</button>
+            <button type="button" class="gc-tab" data-gc-tab="sell">📣 Sell Me This</button>
+          </div>
+          <section class="gc-game-panel" data-gc-panel="alibi">
+            <p class="eyebrow">CASE FILE · GROUP ROLEPLAY</p>
+            <h4>The Alibi Room</h4>
+            <p class="gc-description">One person has a secret role. Everyone else has to build an alibi while the group asks questions and tries to catch the suspicious one.</p>
+            <div class="gc-prompt-card">
+              <span class="gc-kicker">TONIGHT'S CASE</span>
+              <p id="gcAlibiCase">Press “Deal a case” to open a new investigation.</p>
+              <div class="gc-case-meta" id="gcAlibiEvidence"></div>
+            </div>
+            <div class="gc-actions">
+              <button type="button" class="small-btn gc-primary" id="gcDealCase">Deal a case</button>
+              <button type="button" class="small-btn" id="gcCopyCase" disabled>Copy group brief</button>
+              <button type="button" class="small-btn" id="gcRevealRole" disabled>Reveal host-only role</button>
+            </div>
+            <div class="gc-secret" id="gcSecretRole" hidden></div>
+            <label class="gc-label" for="gcAlibiNotes">Your alibi / interrogation notes</label>
+            <textarea id="gcAlibiNotes" rows="3" maxlength="500" placeholder="Where were you? What did you see? What doesn't add up?"></textarea>
+            <p class="gc-footnote">Host tip: share the group brief in Online Tambayan or Public Tambayan. Send the secret role privately to the chosen player. Answers and voting happen in chat.</p>
+          </section>
+          <section class="gc-game-panel" data-gc-panel="sell" hidden>
+            <p class="eyebrow">IMPROV CHALLENGE · PITCH IT</p>
+            <h4>Sell Me This</h4>
+            <p class="gc-description">Get a ridiculous product, a very specific audience, and one sales restriction. Convince everyone it deserves to exist.</p>
+            <div class="gc-prompt-card">
+              <span class="gc-kicker">YOUR IMPOSSIBLE PRODUCT</span>
+              <p id="gcSellProduct">Press “Give me a product” to draw your challenge.</p>
+              <div class="gc-case-meta" id="gcSellConstraint"></div>
+            </div>
+            <div class="gc-actions">
+              <button type="button" class="small-btn gc-primary" id="gcDrawProduct">Give me a product</button>
+              <button type="button" class="small-btn" id="gcCopyChallenge" disabled>Copy challenge</button>
+            </div>
+            <label class="gc-label" for="gcSellPitch">Your sales pitch</label>
+            <textarea id="gcSellPitch" rows="4" maxlength="700" placeholder="Ladies, gentlemen, and highly skeptical frogs..."></textarea>
+            <div class="gc-actions">
+              <button type="button" class="small-btn" id="gcCopyPitch" disabled>Copy my pitch</button>
+              <span class="gc-char-count" id="gcPitchCount">0 / 700</span>
+            </div>
+            <p class="gc-footnote">Bring the challenge to the group, then let everyone pitch. The room can vote on the most convincing or funniest sales pitch.</p>
+          </section>
         </div>
       </div>
 
