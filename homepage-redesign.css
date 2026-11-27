@@ -5369,3 +5369,132 @@ a:focus-visible,
  #home .specimen-list{grid-template-columns:repeat(auto-fill,minmax(145px,1fr))}
 }
 @media(prefers-reduced-motion:reduce){#home .assembled-creature{animation:none}}
+
+
+/* THEME POLISH — keep text contrast consistent when the atmosphere changes */
+body[data-theme="cloud"] #home .hero,
+body[data-theme="peach"] #home .hero,
+body[data-theme="matcha"] #home .hero{
+  color:var(--text);
+  background:
+    radial-gradient(circle at 85% 35%,color-mix(in srgb,var(--accent) 18%,transparent),transparent 34%),
+    linear-gradient(125deg,var(--panel2),var(--panel) 68%);
+  border-color:var(--line);
+}
+body[data-theme="cloud"] #home .hero h1,
+body[data-theme="peach"] #home .hero h1,
+body[data-theme="matcha"] #home .hero h1{color:var(--text);text-shadow:none}
+body[data-theme="cloud"] #home .hero h1 em,
+body[data-theme="peach"] #home .hero h1 em,
+body[data-theme="matcha"] #home .hero h1 em{color:var(--accent);text-shadow:none}
+body[data-theme="cloud"] #home .hero-text,
+body[data-theme="peach"] #home .hero-text,
+body[data-theme="matcha"] #home .hero-text{color:var(--muted)}
+body[data-theme="cloud"] #home .stat,
+body[data-theme="peach"] #home .stat,
+body[data-theme="matcha"] #home .stat{
+  background:linear-gradient(145deg,var(--panel),var(--panel2));
+  color:var(--text);border-color:var(--line);
+}
+body[data-theme="cloud"] #home .stat span,
+body[data-theme="cloud"] #home .stat small,
+body[data-theme="peach"] #home .stat span,
+body[data-theme="peach"] #home .stat small,
+body[data-theme="matcha"] #home .stat span,
+body[data-theme="matcha"] #home .stat small{color:var(--muted)}
+body[data-theme="cloud"] #home .diary-entry p,
+body[data-theme="peach"] #home .diary-entry p,
+body[data-theme="matcha"] #home .diary-entry p,
+body[data-theme="cloud"] #home .hangout-card>p,
+body[data-theme="peach"] #home .hangout-card>p,
+body[data-theme="matcha"] #home .hangout-card>p,
+body[data-theme="cloud"] #home .prompt-box p,
+body[data-theme="peach"] #home .prompt-box p,
+body[data-theme="matcha"] #home .prompt-box p,
+body[data-theme="cloud"] #home .feed-item,
+body[data-theme="peach"] #home .feed-item,
+body[data-theme="matcha"] #home .feed-item{color:var(--text)}
+body[data-theme="cloud"] #home .entry-meta,
+body[data-theme="peach"] #home .entry-meta,
+body[data-theme="matcha"] #home .entry-meta,
+body[data-theme="cloud"] #home .form-note,
+body[data-theme="peach"] #home .form-note,
+body[data-theme="matcha"] #home .form-note,
+body[data-theme="cloud"] #home .empty-state,
+body[data-theme="peach"] #home .empty-state,
+body[data-theme="matcha"] #home .empty-state{color:var(--muted)}
+body[data-theme="cloud"] #home .diary-form input,
+body[data-theme="cloud"] #home .diary-form textarea,
+body[data-theme="cloud"] #home .diary-form select,
+body[data-theme="cloud"] #home .diary-list-head input,
+body[data-theme="cloud"] #home .hangout-form input,
+body[data-theme="cloud"] #home .prompt-box textarea,
+body[data-theme="peach"] #home .diary-form input,
+body[data-theme="peach"] #home .diary-form textarea,
+body[data-theme="peach"] #home .diary-form select,
+body[data-theme="peach"] #home .diary-list-head input,
+body[data-theme="peach"] #home .hangout-form input,
+body[data-theme="peach"] #home .prompt-box textarea,
+body[data-theme="matcha"] #home .diary-form input,
+body[data-theme="matcha"] #home .diary-form textarea,
+body[data-theme="matcha"] #home .diary-form select,
+body[data-theme="matcha"] #home .diary-list-head input,
+body[data-theme="matcha"] #home .hangout-form input,
+body[data-theme="matcha"] #home .prompt-box textarea{
+  background:var(--panel2);color:var(--text);border-color:var(--line);
+}
+body[data-theme="cloud"] #home .diary-form label,
+body[data-theme="peach"] #home .diary-form label,
+body[data-theme="matcha"] #home .diary-form label{color:var(--muted)}
+body[data-theme="cloud"] #home .comfort-panel,
+body[data-theme="peach"] #home .comfort-panel,
+body[data-theme="matcha"] #home .comfort-panel,
+body[data-theme="cloud"] #home .hangout-card,
+body[data-theme="peach"] #home .hangout-card,
+body[data-theme="matcha"] #home .hangout-card{
+  background:var(--panel);color:var(--text);border-color:var(--line);
+}
+body[data-theme="cloud"] #home .comfort-panel p:not(.eyebrow),
+body[data-theme="peach"] #home .comfort-panel p:not(.eyebrow),
+body[data-theme="matcha"] #home .comfort-panel p:not(.eyebrow){color:var(--muted)}
+body[data-theme="cloud"] #home .kind-item,
+body[data-theme="peach"] #home .kind-item,
+body[data-theme="matcha"] #home .kind-item{background:var(--panel2);color:var(--text)}
+body[data-theme="cloud"] #home .small-btn,
+body[data-theme="peach"] #home .small-btn,
+body[data-theme="matcha"] #home .small-btn{color:#fff}
+body[data-theme="cloud"] #home .primary-btn,
+body[data-theme="peach"] #home .primary-btn,
+body[data-theme="matcha"] #home .primary-btn{color:#fff}
+body[data-theme="cloud"] #home .game-result,
+body[data-theme="peach"] #home .game-result,
+body[data-theme="matcha"] #home .game-result{color:var(--text)!important}
+body[data-theme="cloud"] #home .theme-panel,
+body[data-theme="peach"] #home .theme-panel,
+body[data-theme="matcha"] #home .theme-panel{color:#49384c}
+body[data-theme="cloud"] #home .theme-panel p,
+body[data-theme="peach"] #home .theme-panel p,
+body[data-theme="matcha"] #home .theme-panel p{color:#66566b}
+body[data-theme="cloud"] #home .theme-choice,
+body[data-theme="peach"] #home .theme-choice,
+body[data-theme="matcha"] #home .theme-choice{color:#49384c}
+body[data-theme="cloud"] #home .theme-choice.active,
+body[data-theme="peach"] #home .theme-choice.active,
+body[data-theme="matcha"] #home .theme-choice.active{color:#34213f;background:#e9d9ef}
+body[data-theme="cloud"] #home .topbar,
+body[data-theme="peach"] #home .topbar,
+body[data-theme="matcha"] #home .topbar{color:var(--text)}
+body[data-theme="cloud"] #home .topbar .brand small,
+body[data-theme="peach"] #home .topbar .brand small,
+body[data-theme="matcha"] #home .topbar .brand small{color:var(--muted)}
+body[data-theme="cloud"] #home .icon-btn,
+body[data-theme="peach"] #home .icon-btn,
+body[data-theme="matcha"] #home .icon-btn{background:var(--panel2);color:var(--text);border-color:var(--line)}
+body[data-theme="cloud"] #home .footer,
+body[data-theme="peach"] #home .footer,
+body[data-theme="matcha"] #home .footer{color:var(--muted)}
+
+/* Cleaner type rhythm: sharper labels, calmer body copy, consistent controls */
+#home :is(input,textarea,select,button){font-family:'DM Sans',sans-serif}
+#home :is(input,textarea,select):focus-visible,
+#home button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
