@@ -1131,12 +1131,19 @@ $("courtBtn").onclick = () => {
 };
 
 $("frogBtn").onclick = () => {
-  $("frogText").textContent = random([
+  const frog = $("frogText");
+
+  frog.classList.remove("revealed");
+  void frog.offsetWidth;
+
+  frog.textContent = random([
     "RIBBIT. The tea is hot but your peace is hotter.",
     "The frog says: don't text them. Text your bestie.",
     "Ribbit: someone is watching your stories. Let them.",
     "The frog has no advice. Just vibes and damp skin."
   ]);
+
+  frog.classList.add("revealed");
 
   visit("library");
 };
