@@ -3109,3 +3109,38 @@ html.auth-locked #authGate {
   .equipped-profile-title { font-size: 9px; padding: 4px 7px; }
   .equipped-profile-badge { font-size: 10px; }
 }
+
+
+/* Make equipped homepage title readable and intentional */
+#equippedProfileTitle.equipped-profile-title {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  vertical-align: middle;
+  max-width: min(100%, 260px);
+  margin: 0 0 2px 9px;
+  padding: 7px 13px;
+  border: 1px solid rgba(238,211,255,.72);
+  border-radius: 999px;
+  background: linear-gradient(135deg, #7650ad, #49316f);
+  color: #fffaff !important;
+  font-family: inherit;
+  font-size: 13px !important;
+  font-weight: 900;
+  line-height: 1.25;
+  letter-spacing: .15px;
+  white-space: normal;
+  text-align: center;
+  vertical-align: middle;
+  box-shadow: 0 3px 13px rgba(8,3,22,.3), 0 0 15px rgba(192,145,255,.25);
+  text-shadow: 0 1px 2px rgba(0,0,0,.35);
+}
+@media(max-width:560px) {
+  #equippedProfileTitle.equipped-profile-title {
+    max-width: 170px;
+    margin-left: 7px;
+    padding: 6px 10px;
+    font-size: 12px !important;
+    line-height: 1.2;
+  }
+}
