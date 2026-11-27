@@ -4897,6 +4897,73 @@
 #view-mystery .tool-card:nth-child(5) p.revealed {
   animation: machineReveal .65s ease both;
    }
+/* THE FORBIDDEN BUTTON — RESTRICTED ACCESS */
+
+#view-mystery .tool-card:has(#forbiddenBtn) {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  padding: 26px 20px;
+  text-align: center;
+  border: 1px solid rgba(220, 65, 65, .55);
+  border-radius: 18px;
+  background:
+    radial-gradient(ellipse at top, rgba(135, 35, 40, .3), transparent 65%),
+    linear-gradient(145deg, #271719, #171315 70%, #30191d);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, .3);
+}
+
+/* Warning border */
+#view-mystery .tool-card:has(#forbiddenBtn)::before {
+  content: "RESTRICTED ACCESS • AUTHORIZATION REQUIRED";
+  display: block;
+  margin-bottom: 20px;
+  padding: 8px 5px;
+  border-top: 1px solid rgba(255, 95, 95, .3);
+  border-bottom: 1px solid rgba(255, 95, 95, .3);
+  color: #ff8585;
+  font-size: 8px;
+  font-weight: bold;
+  letter-spacing: 2px;
+}
+
+/* Forbidden icon */
+#view-mystery .tool-card:has(#forbiddenBtn) > span {
+  display: block;
+  margin: 8px auto 14px;
+  font-size: 42px;
+  filter: drop-shadow(0 0 12px rgba(255, 65, 65, .4));
+}
+
+/* Heading */
+#view-mystery .tool-card:has(#forbiddenBtn) h3 {
+  color: #ffcccc;
+  font-family: Georgia, serif;
+  font-size: 21px;
+}
+
+/* Description */
+#view-mystery .tool-card:has(#forbiddenBtn) p {
+  min-height: 65px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #e6bcbc;
+  font-family: Georgia, serif;
+  line-height: 1.8;
+}
+
+/* Danger button */
+#view-mystery .tool-card:has(#forbiddenBtn) button {
+  border: 1px solid #ff7777;
+  border-radius: 8px;
+  padding: 13px 22px;
+  background: linear-gradient(135deg, #a82e37, #641b25);
+  color: #fff0f0;
+  font-weight: 900;
+  letter-spacing: 1.5px;
+  box-shadow: 0 0 18px rgba(220, 50, 65, .2);
+}
 
 
 
