@@ -1149,12 +1149,19 @@ $("frogBtn").onclick = () => {
 };
 
 $("universeBtn").onclick = () => {
-  $("universeText").textContent = random([
+  const universe = $("universeText");
+
+  universe.classList.remove("revealed");
+  void universe.offsetWidth;
+
+  universe.textContent = random([
     "YES. But use your brain too.",
     "NO. Protect your peace.",
     "THE SIGNS ARE UNCLEAR. Ask again after a snack.",
     "MOST LIKELY. Stop asking the universe and take a step."
   ]);
+
+  universe.classList.add("revealed");
 
   visit("library");
 };
