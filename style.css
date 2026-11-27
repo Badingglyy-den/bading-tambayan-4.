@@ -3333,3 +3333,88 @@ body[data-theme="matcha"] input,body[data-theme="matcha"] textarea,body[data-the
 body[data-theme="cloud"] input::placeholder,body[data-theme="cloud"] textarea::placeholder,
 body[data-theme="peach"] input::placeholder,body[data-theme="peach"] textarea::placeholder,
 body[data-theme="matcha"] input::placeholder,body[data-theme="matcha"] textarea::placeholder{color:var(--muted);opacity:1}
+
+
+/* DEVICE, ACCESSIBILITY & INPUT POLISH */
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  scroll-padding-top: 84px;
+}
+body {
+  min-width: 320px;
+  overflow-x: clip;
+}
+button, a, input, textarea, select, summary {
+  -webkit-tap-highlight-color: transparent;
+}
+button:focus-visible, a:focus-visible, input:focus-visible,
+textarea:focus-visible, select:focus-visible, summary:focus-visible {
+  outline: 2px solid var(--accent, #c6a5ff);
+  outline-offset: 3px;
+}
+img, video, canvas, svg {
+  max-width: 100%;
+}
+.shell, .app-view, .panel, .section-heading, .section-heading > div {
+  min-width: 0;
+}
+.modal {
+  max-height: min(88dvh, 780px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-gutter: stable;
+}
+@media (max-width: 560px) {
+  input, textarea, select {
+    font-size: 16px;
+  }
+  .topbar {
+    gap: 8px;
+    padding-left: 11px;
+    padding-right: 11px;
+  }
+  .brand {
+    min-width: 0;
+    gap: 7px;
+    letter-spacing: 1px;
+  }
+  .brand small {
+    font-size: 7px;
+    letter-spacing: 1px;
+  }
+  .top-actions {
+    flex-shrink: 0;
+    gap: 6px;
+  }
+  .currency {
+    padding: 7px 8px;
+  }
+  .account-chip {
+    max-width: 102px;
+    min-width: 0;
+  }
+  .account-chip-name {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .modal {
+    width: min(480px, calc(100% - 20px));
+    padding: 20px 16px;
+    border-radius: 18px;
+  }
+  .modal-close button {
+    min-width: 40px;
+    min-height: 40px;
+  }
+}
+@media (max-width: 360px) {
+  .brand small { display: none; }
+  .brand { font-size: 10px; }
+  .currency { padding: 6px 7px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+}
