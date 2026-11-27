@@ -1428,17 +1428,21 @@ if (accountEmailDisplay) {
     currentUser.email || "Email not available";
 }
 
-      const localName = document.getElementById("welcomeName")?.textContent || "Tambay";
-      profile = {
-        display_name: localName.trim().slice(0, 24) || "Tambay",
-        avatar: "💜"
-      };
+      const savedProgress = window.tambayanProgress?.getState?.();
+const localName = savedProgress?.profile?.name ||
+  document.getElementById("welcomeName")?.textContent ||
+  "Tambay";
+
+profile = {
+  display_name: localName.trim().slice(0, 24) || "Tambay",
+  avatar: savedProgress?.profile?.avatar || "🪄"
+};
 
       const { data: savedProfile, error: profileError } = await client
         .from("profiles").select("display_name,avatar")
         .eq("user_id", currentUser.id).maybeSingle();
       if (profileError) throw profileError;
-      if (savedProfile) profile = savedProfile;
+      // Keep the Online Tambayan profile aligned with the main saved profile.
       const accountName = $("accountOpen")?.querySelector(".account-chip-name");
 if (accountName) {
   accountName.textContent = profile.display_name || "Tambay";
