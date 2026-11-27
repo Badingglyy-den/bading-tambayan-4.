@@ -1344,6 +1344,9 @@ async function savePlayerProgress(progress) {
 async function syncPlayerProgress() {
   if (!client || !currentUser || !window.tambayanProgress) return;
 
+  // Switch the game to this user's private local save before reading cloud data.
+  window.tambayanProgress.useAccount(currentUser.id);
+
   const { data: cloudRow, error } = await client
     .from("player_progress")
     .select("progress,updated_at")
@@ -1352,7 +1355,6 @@ async function syncPlayerProgress() {
 
   if (error) throw error;
 
-  const hasLocalSave = window.tambayanProgress.hasLocalSave();
   let mergedProgress = window.tambayanProgress.getState();
 
   if (
@@ -1361,10 +1363,10 @@ async function syncPlayerProgress() {
     !Array.isArray(cloudRow.progress)
   ) {
     mergedProgress = window.tambayanProgress.applyCloudProgress(cloudRow.progress);
-    await savePlayerProgress(mergedProgress);
-  } else if (hasLocalSave) {
-    await savePlayerProgress(mergedProgress);
   }
+
+  // Persist even a new account's initial state to its own cloud row.
+  await savePlayerProgress(mergedProgress);
 
   window.removeEventListener("tambayan:progress-saved", handleProgressSaved);
   window.addEventListener("tambayan:progress-saved", handleProgressSaved);
@@ -1429,27 +1431,36 @@ if (accountEmailDisplay) {
 }
 
       const savedProgress = window.tambayanProgress?.getState?.();
-const localName = savedProgress?.profile?.name ||
-  document.getElementById("welcomeName")?.textContent ||
-  "Tambay";
-
-profile = {
-  display_name: localName.trim().slice(0, 24) || "Tambay",
-  avatar: savedProgress?.profile?.avatar || "🪄"
-};
+      const localName = savedProgress?.profile?.name ||
+        document.getElementById("welcomeName")?.textContent ||
+        "Tambay";
+      const localAvatar = savedProgress?.profile?.avatar || "💜";
 
       const { data: savedProfile, error: profileError } = await client
         .from("profiles").select("display_name,avatar")
         .eq("user_id", currentUser.id).maybeSingle();
       if (profileError) throw profileError;
-      // Keep the Online Tambayan profile aligned with the main saved profile.
-      const accountName = $("accountOpen")?.querySelector(".account-chip-name");
-if (accountName) {
-  accountName.textContent = profile.display_name || "Tambay";
-}
+
+      // Existing cloud profiles are authoritative; never replace them on login.
+      profile = savedProfile
+        ? {
+            display_name: (savedProfile.display_name || localName).trim().slice(0, 24) || "Tambay",
+            avatar: savedProfile.avatar || localAvatar
+          }
+        : {
+            display_name: localName.trim().slice(0, 24) || "Tambay",
+            avatar: localAvatar
+          };
+
+      window.tambayanProgress?.setProfile?.(profile);
       $("onlineName").value = profile.display_name;
       $("onlineAvatar").value = profile.avatar;
-      await saveProfile(false);
+
+      // Only create a profile when this account does not already have one.
+      if (!savedProfile) await saveProfile(false);
+
+      const accountName = $("accountOpen")?.querySelector(".account-chip-name");
+      if (accountName) accountName.textContent = profile.display_name || "Tambay";
       await refreshRoomList();
       status("You're connected! Create a room or join with a code. 💜");
 
