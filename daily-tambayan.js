@@ -1,251 +1,143 @@
-
 (() => {
   "use strict";
 
-  const STORAGE_KEY = "tambayan_daily_dispatch_v1";
-
-  const missions = [
-    {
-      id: "coinBtn",
-      title: "A Flip of Fate",
-      description: "Let the universe decide something for you. Flip the Coin of Fate.",
-      mystery: "The universe has a tiny answer waiting. But will it be heads or tails?",
-      action: "coinBtn"
-    },
-    {
-      id: "frogBtn",
-      title: "The Frog Knows",
-      description: "Visit Palakang Marites and see what little piece of chika it has for you.",
-      mystery: "Ribbit... someone has been keeping a secret. Maybe the frog knows.",
-      action: "frogBtn"
-    },
-    {
-      id: "comfortBtn",
-      title: "A Little Kindness",
-      description: "Visit the Comfort Corner and collect a gentle reminder for today.",
-      mystery: "A little note has been left somewhere just for you.",
-      action: "comfortBtn"
-    },
-    {
-      id: "fortuneBtn",
-      title: "Ask the Universe",
-      description: "Visit the Mystery Library and let the fortune teller read your future.",
-      mystery: "Something about your future is waiting to be revealed...",
-      action: "fortuneBtn"
-    },
-    {
-      id: "dramaBtn",
-      title: "Main Character Moment",
-      description: "Press the Drama Queen Button. A little drama never hurt anyone.",
-      mystery: "The universe senses that today needs a little extra drama.",
-      action: "dramaBtn"
-    },
-    {
-      id: "complimentBtn",
-      title: "Fate Has Opinions",
-      description: "Try the Compliment or Roast machine and accept your fate.",
-      mystery: "A mysterious verdict is waiting. Will it be lambing or sampal?",
-      action: "complimentBtn"
-    }
+  // These five activities are available to every player each day.
+  // Completion is stored inside the account's cloud-synced player progress.
+  const challenges = [
+    { id: "coin", title: "A Flip of Fate", icon: "🪙", description: "Flip the Coin of Fate and let the universe decide.", action: "coinBtn", reward: 5 },
+    { id: "frog", title: "The Frog Knows", icon: "🐸", description: "Ask Palakang Marites for today's little piece of chika.", action: "frogBtn", reward: 5 },
+    { id: "comfort", title: "A Little Kindness", icon: "🫂", description: "Collect a gentle reminder from the Comfort Corner.", action: "comfortBtn", reward: 5 },
+    { id: "fortune", title: "Ask the Universe", icon: "🔮", description: "Visit the fortune teller and reveal your daily fortune.", action: "fortuneBtn", reward: 5 },
+    { id: "drama", title: "Main Character Moment", icon: "🎭", description: "Activate the Drama Queen Button. Be dramatic, respectfully.", action: "dramaBtn", reward: 5 }
   ];
 
-  function todayKey() {
+  const $ = id => document.getElementById(id);
+  const dateKey = () => {
     const now = new Date();
-    const year = now.getFullYear();
-    const month = String(now.getMonth() + 1).padStart(2, "0");
-    const day = String(now.getDate()).padStart(2, "0");
-    return `${year}-${month}-${day}`;
-  }
+    return [now.getFullYear(), String(now.getMonth() + 1).padStart(2, "0"), String(now.getDate()).padStart(2, "0")].join("-");
+  };
+  const addDays = (value, amount) => {
+    const d = new Date(value + "T12:00:00");
+    d.setDate(d.getDate() + amount);
+    return [d.getFullYear(), String(d.getMonth() + 1).padStart(2, "0"), String(d.getDate()).padStart(2, "0")].join("-");
+  };
 
-    function getTodayMission(date = todayKey()) {
-    let hash = 0;
-
-    for (let i = 0; i < date.length; i++) {
-      hash = (hash * 31 + date.charCodeAt(i)) >>> 0;
-    }
-
-    return missions[hash % missions.length];
-  }
-
-  function readProgress() {
-    try {
-      return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {};
-    } catch {
-      return {};
-    }
-  }
-
-  function saveProgress(progress) {
-    try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(progress));
-    } catch (error) {
-      console.warn("Daily Tambayan could not save progress:", error);
-    }
-  }
-    function addDays(dateString, amount) {
-    const date = new Date(dateString + "T12:00:00");
-    date.setDate(date.getDate() + amount);
-
-    return [
-      date.getFullYear(),
-      String(date.getMonth() + 1).padStart(2, "0"),
-      String(date.getDate()).padStart(2, "0")
-    ].join("-");
-  }
-
-  function updateStreakDisplay(streak, lastCompletedDate) {
-    const count = document.getElementById("dailyStreakCount");
-    const hint = document.getElementById("dailyStreakHint");
-
-    if (count) {
-      count.textContent = streak + (streak === 1 ? " day streak" : " days streak");
-    }
-
-    if (hint) {
-      if (lastCompletedDate === date) {
-        hint.textContent = "Today's mission is complete. Keep it going tomorrow!";
-      } else if (streak > 0) {
-        hint.textContent = "Complete today's mission to keep your streak alive.";
-      } else {
-        hint.textContent = "Complete a mission to begin your streak.";
-      }
-    }
-  }
-
-  function updateDisplay(completed) {
-    const title = document.getElementById("dailyMissionTitle");
-    const description = document.getElementById("dailyMissionDescription");
-    const reward = document.getElementById("dailyMissionReward");
-    const status = document.getElementById("dailyMissionStatus");
-    const progress = document.getElementById("dailyMissionProgress");
-    const bar = document.getElementById("dailyMissionProgressBar");
-    const mystery = document.getElementById("dailyMysteryText");
-
-    if (!title || !description) return;
-
-    title.textContent = mission.title;
-    description.textContent = mission.description;
-    reward.textContent = completed ? "⭐ 15 stars collected" : "⭐ 15 stars";
-    status.textContent = completed ? "COMPLETED ✦" : "READY TO EXPLORE";
-    progress.textContent = completed
-      ? "1 of 1 mission completed"
-      : "0 of 1 mission completed";
-
-    if (bar) bar.style.width = completed ? "100%" : "0%";
-    if (mystery) mystery.textContent = mission.mystery;
-  }
-
-    const date = todayKey();
-  const mission = getTodayMission(date);
-
-  const tomorrowDate = new Date();
-  tomorrowDate.setDate(tomorrowDate.getDate() + 1);
-
-  const tomorrowKey = [
-    tomorrowDate.getFullYear(),
-    String(tomorrowDate.getMonth() + 1).padStart(2, "0"),
-    String(tomorrowDate.getDate()).padStart(2, "0")
-  ].join("-");
-
-  const tomorrowMission = getTodayMission(tomorrowKey);
-
-  const tomorrowTitle = document.getElementById("dailyTomorrowTitle");
-  const tomorrowDescription = document.getElementById("dailyTomorrowDescription");
-
-  if (tomorrowTitle) {
-    tomorrowTitle.textContent = tomorrowMission.title;
-  }
-
-  if (tomorrowDescription) {
-    tomorrowDescription.textContent = "Tomorrow's mission: " + tomorrowMission.description;
-  }
-
-    const saved = readProgress();
-
-  let completed = saved.date === date && saved.completed === true;
-
-  const lastCompletedDate = saved.lastCompletedDate || "";
-  let streak = Number(saved.streak) || 0;
-
-  if (
-    lastCompletedDate !== date &&
-    lastCompletedDate !== addDays(date, -1)
-  ) {
-    streak = 0;
-  }
-
-  updateDisplay(completed);
-  updateStreakDisplay(streak, lastCompletedDate);
-
-  document.addEventListener("click", (event) => {
-    if (completed) return;
-
-    const button = event.target.closest("button");
-    if (!button || button.id !== mission.action) return;
-
-    if (typeof window.tambayanApplyLoungeReward !== "function") {
-      console.warn("Daily Tambayan reward system is not ready.");
-      return;
-    }
-
-    const rewarded = window.tambayanApplyLoungeReward(
-      "stars",
-      15,
-      "Daily Tambayan mission completed!"
-    );
-
-         if (!rewarded) return;
-
-    completed = true;
-
-    // Continue yesterday's streak or start a new one.
-    streak = lastCompletedDate === addDays(date, -1)
-      ? streak + 1
-      : 1;
-
-    const milestones = {
-      3: 15,
-      7: 35,
-      14: 75,
-      30: 150
-    };
-
-    const claimedMilestones = Array.isArray(saved.claimedMilestones)
-      ? saved.claimedMilestones
-      : [];
-
-    const bonus = milestones[streak];
-
-    if (bonus && !claimedMilestones.includes(streak)) {
-      const bonusAwarded = window.tambayanApplyLoungeReward(
-        "stars",
-        bonus,streak + "-day streak milestone unlocked! 🎉"
-      );
-
-      if (bonusAwarded) {
-        claimedMilestones.push(streak);
-      }
-    }
-
-    saveProgress({
+  let date = dateKey();
+  let saved = window.tambayanProgress?.getDailyDispatch?.() || {};
+  if (saved.date !== date) {
+    saved = {
       date,
-      completed: true,
-      mission: mission.id,
-      streak,
-      lastCompletedDate: date,
-      claimedMilestones
-    });
+      completed: [],
+      streak: Number(saved.streak) || 0,
+      lastCompletedDate: saved.lastCompletedDate || "",
+      claimedMilestones: Array.isArray(saved.claimedMilestones) ? saved.claimedMilestones : []
+    };
+  }
+  if (!Array.isArray(saved.completed)) saved.completed = [];
+  let completed = new Set(saved.completed);
+  let streak = Number(saved.streak) || 0;
+  let lastCompletedDate = saved.lastCompletedDate || "";
+  let claimedMilestones = Array.isArray(saved.claimedMilestones) ? saved.claimedMilestones : [];
 
-    const panel = document.getElementById("dailyTambayanPanel");
-
-    if (panel) {
-      panel.classList.remove("daily-just-completed");
-      void panel.offsetWidth;
-      panel.classList.add("daily-just-completed");
+  function persist() {
+    const next = { date, completed: [...completed], streak, lastCompletedDate, claimedMilestones };
+    if (window.tambayanProgress?.setDailyDispatch) {
+      window.tambayanProgress.setDailyDispatch(next);
+    } else {
+      try { localStorage.setItem("tambayan_daily_dispatch_v2", JSON.stringify(next)); } catch (_) {}
     }
+  }
 
-    updateDisplay(true);
-    updateStreakDisplay(streak, date);
+  function render() {
+    const list = $("dailyMissionList");
+    if (!list) return;
+    list.innerHTML = challenges.map((item, index) => {
+      const done = completed.has(item.id);
+      return `
+        <article class="daily-challenge-card ${done ? "is-complete" : ""}">
+          <div class="daily-challenge-icon">${item.icon}</div>
+          <div class="daily-challenge-copy">
+            <span class="eyebrow">CHALLENGE 0${index + 1}</span>
+            <h3>${item.title}</h3>
+            <p>${item.description}</p>
+            <span class="daily-challenge-reward">⭐ ${done ? "5 stars collected" : "5 stars"}</span>
+          </div>
+          <div class="daily-challenge-action">
+            <span class="daily-challenge-status">${done ? "✓ DONE" : "READY"}</span>
+            <button type="button" class="small-btn daily-go-button" data-scroll-to="${item.action}" ${done ? "disabled" : ""}>${done ? "Completed" : "Go explore"}</button>
+          </div>
+        </article>`;
+    }).join("");
+
+    const count = completed.size;
+    const progress = $("dailyMissionProgress");
+    const bar = $("dailyMissionProgressBar");
+    const reward = $("dailyMissionReward");
+    const status = $("dailyMissionStatus");
+    if (progress) progress.textContent = count + " of 5 challenges completed";
+    if (bar) bar.style.width = (count / 5 * 100) + "%";
+    if (reward) reward.textContent = count === 5 ? "⭐ 40 stars earned today!" : "⭐ " + (count * 5) + " / 40 stars";
+    if (status) status.textContent = count === 5 ? "ALL COMPLETED ✦" : " " + (5 - count) + " LEFT TO EXPLORE";
+    const streakCount = $("dailyStreakCount");
+    const streakHint = $("dailyStreakHint");
+    if (streakCount) streakCount.textContent = streak + (streak === 1 ? " day streak" : " days streak");
+    if (streakHint) {
+      streakHint.textContent = count === 5
+        ? "Today's dispatch is complete. See you tomorrow!"
+        : "Finish all five challenges to complete today's dispatch.";
+    }
+    const mystery = $("dailyMysteryText");
+    if (mystery) mystery.textContent = count === 5
+      ? "You did it! All five little adventures are complete. Come back tomorrow for a fresh dispatch."
+      : "Five little adventures are waiting. Explore each one and collect your stars.";
+    const tomorrowTitle = $("dailyTomorrowTitle");
+    const tomorrowDescription = $("dailyTomorrowDescription");
+    if (tomorrowTitle) tomorrowTitle.textContent = "A fresh dispatch is on its way";
+    if (tomorrowDescription) tomorrowDescription.textContent = "Your five daily challenges refresh tomorrow.";
+  }
+
+  function completeChallenge(id) {
+    if (completed.has(id)) return;
+    const challenge = challenges.find(item => item.id === id);
+    if (!challenge || typeof window.tambayanApplyLoungeReward !== "function") return;
+    if (!window.tambayanApplyLoungeReward("stars", challenge.reward, "Daily Dispatch: " + challenge.title + "!")) return;
+
+    completed.add(id);
+    if (completed.size === 5) {
+      streak = lastCompletedDate === addDays(date, -1) ? streak + 1 : 1;
+      lastCompletedDate = date;
+      const milestones = { 3: 15, 7: 35, 14: 75, 30: 150 };
+      const bonus = milestones[streak];
+      if (bonus && !claimedMilestones.includes(streak)) {
+        if (window.tambayanApplyLoungeReward("stars", bonus, streak + "-day Daily Dispatch streak! 🎉")) {
+          claimedMilestones.push(streak);
+        }
+      }
+    }
+    persist();
+    render();
+  }
+
+  const panel = $("dailyTambayanPanel");
+  if (!panel) return;
+
+  panel.addEventListener("click", event => {
+    const go = event.target.closest("[data-scroll-to]");
+    if (go) {
+      const target = $(go.dataset.scrollTo);
+      if (target) {
+        target.scrollIntoView({ behavior: "smooth", block: "center" });
+        target.focus?.({ preventScroll: true });
+      }
+    }
+  });
+
+  document.addEventListener("click", event => {
+    const button = event.target.closest("button");
+    if (!button) return;
+    const challenge = challenges.find(item => item.action === button.id);
+    if (challenge) completeChallenge(challenge.id);
   }, true);
+
+  render();
 })();
-    
