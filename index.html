@@ -825,9 +825,55 @@
         <div id="gameCornerSocial" class="game-corner-social" aria-live="polite">
           <div class="gc-intro">A little room for group chaos. Pick an activity, prepare a round, then bring it to the Tambayan chat.</div>
           <div class="gc-activity-tabs" role="group" aria-label="Game Corner activities">
-            <button type="button" class="gc-tab active" data-gc-tab="alibi">🕵️ The Alibi Room</button>
+            <button type="button" class="gc-tab active" data-gc-tab="plot">📖 Plot Twist</button>
+            <button type="button" class="gc-tab" data-gc-tab="opinion">💬 Unpopular Opinion Club</button>
+            <button type="button" class="gc-tab" data-gc-tab="court">⚖️ Tambayan Court</button>
+            <button type="button" class="gc-tab" data-gc-tab="word">🧩 One Word at a Time</button>
+            <button type="button" class="gc-tab" data-gc-tab="alibi">🕵️ The Alibi Room</button>
             <button type="button" class="gc-tab" data-gc-tab="sell">📣 Sell Me This</button>
           </div>
+          <section class="gc-game-panel" data-gc-panel="plot">
+            <p class="eyebrow">CO-WRITE A LITTLE CHAOS</p>
+            <h4>Plot Twist</h4>
+            <p class="gc-description">Start a story with a prompt, then invite everyone to add one sentence each. Copy the growing story between turns.</p>
+            <div class="gc-prompt-card"><span class="gc-kicker">STORY STARTER</span><p id="gcPlotPrompt">Choose a prompt to begin your story.</p></div>
+            <div class="gc-actions"><button type="button" class="small-btn gc-primary" id="gcPlotNew">New story prompt</button><button type="button" class="small-btn" id="gcPlotCopy" disabled>Copy story</button></div>
+            <label class="gc-label" for="gcPlotContribution">Add the next sentence</label>
+            <textarea id="gcPlotContribution" rows="3" maxlength="300" placeholder="And just when everything seemed normal..."></textarea>
+            <div class="gc-actions"><button type="button" class="small-btn" id="gcPlotAdd" disabled>Add sentence</button><span class="gc-char-count" id="gcPlotCount">0 / 300</span></div>
+            <div class="gc-prompt-card gc-story-card"><span class="gc-kicker">THE STORY SO FAR</span><p id="gcPlotStory">Your story will appear here.</p></div>
+          </section>
+          <section class="gc-game-panel" data-gc-panel="opinion" hidden>
+            <p class="eyebrow">SAY IT WITH YOUR CHEST</p>
+            <h4>Unpopular Opinion Club</h4>
+            <p class="gc-description">Draw a harmless hot-take starter, write your opinion, then invite the group to agree, disagree, and explain their reasoning.</p>
+            <div class="gc-prompt-card"><span class="gc-kicker">HOT-TAKE STARTER</span><p id="gcOpinionPrompt">Tap the button to get a conversation starter.</p></div>
+            <div class="gc-actions"><button type="button" class="small-btn gc-primary" id="gcOpinionNew">Give me a hot take</button><button type="button" class="small-btn" id="gcOpinionCopyPrompt" disabled>Copy starter</button></div>
+            <label class="gc-label" for="gcOpinionText">Your opinion</label>
+            <textarea id="gcOpinionText" rows="3" maxlength="500" placeholder="I will defend this opinion because..."></textarea>
+            <div class="gc-actions"><button type="button" class="small-btn" id="gcOpinionCopy" disabled>Copy my take</button><span class="gc-char-count" id="gcOpinionCount">0 / 500</span></div>
+            <p class="gc-footnote">Keep it playful and respectful. Debate the idea, not the person.</p>
+          </section>
+          <section class="gc-game-panel" data-gc-panel="court" hidden>
+            <p class="eyebrow">ALL RISE FOR NONSENSE</p>
+            <h4>Tambayan Court</h4>
+            <p class="gc-description">Read the case, hear both sides in chat, then cast your verdict. The buttons tally your vote on this device only.</p>
+            <div class="gc-prompt-card"><span class="gc-kicker">CASE BEFORE THE COURT</span><p id="gcCourtCase">Open a case to call the court to order.</p><div class="gc-case-meta" id="gcCourtQuestion"></div></div>
+            <div class="gc-actions"><button type="button" class="small-btn gc-primary" id="gcCourtNew">Open a new case</button><button type="button" class="small-btn" id="gcCourtCopy" disabled>Copy case for group</button></div>
+            <div class="gc-actions gc-verdicts"><button type="button" class="small-btn" id="gcGuilty" disabled>⚖️ Guilty <b id="gcGuiltyCount">0</b></button><button type="button" class="small-btn" id="gcInnocent" disabled>🕊️ Innocent <b id="gcInnocentCount">0</b></button><button type="button" class="small-btn" id="gcAbstain" disabled>🤔 Need more evidence</button></div>
+            <p class="gc-footnote" id="gcCourtResult" aria-live="polite">Open a case, discuss it with the group, and cast your verdict.</p>
+          </section>
+          <section class="gc-game-panel" data-gc-panel="word" hidden>
+            <p class="eyebrow">ONE WORD. ONE TURN. TOTAL CHAOS.</p>
+            <h4>One Word at a Time</h4>
+            <p class="gc-description">Build one shared sentence together. Each person adds exactly one word, then passes the turn to the next member.</p>
+            <div class="gc-prompt-card"><span class="gc-kicker">THE OPENING LINE</span><p id="gcWordPrompt">Start a new sentence to begin.</p><div class="gc-case-meta" id="gcWordStory">The group sentence will appear here.</div></div>
+            <div class="gc-actions"><button type="button" class="small-btn gc-primary" id="gcWordNew">Start a new sentence</button><button type="button" class="small-btn" id="gcWordCopy" disabled>Copy sentence</button><button type="button" class="small-btn" id="gcWordUndo" disabled>Undo last word</button></div>
+            <label class="gc-label" for="gcWordInput">Add exactly one word</label>
+            <input id="gcWordInput" type="text" maxlength="30" placeholder="Your one word..." autocomplete="off">
+            <div class="gc-actions"><button type="button" class="small-btn" id="gcWordAdd" disabled>Add my word</button><span class="gc-char-count" id="gcWordCount">0 words</span></div>
+            <p class="gc-footnote" id="gcWordStatus" aria-live="polite">Take turns in chat. No sentences, punctuation-only turns, or sneaky two-word entries!</p>
+          </section>
           <section class="gc-game-panel" data-gc-panel="alibi">
             <p class="eyebrow">CASE FILE · GROUP ROLEPLAY</p>
             <h4>The Alibi Room</h4>
