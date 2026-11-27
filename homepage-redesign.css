@@ -4446,6 +4446,18 @@
 #view-mystery .tool-card:nth-child(2) p.revealed {
   animation: verdictReveal .6s ease both;
 }
+/* BADING COURT — OFFICIAL STAMP */
+
+#view-mystery .court-stamp {
+  margin: 8px 0 10px;
+  color: #d5b77f;
+  font-family: Georgia, serif;
+  font-size: 9px;
+  font-weight: bold;
+  letter-spacing: 2px;
+  text-align: center;
+  text-shadow: 0 0 10px rgba(213, 183, 127, .3);
+}
 
 
 
