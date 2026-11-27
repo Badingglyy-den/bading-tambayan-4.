@@ -5349,3 +5349,23 @@ a:focus-visible,
  #home .lab-bench-top{font-size:8px;letter-spacing:.1em}
 }
 @media(prefers-reduced-motion:reduce){#home .craft-preview{transition:none}}
+
+
+/* Creature Bench: assembled, illustrated specimens */
+#home .creature-preview{display:grid;place-items:center;width:100%;min-height:175px;font-size:initial;filter:none}
+#home .assembled-creature{display:block;width:min(100%,210px);height:auto;overflow:visible;filter:drop-shadow(0 9px 7px #10191055);animation:specimen-arrive .35s ease-out both}
+#home .specimen-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:9px}
+#home .specimen-card{display:grid;grid-template-columns:76px minmax(0,1fr);grid-template-rows:auto auto;align-items:center;gap:4px 9px;padding:8px;border:1px solid #718b6b55;background:#293629;color:#e8efdc;min-width:0}
+#home .specimen-art{grid-row:1 / span 2;display:grid;place-items:center;min-height:76px;background:radial-gradient(circle,#526449 0,#354331 72%);overflow:hidden}
+#home .specimen-creature{width:82px;height:76px;filter:drop-shadow(0 3px 3px #10191055)}
+#home .specimen-details{display:grid;gap:3px;min-width:0}
+#home .specimen-details strong{overflow-wrap:anywhere;color:#f0f2e4;font:600 12px Georgia,serif}
+#home .specimen-details small{color:#aebda5;font-size:10px;line-height:1.3}
+#home .specimen-remove{justify-self:start;padding:3px 0;border:0;background:transparent;color:#e4a9b4;font-size:10px;text-decoration:underline;cursor:pointer}
+@keyframes specimen-arrive{from{opacity:.45;transform:translateY(7px) scale(.94)}to{opacity:1;transform:translateY(0) scale(1)}}
+@media(max-width:650px){
+ #home .creature-preview{min-height:180px}
+ #home .assembled-creature{width:min(100%,205px)}
+ #home .specimen-list{grid-template-columns:repeat(auto-fill,minmax(145px,1fr))}
+}
+@media(prefers-reduced-motion:reduce){#home .assembled-creature{animation:none}}
