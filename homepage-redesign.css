@@ -4069,6 +4069,60 @@
 #view-mystery .tool-card button {
   border-color: rgba(201, 169, 119, .4);
 }
+/* MYSTERY LIBRARY — ARCHIVE DIVIDER */
+
+#view-mystery .mystery-archive-divider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  max-width: 620px;
+  margin: 32px auto 24px;
+  padding: 0 12px;
+}
+
+#view-mystery .mystery-divider-line {
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(201, 169, 119, .55)
+  );
+}
+
+#view-mystery .mystery-divider-line:last-child {
+  background: linear-gradient(
+    90deg,
+    rgba(201, 169, 119, .55),
+    transparent
+  );
+}
+
+#view-mystery .mystery-divider-mark {
+  color: #c9a977;
+  font-size: 12px;
+}
+
+#view-mystery .mystery-divider-label {
+  color: #c9a977;
+  font-family: Georgia, serif;
+  font-size: 9px;
+  letter-spacing: 2px;
+  text-align: center;
+  white-space: nowrap;
+}
+
+@media (max-width: 380px) {
+  #view-mystery .mystery-archive-divider {
+    gap: 7px;
+  }
+
+  #view-mystery .mystery-divider-label {
+    font-size: 8px;
+    letter-spacing: 1.3px;
+  }
+}
 
 
 
