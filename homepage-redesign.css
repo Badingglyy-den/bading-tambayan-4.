@@ -4055,6 +4055,11 @@
     linear-gradient(145deg, rgba(55, 40, 32, .96), rgba(27, 22, 20, .98));
   box-shadow: 0 8px 22px rgba(0, 0, 0, .2);
   transition: transform .25s ease, border-color .25s ease;
+    display: flex;
+  flex-direction: column;
+  min-width: 0;
+  border-radius: 16px;
+  padding: 22px 18px;
 }
 
 #view-mystery .tool-card:hover {
