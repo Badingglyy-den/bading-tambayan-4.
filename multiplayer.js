@@ -1401,6 +1401,7 @@ if (sessionError) throw sessionError;
 currentUser = sessionData.session?.user || null;
 
 if (!currentUser || currentUser.is_anonymous) {
+  document.documentElement.classList.remove("auth-checking");
   document.documentElement.classList.add("auth-locked");
   return;
 }
