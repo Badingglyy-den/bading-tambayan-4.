@@ -1167,12 +1167,19 @@ $("universeBtn").onclick = () => {
 };
 
 $("machineBtn").onclick = () => {
-  $("machineText").textContent = random([
+  const machine = $("machineText");
+
+  machine.classList.remove("revealed");
+  void machine.offsetWidth;
+
+  machine.textContent = random([
     "🫶 LAMBING! You deserve softness today.",
     "👋 SAMPAL! Wake up, the standards are on the floor.",
     "💜 LAMBING! Virtual hug, no explanation needed.",
     "🎰 JACKPOT: Both. Sampal sa delusion, lambing sa sarili."
   ]);
+
+  machine.classList.add("revealed");
 
   visit("library");
 };
