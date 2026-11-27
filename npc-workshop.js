@@ -36,7 +36,7 @@
   ];
   let data = null;
   let selected = "lumi";
-  let timerId = null, secondsLeft = 0;
+  let timerId = null, secondsLeft = 0, notesShelf = null;
   function load() {
     try {
       data = window.tambayanProgress?.getNPCWorkshop?.() || {};
@@ -87,6 +87,12 @@
       .npc-list li span { flex:1; min-width:0; overflow-wrap:anywhere; }
       .npc-list li.done span { text-decoration:line-through; opacity:.58; }
       .npc-progress-note { margin-top:10px; color:var(--muted); font-size:.75rem; }
+      .npc-notebook { margin-top:12px; padding:12px; border:1px solid var(--line); border-radius:13px; background:var(--panel); }
+      .npc-notebook summary { cursor:pointer; font-weight:750; font-size:.86rem; }
+      .npc-saved-note { padding:11px 0; border-top:1px solid var(--line); }
+      .npc-saved-note strong { display:block; font-size:.86rem; }
+      .npc-saved-note small { display:block; margin-top:3px; color:var(--muted); font-size:.7rem; text-transform:capitalize; }
+      .npc-saved-note p { margin:7px 0 0; font-size:.82rem; line-height:1.5; white-space:pre-wrap; overflow-wrap:anywhere; }
       .npc-timer { margin:12px 0; font-size:2rem; font-weight:800; font-variant-numeric:tabular-nums; text-align:center; }
       .npc-quiz-options { display:grid; gap:7px; }
       .npc-quiz-options button { padding:10px; border:1px solid var(--line); border-radius:10px; background:var(--bg); color:var(--text); text-align:left; font:inherit; }
@@ -117,7 +123,7 @@
   }
   function saveNote(kind,title,body) {
     data.notes.unshift({kind,title,body,at:new Date().toISOString()});
-    data.notes=data.notes.slice(0,50); persist();
+    data.notes=data.notes.slice(0,50); persist(); refreshNotes();
   }
   function renderTool(host,id) {
     host.replaceChildren();
@@ -185,6 +191,24 @@
     function tick(){secondsLeft--;render();if(secondsLeft<=0){clearInterval(timerId);timerId=null;status.textContent="Session complete! Take a break and note what you accomplished.";}}
     controls.append(pause,resume,stop);host.append(status,display,controls);render();timerId=setInterval(tick,1000);
   }
+  function refreshNotes() {
+    if (!notesShelf) return;
+    notesShelf.replaceChildren();
+    const summary=$("summary",{},"Your NPC notebook · "+data.notes.length+" saved notes");
+    notesShelf.append(summary);
+    if (!data.notes.length) {
+      notesShelf.append($("p",{className:"npc-progress-note"},"Writing drafts, reflections, research notes, and idea plans will appear here."));
+      return;
+    }
+    data.notes.forEach(note=>{
+      const article=$("article",{className:"npc-saved-note"});
+      const head=$("strong",{},note.title||"Untitled note");
+      const meta=$("small",{},(note.kind||"note")+" · "+new Date(note.at||Date.now()).toLocaleDateString());
+      const body=$("p",{},note.body||"");
+      article.append(head,meta,body);
+      notesShelf.append(article);
+    });
+  }
   function setup() {
     const card=[...document.querySelectorAll(".tool-card")].find(el=>el.querySelector("h3")?.textContent.trim().toLowerCase()==="npc of the day");
     if(!card||card.dataset.npcWorkshopReady==="true")return;
@@ -197,7 +221,9 @@
     const grid=$("div",{className:"npc-resident-grid"});
     residents.forEach(r=>{const b=$("button",{type:"button",className:"npc-resident","aria-pressed":"false"});b.append($("span",{},r[3]),$("strong",{},r[0].charAt(0).toUpperCase()+r[0].slice(1)),$("small",{},r[1]));b.addEventListener("click",()=>{selected=r[0];grid.querySelectorAll("button").forEach(x=>x.setAttribute("aria-pressed",String(x.dataset.id===selected)));renderTool(tool,selected);});b.dataset.id=r[0];grid.append(b);});
     const tool=$("div",{className:"npc-tool", "aria-live":"polite"});
-    wrap.append(head,grid,tool);card.append(wrap);
+    notesShelf=$("details",{className:"npc-notebook"});
+    wrap.append(head,grid,tool,notesShelf);card.append(wrap);
+    refreshNotes();
     const todayName=card.querySelector(".npc-day-name")?.textContent.trim().toLowerCase();
     const found=residents.find(r=>r[0]===todayName);
     if(found)selected=found[0];
