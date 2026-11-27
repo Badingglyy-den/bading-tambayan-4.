@@ -5288,3 +5288,64 @@ a:focus-visible,
 #home .hidden-room .attic-keepsake.is-hidden{opacity:.62;border-style:dashed}
 #home .hidden-room .attic-keepsake.is-hidden .attic-keepsake-icon{color:var(--muted)}
 @media(max-width:600px){#home .hidden-room .attic-music-box{grid-template-columns:54px minmax(0,1fr);gap:12px;padding:15px}#home .hidden-room .attic-music-art{width:52px;height:52px;font-size:28px}#home .hidden-room .attic-music-box,#home .hidden-room .attic-cabinet,#home .hidden-room .attic-keepsakes{padding:15px}#home .hidden-room .attic-keepsake-shelf{grid-template-columns:1fr}#home .hidden-room .attic-keepsake{padding:10px}}
+
+
+/* PHASE 14 — LAB WORKSHOP: three hands-on creative benches */
+#home .lab-workshop{margin:18px 0 42px;padding:clamp(14px,3vw,26px);border:1px solid rgba(196,243,91,.26);background:linear-gradient(145deg,rgba(26,38,29,.96),rgba(17,24,21,.97));box-shadow:0 16px 42px rgba(0,0,0,.18)}
+#home .lab-workshop-heading{padding:3px 2px 20px;border-bottom:1px dashed rgba(196,243,91,.28);margin-bottom:18px}
+#home .lab-file-tag,#home .lab-bench-top{font:700 10px/1.4 monospace;letter-spacing:.16em;color:#c4f35b}
+#home .lab-workshop-heading h3{margin:8px 0 5px;color:#f1f5df;font:500 clamp(25px,4vw,34px)/1.1 Georgia,serif}
+#home .lab-workshop-heading p{margin:0;color:#b9c5ae;font-size:13px;line-height:1.6}
+#home .lab-bench{margin:16px 0;padding:clamp(14px,2.5vw,22px);border:1px solid rgba(210,225,190,.18);background:#202a22;color:#eaf0df}
+#home .lab-bench-top{display:flex;justify-content:space-between;gap:10px;padding-bottom:10px;border-bottom:1px solid rgba(210,225,190,.14);color:#b9d58b;font-size:9px}
+#home .lab-bench-top span:last-child{color:#9ba995;text-align:right}
+#home .lab-bench-heading{display:flex;align-items:flex-start;gap:13px;padding:17px 0}
+#home .lab-bench-icon{display:grid;place-items:center;flex:0 0 43px;height:43px;background:#303d30;border:1px solid #718b6b55;font-size:23px}
+#home .lab-bench-heading h3{margin:0 0 5px;color:#f3f1df;font:500 22px/1.2 Georgia,serif}
+#home .lab-bench-heading p{margin:0;color:#b7c1b1;font-size:12px;line-height:1.6}
+#home .creature-workspace,#home .craft-workspace,#home .machine-workspace{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:18px;align-items:center}
+#home .creature-preview-wrap{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:220px;padding:18px;background:radial-gradient(circle,#526449 0,#354331 45%,#293528 75%);border:1px dashed #a8c18c66}
+#home .creature-preview{display:flex;align-items:center;justify-content:center;gap:2px;min-height:110px;font-size:clamp(42px,8vw,64px);filter:drop-shadow(0 5px 4px #10191066)}
+#home #creatureSpecimenLabel{margin-top:13px;color:#d0dfb9;font:700 9px monospace;letter-spacing:.15em;text-align:center}
+#home .creature-controls,#home .craft-controls,#home .machine-controls{display:grid;gap:10px;min-width:0}
+#home .lab-bench label{display:grid;gap:5px;color:#dce5d0;font-size:11px;font-weight:700}
+#home .lab-bench input,#home .lab-bench select{width:100%;min-width:0;min-height:41px;padding:9px 11px;border:1px solid #71846b66;border-radius:3px;background:#172019;color:#f0f3e8;font:500 13px inherit}
+#home .lab-bench input::placeholder{color:#9ba995}
+#home .lab-action{min-height:42px;padding:10px 14px;border:1px solid #b4d17c88;border-radius:2px 12px 2px 12px;background:#d6e6b5;color:#263523;font-weight:800;font-size:12px;cursor:pointer}
+#home .lab-action:hover{background:#e5f0d0}
+#home .lab-feedback{min-height:18px;margin:0;color:#b9d58b;font-size:11px;line-height:1.5}
+#home .specimen-shelf{margin-top:18px;padding-top:14px;border-top:1px solid rgba(210,225,190,.15)}
+#home .lab-subhead{display:flex;justify-content:space-between;gap:10px;color:#e7ecd9;font-size:12px}
+#home .lab-subhead span,#home .lab-local-note{color:#9eae98;font-size:10px}
+#home .specimen-list{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+#home .specimen-chip{display:flex;align-items:center;gap:8px;padding:7px 10px;border:1px solid #718b6b55;background:#293629;color:#e8efdc;font-size:11px}
+#home .specimen-chip span:first-child{font-size:20px}
+#home .specimen-chip button{border:0;background:transparent;color:#d5b3a8;font-size:11px;cursor:pointer}
+#home .lab-empty{margin:0;color:#9eae98;font-size:11px}
+#home .lab-local-note{margin:9px 0 0}
+#home .craft-preview{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;min-height:255px;padding:20px;border:7px solid rgba(255,255,255,.55);outline:1px solid rgba(255,255,255,.3);text-align:center;color:#43354d;box-shadow:0 10px 24px #0003;transition:background .2s}
+#home .craft-preview[data-paper="lilac"]{background:#e9ddf4;color:#443451}
+#home .craft-preview[data-paper="peach"]{background:#f6ddc9;color:#583b32}
+#home .craft-preview[data-paper="matcha"]{background:#e2ebd4;color:#344633}
+#home .craft-preview[data-paper="night"]{background:#29334b;color:#f3e9ff}
+#home .craft-preview[data-paper="pink"]{background:#f5d9e7;color:#57374b}
+#home .craft-preview-decoration{font-size:17px;letter-spacing:.3em}
+#home .craft-preview-icon{font-size:54px;line-height:1.2}
+#home .craft-preview strong{max-width:100%;overflow-wrap:anywhere;font:600 clamp(20px,3vw,27px)/1.15 Georgia,serif}
+#home .craft-preview-footer{font:700 8px monospace;letter-spacing:.2em;opacity:.72}
+#home .machine-visual{display:flex;align-items:center;justify-content:center;gap:clamp(5px,1.5vw,13px);min-height:175px;padding:18px 8px;background:repeating-linear-gradient(0deg,#ffffff06 0 1px,transparent 1px 15px),#18221b;border:1px dashed #9caf8a66}
+#home .machine-visual>span:not(.machine-join){display:grid;place-items:center;width:clamp(43px,7vw,68px);height:clamp(43px,7vw,68px);background:#303d30;border:1px solid #829b6c66;font-size:clamp(23px,4vw,34px)}
+#home .machine-join{color:#b9d58b;font-size:17px}
+#home .machine-result{margin-top:15px;padding:14px 16px;border-left:3px solid #b9d58b;background:#293629}
+#home .machine-result-label{color:#b9d58b;font:700 9px monospace;letter-spacing:.17em}
+#home .machine-result p{margin:7px 0 0;color:#e7ecd9;font:500 14px/1.6 Georgia,serif}
+@media(max-width:650px){
+ #home .lab-workshop{padding:12px}
+ #home .lab-bench{padding:13px}
+ #home .creature-workspace,#home .craft-workspace,#home .machine-workspace{grid-template-columns:1fr;gap:14px}
+ #home .creature-preview-wrap{min-height:165px}
+ #home .craft-preview{min-height:225px}
+ #home .machine-visual{min-height:125px}
+ #home .lab-bench-top{font-size:8px;letter-spacing:.1em}
+}
+@media(prefers-reduced-motion:reduce){#home .craft-preview{transition:none}}
