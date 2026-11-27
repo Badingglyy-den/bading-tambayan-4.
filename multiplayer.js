@@ -1494,6 +1494,33 @@ if (accountEmailDisplay) {
     if (showNotice) status("Online profile saved! ✨");
   }
 
+  // Keep Avatar Studio edits aligned with the public profile used on next login.
+  window.tambayanSyncPublicProfile = async function (details) {
+    if (!client || !currentUser) throw new Error("Account connection is not ready.");
+    const name = String(details?.name || "Tambay").trim().slice(0, 24) || "Tambay";
+    const avatar = String(details?.avatar || "💜").slice(0, 8) || "💜";
+    const { error } = await client.from("profiles").upsert({
+      user_id: currentUser.id,
+      display_name: name,
+      avatar
+    }, { onConflict: "user_id" });
+    if (error) throw error;
+    profile = { ...(profile || {}), display_name: name, avatar };
+    profileCache.clear();
+    if (roomChannel && currentRoom) {
+      await roomChannel.track({
+        user_id: currentUser.id,
+        display_name: name,
+        avatar,
+        online_at: new Date().toISOString()
+      });
+      renderMembers();
+    }
+    const accountName = $("accountOpen")?.querySelector(".account-chip-name");
+    if (accountName) accountName.textContent = name;
+    return true;
+  };
+
   async function refreshRoomList() {
     if (!client || !currentUser) return;
 
