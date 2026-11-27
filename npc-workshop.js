@@ -230,6 +230,15 @@
     grid.querySelectorAll("button").forEach(x=>x.setAttribute("aria-pressed",String(x.dataset.id===selected)));
     renderTool(tool,selected);
   }
+  // Some mobile browsers jump when a clicked control is replaced during a render.
+  // Preserve the reader's position while NPC tools update their contents.
+  document.addEventListener("click", event => {
+    const control = event.target.closest(".npc-workshop button, .npc-day-card button");
+    if (!control) return;
+    const y = window.scrollY;
+    requestAnimationFrame(() => window.scrollTo({ top: y, behavior: "auto" }));
+  }, true);
+
   function start() {
     setup();let attempts=0;
     const observer=new MutationObserver(()=>{setup();if(document.querySelector('[data-npc-workshop-ready="true"]')||++attempts>40)observer.disconnect();});
