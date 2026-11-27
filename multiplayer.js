@@ -1333,12 +1333,17 @@ document.addEventListener("visibilitychange", () => {
       client = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
       window.tambayanSupabaseClient = client;
       const { data: sessionData, error: sessionError } = await client.auth.getSession();
-      if (sessionData.session) currentUser = sessionData.session.user;
-else {
-  const { data, error } = await client.auth.signInAnonymously();
-  if (error) throw error;
-  currentUser = data.user;
+      const { data: sessionData, error: sessionError } = await client.auth.getSession();
+if (sessionError) throw sessionError;
+
+currentUser = sessionData.session?.user || null;
+
+if (!currentUser || currentUser.is_anonymous) {
+  document.documentElement.classList.add("auth-locked");
+  return;
 }
+
+document.documentElement.classList.remove("auth-locked");
 
 const accountButton = $("accountOpen");
 if (accountButton) {
@@ -2343,33 +2348,71 @@ if (String(message.content || "").startsWith("[[PHOTO]]")) {
     $("accountDialog").showModal();
   }
 };
+  // LOGIN GATE BUTTONS
+$("gateLogin").onclick = () => {
+  $("accountOpen").click();
+  $("accountTitle").textContent = "Welcome back! 💜";
+  $("accountDescription").textContent = "Log in to continue your Bading Tambayan journey.";
+};
+
+$("gateSignup").onclick = () => {
+  $("accountOpen").click();
+  $("accountTitle").textContent = "Join Bading Tambayan! 💜";
+  $("accountDescription").textContent = "Create your account and come on in.";
+};
     // BADING TAMBAYAN — MAIN ACCOUNT LOGIN
-  $("accountLogin").onclick = async () => {
-    const email = $("accountEmail").value.trim();
-    const password = $("accountPassword").value;
-    const message = $("accountStatus");
+  $("accountSignup").onclick = async () => {
+  const email = $("accountEmail").value.trim();
+  const password = $("accountPassword").value;
+  const message = $("accountStatus");
 
-    if (!email || !password) {
-      message.textContent = "Please enter your email and password.";
-      return;
-    }
+  if (!email || !password) {
+    message.textContent = "Please enter your email and password.";
+    return;
+  }
 
-    try {
-      message.textContent = "Logging in...";
+  if (password.length < 8) {
+    message.textContent = "Password must be at least 8 characters.";
+    return;
+  }
 
-      const { error } = await client.auth.signInWithPassword({
+  try {
+    message.textContent = "Creating your account...";
+
+    if (currentUser?.is_anonymous) {
+      const { error } = await client.auth.updateUser({
         email,
         password
       });
 
       if (error) throw error;
 
-      message.textContent = "Welcome back! Reconnecting... 💜";
-      window.location.reload();
-    } catch (error) {
-      message.textContent = error.message;
+      message.textContent =
+        "Verification email sent! Confirm your email to secure your account. Your chatroom identity is being preserved. 💜";
+
+    } else {
+      const { data, error } = await client.auth.signUp({
+        email,
+        password,
+        options: {
+          emailRedirectTo: "https://badingglyy-den.github.io/bading-tambayan-4./"
+        }
+      });
+
+      if (error) throw error;
+
+      if (data.session) {
+        message.textContent = "Account created! Welcome to Bading Tambayan! 💜";
+        window.location.reload();
+      } else {
+        message.textContent =
+          "Verification email sent! Please confirm your email before logging in. 💜";
+      }
     }
-  };
+  } catch (error) {
+    message.textContent = error.message;
+  }
+};
       
   // BADING TAMBAYAN — MAIN ACCOUNT SIGNUP
   $("accountSignup").onclick = async () => {
