@@ -2764,3 +2764,19 @@ html.auth-locked #authGate {
  
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                }
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   
+
+
+/* CHAOS ARCADE EXPANSION */
+.expansion-game { position: relative; overflow: hidden; }
+.expansion-game:after { content: "NEW CHALLENGE"; position: absolute; top: 12px; right: -27px; transform: rotate(35deg); padding: 4px 28px; font-size: 8px; letter-spacing: 1px; color: #f3dfff; background: #7650a8; opacity: .85; }
+.difference-puzzle { display: grid; gap: 7px; margin: 12px 0; padding: 12px; border-radius: 12px; background: #08061266; text-align: center; }
+.difference-row { display: flex; justify-content: space-around; gap: 4px; font-size: 22px; letter-spacing: 2px; }
+.difference-row span { min-width: 22px; }
+.expansion-game .choice-row { margin: 10px 0; }
+.expansion-game .choice-btn { min-width: 42px; min-height: 36px; font-size: 12px; }
+.expansion-game .inline-form input { flex: 1; width: 0; }
+.attic-photo-image { user-select: none; transition: transform .2s ease, filter .2s ease; }
+.attic-photo-image:focus-visible { outline: 2px solid var(--accent); outline-offset: 5px; }
+.attic-photo-secret { padding: 12px; border: 1px dashed var(--line); border-radius: 12px; background: #ffffff0a; line-height: 1.7; }
+.attic-photo-clue-link { display: inline-block; margin: 8px 0 14px; }
+@media (max-width:560px) { .difference-row { font-size: 19px; } .expansion-game:after { font-size: 7px; } }
