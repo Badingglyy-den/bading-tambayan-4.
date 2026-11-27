@@ -4376,6 +4376,18 @@
 #view-mystery .tool-card:nth-child(1) p.revealed {
   animation: fortuneReveal .65s ease both;
 }
+/* FORTUNE TELLER — READING STAMP */
+
+#view-mystery .fortune-stamp {
+  margin: 8px 0 10px;
+  color: #c9a5e8;
+  font-family: Georgia, serif;
+  font-size: 9px;
+  font-weight: bold;
+  letter-spacing: 3px;
+  text-align: center;
+  text-shadow: 0 0 12px rgba(190, 145, 230, .4);
+}
 
 
 
