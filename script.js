@@ -1781,7 +1781,7 @@ $("importFile").onchange = async e => {
     }
 
     if (!confirm(
-      "Importing will replace the current local save. Continue?"
+      "Importing will replace this device's current progress and, while signed in, sync the imported save to your account on other devices. Export a backup first. Continue?"
     )) {
       return;
     }
@@ -1807,7 +1807,7 @@ $("importFile").onchange = async e => {
 
 $("resetBtn").onclick = () => {
   if (!confirm(
-    "This will erase local progress on this device. Export a backup first. Continue?"
+    "This will erase all progress for this account on this device and sync the reset to your account in the cloud. Other devices will receive the reset too. This cannot be undone unless you have a backup. Continue?"
   )) {
     return;
   }
