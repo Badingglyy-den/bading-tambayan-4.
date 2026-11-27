@@ -3292,3 +3292,19 @@ body[data-theme="matcha"] .primary-btn{
   .theme-options{width:100%}
   .theme-choice{flex:1 1 auto}
 }
+
+
+/* THEME CONTRAST SYSTEM — shared readable text and controls */
+body[data-theme="violet"]{--text:#f7f1ff;--muted:#c8bdd8;--accent:#c6a5ff;--accent2:#8d65db;--line:#ffffff24;color-scheme:dark}
+body[data-theme="rose"]{--text:#fff2f8;--muted:#d8b8c8;--accent:#ffc0d9;--accent2:#d66d9f;--line:#ffffff25;color-scheme:dark}
+body[data-theme="ocean"]{--text:#eff8ff;--muted:#b5cadb;--accent:#a9e1ff;--accent2:#4b9dc9;--line:#ffffff24;color-scheme:dark}
+body[data-theme="midnight"]{--text:#f0f3ff;--muted:#b9c5e0;--accent:#c0d0ff;--accent2:#738fd9;--line:#ffffff24;color-scheme:dark}
+body[data-theme="cloud"]{--text:#30283a;--muted:#655a70;--accent:#76549b;--accent2:#9877b7;--line:#57466b30;color-scheme:light}
+body[data-theme="peach"]{--text:#402d27;--muted:#70594f;--accent:#a85c43;--accent2:#c77b5d;--line:#704b3a30;color-scheme:light}
+body[data-theme="matcha"]{--text:#29382b;--muted:#596b55;--accent:#55764c;--accent2:#78966b;--line:#405b3d30;color-scheme:light}
+body[data-theme="cloud"] input,body[data-theme="cloud"] textarea,body[data-theme="cloud"] select,
+body[data-theme="peach"] input,body[data-theme="peach"] textarea,body[data-theme="peach"] select,
+body[data-theme="matcha"] input,body[data-theme="matcha"] textarea,body[data-theme="matcha"] select{color:var(--text)}
+body[data-theme="cloud"] input::placeholder,body[data-theme="cloud"] textarea::placeholder,
+body[data-theme="peach"] input::placeholder,body[data-theme="peach"] textarea::placeholder,
+body[data-theme="matcha"] input::placeholder,body[data-theme="matcha"] textarea::placeholder{color:var(--muted);opacity:1}
