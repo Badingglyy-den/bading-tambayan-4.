@@ -8,7 +8,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="theme-color" content="#17112f">
   <title>Bading Tambayan 4.2 — The Tambayanverse</title>
-  <link rel="stylesheet" href="style.css?v=20261126-mapfix">
+  <link rel="stylesheet" href="style.css?v=20261127-arcade1">
   <link rel="stylesheet" href="homepage-redesign.css?v=26">
   <style id="tambayanverse-map-desktop-fix">
 @media (min-width: 601px) {
@@ -571,6 +571,30 @@
           <div class="inline-form"><input id="colorInput" type="text" placeholder="red yellow blue"><button class="small-btn" id="colorCheck">Check</button></div>
           <p class="game-result" id="colorResult">Remember the colors in order!</p><button class="tiny-link" id="colorNew">New sequence ↻</button>
         </article>
+        <article class="game-card expansion-game">
+          <div class="game-emoji">🕵️</div><h3>Riddle Room</h3><p id="riddlePrompt">I have keys but no locks. What am I?</p>
+          <div class="inline-form"><input id="riddleInput" type="text" placeholder="Your answer"><button class="small-btn" id="riddleCheck">Solve</button></div><p class="game-result" id="riddleResult">Think carefully. Hints are hidden in the wording.</p><button class="tiny-link" id="riddleNext">Next riddle ↻</button>
+        </article>
+        <article class="game-card expansion-game">
+          <div class="game-emoji">🔐</div><h3>Code Breaker</h3><p>Crack the secret 3-digit code. Digits are different.</p>
+          <div class="inline-form"><input id="codeInput" type="number" inputmode="numeric" placeholder="3 digits"><button class="small-btn" id="codeCheck">Crack</button></div><p class="game-result" id="codeResult">You have 6 attempts. Clues will guide you.</p><button class="tiny-link" id="codeNew">New code ↻</button>
+        </article>
+        <article class="game-card expansion-game">
+          <div class="game-emoji">👀</div><h3>Spot the Difference</h3><p>One symbol changed. Which position is different?</p>
+          <div class="difference-puzzle" id="differencePuzzle" aria-live="polite"></div><div class="choice-row" id="differenceChoices"></div><p class="game-result" id="differenceResult">Look closely at both rows.</p><button class="tiny-link" id="differenceNext">Next picture ↻</button>
+        </article>
+        <article class="game-card expansion-game">
+          <div class="game-emoji">🎯</div><h3>Odd One Out</h3><p id="oddQuestion">Which one doesn't belong?</p>
+          <div class="choice-row" id="oddChoices"></div><p class="game-result" id="oddResult">Find the one that breaks the pattern.</p><button class="tiny-link" id="oddNext">Next set ↻</button>
+        </article>
+        <article class="game-card expansion-game">
+          <div class="game-emoji">🧠</div><h3>Pattern Panic</h3><p id="patternQuestion">2 · 4 · 8 · 16 · ?</p>
+          <div class="choice-row" id="patternChoices"></div><p class="game-result" id="patternResult">What comes next?</p><button class="tiny-link" id="patternNext">New pattern ↻</button>
+        </article>
+        <article class="game-card expansion-game">
+          <div class="game-emoji">📁</div><h3>Emoji Detective</h3><p id="detectiveStory">A tiny case has landed on your desk...</p>
+          <div class="choice-row" id="detectiveChoices"></div><p class="game-result" id="detectiveResult">Read the clues and identify the culprit.</p><button class="tiny-link" id="detectiveNext">New case ↻</button>
+        </article>
       </div>
     </section>
 
@@ -887,7 +911,8 @@
   <script src="secret-hunt-extras.js"></script>
  <script src="npc-of-the-day.js?v=3"></script>
   <script src="daily-tambayan.js?v=5"></script>
-  <script src="attic.js?v=4"></script>
+  <script src="attic.js?v=5"></script>
+  <script src="arcade-expansion.js?v=1"></script>
 
 <!-- Register notification service worker -->
 <script>
