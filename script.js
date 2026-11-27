@@ -458,7 +458,34 @@ function visit(id) {
 function render() {
   $("starCount").textContent = state.stars;
   $("shopStars").textContent = state.stars;
-  $("welcomeName").textContent = state.profile.name || "Sis";
+  const profileName = state.profile.name || "Sis";
+  $("welcomeName").textContent = profileName;
+  const heroName = $("profileHeroName"); if (heroName) heroName.textContent = profileName;
+  const heroBio = $("profileHeroBio"); if (heroBio) heroBio.textContent = (state.profile.bio || "").trim() || "Your introduction will live here. Tell the tambayan a little about yourself.";
+  const heroAvatar = $("profileHeroAvatar");
+  if (heroAvatar) {
+    heroAvatar.dataset.frame = (state.equippedItems || {}).frame || "";
+    heroAvatar.dataset.aura = (state.equippedItems || {}).aura || "";
+    heroAvatar.dataset.decoration = (state.equippedItems || {}).avatar || "";
+    renderAvatarDisplay(heroAvatar);
+  }
+  const heroEquipped = $("profileHeroEquipped");
+  if (heroEquipped) {
+    heroEquipped.replaceChildren();
+    ["title", "badge"].forEach(slot => {
+      const item = shopItems.find(x => x.id === (state.equippedItems || {})[slot]);
+      if (!item) return;
+      const chip = document.createElement("span"); chip.className = "profile-hero-chip";
+      chip.textContent = item.icon + " " + item.name; heroEquipped.appendChild(chip);
+    });
+    if (!heroEquipped.childElementCount) {
+      const hint = document.createElement("span"); hint.className = "profile-hero-chip profile-hero-chip-empty";
+      hint.textContent = "Your titles and badges will appear here"; heroEquipped.appendChild(hint);
+    }
+  }
+  const heroLevel = $("profileHeroLevel"); if (heroLevel) heroLevel.textContent = level();
+  const heroStars = $("profileHeroStars"); if (heroStars) heroStars.textContent = state.stars;
+  const heroBadges = $("profileHeroBadges"); if (heroBadges) heroBadges.textContent = state.badges.length;
   const equipped = state.equippedItems || {};
   const titleItem = shopItems.find(item => item.id === equipped.title);
   const profileTitle = $("equippedProfileTitle");
@@ -765,6 +792,7 @@ function random(a) {
 
 $("profileOpen").onclick = () =>
   $("profileDialog").showModal();
+$("profileHeroEdit")?.addEventListener("click", () => $("profileDialog").showModal());
 
 $("backupOpen").onclick = () =>
   $("settingsDialog").showModal();
@@ -772,7 +800,9 @@ $("backupOpen").onclick = () =>
 $("saveProfile").onclick = () => {
   state.profile.name = $("profileName").value.trim() || "Sis";
   state.profile.avatar = $("profileAvatar").value || state.profile.avatar || "💜";
+  state.profile.bio = $("profileBio").value.trim().slice(0, 180);
   save();
+  render();
   $("profileDialog").close();
   toast("Profile updated! 💜");
 };
@@ -837,6 +867,7 @@ function updateAvatarSelection(avatar) {
 
 $("profileOpen").addEventListener("click", () => {
   $("profileName").value = state.profile.name;
+  $("profileBio").value = state.profile.bio || "";
   updateAvatarSelection(state.profile.avatar);
   const photoStatus = $("profilePhotoStatus");
   if (photoStatus) photoStatus.textContent = state.profile.photo ? "A profile photo is saved to your account." : "No profile photo uploaded yet.";
