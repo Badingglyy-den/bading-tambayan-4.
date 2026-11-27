@@ -1492,7 +1492,14 @@ if (accountEmailDisplay) {
       showWelcomeUniverse();
     } catch (error) {
       console.error("Online Tambayan initialization failed:", error);
-      status(error.message || "Could not connect to Online Tambayan. Please refresh.", true);
+      const message = error.message || "Could not connect to Online Tambayan. Please refresh.";
+      status(message, true);
+      // Never leave the visitor on an endless session-restoration screen.
+      document.documentElement.classList.remove("auth-checking");
+      if (document.documentElement.classList.contains("auth-locked")) {
+        const gateMessage = $("authGate")?.querySelector(".auth-gate-description");
+        if (gateMessage) gateMessage.textContent = "We couldn't connect just yet. Check your internet connection and try logging in again.";
+      }
     }
   }
 
@@ -2362,12 +2369,8 @@ if (String(message.content || "").startsWith("[[PHOTO]]")) {
 
   $("onlineSaveProfile").onclick = async () => {
     try { await saveProfile(true); }
-    catch (error) { status(error.message, true); }
+    catch (error) { status(error.message || "Profile couldn't be saved.", true); }
   };
-  $("onlineSaveProfile").onclick = async () => {
-  try { await saveProfile(true); }
-  catch (error) { status(error.message, true); }
-};
 
 $("onlineManageAccount").onclick = () => {
   $("accountOpen").click();
