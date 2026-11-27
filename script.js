@@ -37,6 +37,7 @@ const defaultState = () => ({
   hangoutPosts: [],
   kindPosts: [],
   labWorkshop: { creatures: [] },
+  npcWorkshop: { priorities: [], habits: [], notes: [], goals: [], organizer: [], quizScore: 0, completedChallenges: [] },
   lastHangoutQuestion: ""
 });
 
@@ -103,7 +104,18 @@ function normalize(x) {
     kindPosts: Array.isArray(x.kindPosts) ? x.kindPosts : [],
     labWorkshop: x.labWorkshop && typeof x.labWorkshop === "object" && !Array.isArray(x.labWorkshop)
       ? { creatures: Array.isArray(x.labWorkshop.creatures) ? x.labWorkshop.creatures.slice(0, 24) : [] }
-      : { creatures: [] }
+      : { creatures: [] },
+    npcWorkshop: x.npcWorkshop && typeof x.npcWorkshop === "object" && !Array.isArray(x.npcWorkshop)
+      ? {
+          priorities: Array.isArray(x.npcWorkshop.priorities) ? x.npcWorkshop.priorities.slice(0, 3) : [],
+          habits: Array.isArray(x.npcWorkshop.habits) ? x.npcWorkshop.habits.slice(0, 30) : [],
+          notes: Array.isArray(x.npcWorkshop.notes) ? x.npcWorkshop.notes.slice(0, 50) : [],
+          goals: Array.isArray(x.npcWorkshop.goals) ? x.npcWorkshop.goals.slice(0, 30) : [],
+          organizer: Array.isArray(x.npcWorkshop.organizer) ? x.npcWorkshop.organizer.slice(0, 50) : [],
+          quizScore: Math.max(0, Number(x.npcWorkshop.quizScore) || 0),
+          completedChallenges: Array.isArray(x.npcWorkshop.completedChallenges) ? x.npcWorkshop.completedChallenges.slice(0, 100) : []
+        }
+      : { priorities: [], habits: [], notes: [], goals: [], organizer: [], quizScore: 0, completedChallenges: [] }
   };
 }
 
@@ -222,6 +234,26 @@ window.tambayanProgress = {
 
   getLabWorkshop() {
     return JSON.parse(JSON.stringify(state.labWorkshop || { creatures: [] }));
+  },
+
+  getNPCWorkshop() {
+    return JSON.parse(JSON.stringify(state.npcWorkshop || { priorities: [], habits: [], notes: [], goals: [], organizer: [], quizScore: 0, completedChallenges: [] }));
+  },
+
+  setNPCWorkshop(progress) {
+    if (!progress || typeof progress !== "object" || Array.isArray(progress)) return this.getNPCWorkshop();
+    const current = this.getNPCWorkshop();
+    state.npcWorkshop = {
+      priorities: Array.isArray(progress.priorities) ? progress.priorities.slice(0, 3) : current.priorities,
+      habits: Array.isArray(progress.habits) ? progress.habits.slice(0, 30) : current.habits,
+      notes: Array.isArray(progress.notes) ? progress.notes.slice(0, 50) : current.notes,
+      goals: Array.isArray(progress.goals) ? progress.goals.slice(0, 30) : current.goals,
+      organizer: Array.isArray(progress.organizer) ? progress.organizer.slice(0, 50) : current.organizer,
+      quizScore: Number.isFinite(Number(progress.quizScore)) ? Math.max(0, Number(progress.quizScore)) : current.quizScore,
+      completedChallenges: Array.isArray(progress.completedChallenges) ? progress.completedChallenges.slice(0, 100) : current.completedChallenges
+    };
+    save();
+    return this.getNPCWorkshop();
   },
 
   setLabWorkshop(progress) {
