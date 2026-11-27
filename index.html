@@ -203,6 +203,23 @@
   to { opacity: 1; }
 }
   </style>
+<style id="daily-dispatch-five-challenges">
+.daily-dispatch-intro{margin:8px 0 16px}
+.daily-dispatch-intro h3{margin:4px 0}
+.daily-dispatch-intro p:last-child{opacity:.78;margin:6px 0}
+.daily-challenge-list{display:grid;gap:12px}
+.daily-challenge-card{display:grid;grid-template-columns:48px minmax(0,1fr) auto;gap:12px;align-items:center;padding:15px;border:1px solid rgba(180,145,220,.22);border-radius:18px;background:rgba(255,255,255,.035)}
+.daily-challenge-card.is-complete{border-color:rgba(115,205,157,.45);background:rgba(115,205,157,.07)}
+.daily-challenge-icon{font-size:30px;text-align:center}
+.daily-challenge-copy h3{margin:3px 0;font-size:1rem}
+.daily-challenge-copy p{margin:4px 0 7px;font-size:.9rem;opacity:.8}
+.daily-challenge-reward,.daily-challenge-status{font-size:.75rem;font-weight:800;letter-spacing:.04em}
+.daily-challenge-action{display:grid;gap:8px;justify-items:end}
+.daily-challenge-action .small-btn{white-space:nowrap}
+.daily-challenge-card.is-complete .daily-challenge-status{color:#75cd9d}
+.daily-go-button:disabled{opacity:.65;cursor:default}
+@media(max-width:520px){.daily-challenge-card{grid-template-columns:38px minmax(0,1fr);gap:10px;padding:12px}.daily-challenge-icon{font-size:26px}.daily-challenge-action{grid-column:2;display:flex;align-items:center;justify-content:space-between;width:100%}}
+</style>
 </head>
 <body>
   <div id="authGate" class="auth-gate">
@@ -294,19 +311,15 @@
     <span class="daily-board-icon">📜</span>
   </div>
 
-  <div class="daily-mission">
-    <div class="daily-mission-icon">🔎</div>
-    <div class="daily-mission-content">
-      <p class="eyebrow">TODAY'S LITTLE MISSION</p>
-      <h3 id="dailyMissionTitle">The Missing Little Star</h3>
-      <p id="dailyMissionDescription">Find the tiny star hiding somewhere in the six worlds.</p>
-    </div>
-    <span class="daily-mission-number">01</span>
+  <div class="daily-dispatch-intro">
+    <p class="eyebrow">FIVE LITTLE ADVENTURES · SAME FOR EVERYONE</p>
+    <h3>Today's five challenges</h3>
+    <p>Complete each activity to collect stars. Your progress follows your account across devices.</p>
   </div>
-
+  <div class="daily-challenge-list" id="dailyMissionList"></div>
   <div class="daily-mission-footer">
-    <span id="dailyMissionReward">⭐ 15 stars</span>
-    <span id="dailyMissionStatus">NOT STARTED</span>
+    <span id="dailyMissionReward">⭐ 0 / 40 stars</span>
+    <span id="dailyMissionStatus">5 LEFT TO EXPLORE</span>
   </div>
   <div class="daily-streak-strip">
   <span class="daily-streak-icon">🔥</span>
@@ -860,7 +873,7 @@
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
   <!-- Existing Bading Tambayan features -->
-  <script src="script.js?v=20261127-5"></script>
+  <script src="script.js?v=20261127-6"></script>
   <!-- Supabase library required by online multiplayer -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <!-- Online multiplayer module -->
@@ -873,7 +886,7 @@
 <script src="layout.js?v=20261126-6"></script>
   <script src="secret-hunt-extras.js"></script>
  <script src="npc-of-the-day.js?v=3"></script>
-  <script src="daily-tambayan.js?v=4"></script>
+  <script src="daily-tambayan.js?v=5"></script>
   <script src="attic.js?v=4"></script>
 
 <!-- Register notification service worker -->
