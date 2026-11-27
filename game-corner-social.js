@@ -150,4 +150,166 @@
     const pitch = $("gcSellPitch").value.trim();
     if (pitch) copyText("📣 MY SELL ME THIS PITCH\n" + (activeProduct ? activeProduct.item + "\n\n" : "") + pitch, event.currentTarget);
   });
+
+  const plotPrompts = [
+    "The whole tambayan received a mysterious invitation with no sender...",
+    "It was supposed to be a normal Tuesday until the ceiling started whispering...",
+    "At exactly midnight, every phone displayed the same message: “Don't open the fridge.”",
+    "We accidentally adopted a dragon, and nobody knows who is responsible...",
+    "The new neighbor seemed ordinary, except they knew everyone's nickname...",
+    "A tiny door appeared in the lounge wall, and something knocked from the other side..."
+  ];
+  const opinionPrompts = [
+    "Breakfast food tastes better at night.",
+    "Voice notes should come with a skip-intro button.",
+    "The best seat in the house is always the floor.",
+    "Rewatching a favorite show is better than starting a new one.",
+    "A sandwich cut diagonally tastes different. (It does.)",
+    "Being early is more stressful than being five minutes late.",
+    "The last bite of food should always be offered to someone else.",
+    "Rainy days are better when you have absolutely no plans.",
+    "A good playlist can fix at least 37% of a bad day.",
+    "The group chat is a form of community service."
+  ];
+  const courtCases = [
+    { case: "The accused ate the last piece of pizza after saying, “I'm not hungry.”", question: "Is this a betrayal of the highest order or a perfectly legal snack decision?" },
+    { case: "Someone sends “I'm outside” while they are still choosing an outfit at home.", question: "Guilty of misleading the group, or innocent because getting ready is a journey?" },
+    { case: "A person watches the next episode without waiting for the group.", question: "Is this an unforgivable spoiler-adjacent crime?" },
+    { case: "Someone borrows a charger and returns it with the cable wrapped in a different way.", question: "Is the charger still legally the same charger?" },
+    { case: "A friend says “one last game” and then starts five more rounds.", question: "Should the court sentence them to host the next game night?" },
+    { case: "Someone reacts to a message but never replies to the actual question.", question: "Is a reaction a valid legal response?" },
+    { case: "A person takes a bite of your food after asking “Can I try?” and takes half.", question: "Was consent obtained under misleading portion expectations?" },
+    { case: "Someone says they are five minutes away but has not left the house.", question: "Is this optimism, fiction, or a punishable offense?" }
+  ];
+  const wordOpeners = [
+    "Nobody expected the tiny frog to",
+    "At the end of the hallway, we discovered",
+    "The group chat went silent when",
+    "Everything was normal until the toaster",
+    "Our mission was simple: find",
+    "The mysterious package contained"
+  ];
+  let plotStory = [];
+  let courtVote = "";
+  let wordList = [];
+  let currentCourt = null;
+  let currentWordOpener = "";
+
+  function updatePlot() {
+    const story = plotStory.join(" ");
+    $("gcPlotStory").textContent = story || "Your story will appear here.";
+    $("gcPlotCopy").disabled = !story;
+  }
+  $("gcPlotNew")?.addEventListener("click", () => {
+    const starter = choose(plotPrompts);
+    plotStory = [starter];
+    $("gcPlotPrompt").textContent = starter;
+    $("gcPlotContribution").value = "";
+    $("gcPlotCount").textContent = "0 / 300";
+    $("gcPlotAdd").disabled = true;
+    updatePlot();
+  });
+  $("gcPlotContribution")?.addEventListener("input", event => {
+    const value = event.currentTarget.value;
+    $("gcPlotCount").textContent = value.length + " / 300";
+    $("gcPlotAdd").disabled = !value.trim();
+  });
+  $("gcPlotAdd")?.addEventListener("click", () => {
+    const sentence = $("gcPlotContribution").value.trim();
+    if (!sentence) return;
+    plotStory.push(sentence);
+    $("gcPlotContribution").value = "";
+    $("gcPlotCount").textContent = "0 / 300";
+    $("gcPlotAdd").disabled = true;
+    updatePlot();
+  });
+  $("gcPlotCopy")?.addEventListener("click", event => {
+    if (plotStory.length) copyText("📖 PLOT TWIST\n\n" + plotStory.join("\n\n"), event.currentTarget);
+  });
+
+  $("gcOpinionNew")?.addEventListener("click", () => {
+    $("gcOpinionPrompt").textContent = choose(opinionPrompts);
+    $("gcOpinionCopyPrompt").disabled = false;
+  });
+  $("gcOpinionCopyPrompt")?.addEventListener("click", event => {
+    copyText("💬 UNPOPULAR OPINION CLUB\n" + $("gcOpinionPrompt").textContent + "\n\nAgree or disagree? Explain your take.", event.currentTarget);
+  });
+  $("gcOpinionText")?.addEventListener("input", event => {
+    const value = event.currentTarget.value;
+    $("gcOpinionCount").textContent = value.length + " / 500";
+    $("gcOpinionCopy").disabled = !value.trim();
+  });
+  $("gcOpinionCopy")?.addEventListener("click", event => {
+    const take = $("gcOpinionText").value.trim();
+    if (take) copyText("💬 MY UNPOPULAR OPINION\n" + $("gcOpinionPrompt").textContent + "\n\n" + take, event.currentTarget);
+  });
+
+  function setCourtVote(vote) {
+    if (!currentCourt) return;
+    if (courtVote === "guilty") $("gcGuiltyCount").textContent = Math.max(0, Number($("gcGuiltyCount").textContent) - 1);
+    if (courtVote === "innocent") $("gcInnocentCount").textContent = Math.max(0, Number($("gcInnocentCount").textContent) - 1);
+    courtVote = vote;
+    if (vote === "guilty") $("gcGuiltyCount").textContent = Number($("gcGuiltyCount").textContent) + 1;
+    if (vote === "innocent") $("gcInnocentCount").textContent = Number($("gcInnocentCount").textContent) + 1;
+    $("gcCourtResult").textContent = vote === "guilty" ? "Your verdict: GUILTY. The court has spoken (on this device)." : vote === "innocent" ? "Your verdict: INNOCENT. The accused may leave the snack table." : "You reserved judgment. More evidence is required.";
+  }
+  $("gcCourtNew")?.addEventListener("click", () => {
+    currentCourt = choose(courtCases);
+    courtVote = "";
+    $("gcCourtCase").textContent = currentCourt.case;
+    $("gcCourtQuestion").textContent = currentCourt.question;
+    $("gcGuiltyCount").textContent = "0";
+    $("gcInnocentCount").textContent = "0";
+    ["gcCourtCopy", "gcGuilty", "gcInnocent", "gcAbstain"].forEach(id => { $(id).disabled = false; });
+    $("gcCourtResult").textContent = "Case opened. Hear both sides before casting your verdict.";
+  });
+  $("gcCourtCopy")?.addEventListener("click", event => {
+    if (currentCourt) copyText("⚖️ TAMBAYAN COURT\nCASE: " + currentCourt.case + "\nQUESTION: " + currentCourt.question + "\n\nPresent your arguments. Then vote: GUILTY or INNOCENT!", event.currentTarget);
+  });
+  $("gcGuilty")?.addEventListener("click", () => setCourtVote("guilty"));
+  $("gcInnocent")?.addEventListener("click", () => setCourtVote("innocent"));
+  $("gcAbstain")?.addEventListener("click", () => setCourtVote("abstain"));
+
+  function updateWordGame() {
+    $("gcWordStory").textContent = wordList.length ? wordList.join(" ") : "The group sentence will appear here.";
+    $("gcWordCount").textContent = wordList.length + (wordList.length === 1 ? " word" : " words");
+    $("gcWordCopy").disabled = !wordList.length;
+    $("gcWordUndo").disabled = !wordList.length;
+  }
+  $("gcWordNew")?.addEventListener("click", () => {
+    currentWordOpener = choose(wordOpeners);
+    wordList = currentWordOpener.split(/\s+/);
+    $("gcWordPrompt").textContent = currentWordOpener;
+    $("gcWordInput").value = "";
+    $("gcWordAdd").disabled = true;
+    $("gcWordStatus").textContent = "New sentence started. Add exactly one word, then pass the turn!";
+    updateWordGame();
+  });
+  $("gcWordInput")?.addEventListener("input", event => {
+    const value = event.currentTarget.value.trim();
+    $("gcWordAdd").disabled = !/^[\p{L}\p{N}]+(?:['’-][\p{L}\p{N}]+)*$/u.test(value);
+    $("gcWordStatus").textContent = value && !$("gcWordAdd").disabled ? "Looks like one word. You're good to go!" : value ? "One word only, please—no spaces or punctuation-only turns." : "Enter one word to take your turn.";
+  });
+  $("gcWordAdd")?.addEventListener("click", () => {
+    const word = $("gcWordInput").value.trim();
+    if (!/^[\p{L}\p{N}]+(?:['’-][\p{L}\p{N}]+)*$/u.test(word)) return;
+    wordList.push(word);
+    $("gcWordInput").value = "";
+    $("gcWordAdd").disabled = true;
+    $("gcWordStatus").textContent = "Word added! Pass the turn to the next person.";
+    updateWordGame();
+  });
+  $("gcWordUndo")?.addEventListener("click", () => {
+    if (wordList.length > currentWordOpener.split(/\s+/).length) {
+      wordList.pop();
+      $("gcWordStatus").textContent = "Last word removed.";
+      updateWordGame();
+    } else {
+      $("gcWordStatus").textContent = "The opening line stays. Start a new sentence to reset it.";
+    }
+  });
+  $("gcWordCopy")?.addEventListener("click", event => {
+    if (wordList.length) copyText("🧩 ONE WORD AT A TIME\n\n" + wordList.join(" "), event.currentTarget);
+  });
+
 })();
