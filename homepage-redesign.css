@@ -4157,8 +4157,11 @@
 }
 
 #view-mystery .tool-card:nth-child(1) button {
-  border-color: rgba(190, 151, 218, .55);
-  background: rgba(105, 72, 129, .35);
+  border: 1px solid #d9b9f0;
+  background: linear-gradient(120deg, #d7b5ff, #f0b9df);
+  color: #24152f;
+  font-weight: 800;
+  box-shadow: 0 0 14px rgba(189, 145, 255, .3);
 }
 
 
