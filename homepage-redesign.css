@@ -4964,6 +4964,108 @@
   letter-spacing: 1.5px;
   box-shadow: 0 0 18px rgba(220, 50, 65, .2);
 }
+/* FORBIDDEN BUTTON — CLASSIFIED FILE REDESIGN */
+
+#view-mystery .forbidden-card {
+  position: relative;
+  overflow: hidden;
+  gap: 14px;
+  padding: 20px 18px;
+  background:
+    radial-gradient(circle at 50% 35%, rgba(120, 15, 25, 0.28), transparent 55%),
+    linear-gradient(145deg, #211114, #100d10 75%);
+  border: 1px solid rgba(220, 55, 65, 0.5);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.35);
+}
+
+#view-mystery .forbidden-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid rgba(220, 55, 65, 0.25);
+  font-size: 10px;
+  letter-spacing: 1px;
+  font-weight: 800;
+}
+
+#view-mystery .forbidden-status {
+  color: #ff626c;
+}
+
+#view-mystery .forbidden-file {
+  color: #a99a9c;
+}
+
+#view-mystery .forbidden-icon {
+  align-self: center;
+  font-size: 42px;
+  margin: 5px 0;
+  filter: drop-shadow(0 0 12px rgba(255, 45, 60, 0.45));
+}
+
+#view-mystery .forbidden-classification {
+  align-self: center;
+  padding: 5px 10px;
+  border: 1px solid rgba(255, 75, 85, 0.45);
+  border-radius: 4px;
+  color: #ff777e;
+  background: rgba(120, 10, 20, 0.2);
+  font-size: 9px;
+  font-weight: 900;
+  letter-spacing: 2px;
+}
+
+#view-mystery .forbidden-card h3 {
+  color: #ffe6e7;
+  text-align: center;
+  letter-spacing: 0.4px;
+}
+
+#view-mystery .forbidden-card #forbiddenText {
+  color: #c8b5b7;
+  text-align: center;
+}
+
+#view-mystery .forbidden-warning {
+  padding: 9px;
+  border: 1px dashed rgba(255, 80, 90, 0.4);
+  border-radius: 6px;
+  color: #ff858b;
+  background: rgba(130, 15, 25, 0.16);
+  text-align: center;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.6px;
+}
+
+#view-mystery .forbidden-card #forbiddenBtn {
+  width: 100%;
+  min-height: 46px;
+  border: 1px solid #ff555f;
+  border-radius: 7px;
+  color: #fff;
+  background: linear-gradient(135deg, #a91e2b, #64101a);
+  box-shadow: 0 0 16px rgba(220, 35, 50, 0.2);
+  font-weight: 900;
+  letter-spacing: 2px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+#view-mystery .forbidden-card #forbiddenBtn:active {
+  transform: scale(0.97);
+  box-shadow: 0 0 22px rgba(255, 45, 60, 0.5);
+}
+
+#view-mystery .forbidden-footer {
+  padding-top: 9px;
+  border-top: 1px solid rgba(220, 55, 65, 0.2);
+  color: #817174;
+  text-align: center;
+  font-size: 8px;
+  letter-spacing: 1.5px;
+}
 
 
 
