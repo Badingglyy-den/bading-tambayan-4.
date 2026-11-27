@@ -2158,6 +2158,11 @@ body {
 ================================= */
 
 #profileDialog {
+  max-height: calc(100dvh - 24px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-gutter: stable;
+  box-sizing: border-box;
   width: min(440px, calc(100% - 28px));
   padding: 25px 22px;
   border: 1px solid rgba(200, 155, 255, .4);
@@ -2202,7 +2207,8 @@ body {
 }
 
 #profileDialog input,
-#profileDialog select {
+#profileDialog select,
+#profileDialog textarea {
   width: 100%;
   min-height: 46px;
   padding: 11px 13px;
@@ -2213,17 +2219,36 @@ body {
   font: inherit;
 }
 
+#profileDialog textarea {
+  display: block;
+  min-height: 82px;
+  resize: vertical;
+  line-height: 1.55;
+  color: #fff;
+  background: rgba(255,255,255,.07);
+}
 #profileDialog select option {
   color: #24143d;
   background: #fff;
 }
 
 #profileDialog input:focus,
-#profileDialog select:focus {
+#profileDialog select:focus,
+#profileDialog textarea:focus {
   outline: 2px solid rgba(194, 145, 255, .65);
   border-color: #c99aff;
 }
 
+#profileDialog #saveProfile {
+  position: sticky;
+  bottom: 0;
+  z-index: 5;
+  padding: 12px;
+  background: #24143d;
+  box-shadow: 0 -10px 18px rgba(16,13,32,.85);
+  cursor: pointer;
+  touch-action: manipulation;
+}
 #profileDialog .full-btn,
 #profileDialog button.primary-btn {
   width: 100%;
