@@ -620,7 +620,7 @@ function renderShop() {
 function renderAvatarDisplay(element) {
   if (!element) return;
   const photo = state.profile?.photo || "";
-  if (photo && /^data:image\\/(jpeg|png|webp);base64,/.test(photo)) {
+  if (photo && /^data:image\/(jpeg|png|webp);base64,/.test(photo)) {
     const img = document.createElement("img");
     img.src = photo;
     img.alt = "Profile photo";
