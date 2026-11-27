@@ -3158,3 +3158,65 @@ html.auth-locked #authGate {
 .comfort-tool textarea:focus{border-color:var(--accent)}
 .comfort-journal-footer{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:8px;color:var(--muted);font-size:11px}
 @media(max-width:560px){.comfort-tools{grid-template-columns:1fr}.comfort-tool{padding:19px}.comfort-tool>p:not(.eyebrow){min-height:0}}
+
+
+/* My Space: make achievements and discoveries comfortable to read */
+.achievements-panel{
+  align-items:start;
+  gap:24px;
+}
+.achievements-panel>div{
+  min-width:0;
+}
+.achievements-panel h3{
+  margin:0 0 12px;
+  color:var(--text);
+  font-size:16px;
+  line-height:1.35;
+}
+.chip-list{
+  display:flex;
+  flex-wrap:wrap;
+  align-items:stretch;
+  gap:9px;
+}
+.chip-list .chip{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  max-width:100%;
+  min-height:38px;
+  padding:8px 12px;
+  border-radius:12px;
+  border:1px solid var(--line);
+  background:var(--panel2);
+  color:var(--text);
+  font-size:13px;
+  font-weight:600;
+  line-height:1.4;
+  overflow-wrap:anywhere;
+  white-space:normal;
+}
+.chip-list .chip.locked{
+  opacity:1;
+  color:var(--muted);
+  background:transparent;
+  border-style:dashed;
+}
+@media(max-width:560px){
+  .achievements-panel{
+    grid-template-columns:1fr;
+    gap:22px;
+    padding:18px;
+  }
+  .achievements-panel>div+div{
+    padding-top:18px;
+    border-top:1px solid var(--line);
+  }
+  .chip-list{gap:8px}
+  .chip-list .chip{
+    min-height:40px;
+    padding:9px 11px;
+    font-size:13px;
+  }
+}
