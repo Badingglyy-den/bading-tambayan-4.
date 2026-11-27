@@ -25,6 +25,14 @@
         {
           text: "Where you spin for a chance to win, something tiny and purple is waiting.",
           location: "Spin & Win."
+        },
+        {
+          text: "Think of a place where a result is decided by a wheel, not by a choice.",
+          location: "The game with a spinning wheel."
+        },
+        {
+          text: "You do not need to win the spin. Look around the control or result area itself.",
+          location: "Inspect the Spin & Win card closely."
         }
       ]
     },
@@ -46,6 +54,14 @@
         {
           text: "Today's visitor has a tiny bell waiting nearby.",
           location: "NPC of the Day."
+        },
+        {
+          text: "This clue follows the featured visitor, not the whole resident roster.",
+          location: "The character introduced for today."
+        },
+        {
+          text: "Look around the visitor's own introduction and interaction area.",
+          location: "Inspect the NPC of the Day card."
         }
       ]
     },
@@ -67,6 +83,14 @@
         {
           text: "Look beside the place where you plant a flower for today's mood.",
           location: "Mood Garden."
+        },
+        {
+          text: "The flower is a clue: this spot is about checking in with yourself.",
+          location: "The place where you record a mood."
+        },
+        {
+          text: "You are looking for a small heart near the mood-entry area, not inside the flower choices.",
+          location: "Inspect the Mood Garden card."
         }
       ]
     },
@@ -88,6 +112,14 @@
         {
           text: "A tiny gem is tucked by the heading for our shared places.",
           location: "Community Spaces."
+        },
+        {
+          text: "This one is near a heading rather than inside a conversation.",
+          location: "The introduction to the shared destinations."
+        },
+        {
+          text: "Look around the words that introduce Public Tambayan and Online Tambayan.",
+          location: "Our Shared Spaces."
         }
       ]
     }
@@ -118,24 +150,61 @@
         gap: 7px;
       }
 
+      .secret-hunt-hint-group {
+        padding: 12px;
+        border: 1px solid rgba(160, 140, 190, .25);
+        border-radius: 13px;
+        background: rgba(120, 100, 150, .07);
+      }
+
       .secret-hunt-hint-group h5 {
-        margin: 5px 0 0;
-        font-size: .92em;
+        margin: 0 0 9px;
+        font-size: .96em;
+      }
+
+      .secret-hunt-hint-progress {
+        margin: -3px 0 9px;
+        font-size: .78em;
+        opacity: .72;
       }
 
       .secret-hunt-hint-button {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
         width: 100%;
+        min-height: 40px;
+        padding: 9px 11px;
         text-align: left;
         white-space: normal;
         line-height: 1.4;
       }
 
+      .secret-hunt-hint-button::after {
+        content: "＋";
+        flex: 0 0 auto;
+        opacity: .7;
+      }
+
+      .secret-hunt-hint-button[aria-expanded="true"]::after {
+        content: "−";
+      }
+
       .secret-hunt-hint-reveal {
-        margin: 6px 0 2px;
-        padding: 9px 11px;
-        border-radius: 10px;
+        margin: 6px 0 10px;
+        padding: 10px 12px;
+        border-left: 3px solid rgba(170, 135, 220, .7);
+        border-radius: 0 10px 10px 0;
         background: rgba(160, 120, 210, .13);
-        line-height: 1.45;
+        line-height: 1.5;
+      }
+
+      .secret-hunt-hints [hidden] { display: none !important; }
+
+      @media (max-width: 560px) {
+        .secret-hunt-hint-group { padding: 10px; }
+        .secret-hunt-hint-button { min-height: 44px; }
       }
 
       .secret-hunt-treasure {
@@ -259,33 +328,34 @@
 
       group.appendChild(groupHeading);
 
+      const progress = document.createElement("p");
+      progress.className = "secret-hunt-hint-progress";
+      progress.textContent = "0 of " + discovery.hints.length + " nudges opened";
+      group.appendChild(progress);
+
+      let openedCount = 0;
+
       discovery.hints.forEach((hint, index) => {
         const item = document.createElement("div");
-
         const button = document.createElement("button");
         button.type = "button";
         button.className = "small-btn secret-hunt-hint-button";
-        button.textContent = "Reveal hint " + (index + 1);
+        button.textContent = "Nudge " + (index + 1) + " · " +
+          (index < 2 ? "Gentle" : index < 4 ? "Closer" : "Strong");
         button.setAttribute("aria-expanded", "false");
 
         const reveal = document.createElement("p");
         reveal.className = "secret-hunt-hint-reveal";
         reveal.hidden = true;
-        reveal.textContent =
-          hint.text + " 📍 " + hint.location;
+        reveal.textContent = hint.text + " 📍 " + hint.location;
 
         button.addEventListener("click", () => {
           const opening = reveal.hidden;
           reveal.hidden = !opening;
-
-          button.setAttribute(
-            "aria-expanded",
-            String(opening)
-          );
-
-          button.textContent = opening
-            ? "Hide hint " + (index + 1)
-            : "Reveal hint " + (index + 1);
+          button.setAttribute("aria-expanded", String(opening));
+          openedCount += opening ? 1 : -1;
+          progress.textContent = openedCount + " of " +
+            discovery.hints.length + " nudges opened";
         });
 
         item.append(button, reveal);
