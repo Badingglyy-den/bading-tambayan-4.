@@ -2808,3 +2808,23 @@ html.auth-locked #authGate {
 .collection-sets-wrap{margin-top:20px;padding-top:16px;border-top:1px solid var(--line)}
 .collection-sets-wrap h3{font-size:15px;margin:0 0 8px}
 @media(max-width:560px){.shop-filters{margin-right:-4px}.shop-item{padding:11px}.shop-item h4{font-size:11px}.shop-item p{min-height:48px}.shop-set{padding:10px}}
+
+/* Collectible equipment and player showcase */
+.equipped-profile-title{display:inline-block;margin-left:7px;padding:3px 8px;border-radius:20px;background:#b78cff22;color:var(--accent);font-size:10px;vertical-align:middle}
+.equipment-studio{margin-top:20px;padding-top:16px;border-top:1px solid var(--line)}
+.equipment-studio h3{font-size:16px;margin:0 0 6px}
+.equipment-help{font-size:11px;color:var(--muted);line-height:1.5;margin:0 0 12px}
+.equipment-options{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.equipment-slot{display:grid;gap:5px;font-size:10px;font-weight:800;color:var(--muted)}
+.equipment-slot select{width:100%;min-width:0;border:1px solid var(--line);border-radius:10px;padding:10px;background:var(--panel);color:var(--text);font:inherit}
+.equipped-showcase{display:flex;flex-wrap:wrap;gap:7px;margin-top:9px}
+.equipped-chip{font-size:10px;padding:7px 10px;border-radius:20px;background:#b78cff18;border:1px solid #b78cff44}
+#headerAvatar[data-frame="frame_cloud"],#avatarPreview[data-frame="frame_cloud"]{outline:3px solid #b9e7ff;outline-offset:3px;border-radius:16px}
+#headerAvatar[data-frame="frame_galaxy"],#avatarPreview[data-frame="frame_galaxy"]{outline:3px solid #d4a7ff;outline-offset:3px;border-radius:16px;box-shadow:0 0 15px #bd7cff88}
+#headerAvatar[data-aura="aura_nebula"],#avatarPreview[data-aura="aura_nebula"]{filter:drop-shadow(0 0 9px #bd83ff)}
+#headerAvatar[data-aura="wings_phoenix"],#avatarPreview[data-aura="wings_phoenix"]{filter:drop-shadow(0 0 9px #ff9b54)}
+#headerAvatar[data-decoration="avatar_moonhalo"]::after,#avatarPreview[data-decoration="avatar_moonhalo"]::after{content:"🌙";position:absolute;font-size:12px;transform:translate(8px,-13px)}
+#headerAvatar[data-decoration="avatar_aurora"]::after,#avatarPreview[data-decoration="avatar_aurora"]::after{content:"🦋";position:absolute;font-size:12px;transform:translate(8px,-13px)}
+#headerAvatar[data-decoration="avatar_crown"]::after,#avatarPreview[data-decoration="avatar_crown"]::after{content:"👑";position:absolute;font-size:12px;transform:translate(8px,-13px)}
+#headerAvatar,#avatarPreview{position:relative}
+@media(max-width:560px){.equipment-options{grid-template-columns:1fr}}
