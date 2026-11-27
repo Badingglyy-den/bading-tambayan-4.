@@ -4428,6 +4428,24 @@
   line-height: 1.8;
   text-align: center;
 }
+/* BADING COURT — VERDICT REVEAL */
+
+@keyframes verdictReveal {
+  0% {
+    opacity: 0;
+    transform: translateY(8px) scale(.98);
+    filter: blur(3px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    filter: blur(0);
+  }
+}
+
+#view-mystery .tool-card:nth-child(2) p.revealed {
+  animation: verdictReveal .6s ease both;
+}
 
 
 
