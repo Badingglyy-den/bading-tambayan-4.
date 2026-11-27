@@ -1326,6 +1326,68 @@ document.addEventListener("visibilitychange", () => {
       document.head.appendChild(script);
     });
   }
+  let progressSyncTimer = null;
+let progressSyncReady = false;
+
+async function savePlayerProgress(progress) {
+  if (!client || !currentUser || !progress || typeof progress !== "object") return;
+
+  const { error } = await client.from("player_progress").upsert({
+    user_id: currentUser.id,
+    progress,
+    updated_at: new Date().toISOString()
+  }, { onConflict: "user_id" });
+
+  if (error) throw error;
+}
+
+async function syncPlayerProgress() {
+  if (!client || !currentUser || !window.tambayanProgress) return;
+
+  const { data: cloudRow, error } = await client
+    .from("player_progress")
+    .select("progress,updated_at")
+    .eq("user_id", currentUser.id)
+    .maybeSingle();
+
+  if (error) throw error;
+
+  const hasLocalSave = window.tambayanProgress.hasLocalSave();
+  let mergedProgress = window.tambayanProgress.getState();
+
+  if (
+    cloudRow?.progress &&
+    typeof cloudRow.progress === "object" &&
+    !Array.isArray(cloudRow.progress)
+  ) {
+    mergedProgress = window.tambayanProgress.applyCloudProgress(cloudRow.progress);
+    await savePlayerProgress(mergedProgress);
+  } else if (hasLocalSave) {
+    await savePlayerProgress(mergedProgress);
+  }
+
+  window.removeEventListener("tambayan:progress-saved", handleProgressSaved);
+  window.addEventListener("tambayan:progress-saved", handleProgressSaved);
+  progressSyncReady = true;
+}
+
+function handleProgressSaved(event) {
+  if (!progressSyncReady || !client || !currentUser) return;
+
+  const progress = event.detail?.progress;
+  if (!progress || typeof progress !== "object") return;
+
+  clearTimeout(progressSyncTimer);
+
+  progressSyncTimer = setTimeout(async () => {
+    try {
+      await savePlayerProgress(progress);
+    } catch (error) {
+      console.error("Could not sync player progress:", error);
+      status("Your progress is saved on this device, but cloud sync failed. 💜", true);
+    }
+  }, 800);
+}
 
   async function initialize() {
     try {
@@ -1341,6 +1403,13 @@ currentUser = sessionData.session?.user || null;
 if (!currentUser || currentUser.is_anonymous) {
   document.documentElement.classList.add("auth-locked");
   return;
+}
+
+try {
+  await syncPlayerProgress();
+} catch (progressError) {
+  console.error("Player progress sync failed:", progressError);
+  status("Cloud sync couldn't load. Your local progress is safe. 💜", true);
 }
 
 document.documentElement.classList.remove("auth-locked");
