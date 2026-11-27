@@ -2291,6 +2291,115 @@ if (String(message.content || "").startsWith("[[PHOTO]]")) {
       $("onlineAccountStatus").textContent = error.message;
     }
   };
+    // BADING TAMBAYAN — OPEN MAIN ACCOUNT WINDOW
+  $("accountOpen").onclick = () => {
+    $("accountStatus").textContent = "";
+    $("accountDialog").showModal();
+  };
+    // BADING TAMBAYAN — MAIN ACCOUNT LOGIN
+  $("accountLogin").onclick = async () => {
+    const email = $("accountEmail").value.trim();
+    const password = $("accountPassword").value;
+    const message = $("accountStatus");
+
+    if (!email || !password) {
+      message.textContent = "Please enter your email and password.";
+      return;
+    }
+
+    try {
+      message.textContent = "Logging in...";
+
+      const { error } = await client.auth.signInWithPassword({
+        email,
+        password
+      });
+
+      if (error) throw error;
+
+      message.textContent = "Welcome back! Reconnecting... 💜";
+      window.location.reload();
+    } catch (error) {
+      message.textContent = error.message;
+    }
+  };
+    // BADING TAMBAYAN — MAIN ACCOUNT SIGNUP
+  $(  // BADING TAMBAYAN — MAIN ACCOUNT SIGNUP
+  $("accountSignup").onclick = async () => {
+    const email = $("accountEmail").value.trim();
+    const password = $("accountPassword").value;
+    const message = $("accountStatus");
+
+    if (!email || !password) {
+      message.textContent = "Please enter your email and password.";
+      return;
+    }
+
+    if (password.length < 8) {
+      message.textContent = "Password must be at least 8 characters.";
+      return;
+    }
+
+    try {
+      message.textContent = "Checking your account...";
+
+      const { data, error } = await client.auth.getUser();
+      if (error) throw error;
+
+      if (!data.user.is_anonymous) {
+        message.textContent =
+          "You're already logged in with an account. 💜";
+        return;
+      }
+
+      if (data.user.email === email && data.user.email_confirmed_at) {
+        const { error: passwordError } =
+          await client.auth.updateUser({ password });
+
+        if (passwordError) throw passwordError;
+
+        message.textContent =
+          "Your account is ready! Welcome to Bading Tambayan. 💜";
+        return;
+      }
+
+      const { error: emailError } =
+        await client.auth.updateUser({ email });
+
+      if (emailError) throw emailError;
+
+      message.textContent =
+        "Verification email sent! Confirm your email, then return here and tap Create an account again to set your password. 💜";
+
+    } catch (error) {
+      message.textContent = error.message;
+    }
+  };
+    // BADING TAMBAYAN — PASSWORD RECOVERY
+  $("accountForgot").onclick = async () => {
+    const email = $("accountEmail").value.trim();
+    const message = $("accountStatus");
+
+    if (!email) {
+      message.textContent = "Enter your email address first.";
+      return;
+    }
+
+    try {
+      message.textContent = "Sending password reset email...";
+
+      const { error } = await client.auth.resetPasswordForEmail(email, {
+        redirectTo: window.location.origin
+      });
+
+      if (error) throw error;
+
+      message.textContent =
+        "Password reset instructions have been sent to your email. 💜";
+    } catch (error) {
+      message.textContent = error.message;
+    }
+  };
     // ONLINE TAMBAYAN — BROWSER NOTIFICATION PERMISSION
   function updateNotificationControl() {
     const button = $("onlineNotificationButton");
