@@ -422,7 +422,7 @@
       });
       back.hidden = false;
       loungeView.dataset.loungeOpen = id;
-      loungeView.querySelector(".section-heading#hangout")?.scrollIntoView({ behavior: "smooth", block: "start" });
+      // Keep the visitor at their current reading position when switching Lounge panels.
     }
 
     // One delegated handler powers both the overview tiles and the Shared Spaces shortcuts.
