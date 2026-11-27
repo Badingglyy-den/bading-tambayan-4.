@@ -4845,6 +4845,22 @@
   letter-spacing: 2px;
   text-shadow: 0 0 10px rgba(255, 177, 130, .4);
 }
+/* SAMPAL O LAMBING — MARQUEE GLOW */
+
+#view-mystery .tool-card:nth-child(5) .machine-stamp {
+  animation: machineGlow 2.5s ease-in-out infinite;
+}
+
+@keyframes machineGlow {
+  0%, 100% {
+    box-shadow: 0 0 5px rgba(255, 177, 130, .08);
+    text-shadow: 0 0 5px rgba(255, 177, 130, .2);
+  }
+  50% {
+    box-shadow: 0 0 16px rgba(255, 177, 130, .25);
+    text-shadow: 0 0 12px rgba(255, 177, 130, .65);
+  }
+}
 
 
 
