@@ -4358,6 +4358,24 @@
   font-weight: 800;
   box-shadow: 0 0 16px rgba(220, 65, 75, .3);
 }
+/* FORTUNE TELLER — REVEAL ANIMATION */
+
+@keyframes fortuneReveal {
+  0% {
+    opacity: 0;
+    transform: translateY(8px);
+    filter: blur(3px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+  }
+}
+
+#view-mystery .tool-card:nth-child(1) p.revealed {
+  animation: fortuneReveal .65s ease both;
+}
 
 
 
