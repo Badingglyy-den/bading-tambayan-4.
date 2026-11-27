@@ -2209,39 +2209,59 @@ if (String(message.content || "").startsWith("[[PHOTO]]")) {
     try { await saveProfile(true); }
     catch (error) { status(error.message, true); }
   };
-    // ONLINE TAMBAYAN — CREATE ACCOUNT
+    
+  // ONLINE TAMBAYAN — CREATE ACCOUNT
   $("onlineCreateAccount").onclick = async () => {
     const email = $("onlineAccountEmail").value.trim();
     const password = $("onlineAccountPassword").value;
+    const message = $("onlineAccountStatus");
 
     if (!email || !password) {
-      $("onlineAccountStatus").textContent = "Please enter your email and password.";
+      message.textContent = "Please enter your email and password.";
       return;
     }
 
     if (password.length < 8) {
-      $("onlineAccountStatus").textContent = "Password must be at least 8 characters.";
+      message.textContent = "Password must be at least 8 characters.";
       return;
     }
 
     try {
-      if (currentUser.is_anonymous) {
+      message.textContent = "Checking your account...";
+
+      const { data, error: userError } = await client.auth.getUser();
+      if (userError) throw userError;
+
+      if (data.user.is_anonymous) {
         const { error } = await client.auth.updateUser({ email });
         if (error) throw error;
 
-        $("onlineAccountStatus").textContent =
-          "Verification email sent! Confirm your email, return here, enter your password, then tap Create account again.";
+        message.textContent =
+          "Verification email sent! Confirm your email, return to this site, then tap Create account again to set your password.";
       } else {
+        if (data.user.email !== email) {
+          message.textContent =
+            "This account is linked to a different email. Please use your verified email.";
+          return;
+        }
+
+        if (!data.user.email_confirmed_at) {
+          message.textContent =
+            "Please confirm your email first, then try again.";
+          return;
+        }
+
         const { error } = await client.auth.updateUser({ password });
         if (error) throw error;
 
-        $("onlineAccountStatus").textContent =
-          "Your password has been saved! Your account is ready. 💜";
+        message.textContent =
+          "Your password is saved! Your account is ready. 💜";
       }
     } catch (error) {
-      $("onlineAccountStatus").textContent = error.message;
+      message.textContent = error.message;
     }
   };
+
     // ONLINE TAMBAYAN — LOG IN
   $("onlineLogin").onclick = async () => {
     const email = $("onlineAccountEmail").value.trim();
