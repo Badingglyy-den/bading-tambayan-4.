@@ -2817,4 +2817,146 @@ $("onlinePhotoInput").addEventListener("change", async event => {
   `;
   document.head.appendChild(chatroomFinalStyle);
   
+
+
+  // ONLINE TAMBAYAN — CONSOLIDATED LAYOUT POLISH
+  const organizedChatStyle = document.createElement("style");
+  organizedChatStyle.textContent = `
+    #onlineTambayan { margin: 26px 0 42px; }
+    #onlineTambayan .section-heading { margin-bottom: 13px; }
+    #onlineTambayan .online-panel {
+      display: grid;
+      grid-template-columns: repeat(12,minmax(0,1fr));
+      gap: 14px;
+      padding: clamp(14px,2.5vw,24px);
+      background: linear-gradient(155deg,#201832 0%,#171222 70%,#1c1729 100%);
+      border: 1px solid rgba(203,177,235,.2);
+      border-radius: 22px;
+    }
+    #onlineTambayan .online-panel > .online-muted { grid-column: 1/-1; margin: 0; }
+    #onlineTambayan .online-grid {
+      grid-column: span 7;
+      grid-template-columns: repeat(2,minmax(0,1fr));
+      gap: 12px;
+      margin: 0;
+    }
+    #onlineTambayan .online-grid > div,
+    #onlineTambayan #onlineAccountBox,
+    #onlineTambayan #onlineMyRoomsBox,
+    #onlineTambayan .online-columns > .online-box {
+      min-width: 0;
+      padding: 16px;
+      border: 1px solid rgba(203,177,235,.15);
+      border-radius: 15px;
+      background: rgba(255,255,255,.035);
+      box-shadow: none;
+    }
+    #onlineTambayan .online-grid h3,
+    #onlineTambayan #onlineAccountBox h3,
+    #onlineTambayan #onlineMyRoomsBox h3,
+    #onlineTambayan .online-columns h3 {
+      margin: 0 0 9px;
+      font-size: 1rem;
+      color: #f1e9fa;
+    }
+    #onlineTambayan #onlineAccountBox {
+      grid-column: span 5;
+      align-self: stretch;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 7px;
+    }
+    #onlineTambayan #onlineAccountEmailDisplay {
+      max-width: 100%;
+      overflow-wrap: anywhere;
+      color: #eee0ff;
+      font-size: .9rem;
+    }
+    #onlineTambayan .online-status { grid-column: 1/-1; margin: 0; }
+    #onlineTambayan .online-notification-settings {
+      grid-column: 1/-1;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px 12px;
+      padding: 10px 13px;
+      border: 1px solid rgba(203,177,235,.13);
+      border-radius: 13px;
+      background: rgba(255,255,255,.025);
+    }
+    #onlineTambayan .online-notification-settings button { margin: 0; }
+    #onlineTambayan #onlineMyRoomsBox { grid-column: 1/-1; margin: 0; }
+    #onlineTambayan .online-room-list {
+      grid-template-columns: repeat(auto-fill,minmax(min(100%,205px),1fr));
+      margin: 12px 0 0;
+    }
+    #onlineTambayan .online-room { grid-column: 1/-1; min-width: 0; margin-top: 0; padding-top: 16px; }
+    #onlineTambayan .online-room-top { align-items: center; }
+    #onlineTambayan .online-columns {
+      grid-template-columns: minmax(0,1fr) 235px;
+      align-items: stretch;
+      gap: 13px;
+    }
+    #onlineTambayan .online-columns > .online-box { min-width: 0; }
+    #onlineTambayan .online-messages {
+      height: clamp(340px,52vh,570px);
+      min-height: 340px;
+      max-height: 570px;
+      padding: 13px;
+      overscroll-behavior: contain;
+      scrollbar-gutter: stable;
+    }
+    #onlineTambayan .online-message { max-width: min(88%,560px); }
+    #onlineTambayan .online-members { max-height: 440px; overflow-y: auto; }
+    #onlineTambayan .online-compose {
+      position: sticky;
+      bottom: 0;
+      z-index: 2;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px;
+      background: #282039;
+      border: 1px solid rgba(203,177,235,.22);
+      border-radius: 14px;
+    }
+    #onlineTambayan .online-compose input { flex: 1; min-width: 0; margin: 0; }
+    #onlineTambayan .online-compose button { margin: 0; }
+    #onlineTambayan .online-photo-button { flex: 0 0 42px; margin: 0; }
+    #onlineTambayan .online-reactions { padding-top: 10px; }
+    #onlineTambayan :is(input,button):focus-visible {
+      outline: 2px solid #d6baff;
+      outline-offset: 2px;
+    }
+    @media(max-width:760px) {
+      #onlineTambayan .online-panel { gap: 11px; padding: 12px; }
+      #onlineTambayan .online-grid { grid-column: 1/-1; grid-template-columns: 1fr; }
+      #onlineTambayan #onlineAccountBox { grid-column: 1/-1; }
+      #onlineTambayan .online-columns { grid-template-columns: 1fr; }
+      #onlineTambayan .online-columns > .online-box { padding: 12px; }
+      #onlineTambayan .online-messages {
+        height: min(55vh,500px);
+        min-height: 320px;
+        max-height: 500px;
+      }
+      #onlineTambayan .online-members { max-height: 230px; }
+      #onlineTambayan .online-room-top { align-items: flex-start; }
+      #onlineTambayan .online-room-actions { width: 100%; }
+      #onlineTambayan .online-room-actions button { flex: 1 1 auto; }
+      #onlineTambayan .online-message { max-width: 96%; }
+    }
+    @media(max-width:390px) {
+      #onlineTambayan .online-compose { gap: 5px; padding: 6px; }
+      #onlineTambayan .online-photo-button { flex-basis: 34px; padding: 6px; }
+      #onlineTambayan .online-compose button { min-width: 58px; padding: 9px; }
+      #onlineTambayan .online-reactions button { min-width: 39px; }
+    }
+    @media(prefers-reduced-motion:reduce) {
+      #onlineTambayan .online-room-card,
+      #onlineTambayan button { transition: none!important; }
+    }
+  `;
+  document.head.appendChild(organizedChatStyle);
+
 })();
