@@ -1369,6 +1369,10 @@ if (accountEmailDisplay) {
         .eq("user_id", currentUser.id).maybeSingle();
       if (profileError) throw profileError;
       if (savedProfile) profile = savedProfile;
+      const accountName = $("accountOpen")?.querySelector(".account-chip-name");
+if (accountName) {
+  accountName.textContent = profile.display_name || "Tambay";
+}
       $("onlineName").value = profile.display_name;
       $("onlineAvatar").value = profile.avatar;
       await saveProfile(false);
