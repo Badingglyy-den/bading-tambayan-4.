@@ -12,6 +12,154 @@
   const photoClueLink = document.querySelector(".attic-photo-clue-link");
   const photoNumber = document.getElementById("attic-photo-number");
 
+  const musicButton = document.getElementById("attic-music-open");
+  const musicMessage = document.getElementById("attic-music-message");
+  const musicArchive = document.getElementById("attic-music-archive");
+  const cabinetCode = document.getElementById("attic-cabinet-code");
+  const cabinetButton = document.getElementById("attic-cabinet-unlock");
+  const cabinetFeedback = document.getElementById("attic-cabinet-feedback");
+  const cabinetPrize = document.getElementById("attic-cabinet-prize");
+  const keepsakeShelf = document.getElementById("attic-keepsake-shelf");
+  const keepsakeCount = document.getElementById("attic-keepsake-count");
+
+  const musicRecordings = [
+    "A soft voice counts: “Two knocks. One pause. One final knock.” Then the recording ends.",
+    "A music-box melody plays backwards. At the end, someone whispers: “The quietest drawer is not empty.”",
+    "Three notes ring out, then a voice says: “Keep the little things. They remember more than we do.”",
+    "A distant clock ticks eleven times. A note follows: “Time leaves fingerprints.”",
+    "Someone hums a tune and stops just before the last note. “You can finish it tomorrow,” they whisper.",
+    "A paper rustle, a small laugh, then: “If you found this, you were meant to look closer.”",
+    "The recording is almost silent. Just before it ends, a voice says: “The attic is only the beginning.”"
+  ];
+  const musicMessageToday = musicRecordings[dayNumber % musicRecordings.length];
+  const musicDateKey = dateKey;
+
+  function getAtticProgress() {
+    try {
+      return window.tambayanProgress?.getDailyDispatch?.() || {};
+    } catch (error) {
+      return {};
+    }
+  }
+
+  function saveAtticProgress(progress) {
+    try {
+      if (window.tambayanProgress?.setDailyDispatch) {
+        window.tambayanProgress.setDailyDispatch(progress);
+        return;
+      }
+    } catch (error) {}
+    try { localStorage.setItem("tambayan_attic_adventure_fallback", JSON.stringify(progress)); } catch (error) {}
+  }
+
+  function getKeepsakes() {
+    const progress = getAtticProgress();
+    return Array.isArray(progress.atticKeepsakes) ? progress.atticKeepsakes : [];
+  }
+
+  function addKeepsake(id) {
+    const progress = getAtticProgress();
+    const items = Array.isArray(progress.atticKeepsakes) ? progress.atticKeepsakes : [];
+    if (!items.includes(id)) {
+      items.push(id);
+      progress.atticKeepsakes = items;
+      saveAtticProgress(progress);
+    }
+    renderKeepsakes();
+  }
+
+  const keepsakeDetails = [
+    { id: "music-recording", icon: "🎼", name: "A recorded whisper", note: "The Music Box's first message." },
+    { id: "cabinet-pin", icon: "🧷", name: "Brass music pin", note: "Found beneath the Locked Cabinet's lining." },
+    { id: "photo-message", icon: "📷", name: "Words on a photograph", note: "A message revealed on the back of the daily photograph." }
+  ];
+
+  function renderKeepsakes() {
+    if (!keepsakeShelf || !keepsakeCount) return;
+    const foundItems = getKeepsakes();
+    keepsakeCount.textContent = foundItems.length + " / " + keepsakeDetails.length;
+    keepsakeShelf.replaceChildren();
+    keepsakeDetails.forEach(item => {
+      const card = document.createElement("div");
+      card.className = "attic-keepsake" + (foundItems.includes(item.id) ? " is-found" : " is-hidden");
+      const icon = document.createElement("span");
+      icon.className = "attic-keepsake-icon";
+      icon.textContent = foundItems.includes(item.id) ? item.icon : "？";
+      const copy = document.createElement("span");
+      const name = document.createElement("strong");
+      name.textContent = foundItems.includes(item.id) ? item.name : "Not found yet";
+      const note = document.createElement("small");
+      note.textContent = foundItems.includes(item.id) ? item.note : "Keep exploring the attic.";
+      copy.append(name, note);
+      card.append(icon, copy);
+      keepsakeShelf.append(card);
+    });
+  }
+
+  if (musicButton && musicMessage) {
+    musicButton.addEventListener("click", () => {
+      musicMessage.hidden = false;
+      musicMessage.textContent = "“" + musicMessageToday + "”";
+      musicButton.textContent = "Play today's recording again";
+      const progress = getAtticProgress();
+      if (progress.atticMusicDate !== musicDateKey) {
+        progress.atticMusicDate = musicDateKey;
+        progress.atticMusicDays = (Number(progress.atticMusicDays) || 0) + 1;
+        saveAtticProgress(progress);
+      }
+      if (!progress.atticMusicKeepsake) {
+        progress.atticMusicKeepsake = true;
+        progress.atticKeepsakes = Array.isArray(progress.atticKeepsakes) ? progress.atticKeepsakes : [];
+        if (!progress.atticKeepsakes.includes("music-recording")) progress.atticKeepsakes.push("music-recording");
+        saveAtticProgress(progress);
+      }
+      if (musicArchive) musicArchive.textContent = "Recordings heard: " + (Number(progress.atticMusicDays) || 1);
+      renderKeepsakes();
+    });
+    const saved = getAtticProgress();
+    if (musicArchive) musicArchive.textContent = "Recordings heard: " + (Number(saved.atticMusicDays) || 0);
+  }
+
+  function tryCabinetCode() {
+    if (!cabinetCode || !cabinetFeedback) return;
+    const progress = getAtticProgress();
+    if (progress.atticCabinetSolved) {
+      cabinetFeedback.textContent = "Already open. The little pin is yours to keep.";
+      if (cabinetPrize) cabinetPrize.hidden = false;
+      return;
+    }
+    if (cabinetCode.value.trim() === "211") {
+      progress.atticCabinetSolved = true;
+      progress.atticKeepsakes = Array.isArray(progress.atticKeepsakes) ? progress.atticKeepsakes : [];
+      if (!progress.atticKeepsakes.includes("cabinet-pin")) progress.atticKeepsakes.push("cabinet-pin");
+      saveAtticProgress(progress);
+      cabinetFeedback.textContent = "Click. The cabinet opens. You found something tucked beneath the lining.";
+      if (cabinetPrize) cabinetPrize.hidden = false;
+      cabinetButton.disabled = true;
+      cabinetButton.textContent = "Cabinet unlocked";
+      if (typeof window.tambayanApplyLoungeReward === "function") {
+        window.tambayanApplyLoungeReward("stars", 10, "Locked Cabinet opened!");
+      }
+      renderKeepsakes();
+    } else {
+      cabinetFeedback.textContent = "No click yet. Listen to the rhythm: two knocks, one pause, one final knock.";
+      cabinetCode.value = "";
+      cabinetCode.focus();
+    }
+  }
+
+  if (cabinetButton) cabinetButton.addEventListener("click", tryCabinetCode);
+  if (cabinetCode) cabinetCode.addEventListener("keydown", event => {
+    if (event.key === "Enter") tryCabinetCode();
+  });
+  if (getAtticProgress().atticCabinetSolved) {
+    if (cabinetPrize) cabinetPrize.hidden = false;
+    if (cabinetFeedback) cabinetFeedback.textContent = "Already open. The little pin is yours to keep.";
+    if (cabinetButton) { cabinetButton.disabled = true; cabinetButton.textContent = "Cabinet unlocked"; }
+  }
+  renderKeepsakes();
+
+
   // The photograph changes every day for everyone.
   const dailyPhotoClues = [
     { image: "🖼️", detail: "A second shadow appears behind the person. But there is no one standing there.", secret: "The shadow is holding up two fingers. Look for the number 2 in the library." },
@@ -54,6 +202,7 @@
       if (photoClueLink) photoClueLink.hidden = !opening;
 
       if (opening) {
+        addKeepsake("photo-message");
         let daily = {};
         try {
           daily = window.tambayanProgress?.getDailyDispatch?.() || {};
