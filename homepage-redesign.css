@@ -4303,6 +4303,41 @@
   font-weight: 800;
   box-shadow: 0 0 14px rgba(220, 153, 91, .25);
 }
+/* MYSTERY LIBRARY — THE FORBIDDEN BUTTON */
+
+#view-mystery .tool-card:nth-child(6) {
+  border-color: rgba(190, 75, 75, .55);
+  background:
+    radial-gradient(
+      circle at 50% 0%,
+      rgba(151, 43, 48, .28),
+      transparent 65%
+    ),
+    linear-gradient(145deg, #351e22, #1c1519);
+  box-shadow: 0 8px 25px rgba(25, 5, 8, .4);
+}
+
+#view-mystery .tool-card:nth-child(6) > span {
+  border-color: rgba(218, 105, 105, .7);
+  background: rgba(160, 47, 55, .2);
+  box-shadow: 0 0 18px rgba(210, 70, 75, .2);
+}
+
+#view-mystery .tool-card:nth-child(6) h3 {
+  color: #f0b7b7;
+}
+
+#view-mystery .tool-card:nth-child(6) p {
+  color: #cbaaaa;
+}
+
+#view-mystery .tool-card:nth-child(6) button {
+  border: 1px solid #e17c7c;
+  background: linear-gradient(120deg, #e36d70, #a93442);
+  color: #fff0ed;
+  font-weight: 800;
+  box-shadow: 0 0 16px rgba(220, 65, 75, .3);
+}
 
 
 
