@@ -4233,6 +4233,41 @@
   font-weight: 800;
   box-shadow: 0 0 14px rgba(126, 176, 108, .2);
 }
+/* MYSTERY LIBRARY — ASK THE UNIVERSE */
+
+#view-mystery .tool-card:nth-child(4) {
+  border-color: rgba(135, 147, 220, .5);
+  background:
+    radial-gradient(
+      circle at 50% 0%,
+      rgba(104, 91, 180, .3),
+      transparent 65%
+    ),
+    linear-gradient(145deg, #252744, #171a30);
+  box-shadow: 0 8px 25px rgba(8, 10, 35, .4);
+}
+
+#view-mystery .tool-card:nth-child(4) > span {
+  border-color: rgba(171, 174, 235, .7);
+  background: rgba(119, 112, 194, .2);
+  box-shadow: 0 0 18px rgba(140, 139, 230, .22);
+}
+
+#view-mystery .tool-card:nth-child(4) h3 {
+  color: #d5d3ff;
+}
+
+#view-mystery .tool-card:nth-child(4) p {
+  color: #b9bddb;
+}
+
+#view-mystery .tool-card:nth-child(4) button {
+  border: 1px solid #b9b5ef;
+  background: linear-gradient(120deg, #c9c2ff, #9da9e8);
+  color: #20203b;
+  font-weight: 800;
+  box-shadow: 0 0 14px rgba(157, 169, 232, .25);
+}
 
 
 
