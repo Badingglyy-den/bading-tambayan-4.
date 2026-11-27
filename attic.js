@@ -10,6 +10,7 @@
   const photoCaption = document.getElementById("attic-photo-caption");
   const photoSecret = document.getElementById("attic-photo-secret");
   const photoClueLink = document.querySelector(".attic-photo-clue-link");
+  const photoNumber = document.getElementById("attic-photo-number");
 
   // The photograph changes every day for everyone.
   const dailyPhotoClues = [
@@ -31,6 +32,8 @@
   const dateKey = [today.getFullYear(), String(today.getMonth() + 1).padStart(2, "0"), String(today.getDate()).padStart(2, "0")].join("-");
   const dayNumber = Math.floor(Date.UTC(today.getFullYear(), today.getMonth(), today.getDate()) / 86400000);
   const clue = dailyPhotoClues[((dayNumber % dailyPhotoClues.length) + dailyPhotoClues.length) % dailyPhotoClues.length];
+
+  if (photoNumber) photoNumber.textContent = "NO. " + String((dayNumber % dailyPhotoClues.length) + 1).padStart(3, "0");
 
   if (photoImage && photoDetail && photoCaption) {
     photoImage.textContent = clue.image;
