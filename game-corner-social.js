@@ -28,11 +28,11 @@
     #view-community .gc-secret { margin-top:12px; padding:13px; border:1px dashed var(--accent); border-radius:11px; background:var(--panel2); color:var(--text); font-size:12px; line-height:1.7; }
     #view-community .gc-label { display:block; margin:16px 0 7px; color:var(--text); font-size:12px; font-weight:800; }
     #view-community .gc-game-panel textarea { display:block; width:100%; min-height:94px; padding:12px; border:1px solid var(--line); border-radius:11px; background:var(--bg, var(--panel2)); color:var(--text); font:inherit; font-size:13px; line-height:1.6; resize:vertical; }
-    #view-community .gc-game-panel textarea:focus { outline:2px solid var(--accent); outline-offset:2px; }
+    #view-community .gc-game-panel textarea:focus, #view-community .gc-game-panel input:focus { outline:2px solid var(--accent); outline-offset:2px; }\n    #view-community .gc-game-panel input { display:block; width:100%; min-height:46px; padding:11px 12px; border:1px solid var(--line); border-radius:11px; background:var(--bg, var(--panel2)); color:var(--text); font:inherit; font-size:13px; }\n    #view-community .gc-story-card { margin-top:12px; }\n    #view-community .gc-verdicts button { flex:1 1 130px; }
     #view-community .gc-footnote { margin:12px 0 0; color:var(--muted); font-size:11px; line-height:1.65; }
     #view-community .gc-char-count { margin-left:auto; color:var(--muted); font-size:10px; }
     @media(max-width:560px) {
-      #view-community .gc-activity-tabs { grid-template-columns:1fr; }
+      #view-community .gc-activity-tabs { grid-template-columns:repeat(2,minmax(0,1fr)); }
       #view-community .gc-actions button { flex:1 1 auto; }
       #view-community .gc-game-panel { padding:15px; }
     }
