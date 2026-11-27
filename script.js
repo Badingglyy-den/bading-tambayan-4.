@@ -208,6 +208,19 @@ window.tambayanProgress = {
     return JSON.parse(JSON.stringify(state));
   },
 
+  getDailyDispatch() {
+    return JSON.parse(JSON.stringify(state.dailyDispatch || {}));
+  },
+
+  setDailyDispatch(progress) {
+    if (!progress || typeof progress !== "object" || Array.isArray(progress)) {
+      return this.getDailyDispatch();
+    }
+    state.dailyDispatch = progress;
+    save();
+    return this.getDailyDispatch();
+  },
+
   setProfile(profile) {
     if (!profile || typeof profile !== "object") return this.getState();
     state.profile = {
