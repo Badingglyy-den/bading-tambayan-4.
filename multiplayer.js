@@ -2291,4 +2291,189 @@ $("onlinePhotoInput").addEventListener("change", async event => {
   });
 
   initialize();
+    // ONLINE TAMBAYAN — FINAL VISUAL UPGRADE
+  const chatroomFinalStyle = document.createElement("style");
+  chatroomFinalStyle.textContent = `
+    #onlineTambayan {
+      color: #f5edff;
+    }
+
+    #onlineTambayan .section-heading h2 {
+      letter-spacing: -.5px;
+      text-shadow: 0 3px 20px rgba(190,145,255,.2);
+    }
+
+    #onlineTambayan .section-note {
+      color: #c8addf;
+    }
+
+    #onlineTambayan .online-panel {
+      border: 1px solid rgba(203,169,255,.2);
+      box-shadow: 0 18px 45px rgba(8,3,20,.28);
+    }
+
+    #onlineTambayan .online-muted {
+      color: #b9a9ca;
+      line-height: 1.55;
+    }
+
+    #onlineTambayan .online-grid > div,
+    #onlineTambayan #onlineMyRoomsBox,
+    #onlineTambayan .online-columns > .online-box {
+      border: 1px solid rgba(204,174,255,.13);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.035);
+    }
+
+    #onlineTambayan .online-grid > div {
+      background: linear-gradient(145deg, rgba(158,111,220,.12), rgba(255,255,255,.025));
+    }
+
+    #onlineTambayan h3 {
+      color: #f1e4ff;
+    }
+
+    #onlineTambayan input {
+      color: #fff;
+      background: rgba(9,5,19,.55);
+      border: 1px solid rgba(198,164,255,.24);
+      border-radius: 11px;
+      padding: 11px 12px;
+      outline: none;
+      transition: border-color .2s, box-shadow .2s;
+    }
+
+    #onlineTambayan input:focus {
+      border-color: #bd91ff;
+      box-shadow: 0 0 0 3px rgba(189,145,255,.13);
+    }
+
+    #onlineTambayan input::placeholder {
+      color: #88799b;
+    }
+
+    #onlineTambayan button {
+      border-radius: 11px;
+      transition: transform .18s, filter .18s, box-shadow .18s;
+    }
+
+    #onlineTambayan button:hover {
+      filter: brightness(1.12);
+      box-shadow: 0 5px 18px rgba(170,112,255,.15);
+    }
+
+    #onlineTambayan button:active {
+      transform: scale(.97);
+    }
+
+    #onlineTambayan .online-status {
+      padding: 11px 13px;
+      border-radius: 12px;
+      background: rgba(173,130,255,.08);
+      border: 1px solid rgba(190,155,255,.13);
+    }
+
+    #onlineTambayan .online-notification-settings {
+      padding: 12px;
+      border-radius: 13px;
+      background: rgba(255,255,255,.035);
+      border: 1px solid rgba(200,170,255,.12);
+    }
+
+    #onlineTambayan #onlineMyRoomsBox {
+      background: linear-gradient(145deg, rgba(153,111,205,.09), rgba(255,255,255,.025));
+    }
+
+    #onlineTambayan .online-room-card {
+      border: 1px solid rgba(194,158,255,.17);
+      border-radius: 13px;
+      background: rgba(158,119,211,.09);
+      transition: background .2s, border-color .2s, transform .2s;
+    }
+
+    #onlineTambayan .online-room-card:hover {
+      background: rgba(158,119,211,.17);
+      border-color: rgba(207,174,255,.4);
+      transform: translateY(-2px);
+    }
+
+    #onlineTambayan .online-room-top {
+      background:
+        radial-gradient(ellipse at top left, rgba(180,133,255,.15), transparent 65%),
+        rgba(150,108,205,.07);
+      border-color: rgba(205,170,255,.2);
+    }
+
+    #onlineTambayan .online-code {
+      display: inline-block;
+      padding: 5px 10px;
+      border-radius: 8px;
+      background: rgba(184,140,255,.14);
+      border: 1px solid rgba(204,171,255,.22);
+      letter-spacing: 2px;
+    }
+
+    #onlineTambayan .online-messages {
+      background:
+        radial-gradient(ellipse at top right, rgba(151,105,208,.09), transparent 55%),
+        rgba(7,4,15,.58);
+      border: 1px solid rgba(190,155,255,.12);
+    }
+
+    #onlineTambayan .online-message {
+      padding: 10px 13px;
+      border: 1px solid rgba(207,177,255,.12);
+      box-shadow: 0 4px 12px rgba(0,0,0,.12);
+      line-height: 1.5;
+    }
+
+    #onlineTambayan .online-compose {
+      gap: 8px;
+    }
+
+    #onlineTambayan .online-compose input {
+      min-width: 0;
+      background: rgba(255,255,255,.055);
+    }
+
+    #onlineTambayan .online-members {
+      padding-top: 5px;
+    }
+
+    #onlineTambayan .online-member {
+      padding: 9px 10px;
+      border-radius: 10px;
+      background: rgba(174,133,226,.07);
+      border: 1px solid rgba(194,158,255,.1);
+    }
+
+    #onlineTambayan .online-typing {
+      color: #c7a6ee;
+      font-size: .82rem;
+    }
+
+    @media (max-width: 620px) {
+      #onlineTambayan .online-panel {
+        padding: 13px;
+      }
+
+      #onlineTambayan .online-grid > div {
+        border-radius: 15px;
+      }
+
+      #onlineTambayan .online-messages {
+        min-height: 260px;
+        border-radius: 13px;
+      }
+
+      #onlineTambayan .online-compose input {
+        font-size: 16px;
+      }
+
+      #onlineTambayan .online-room-top {
+        gap: 12px;
+      }
+    }
+  `;
+  document.head.appendChild(chatroomFinalStyle);
+  
 })();
