@@ -1252,6 +1252,27 @@
   }
 
   const $ = id => document.getElementById(id);
+
+  function showWelcomeUniverse() {
+    const screen = $("welcomeUniverse");
+    if (!screen) return;
+    try {
+      if (sessionStorage.getItem("tambayanWelcomeShown") === "yes") return;
+      sessionStorage.setItem("tambayanWelcomeShown", "yes");
+    } catch (_) {}
+    screen.hidden = false;
+    document.documentElement.classList.add("welcome-open");
+    const enter = $("enterUniverseButton");
+    if (enter) enter.onclick = () => {
+      screen.classList.add("is-entering");
+      window.setTimeout(() => {
+        screen.hidden = true;
+        screen.classList.remove("is-entering");
+        document.documentElement.classList.remove("welcome-open");
+        window.scrollTo(0, 0);
+      }, 560);
+    };
+  }
   let client = null;
   let currentUser = null;
   let currentRoom = null;
@@ -1468,6 +1489,7 @@ if (accountEmailDisplay) {
       saveActiveRoom(null);
       $("onlineRoom").style.display = "none";
       renderRoomList();
+      showWelcomeUniverse();
     } catch (error) {
       console.error("Online Tambayan initialization failed:", error);
       status(error.message || "Could not connect to Online Tambayan. Please refresh.", true);
@@ -2384,6 +2406,7 @@ $("onlineManageAccount").onclick = () => {
         return;
       }
 
+      try { sessionStorage.removeItem("tambayanWelcomeShown"); } catch (_) {}
       window.location.reload();
     };
 
@@ -2459,6 +2482,7 @@ $("gateSignup").onclick = () => {
     if (error) throw error;
 
     message.textContent = "Welcome back! Reconnecting... 💜";
+    try { sessionStorage.removeItem("tambayanWelcomeShown"); } catch (_) {}
     window.location.reload();
   } catch (error) {
     message.textContent = error.message;
@@ -2501,6 +2525,7 @@ $("gateSignup").onclick = () => {
 
     if (data.session) {
       message.textContent = "Account created! Welcome to Bading Tambayan! 💜";
+      try { sessionStorage.removeItem("tambayanWelcomeShown"); } catch (_) {}
       window.location.reload();
     } else {
       message.textContent =
