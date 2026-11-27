@@ -1333,13 +1333,19 @@ document.addEventListener("visibilitychange", () => {
       client = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
       window.tambayanSupabaseClient = client;
       const { data: sessionData, error: sessionError } = await client.auth.getSession();
-      if (sessionError) throw sessionError;
       if (sessionData.session) currentUser = sessionData.session.user;
-      else {
-        const { data, error } = await client.auth.signInAnonymously();
-        if (error) throw error;
-        currentUser = data.user;
-      }
+else {
+  const { data, error } = await client.auth.signInAnonymously();
+  if (error) throw error;
+  currentUser = data.user;
+}
+
+const accountButton = $("accountOpen");
+if (accountButton) {
+  accountButton.textContent = currentUser.is_anonymous
+    ? "Log in"
+    : "My Account";
+}
 
       const localName = document.getElementById("welcomeName")?.textContent || "Tambay";
       profile = {
