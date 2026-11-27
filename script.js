@@ -145,11 +145,12 @@ function mergeProgress(local, cloud) {
     return Math.max(local, cloud);
   }
 
-  if (cloud !== undefined && cloud !== null && cloud !== "") {
-  return cloud;
+  if (local !== undefined && local !== null && local !== "") {
+  return local;
 }
 
-return local;
+return cloud !== undefined ? cloud : local;
+}
 
 window.tambayanProgress = {
   getState() {
