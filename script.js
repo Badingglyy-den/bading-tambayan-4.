@@ -108,14 +108,15 @@ function save() {
     detail: { progress: JSON.parse(JSON.stringify(state)) }
   }));
 }
-
 function mergeProgress(local, cloud) {
+  // Combine arrays without duplicating identical entries.
   if (Array.isArray(local) || Array.isArray(cloud)) {
     const combined = [
       ...(Array.isArray(local) ? local : []),
       ...(Array.isArray(cloud) ? cloud : [])
     ];
     const seen = new Set();
+
     return combined.filter(item => {
       const key = JSON.stringify(item);
       if (seen.has(key)) return false;
@@ -124,63 +125,48 @@ function mergeProgress(local, cloud) {
     });
   }
 
+  // Merge objects recursively.
   if (
     local && cloud &&
     typeof local === "object" &&
     typeof cloud === "object"
   ) {
     const merged = { ...local, ...cloud };
-    for (const key of new Set([
-      ...Object.keys(cloud),
-      ...Object.keys(local)
-    ])) {
-      if (key in local && key in cloud) {
-  if (key === "profile") {
-    merged[key] = { ...local[key], ...cloud[key] };
-  } else {
-    merged[key] = mergeProgress(local[key], cloud[key]);
-  }
-}
+    const keys = new Set([
+      ...Object.keys(local),
+      ...Object.keys(cloud)
+    ]);
+
+    for (const key of keys) {
+      if (!(key in local) || !(key in cloud)) continue;
+
+      if (
+        key === "profile" &&
+        local[key] && cloud[key] &&
+        typeof local[key] === "object" &&
+        typeof cloud[key] === "object"
+      ) {
+        merged[key] = { ...local[key], ...cloud[key] };
+      } else {
+        merged[key] = mergeProgress(local[key], cloud[key]);
+      }
+    }
+
     return merged;
   }
 
+  // Keep the highest numeric progress.
   if (typeof local === "number" && typeof cloud === "number") {
     return Math.max(local, cloud);
   }
 
+  // Preserve useful local values if cloud data is empty.
   if (local !== undefined && local !== null && local !== "") {
-  return local;
-}
-
-return cloud !== undefined ? cloud : local;
-}
-
-window.tambayanProgress = {
-  getState() {
-    return JSON.parse(JSON.stringify(state));
-  },
-
-  hasLocalSave() {
-    return [KEY, ...LEGACY_KEYS].some(key =>
-      localStorage.getItem(key) !== null
-    );
-  },
-
-  applyCloudProgress(cloudProgress) {
-    if (
-      !cloudProgress ||
-      typeof cloudProgress !== "object" ||
-      Array.isArray(cloudProgress)
-    ) {
-      return this.getState();
-    }
-
-    state = normalize(mergeProgress(state, cloudProgress));
-    localStorage.setItem(KEY, JSON.stringify(state));
-    render();
-    return this.getState();
+    return local;
   }
-};
+
+  return cloud !== undefined ? cloud : local;
+        }
 
 function toast(msg) {
   const t = $("toast");
