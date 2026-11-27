@@ -1162,6 +1162,21 @@
           <button id="onlineJoinRoom">Join room</button>
         </div>
       </div>
+            <div class="online-box" id="onlineAccountBox">
+        <h3>🔐 Your Tambayan Account</h3>
+        <p class="online-muted">Save your account so you can return from another device.</p>
+
+        <label for="onlineAccountEmail">Email address</label>
+        <input id="onlineAccountEmail" type="email" placeholder="Your email address" autocomplete="email">
+
+        <label for="onlineAccountPassword">Password</label>
+        <input id="onlineAccountPassword" type="password" placeholder="At least 8 characters" autocomplete="new-password">
+
+        <button type="button" id="onlineCreateAccount">Create account</button>
+        <button type="button" id="onlineLogin">Log in</button>
+
+        <p class="online-muted" id="onlineAccountStatus" role="status" aria-live="polite"></p>
+      </div>
       <p class="online-status" id="onlineStatus" role="status" aria-live="polite">Connecting to the online tambayan…</p>
       <div class="online-notification-settings">
   <button type="button" id="onlineNotificationButton">
