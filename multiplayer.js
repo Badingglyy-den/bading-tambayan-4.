@@ -2249,6 +2249,10 @@ $("onlineManageAccount").onclick = () => {
     $("accountLogin").style.display = "none";
     $("accountSignup").style.display = "none";
     $("accountForgot").style.display = "none";
+    $("accountNewPasswordLabel").style.display = "";
+    $("accountNewPassword").style.display = "";
+    $("accountChangePassword").style.display = "";
+    $("accountNewPassword").value = "";
 
     message.innerHTML = '<button class="danger-btn full-btn" id="accountLogout" type="button">Log out</button>';
 
@@ -2275,13 +2279,9 @@ $("onlineManageAccount").onclick = () => {
     $("accountLogin").style.display = "";
     $("accountSignup").style.display = "";
     $("accountForgot").style.display = "";
-    $("accountNewPasswordLabel").style.display = "";
-$("accountNewPassword").style.display = "";
-$("accountChangePassword").style.display = "";
-$("accountNewPassword").value = "";
     $("accountNewPasswordLabel").style.display = "none";
-$("accountNewPassword").style.display = "none";
-$("accountChangePassword").style.display = "none";
+    $("accountNewPassword").style.display = "none";
+    $("accountChangePassword").style.display = "none";
 
     message.textContent = "";
     $("accountDialog").showModal();
