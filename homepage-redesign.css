@@ -4531,6 +4531,29 @@
   text-align: center;
   text-shadow: 0 0 10px rgba(153, 190, 120, .35);
 }
+/* PALAKANG MARITES — GOSSIP SEAL */
+
+#view-mystery .tool-card:nth-child(3)::after {
+  content: "🐸";
+  position: absolute;
+  top: 12px;
+  right: 16px;
+  font-size: 19px;
+  opacity: .65;
+  pointer-events: none;
+  animation: frogPeek 3s ease-in-out infinite;
+}
+
+@keyframes frogPeek {
+  0%, 100% {
+    transform: translateY(2px) rotate(-8deg);
+    opacity: .45;
+  }
+  50% {
+    transform: translateY(-4px) rotate(8deg);
+    opacity: 1;
+  }
+}
 
 
 
