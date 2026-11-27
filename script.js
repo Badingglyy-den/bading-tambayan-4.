@@ -871,6 +871,7 @@ $("profileOpen").addEventListener("click", () => {
   updateAvatarSelection(state.profile.avatar);
   const photoStatus = $("profilePhotoStatus");
   if (photoStatus) photoStatus.textContent = state.profile.photo ? "A profile photo is saved to your account." : "No profile photo uploaded yet.";
+  renderEquipmentOptions();
 });
 
 document.addEventListener("click", event => {
