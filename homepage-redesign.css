@@ -4861,6 +4861,27 @@
     text-shadow: 0 0 12px rgba(255, 177, 130, .65);
   }
 }
+/* SAMPAL O LAMBING — JACKPOT REVEAL */
+
+@keyframes machineReveal {
+  0% {
+    opacity: 0;
+    transform: scale(.92) translateY(8px);
+    filter: blur(4px);
+  }
+  65% {
+    opacity: 1;
+    transform: scale(1.03) translateY(-2px);
+    filter: blur(0);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+#view-mystery .tool-card:nth-child(5) p.revealed {
+  animation: machineReveal .65s ease both;
+   }
 
 
 
