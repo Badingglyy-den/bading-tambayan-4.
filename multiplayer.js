@@ -2299,9 +2299,50 @@ if (String(message.content || "").startsWith("[[PHOTO]]")) {
   };
     // BADING TAMBAYAN — OPEN MAIN ACCOUNT WINDOW
   $("accountOpen").onclick = () => {
-    $("accountStatus").textContent = "";
+  const message = $("accountStatus");
+
+  if (currentUser && !currentUser.is_anonymous) {
+    const email = currentUser.email || "No email available";
+
+    $("accountTitle").textContent = "My Account 💜";
+    $("accountDescription").textContent = "You're logged in as " + email;
+
+    $("accountEmail").style.display = "none";
+    $("accountPassword").style.display = "none";
+    $("accountLogin").style.display = "none";
+    $("accountSignup").style.display = "none";
+    $("accountForgot").style.display = "none";
+
+    message.innerHTML = '<button class="danger-btn full-btn" id="accountLogout" type="button">Log out</button>';
+
     $("accountDialog").showModal();
-  };
+
+    $("accountLogout").onclick = async () => {
+      message.textContent = "Logging out...";
+      const { error } = await client.auth.signOut();
+
+      if (error) {
+        message.textContent = error.message;
+        return;
+      }
+
+      window.location.reload();
+    };
+
+  } else {
+    $("accountTitle").textContent = "Welcome back! 💜";
+    $("accountDescription").textContent = "Log in to continue your Bading Tambayan journey.";
+
+    $("accountEmail").style.display = "";
+    $("accountPassword").style.display = "";
+    $("accountLogin").style.display = "";
+    $("accountSignup").style.display = "";
+    $("accountForgot").style.display = "";
+
+    message.textContent = "";
+    $("accountDialog").showModal();
+  }
+};
     // BADING TAMBAYAN — MAIN ACCOUNT LOGIN
   $("accountLogin").onclick = async () => {
     const email = $("accountEmail").value.trim();
