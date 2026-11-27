@@ -76,7 +76,7 @@
     const status = $("dailyMissionStatus");
     if (progress) progress.textContent = count + " of 5 challenges completed";
     if (bar) bar.style.width = (count / 5 * 100) + "%";
-    if (reward) reward.textContent = count === 5 ? "⭐ 40 stars earned today!" : "⭐ " + (count * 5) + " / 40 stars";
+    if (reward) reward.textContent = count === 5 ? "⭐ 25 stars earned today!" : "⭐ " + (count * 5) + " / 25 stars";
     if (status) status.textContent = count === 5 ? "ALL COMPLETED ✦" : " " + (5 - count) + " LEFT TO EXPLORE";
     const streakCount = $("dailyStreakCount");
     const streakHint = $("dailyStreakHint");
