@@ -4830,6 +4830,21 @@
   font-weight: 800;
   box-shadow: 0 4px 18px rgba(223, 126, 102, .25);
    }
+/* SAMPAL O LAMBING — CARNIVAL MARQUEE */
+
+#view-mystery .tool-card:nth-child(5) .machine-stamp {
+  display: inline-block;
+  margin: 8px auto 14px;
+  padding: 7px 13px;
+  border: 1px solid rgba(255, 202, 151, .4);
+  border-radius: 20px;
+  background: rgba(174, 88, 78, .18);
+  color: #ffd5ae;
+  font-size: 9px;
+  font-weight: bold;
+  letter-spacing: 2px;
+  text-shadow: 0 0 10px rgba(255, 177, 130, .4);
+}
 
 
 
