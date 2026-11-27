@@ -129,7 +129,7 @@ function mergeProgress(local, cloud) {
     typeof local === "object" &&
     typeof cloud === "object"
   ) {
-    const merged = { ...cloud, ...local };
+    const merged = { ...local, ...cloud };
     for (const key of new Set([
       ...Object.keys(cloud),
       ...Object.keys(local)
@@ -145,12 +145,11 @@ function mergeProgress(local, cloud) {
     return Math.max(local, cloud);
   }
 
-  if (local !== undefined && local !== null && local !== "") {
-    return local;
-  }
-
-  return cloud !== undefined ? cloud : local;
+  if (cloud !== undefined && cloud !== null && cloud !== "") {
+  return cloud;
 }
+
+return local;
 
 window.tambayanProgress = {
   getState() {
