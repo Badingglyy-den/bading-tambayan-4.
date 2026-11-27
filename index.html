@@ -9,7 +9,7 @@
   <meta name="theme-color" content="#17112f">
   <title>Bading Tambayan 4.2 — The Tambayanverse</title>
   <link rel="stylesheet" href="style.css?v=20261127-achievements1">
-  <link rel="stylesheet" href="homepage-redesign.css?v=27-atticfix1">
+  <link rel="stylesheet" href="homepage-redesign.css?v=27-atticchapter1">
   <style id="tambayanverse-map-desktop-fix">
 @media (min-width: 601px) {
 
@@ -504,6 +504,58 @@
     Follow the forgotten words ↗
     </a>
 </div>
+
+  <section class="attic-new-chapter" aria-label="New attic mysteries">
+    <div class="attic-chapter-heading">
+      <p class="eyebrow">THE ROOM HAS MORE TO TELL</p>
+      <h3>Things left unfinished</h3>
+      <p>Some objects only make sense when you come back to them.</p>
+    </div>
+
+    <article class="attic-music-box">
+      <div class="attic-music-art" aria-hidden="true">♫</div>
+      <div class="attic-feature-copy">
+        <p class="eyebrow">A RECORDING THAT RESETS DAILY</p>
+        <h3>The Music Box</h3>
+        <p id="attic-music-teaser">A tiny melody is trapped inside. It sounds almost like someone counting.</p>
+        <button class="attic-action" id="attic-music-open" type="button">Wind it up</button>
+        <div class="attic-reveal-note" id="attic-music-message" hidden aria-live="polite"></div>
+        <small class="attic-archive-count" id="attic-music-archive">Your recordings: 0 found</small>
+      </div>
+    </article>
+
+    <article class="attic-cabinet">
+      <div class="attic-cabinet-top">
+        <span aria-hidden="true">🗄️</span>
+        <div>
+          <p class="eyebrow">THE BRASS KEY DOESN'T FIT THIS ONE</p>
+          <h3>The Locked Cabinet</h3>
+          <p>Three numbers. The Music Box left the first clue. Listen carefully.</p>
+        </div>
+      </div>
+      <div class="attic-cabinet-clue">“Two knocks. One pause. One final knock.”</div>
+      <div class="attic-cabinet-controls">
+        <label class="sr-only" for="attic-cabinet-code">Three-digit cabinet code</label>
+        <input id="attic-cabinet-code" type="text" inputmode="numeric" maxlength="3" pattern="[0-9]{3}" placeholder="•••" autocomplete="off">
+        <button class="attic-action" id="attic-cabinet-unlock" type="button">Try the lock</button>
+      </div>
+      <p class="attic-cabinet-feedback" id="attic-cabinet-feedback" aria-live="polite">The cabinet is still locked.</p>
+      <div class="attic-cabinet-prize" id="attic-cabinet-prize" hidden>
+        <span aria-hidden="true">🧷</span>
+        <div><strong>A little brass music pin</strong><p>It was tucked beneath a velvet lining. One more thing has found its way home.</p></div>
+      </div>
+    </article>
+
+    <article class="attic-keepsakes">
+      <div class="attic-keepsakes-heading">
+        <div><p class="eyebrow">WHAT YOU'VE BROUGHT TO LIGHT</p><h3>Forgotten Keepsakes</h3></div>
+        <span id="attic-keepsake-count">0 / 3</span>
+      </div>
+      <p class="attic-keepsakes-intro">A small shelf for things the attic doesn't want you to lose.</p>
+      <div class="attic-keepsake-shelf" id="attic-keepsake-shelf" aria-live="polite"></div>
+    </article>
+  </section>
+
   <div class="attic-result" id="attic-result" aria-live="polite">
     <p>THE ATTIC IS QUIET</p>
     <span>Choose something to investigate. You never know what might be hiding inside.</span>
@@ -933,7 +985,7 @@
   <script src="secret-hunt-extras.js"></script>
  <script src="npc-of-the-day.js?v=3"></script>
   <script src="daily-tambayan.js?v=5"></script>
-  <script src="attic.js?v=5"></script>
+  <script src="attic.js?v=6"></script>
   <script src="arcade-expansion.js?v=1"></script>
 
 <!-- Register notification service worker -->
