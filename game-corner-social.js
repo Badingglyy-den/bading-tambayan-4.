@@ -5,6 +5,40 @@
   if (!root || root.dataset.ready === "true") return;
   root.dataset.ready = "true";
 
+
+  const style = document.createElement("style");
+  style.textContent = `
+    #view-community .game-corner-social { display:grid; gap:14px; margin-top:18px; }
+    #view-community .gc-intro { color:var(--muted); font-size:13px; line-height:1.65; }
+    #view-community .gc-activity-tabs { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:9px; }
+    #view-community .gc-tab { min-height:48px; padding:11px 13px; border:1px solid var(--line); border-radius:13px; background:var(--panel); color:var(--text); font:inherit; font-size:12px; font-weight:800; cursor:pointer; }
+    #view-community .gc-tab.active { border-color:var(--accent); background:var(--panel2); color:var(--accent); }
+    #view-community .gc-game-panel { min-width:0; padding:clamp(16px,3vw,24px); border:1px solid var(--line); border-radius:17px; background:var(--panel); }
+    #view-community .gc-game-panel[hidden] { display:none !important; }
+    #view-community .gc-game-panel h4 { margin:5px 0 8px; color:var(--text); font-size:clamp(20px,3vw,25px); }
+    #view-community .gc-description { max-width:65ch; margin:0 0 16px; color:var(--muted); font-size:13px; line-height:1.7; }
+    #view-community .gc-prompt-card { padding:16px; border:1px solid var(--line); border-radius:13px; background:var(--panel2); }
+    #view-community .gc-kicker { color:var(--accent); font-size:9px; font-weight:900; letter-spacing:.15em; }
+    #view-community .gc-prompt-card > p { margin:9px 0; color:var(--text); font-size:14px; line-height:1.75; font-weight:650; }
+    #view-community .gc-case-meta { color:var(--muted); font-size:12px; line-height:1.65; }
+    #view-community .gc-actions { display:flex; flex-wrap:wrap; align-items:center; gap:8px; margin-top:12px; }
+    #view-community .gc-actions button { min-height:42px; padding:9px 13px; border:1px solid var(--line); border-radius:10px; background:var(--panel2); color:var(--text); font:inherit; font-size:11px; font-weight:800; cursor:pointer; }
+    #view-community .gc-actions button.gc-primary { border-color:var(--accent); background:var(--accent); color:#fff; }
+    #view-community .gc-actions button:disabled { opacity:.45; cursor:not-allowed; }
+    #view-community .gc-secret { margin-top:12px; padding:13px; border:1px dashed var(--accent); border-radius:11px; background:var(--panel2); color:var(--text); font-size:12px; line-height:1.7; }
+    #view-community .gc-label { display:block; margin:16px 0 7px; color:var(--text); font-size:12px; font-weight:800; }
+    #view-community .gc-game-panel textarea { display:block; width:100%; min-height:94px; padding:12px; border:1px solid var(--line); border-radius:11px; background:var(--bg, var(--panel2)); color:var(--text); font:inherit; font-size:13px; line-height:1.6; resize:vertical; }
+    #view-community .gc-game-panel textarea:focus { outline:2px solid var(--accent); outline-offset:2px; }
+    #view-community .gc-footnote { margin:12px 0 0; color:var(--muted); font-size:11px; line-height:1.65; }
+    #view-community .gc-char-count { margin-left:auto; color:var(--muted); font-size:10px; }
+    @media(max-width:560px) {
+      #view-community .gc-activity-tabs { grid-template-columns:1fr; }
+      #view-community .gc-actions button { flex:1 1 auto; }
+      #view-community .gc-game-panel { padding:15px; }
+    }
+  `;
+  document.head.appendChild(style);
+
   const cases = [
     { title: "The Great Midnight Snack Disappearance", scene: "At 12:17 AM, the last slice of cake vanished from the shared fridge. Four people were awake, and someone left a suspiciously clean plate in the sink.", evidence: "Clue: A tiny frosting mark was found on the TV remote.", role: "You are the cake culprit. You claim you were asleep, but you accidentally know the cake flavor." },
     { title: "Who Changed the Group Chat Name?", scene: "The group chat name changed to “Definitely Not A Secret Society” at 3:06 AM. Nobody is admitting to it.", evidence: "Clue: The name was changed from a device logged in near the kitchen.", role: "You changed the name because you were bored. Your alibi: you were making instant noodles." },
