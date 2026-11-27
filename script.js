@@ -927,19 +927,7 @@ document.addEventListener("change", event => {
 });
 
 
-$("dailyMessage").onclick = () => {
-  const m = random([
-    "You are allowed to outgrow places you once begged to belong in.",
-    "Hindi ka late. You are living at your own pace.",
-    "You can be a work in progress and still be worthy of love.",
-    "Rest. Hindi ka robot, kahit minsan ikaw ang taga-ayos ng lahat.",
-    "A little progress is still progress. Keep going, sis."
-  ]);
-
-  state.lastDailyMessage = m;
-  toast(m);
-  save();
-};
+// The old Daily Message button was retired. Daily encouragement now lives in Daily Dispatch.
 
 document.querySelectorAll(".world-card").forEach(a => {
   a.addEventListener("click", () => {
