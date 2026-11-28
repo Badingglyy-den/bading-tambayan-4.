@@ -3896,7 +3896,7 @@ $("onlinePhotoInput").addEventListener("change", async event => {
       }
       #onlineTambayan .online-chat-theme-panel[hidden] {display:none!important}
       #onlineTambayan .online-compose {
-        display:grid;grid-template-columns:42px minmax(0,1fr) 42px 44px;
+        display:grid;grid-template-columns:42px minmax(0,1fr) 42px 52px;
         grid-template-rows:auto auto;gap:8px;align-items:center;
         padding:9px;margin-top:14px;
       }
@@ -3917,8 +3917,9 @@ $("onlinePhotoInput").addEventListener("change", async event => {
         grid-column:3;grid-row:2;width:44px;min-width:44px;
       }
       #onlineTambayan .online-compose > button[type="submit"] {
-        grid-column:4;grid-row:2;min-width:44px;width:100%;
-        min-height:44px;padding:8px 5px;margin:0;font-size:12px;
+        grid-column:4;grid-row:2;flex:0 0 52px;width:52px;min-width:52px;max-width:52px;
+        min-height:44px;height:44px;padding:6px 4px;margin:0;font-size:12px;
+        white-space:nowrap;box-sizing:border-box;
       }
     }
   `;
