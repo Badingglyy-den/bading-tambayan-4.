@@ -1921,98 +1921,118 @@ renderRoomList();
         }
       });
   }
-  async function loadMessages() {
-  const messagesBox = $("onlineMessages");
+  async function prepareMessageReceipts(messages) {
+    const ownMessageIds = messages
+      .filter(message => message.user_id === currentUser.id)
+      .map(message => message.id);
+    const incomingMessages = messages.filter(message => message.user_id !== currentUser.id);
 
-  messagesBox.innerHTML = '<span class="online-muted">Loading chat…</span>';
+    const tasks = [];
 
-  oldestMessageCursor = null;
-  hasMoreMessages = true;
-  loadingOlderMessages = false;
-  messageIds = new Set();
-
-  const olderStatus = $("onlineOlderMessagesStatus");
-  if (olderStatus) olderStatus.style.display = "none";
-
-  const { data, error } = await client.from("messages")
-    .select("id,user_id,content,created_at")
-    .eq("room_id", currentRoom.id)
-    .order("created_at", { ascending: false })
-    .order("id", { ascending: false })
-    .limit(50);
-
-  if (error) throw error;
-
-  const messages = (data || []).reverse();
-
-  messagesBox.innerHTML = "";
-  hasMoreMessages = messages.length === 50;
-
-  if (messages.length) {
-    const oldest = messages[0];
-    oldestMessageCursor = {
-      created_at: oldest.created_at,
-      id: oldest.id
-    };
-  }
-
-  for (const message of messages) {
-    if (message.user_id === currentUser.id) {
-      const { data: reads, error: readsError } = await client
-        .from("message_reads")
-        .select("message_id,user_id")
-        .eq("message_id", message.id);
-
-      if (readsError) {
-        console.warn("Could not load read receipts:", readsError);
-      }
-
-      if ((reads || []).some(read => read.user_id !== currentUser.id)) {
-        receiptMessageIds.add(String(message.id));
-      }
+    if (ownMessageIds.length) {
+      tasks.push((async () => {
+        const { data, error } = await client.from("message_reads")
+          .select("message_id,user_id")
+          .in("message_id", ownMessageIds);
+        if (error) {
+          console.warn("Could not load read receipts:", error);
+          return;
+        }
+        for (const read of data || []) {
+          if (read.user_id !== currentUser.id) {
+            receiptMessageIds.add(String(read.message_id));
+          }
+        }
+      })());
     }
 
-    await appendMessage(message);
+    if (incomingMessages.length) {
+      const rows = incomingMessages.map(message => ({
+        message_id: message.id,
+        user_id: currentUser.id
+      }));
+      for (const message of incomingMessages) seenMessageIds.add(String(message.id));
+      tasks.push((async () => {
+        const { error } = await client.from("message_reads")
+          .upsert(rows, { onConflict: "message_id,user_id", ignoreDuplicates: true });
+        if (error) {
+          for (const message of incomingMessages) seenMessageIds.delete(String(message.id));
+          console.warn("Could not mark loaded messages as seen:", error);
+        }
+      })());
+    }
+
+    await Promise.all(tasks);
   }
-}
-    async function catchUpRoomMessages() {
+
+  async function loadMessages() {
+    const messagesBox = $("onlineMessages");
+    const roomId = currentRoom.id;
+
+    messagesBox.innerHTML = '<span class="online-muted">Loading chat…</span>';
+    oldestMessageCursor = null;
+    hasMoreMessages = true;
+    loadingOlderMessages = false;
+    messageIds = new Set();
+
+    const olderStatus = $("onlineOlderMessagesStatus");
+    if (olderStatus) olderStatus.style.display = "none";
+
+    const { data, error } = await client.from("messages")
+      .select("id,user_id,content,created_at")
+      .eq("room_id", roomId)
+      .order("created_at", { ascending: false })
+      .order("id", { ascending: false })
+      .limit(50);
+
+    if (error) throw error;
+    if (!currentRoom || currentRoom.id !== roomId) return;
+
+    const messages = (data || []).reverse();
+    messagesBox.innerHTML = "";
+    hasMoreMessages = messages.length === 50;
+
+    if (messages.length) {
+      const oldest = messages[0];
+      oldestMessageCursor = { created_at: oldest.created_at, id: oldest.id };
+    }
+
+    await prepareMessageReceipts(messages);
+    for (const message of messages) {
+      await appendMessage(message, false, false);
+    }
+
+    // Always open a room at its newest message.
+    messagesBox.scrollTop = messagesBox.scrollHeight;
+  }
+  async function catchUpRoomMessages() {
     if (!currentRoom) return;
 
+    const roomId = currentRoom.id;
     try {
       const { data, error } = await client.from("messages")
         .select("id,user_id,content,created_at")
-        .eq("room_id", currentRoom.id)
+        .eq("room_id", roomId)
         .order("created_at", { ascending: false })
         .order("id", { ascending: false })
         .limit(100);
 
       if (error) throw error;
+      if (!currentRoom || currentRoom.id !== roomId) return;
 
       const messages = (data || []).reverse();
+      await prepareMessageReceipts(messages);
 
       for (const message of messages) {
-        if (message.user_id === currentUser.id) {
-          const { data: reads, error: readsError } = await client
-            .from("message_reads")
-            .select("message_id,user_id")
-            .eq("message_id", message.id);
-
-          if (readsError) {
-            console.warn("Could not refresh read receipts:", readsError);
-          }
-
-          if ((reads || []).some(read => read.user_id !== currentUser.id)) {
-            receiptMessageIds.add(String(message.id));
-            updateReceiptDisplay(message.id);
-          }
-        }
-
-        await appendMessage(message);
+        await appendMessage(message, false, false);
       }
+
+      // Catch-up can add messages received during connection; stay at the bottom.
+      $("onlineMessages").scrollTop = $("onlineMessages").scrollHeight;
     } catch (error) {
       console.warn("Could not catch up on room messages:", error);
-        }
-        }
+    }
+  }
       async function loadOlderMessages() {
   if (
     !currentRoom ||
@@ -2029,8 +2049,6 @@ renderRoomList();
   const roomId = currentRoom.id;
   const oldScrollHeight = messagesBox.scrollHeight;
   const oldScrollTop = messagesBox.scrollTop;
-  const originalFirstMessage = messagesBox.firstElementChild;
-  const prependedMessages = [];
 
   if (olderStatus) {
     olderStatus.textContent = "Loading older messages...";
@@ -2070,34 +2088,10 @@ renderRoomList();
       id: oldest.id
     };
 
+    await prepareMessageReceipts(messages);
     for (const message of messages) {
-  const alreadyLoaded = messageIds.has(String(message.id));
-
-  if (message.user_id === currentUser.id) {
-    const { data: reads, error: readsError } = await client
-      .from("message_reads")
-      .select("message_id,user_id")
-      .eq("message_id", message.id);
-
-    if (readsError) {
-      console.warn("Could not load read receipts:", readsError);
+      await appendMessage(message, false, false);
     }
-
-    if ((reads || []).some(read => read.user_id !== currentUser.id)) {
-      receiptMessageIds.add(String(message.id));
-    }
-  }
-
-  await appendMessage(message);
-
-  if (!alreadyLoaded && messagesBox.lastElementChild) {
-    prependedMessages.push(messagesBox.lastElementChild);
-  }
-}
-
-for (const messageElement of prependedMessages) {
-  messagesBox.insertBefore(messageElement, originalFirstMessage);
-}
 
     const newScrollHeight = messagesBox.scrollHeight;
 
@@ -2191,7 +2185,7 @@ for (const messageElement of prependedMessages) {
   preview.querySelector("img").src = url;
   preview.style.display = "flex";
       }
-  async function appendMessage(message, notify = false) {
+  async function appendMessage(message, notify = false, markRead = true) {
     if (!message) return;
     const id = String(message.id);
     if (messageIds.has(id)) return;
@@ -2299,7 +2293,7 @@ if (String(message.content || "").startsWith("[[PHOTO]]")) {
     if (wasNearBottom) {
       messageList.scrollTop = messageList.scrollHeight;
     }
-    if (!mine) await markMessageRead(message);
+    if (!mine && markRead) await markMessageRead(message);
   }
   
   function renderMembers() {
