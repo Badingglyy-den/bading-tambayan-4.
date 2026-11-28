@@ -9,10 +9,11 @@
   <script>
   (function () {
     try {
-      var screenWidth = Math.min(window.screen.width || 9999, window.screen.height || 9999);
+      var screenWidth = window.screen.width || 9999;
+      var screenHeight = window.screen.height || 9999;
       var hasTouch = (navigator.maxTouchPoints || 0) > 0 ||
         (window.matchMedia && window.matchMedia("(pointer: coarse)").matches);
-      if (hasTouch && screenWidth <= 900) {
+      if (hasTouch && screenWidth <= 1280 && screenHeight <= 3000) {
         document.documentElement.classList.add("touch-mobile");
         var viewport = document.querySelector('meta[name="viewport"]');
         if (viewport) viewport.setAttribute("content",
