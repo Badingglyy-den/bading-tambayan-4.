@@ -161,3 +161,26 @@ body :is(.primary-btn,.small-btn,.danger-btn){
   color:#fff!important;
 }
 
+/* Accessible foreground colors for theme-colored buttons and accents. */
+body[data-theme="violet"],body[data-theme="rose"],
+body[data-theme="ocean"],body[data-theme="midnight"]{
+  --bt-on-accent:#21172e;
+  --bt-on-accent-strong:#ffffff;
+}
+body[data-theme="cloud"],body[data-theme="peach"],body[data-theme="matcha"]{
+  --bt-on-accent:#ffffff;
+  --bt-on-accent-strong:#ffffff;
+}
+body :is(.primary-btn,.small-btn){
+  color:var(--bt-on-accent)!important;
+  text-shadow:none!important;
+}
+body :is(.danger-btn){
+  color:#32101a!important;
+}
+/* Text on raised controls stays theme-aware, while action labels keep contrast. */
+body :is(.soft-btn,.secondary-btn,.choice-btn,.theme-choice,.icon-btn){
+  color:var(--bt-text)!important;
+}
+body :is(.primary-btn,.small-btn):disabled{opacity:.72}
+
