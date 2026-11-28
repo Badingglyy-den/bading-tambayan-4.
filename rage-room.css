@@ -1,46 +1,101 @@
-/* Rage Room — World 07 */
-#rageRoom{margin:28px 0 42px;scroll-margin-top:88px}
+/* World 07 — full-width, touch-first Rage Room */
+#rageRoom{width:100%;max-width:none;margin:24px 0 44px;scroll-margin-top:88px}
 #rageRoom[hidden]{display:none!important}
-#rageRoom .rage-shell{padding:clamp(16px,3vw,28px);border:1px solid #ef8b9b44;border-radius:26px;background:radial-gradient(ellipse at 90% 0%,#8f36502c,transparent 38%),linear-gradient(145deg,#211722,#130f1b 75%);box-shadow:0 20px 55px #08050c88;color:#fff}
-#rageRoom .rage-kicker{font-size:10px;letter-spacing:2px;font-weight:900;color:#ff9b9e}
-#rageRoom h2,#rageRoom h3,#rageRoom p{margin-top:0}
-#rageRoom .rage-hero{padding:clamp(18px,4vw,30px);border-radius:20px;background:linear-gradient(120deg,#3b1e30,#25182d 65%,#1b192b);border:1px solid #ff9caa33}
-#rageRoom .rage-hero h2{font-size:clamp(30px,6vw,48px);margin:7px 0;letter-spacing:-1.5px}
-#rageRoom .rage-hero p{color:#e4cbd7;max-width:620px;line-height:1.65;margin-bottom:0}
-#rageRoom .rage-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:16px 0}
-#rageRoom .rage-card{min-width:0;padding:16px;border:1px solid #ffffff1b;border-radius:18px;background:linear-gradient(145deg,#342330,#211c2b);color:#fff}
-#rageRoom .rage-card h3{font-size:16px;margin:8px 0 5px}
-#rageRoom .rage-card p{font-size:12px;line-height:1.5;color:#d5c4d0;margin-bottom:12px}
-#rageRoom .rage-emoji{font-size:30px}
-#rageRoom button{font:inherit;cursor:pointer}
-#rageRoom .rage-btn{border:0;border-radius:11px;padding:10px 13px;background:linear-gradient(110deg,#b34c66,#e17d83);color:white;font-weight:800;font-size:12px}
+#rageRoom .rage-shell{width:100%;max-width:none;box-sizing:border-box;padding:clamp(16px,3vw,34px);border:1px solid #ef8b9b44;border-radius:28px;background:radial-gradient(ellipse at 90% 0%,#8f36502c,transparent 38%),linear-gradient(145deg,#211722,#130f1b 75%);box-shadow:0 20px 55px #08050c88;color:#fff}
+#rageRoom .rage-hero{padding:clamp(22px,4vw,42px);border-radius:23px;background:linear-gradient(120deg,#3b1e30,#25182d 65%,#1b192b);border:1px solid #ff9caa33}
+#rageRoom .rage-kicker{font-size:10px;letter-spacing:2px;font-weight:900;color:#ff9b9e;margin:0 0 7px}
+#rageRoom .rage-hero h2{font-size:clamp(32px,6vw,54px);margin:7px 0;letter-spacing:-1.5px}
+#rageRoom .rage-hero p:last-child{color:#e4cbd7;max-width:760px;line-height:1.7;margin:0}
+#rageRoom .rage-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;margin:20px 0}
+#rageRoom .rage-card{min-width:0;box-sizing:border-box;padding:clamp(16px,2.5vw,26px);border:1px solid #ffffff1b;border-radius:21px;background:linear-gradient(145deg,#342330,#211c2b);color:#fff;overflow:hidden}
+#rageRoom .rage-card h3{font-size:clamp(18px,2vw,23px);margin:5px 0}
+#rageRoom .rage-card p{font-size:13px;line-height:1.65;color:#d5c4d0;margin:8px 0 14px}
+#rageRoom .rage-card-heading{display:flex;justify-content:space-between;align-items:center;gap:12px}
+#rageRoom .rage-card-heading .rage-emoji{font-size:28px}
+#rageRoom .rage-count{flex:0 0 auto;padding:7px 10px;border-radius:999px;background:#ffffff12;border:1px solid #ffffff1c;color:#ffc0c7;font-size:11px;font-weight:900}
+#rageRoom .rage-wide{grid-column:1/-1}
+#rageRoom button{font:inherit;cursor:pointer;-webkit-tap-highlight-color:transparent}
+#rageRoom .rage-btn{border:0;border-radius:12px;padding:11px 15px;background:linear-gradient(110deg,#b34c66,#e17d83);color:white;font-weight:850;font-size:12px}
 #rageRoom .rage-btn.secondary{background:#ffffff12;border:1px solid #ffffff26;color:#fff}
+#rageRoom .rage-actions{display:flex;gap:9px;flex-wrap:wrap;align-items:center}
 #rageRoom .rage-btn:disabled{opacity:.45;cursor:not-allowed}
-#rageRoom .rage-stage{min-height:118px;padding:15px;border-radius:14px;background:#100d18;border:1px solid #ffffff17;display:grid;place-items:center;text-align:center;margin:10px 0}
-#rageRoom .rage-target{font-size:58px;line-height:1.2;user-select:none;transition:transform .12s}
-#rageRoom .rage-target.hit{transform:rotate(-13deg) scale(.88)}
-#rageRoom .rage-meter{height:7px;border-radius:10px;background:#ffffff18;overflow:hidden;margin:10px 0}
+#rageRoom .rage-status{min-height:18px;color:#ffb5bd;font-size:11px;margin:10px 0 0}
+#rageRoom .rage-muted{font-size:11px;color:#cbb9c7;line-height:1.6}
+#rageRoom .rage-doll-stage{position:relative;display:grid;place-items:center;min-height:380px;margin:14px 0;padding:16px;border-radius:18px;overflow:hidden;background:radial-gradient(ellipse at 50% 65%,#6d344c55,transparent 48%),linear-gradient(145deg,#120e19,#211323);border:1px solid #ffffff18}
+#rageRoom .rage-doll{position:relative;display:block;width:min(100%,270px);height:315px;border:0;background:transparent;touch-action:manipulation}
+#rageRoom .doll-head{position:absolute;z-index:2;top:22px;left:50%;width:92px;height:94px;transform:translateX(-50%);border-radius:48% 48% 44% 44%;background:radial-gradient(circle at 35% 25%,#f2c6ad,#bd806f 75%);box-shadow:inset -8px -8px 0 #784b5144,0 8px 18px #0005}
+#rageRoom .doll-head:before,.doll-head:after{content:"";position:absolute;top:2px;width:28px;height:28px;border-radius:50%;background:#bd806f}
+#rageRoom .doll-head:before{left:-8px}#rageRoom .doll-head:after{right:-8px}
+#rageRoom .doll-head i,#rageRoom .doll-head b{position:absolute;top:43px;width:7px;height:7px;border-radius:50%;background:#392331}
+#rageRoom .doll-head i{left:27px}#rageRoom .doll-head b{right:27px}
+#rageRoom .doll-head em{position:absolute;left:50%;top:61px;width:18px;height:8px;border-bottom:2px solid #70414a;transform:translateX(-50%);border-radius:50%}
+#rageRoom .doll-body{position:absolute;z-index:1;top:110px;left:50%;width:112px;height:116px;transform:translateX(-50%);border-radius:35px 35px 24px 24px;background:repeating-linear-gradient(45deg,#9d6173 0 9px,#b77c8a 9px 18px);box-shadow:inset -10px -4px #4b293a55,0 9px 16px #0005}
+#rageRoom .doll-body:after{content:"✕";position:absolute;left:50%;top:40px;transform:translateX(-50%);font-size:22px;color:#eac4c2aa}
+#rageRoom .doll-arm{position:absolute;z-index:0;top:125px;width:32px;height:112px;border-radius:20px;background:#ad7580}
+#rageRoom .doll-arm.left{left:45px;transform:rotate(25deg)}#rageRoom .doll-arm.right{right:45px;transform:rotate(-25deg)}
+#rageRoom .doll-leg{position:absolute;top:210px;width:38px;height:96px;border-radius:18px;background:#9b6575}
+#rageRoom .doll-leg.left{left:89px;transform:rotate(7deg)}#rageRoom .doll-leg.right{right:89px;transform:rotate(-7deg)}
+#rageRoom .doll-thread{position:absolute;top:0;left:50%;height:24px;border-left:3px dashed #b98b9a}
+#rageRoom .rage-needle-layer{position:absolute;inset:0;z-index:5;pointer-events:none}
+#rageRoom .rage-needle{position:absolute;width:5px;height:30px;border-radius:4px 4px 1px 1px;background:linear-gradient(90deg,#e7e3df,#6e747c 50%,#fff);transform:translate(-50%,-50%) rotate(var(--needle-tilt));filter:drop-shadow(1px 2px 2px #0009);animation:needleDrop .18s ease-out}
+#rageRoom .rage-needle:before{content:"";position:absolute;top:-5px;left:-3px;width:11px;height:7px;border-radius:5px;background:#df6b84}
+#rageRoom .rage-stage-hint{position:absolute;bottom:12px;left:0;right:0;text-align:center;color:#d6aab9;font-size:9px;font-weight:900;letter-spacing:1.8px}
+#rageRoom .doll-tapped{animation:dollJolt .2s ease}
+#rageRoom .rage-punch-arena{position:relative;display:flex;justify-content:center;align-items:flex-start;min-height:380px;margin:14px 0;padding:0 12px 40px;border-radius:18px;overflow:hidden;background:radial-gradient(ellipse at 50% 70%,#8b3c5140,transparent 50%),linear-gradient(145deg,#120e19,#211323);border:1px solid #ffffff18}
+#rageRoom .rage-chain{position:absolute;top:0;left:50%;height:86px;border-left:5px double #9b9aa7}
+#rageRoom .rage-punch-bag{position:relative;margin-top:80px;width:112px;height:230px;border:5px solid #602b3c;border-radius:48px 48px 39px 39px;background:linear-gradient(90deg,#702c42,#d15a6d 28%,#8d354b 72%,#4b2336);box-shadow:inset 10px 0 18px #ffb1b133,inset -12px 0 18px #160d1c88,0 16px 22px #0008;transform-origin:50% 0;touch-action:manipulation}
+#rageRoom .bag-seam{position:absolute;top:12px;bottom:12px;left:50%;border-left:1px dashed #f4b7c466}
+#rageRoom .bag-mark{position:absolute;top:48%;left:0;right:0;color:#ffd6d7;font-size:18px;font-weight:1000;letter-spacing:3px;text-shadow:0 2px 5px #391522;text-align:center}
+#rageRoom .rage-punch-bag.punching{animation:bagSwing .48s ease}
+#rageRoom .rage-impact{position:absolute;top:42%;left:calc(50% + 70px);font-size:24px;font-weight:1000;color:#ffd27e;text-shadow:0 3px 12px #ff7b4d;opacity:0;transform:scale(.4) rotate(-12deg);pointer-events:none}
+#rageRoom .rage-impact.show{animation:impactPop .48s ease}
+#rageRoom .rage-meter{height:9px;border-radius:20px;background:#ffffff18;overflow:hidden;margin:16px 0 8px}
 #rageRoom .rage-meter span{display:block;height:100%;width:0;background:linear-gradient(90deg,#bd4e67,#ffb26f);transition:width .2s}
-#rageRoom .rage-pinboard{display:flex;justify-content:center;align-items:center;gap:5px;flex-wrap:wrap;min-height:95px;font-size:30px}
-#rageRoom .rage-pinboard button{border:0;background:transparent;font-size:26px;padding:5px}
-#rageRoom .rage-field{width:100%;box-sizing:border-box;border:1px solid #ffffff2a;border-radius:11px;background:#100d18;color:#fff;padding:12px;margin:5px 0 10px;font:inherit}
-#rageRoom textarea.rage-field{min-height:94px;resize:vertical}
+#rageRoom .rage-plate-stage{min-height:230px;margin:15px 0;padding:clamp(12px,3vw,25px);border-radius:18px;background:radial-gradient(ellipse at center,#6b3a4b44,transparent 68%),#100d18;border:1px solid #ffffff17}
+#rageRoom .rage-plate-rack{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:16px;align-items:center}
+#rageRoom .rage-plate{position:relative;display:grid;place-items:center;aspect-ratio:1;min-width:0;border:0;border-radius:50%;background:radial-gradient(circle,#fff8f0 0 40%,#c9c3d0 42% 57%,#80768e 60% 67%,#ddd3df 70% 100%);box-shadow:0 8px 15px #0008,inset 0 0 0 3px #ffffffaa;transition:transform .16s,opacity .2s;overflow:visible}
+#rageRoom .rage-plate:before{content:"";position:absolute;inset:12%;border:2px solid #aaa0b5;border-radius:50%}
+#rageRoom .rage-plate:after{content:"";position:absolute;inset:22%;border:1px solid #c1aab6;border-radius:50%}
+#rageRoom .rage-plate:active{transform:scale(.94)}
+#rageRoom .rage-plate.shattered{opacity:0;transform:scale(1.25) rotate(28deg);pointer-events:none}
+#rageRoom .plate-shards{position:absolute;inset:0;pointer-events:none}
+#rageRoom .plate-shards i{position:absolute;left:50%;top:50%;width:0;height:0;border-left:11px solid transparent;border-right:8px solid transparent;border-bottom:25px solid #f0e5ee;opacity:0}
+#rageRoom .rage-plate.shattered .plate-shards i{opacity:1;animation:plateShard .48s ease-out forwards}
+#rageRoom .rage-plate.shattered .plate-shards i:nth-child(1){--sx:-35px;--sy:-40px}
+#rageRoom .rage-plate.shattered .plate-shards i:nth-child(2){--sx:35px;--sy:-35px;animation-delay:.02s}
+#rageRoom .rage-plate.shattered .plate-shards i:nth-child(3){--sx:-45px;--sy:32px;animation-delay:.04s}
+#rageRoom .rage-plate.shattered .plate-shards i:nth-child(4){--sx:40px;--sy:40px;animation-delay:.06s}
+#rageRoom .rage-plate.shattered .plate-shards i:nth-child(5){--sx:0px;--sy:-55px;animation-delay:.08s}
+#rageRoom .rage-plate-empty{padding:24px;text-align:center;color:#ffc1c8;font-weight:800}
+#rageRoom .rage-field{width:100%;box-sizing:border-box;border:1px solid #ffffff2a;border-radius:12px;background:#100d18;color:#fff;padding:14px;margin:5px 0 12px;font:inherit}
+#rageRoom textarea.rage-field{min-height:150px;resize:vertical}
 #rageRoom .rage-note{padding:13px;border:1px solid #ffffff1a;background:#ffffff08;border-radius:13px;margin:9px 0;white-space:pre-wrap;overflow-wrap:anywhere;font-size:13px}
 #rageRoom .rage-note small{display:block;color:#c9b8c5;margin-top:8px;font-size:10px}
 #rageRoom .rage-tabs{display:flex;gap:7px;flex-wrap:wrap;margin:18px 0 10px}
-#rageRoom .rage-tabs button[aria-pressed=true]{background:#a94b63;color:#fff;border-color:#e98c9a}
-#rageRoom .rage-status{min-height:18px;color:#ffb5bd;font-size:11px;margin:6px 0}
 #rageRoom .rage-muted{font-size:11px;color:#cbb9c7;line-height:1.5}
-#rageRoom .rage-wall-lock{border:1px dashed #ff9aa655;border-radius:15px;padding:14px;background:#351d2b66}
-@media(max-width:560px){#rageRoom .rage-grid{grid-template-columns:1fr}#rageRoom .rage-card{padding:14px}}
-@media(prefers-reduced-motion:reduce){#rageRoom *{transition:none!important;animation:none!important}}
-
-.rage-room-map-link{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:20px;margin:14px 0 28px;border:1px solid #ed8d9c44;background:linear-gradient(120deg,#311d2a,#1d1726)}
-.rage-room-map-link h2{margin:4px 0;font-size:22px}.rage-room-map-link p:last-child{margin:5px 0;color:var(--muted);font-size:12px}
-.rage-room-map-link .map-location{display:inline-flex;align-items:center;justify-content:center;padding:12px 16px;border:1px solid #e98b9b66;border-radius:12px;background:#9e4057;color:white;font-weight:800;white-space:nowrap}
-@media(max-width:560px){.rage-room-map-link{align-items:flex-start;flex-direction:column}.rage-room-map-link .map-location{width:100%;box-sizing:border-box}}
+#rageRoom .rage-footer-note{text-align:center;color:#d3b5c5;font-size:11px;letter-spacing:.5px;margin:22px 0 0}
+#rageRoom [hidden]{display:none!important}
 #rageRoom .rage-note button{margin-left:8px}
 #rageRoom .burning{animation:ragePaperBurn 1.7s ease forwards}
+.world-card.rage{border-color:#e77b9155;background:radial-gradient(circle at 80% 10%,#e65a7130,transparent 45%),linear-gradient(145deg,#38202f,#201827)}
+.world-card.rage .world-icon{filter:drop-shadow(0 0 12px #ff718a88)}
+@keyframes needleDrop{from{opacity:0;transform:translate(-50%,-65%) rotate(var(--needle-tilt)) scale(.6)}to{opacity:1;transform:translate(-50%,-50%) rotate(var(--needle-tilt)) scale(1)}}
+@keyframes dollJolt{0%,100%{transform:translateX(0)}35%{transform:translateX(-5px) rotate(-1deg)}70%{transform:translateX(5px) rotate(1deg)}}
+@keyframes bagSwing{0%,100%{transform:rotate(0)}20%{transform:rotate(15deg)}48%{transform:rotate(-12deg)}72%{transform:rotate(7deg)}}
+@keyframes impactPop{0%{opacity:0;transform:scale(.4) rotate(-12deg)}35%{opacity:1;transform:scale(1.2) rotate(8deg)}100%{opacity:0;transform:scale(.8) rotate(12deg)}}
+@keyframes plateShard{0%{opacity:1;transform:translate(-50%,-50%) scale(.4)}100%{opacity:0;transform:translate(calc(-50% + var(--sx)),calc(-50% + var(--sy))) rotate(140deg) scale(1)}}
 @keyframes ragePaperBurn{0%{opacity:1;filter:none;transform:scale(1)}65%{opacity:.8;filter:sepia(1) blur(1px);transform:translateY(-8px) scale(.98)}100%{opacity:0;filter:blur(5px);transform:translateY(-24px) scale(.8)}}
-
-@media(min-width:601px){body .verse-map-panel .map-rage{bottom:8%!important;left:50%!important;top:auto!important;right:auto!important;transform:translateX(-50%)!important}}
+@media(max-width:900px){#rageRoom .rage-plate-rack{grid-template-columns:repeat(4,minmax(0,1fr));gap:13px}}
+@media(max-width:620px){
+ #rageRoom{margin:14px 0 32px}
+ #rageRoom .rage-shell{padding:12px;border-radius:20px}
+ #rageRoom .rage-grid{grid-template-columns:1fr;gap:13px}
+ #rageRoom .rage-wide{grid-column:auto}
+ #rageRoom .rage-card{padding:15px;border-radius:17px}
+ #rageRoom .rage-doll-stage,#rageRoom .rage-punch-arena{min-height:350px}
+ #rageRoom .rage-plate-rack{grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+ #rageRoom .rage-plate-stage{min-height:180px}
+ #rageRoom .rage-plate{max-width:100px;justify-self:center;width:100%}
+ #rageRoom .rage-actions .rage-btn{flex:1 1 auto}
+}
+@media(prefers-reduced-motion:reduce){#rageRoom *{transition:none!important;animation:none!important}}
