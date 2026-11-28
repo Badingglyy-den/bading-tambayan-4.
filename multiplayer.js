@@ -4155,6 +4155,7 @@ $("onlinePhotoInput").addEventListener("change", async event => {
   let dmActivePeer = null;
   let dmHeads = new Map();
   let dmUnreadConversations = new Set();
+  let dmUnreadCounts = new Map();
 
   function dmEscape(value) { return safeText(value); }
   function dmReadKey(id) { return "bt_dm_read_" + currentUser.id + "_" + id; }
@@ -4195,19 +4196,17 @@ $("onlinePhotoInput").addEventListener("change", async event => {
   }
 
   async function requestDmNotifications() {
-    if (!("Notification" in window)) {
-      alert("This browser does not support message notifications.");
-      return;
-    }
     try {
-      const permission = await Notification.requestPermission();
-      if (permission === "granted") {
-        alert("Private-message notifications are enabled while Bading Tambayan is open.");
-      } else {
-        alert("Notifications were not enabled. You can allow them in your browser site settings.");
+      // Use the site's real Web Push subscription flow, not permission alone.
+      await enableChatPushNotifications();
+      const status = $("onlineNotificationStatus")?.textContent || "";
+      if (status.includes("all set") || pushSubscriptionActive) {
+        alert("Private-message push notifications are registered on this device. 💜");
+      } else if (status) {
+        alert(status);
       }
     } catch (error) {
-      alert("Could not enable notifications in this browser.");
+      alert(error.message || "Could not enable private-message notifications.");
     }
   }
 
@@ -4244,6 +4243,7 @@ $("onlinePhotoInput").addEventListener("change", async event => {
           const peer = dmConversations.get(msg.conversation_id);
           if (peer) dmHeads.set(msg.conversation_id, peer);
           dmUnreadConversations.add(msg.conversation_id);
+          dmUnreadCounts.set(msg.conversation_id, (dmUnreadCounts.get(msg.conversation_id) || 0) + 1);
           renderDmHeads();
           showDmBrowserNotification(msg);
         }
@@ -4277,28 +4277,29 @@ $("onlinePhotoInput").addEventListener("change", async event => {
     for (const [id, peer] of dmConversations) {
       if (id !== dmActiveConversation) dmHeads.set(id, peer);
     }
-    // Rebuild unread indicators from the latest incoming message in each conversation.
+    // Count every incoming message after the last locally recorded read time.
+    dmUnreadCounts.clear();
     if (ids.length) {
       const {data: recentMessages, error: messageError} = await client.from("dm_messages")
         .select("conversation_id,sender_id,created_at")
         .in("conversation_id", ids)
-        .order("created_at", {ascending:false})
-        .limit(300);
+        .neq("sender_id", currentUser.id)
+        .order("created_at", {ascending:true})
+        .limit(2000);
       if (messageError) throw messageError;
-      const latest = new Map();
-      for (const message of recentMessages || []) {
-        if (!latest.has(message.conversation_id)) latest.set(message.conversation_id, message);
-      }
       for (const id of ids) {
-        const message = latest.get(id);
-        if (!message || message.sender_id === currentUser.id || id === dmActiveConversation) {
-          dmUnreadConversations.delete(id);
-          continue;
-        }
         let readAt = "";
         try { readAt = localStorage.getItem(dmReadKey(id)) || ""; } catch (_) {}
-        if (message.created_at > readAt) dmUnreadConversations.add(id);
-        else dmUnreadConversations.delete(id);
+        const count = (recentMessages || []).filter(message =>
+          message.conversation_id === id && message.created_at > readAt
+        ).length;
+        if (count > 0 && id !== dmActiveConversation) {
+          dmUnreadConversations.add(id);
+          dmUnreadCounts.set(id, count);
+        } else {
+          dmUnreadConversations.delete(id);
+          dmUnreadCounts.delete(id);
+        }
       }
     }
     await renderDmDirectory();
@@ -4373,6 +4374,7 @@ $("onlinePhotoInput").addEventListener("change", async event => {
     $("btDmMessages").scrollTop=$("btDmMessages").scrollHeight;
     markDmRead(conversationId);
     dmUnreadConversations.delete(conversationId);
+    dmUnreadCounts.delete(conversationId);
     dmHeads.delete(conversationId);
     renderDmHeads();
     $("btDmInput").focus({preventScroll:true});
@@ -4414,6 +4416,7 @@ $("onlinePhotoInput").addEventListener("change", async event => {
   function markDmRead(conversationId) {
     try { localStorage.setItem(dmReadKey(conversationId),new Date().toISOString()); } catch(_){}
     dmUnreadConversations.delete(conversationId);
+    dmUnreadCounts.delete(conversationId);
     renderDmHeads();
   }
 
@@ -4433,7 +4436,10 @@ $("onlinePhotoInput").addEventListener("change", async event => {
       button.title=peer.profile.display_name||"Private chat";
       button.textContent=peer.profile.avatar||"💜";
       if (dmUnreadConversations.has(id)) {
-        const dot=document.createElement("small"); dot.textContent="1"; button.appendChild(dot);
+        const dot=document.createElement("small");
+        const unreadCount = dmUnreadCounts.get(id) || 1;
+        dot.textContent = unreadCount > 99 ? "99+" : String(unreadCount);
+        button.appendChild(dot);
       }
       button.onclick=()=>openDmConversation(id);
       box.appendChild(button);
