@@ -35,7 +35,7 @@
   <link rel="stylesheet" href="style.css?v=20261128-headeravatar2">
   <link rel="stylesheet" href="homepage-redesign.css?v=mobile-profile-3">
   <link rel="stylesheet" href="community-garden.css?v=1">
-  <link rel="stylesheet" href="cosmic-frontier.css?v=3">
+  <link rel="stylesheet" href="cosmic-frontier.css?v=4">
   <style id="tambayanverse-map-desktop-fix">
 @media (min-width: 601px) {
 
@@ -1528,7 +1528,23 @@
             <div class="cosmic-inventory-card"><span class="cosmic-label">YOUR FIELD PACK</span><div class="cosmic-inventory-items"><span>🔹 <b id="cosmicCrystalCount">0</b> Crystals</span><span>🌱 <b id="cosmicBioCount">0</b> Bio-samples</span><span>🪙 <b id="cosmicRelicCount">0</b> Relics</span></div></div>
           </div>
           <div class="cosmic-discovery-log"><div class="cosmic-log-heading"><div><span class="cosmic-label">CAPTAIN'S LOG</span><h4>Discoveries & artifacts</h4></div><span id="cosmicLogCount">0 found</span></div><div id="cosmicDiscoveryLog" class="cosmic-log-list"><p>No discoveries yet. Your first find is waiting.</p></div></div>
-          <p class="cosmic-save-note" id="cosmicSaveNote">Expedition progress saves privately on this device.</p>
+          <section class="cosmic-interactive-panel" aria-labelledby="cosmicEncounterTitle">
+            <div class="cosmic-log-heading"><div><span class="cosmic-label">FIRST CONTACT</span><h4 id="cosmicEncounterTitle">Alien encounter</h4></div><span id="cosmicEncounterStatus">NO SIGNAL</span></div>
+            <p id="cosmicEncounterText">Investigate the planet to reveal signs of native life. Some discoveries may lead to a creature encounter.</p>
+            <div id="cosmicEncounterCard" class="cosmic-encounter-card"><span class="cosmic-encounter-art">📡</span><div><strong>Scanner on standby</strong><small>Your scanner is waiting for a life-form signal.</small></div></div>
+            <button type="button" class="cosmic-action-button" id="cosmicScanCreature" disabled>Scan & add to creature archive</button>
+          </section>
+          <section class="cosmic-interactive-panel" aria-labelledby="cosmicMissionBoardTitle">
+            <div class="cosmic-log-heading"><div><span class="cosmic-label">EXPEDITION OBJECTIVE</span><h4 id="cosmicMissionBoardTitle">Planet mission</h4></div><span id="cosmicMissionStatus">IN PROGRESS</span></div>
+            <p id="cosmicMissionObjective">Complete the field survey and document the local life-form.</p>
+            <div class="cosmic-mission-track"><i id="cosmicMissionBar"></i></div>
+            <button type="button" class="cosmic-action-button" id="cosmicClaimMission" disabled>Mission reward locked</button>
+          </section>
+          <section class="cosmic-interactive-panel" aria-labelledby="cosmicArchiveTitle">
+            <div class="cosmic-log-heading"><div><span class="cosmic-label">XENOBIOLOGY DATABASE</span><h4 id="cosmicArchiveTitle">Creature archive</h4></div><span id="cosmicCreatureCount">0 / 4 archived</span></div>
+            <div id="cosmicCreatureArchive" class="cosmic-creature-grid"><p>No life-forms archived yet. Your first encounter is out there.</p></div>
+          </section>
+          <p class="cosmic-save-note" id="cosmicSaveNote">Expedition progress saves privately on this device.</p>Expedition progress saves privately on this device.</p>
         </section>
         <footer class="cosmic-footer">THE FRONTIER IS YOURS TO DISCOVER <span>✦</span> TAKE NOTHING BUT MEMORIES</footer>
       </div>
@@ -1669,7 +1685,7 @@
   <!-- Online multiplayer module -->
   <script src="multiplayer.js?v=20261128-dm-voice-preview2"></script>
   <script src="rage-room.js?v=2"></script>
-  <script src="cosmic-frontier.js?v=3"></script>
+  <script src="cosmic-frontier.js?v=4"></script>
   <!-- Public Community module -->
   <script src="community.js?v=20261128-publicfeed1"></script>
   <script src="kindness.js?v=2"></script>
