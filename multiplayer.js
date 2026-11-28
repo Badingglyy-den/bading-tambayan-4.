@@ -1840,13 +1840,6 @@ try {
 document.documentElement.classList.remove("auth-checking");
 document.documentElement.classList.remove("auth-locked");
 
-const accountButton = $("accountOpen");
-if (accountButton) {
-  const accountName = accountButton.querySelector(".account-chip-name");
-  if (accountName) {
-    accountName.textContent = "Tambay";
-  }
-}
       const accountEmailDisplay = $("onlineAccountEmailDisplay");
 if (accountEmailDisplay) {
   accountEmailDisplay.textContent =
@@ -1881,8 +1874,6 @@ if (accountEmailDisplay) {
       // Only create a profile when this account does not already have one.
       if (!savedProfile) await saveProfile(false);
 
-      const accountName = $("accountOpen")?.querySelector(".account-chip-name");
-      if (accountName) accountName.textContent = profile.display_name || "Tambay";
       await refreshRoomList();
       await initializeDirectMessages();
       const notificationParams = new URLSearchParams(window.location.search);
@@ -1977,8 +1968,6 @@ if (accountEmailDisplay) {
       avatar
     }, { onConflict: "user_id" });
     if (error) throw error;
-    const accountName = $("accountOpen")?.querySelector(".account-chip-name");
-    if (accountName) accountName.textContent = name;
     return true;
   };
 
