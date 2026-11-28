@@ -35,7 +35,7 @@ function render(){
   const opened=x.opened||x.unlock<=today();
   return '<article class="diary-mini-item"><b>'+(opened?"🍾 Washed ashore":"🌊 Still drifting")+' · '+esc(dateLabel(x.unlock))+'</b><p>'+(opened?esc(x.message):"This message is still sealed until its chosen day.")+'</p>'+(opened&&!x.opened?'<button type="button" class="diary-room-button" data-bottle-open="'+esc(x.id)+'">Open bottle</button>':"")+'</article>';
  }).join(""));
- mini("diaryArtifactList",data.artifacts.slice().reverse().map(x=>'<article class="diary-mini-item"><b>✦ '+esc(x.name)+' <small>· '+esc(x.type)+'</small></b><p>'+esc(x.story)+'</p></article>').join(""));
+ mini("diaryArtifactList",data.artifacts.slice().reverse().map(x=>'<article class="diary-mini-item"><b>✦ '+esc(x.name)+' <small>· '+esc(x.type)+'</small></b>'+(x.photo&&x.photo.startsWith("data:image/jpeg;base64,")?'<img class="diary-artifact-photo" src="'+x.photo+'" alt="'+esc(x.name)+'">':"")+'<p>'+esc(x.story)+'</p><small>Added '+esc(dateLabel(x.date))+'</small></article>').join(""));
  mini("diaryThreadList",data.threads.slice().reverse().map(x=>'<article class="diary-mini-item"><b>🧵 '+esc(x.aTitle)+' ↔ '+esc(x.bTitle)+'</b><p>'+esc(x.note)+'</p></article>').join(""));
  const secrets=Object.entries(data.secrets);
  mini("diarySecretList",secrets.slice().reverse().map(([id,x])=>'<article class="diary-mini-item"><b>🗝️ '+esc(x.title)+' · Hidden footnote</b><p>'+esc(x.note)+'</p></article>').join(""));
@@ -69,10 +69,43 @@ function init(){
   if(!message||!unlock||unlock<today())return;
   data.bottles.push({id:"b"+Date.now(),message,unlock,opened:false});save();$("diaryBottleMessage").value="";$("diaryBottleDate").value="";render();
  });
+ const artifactType=$("diaryArtifactType"),photoWrap=$("diaryPhotoUpload"),photoInput=$("diaryArtifactPhoto");
+ let selectedArtifactPhoto="";
+ function setArtifactPhotoPreview(dataUrl){
+  const preview=$("diaryArtifactPhotoPreview");if(!preview)return;
+  preview.hidden=!dataUrl;
+  preview.innerHTML=dataUrl?'<img src="'+dataUrl+'" alt="Selected museum memory photo"><button type="button" class="diary-room-button" id="diaryArtifactPhotoRemove">Remove photo</button>':"";
+ }
+ artifactType.addEventListener("change",()=>{
+  const isPhoto=artifactType.value==="Photo memory";photoWrap.hidden=!isPhoto;
+  if(!isPhoto){selectedArtifactPhoto="";photoInput.value="";setArtifactPhotoPreview("");}
+ });
+ photoInput.addEventListener("change",()=>{
+  const file=photoInput.files&&photoInput.files[0];if(!file)return;
+  if(!file.type.startsWith("image/")){photoInput.value="";return;}
+  if(file.size>12*1024*1024){alert("Please choose a photo under 12 MB.");photoInput.value="";return;}
+  const reader=new FileReader();
+  reader.onload=()=>{
+   const image=new Image();
+   image.onload=()=>{
+    const max=1200,scale=Math.min(1,max/Math.max(image.width,image.height));
+    const canvas=document.createElement("canvas");
+    canvas.width=Math.max(1,Math.round(image.width*scale));canvas.height=Math.max(1,Math.round(image.height*scale));
+    const ctx=canvas.getContext("2d");if(!ctx){alert("This photo could not be prepared.");return;}
+    ctx.drawImage(image,0,0,canvas.width,canvas.height);
+    selectedArtifactPhoto=canvas.toDataURL("image/jpeg",0.78);setArtifactPhotoPreview(selectedArtifactPhoto);
+   };
+   image.onerror=()=>{alert("This photo could not be opened. Try a JPG or PNG.");photoInput.value="";};
+   image.src=reader.result;
+  };
+  reader.onerror=()=>alert("Could not read that photo. Please try again.");reader.readAsDataURL(file);
+ });
+ photoWrap.addEventListener("click",e=>{if(e.target.closest("#diaryArtifactPhotoRemove")){selectedArtifactPhoto="";photoInput.value="";setArtifactPhotoPreview("");}});
  $("diaryArtifactSave").addEventListener("click",()=>{
-  const name=$("diaryArtifactName").value.trim(),story=$("diaryArtifactStory").value.trim();
+  const name=$("diaryArtifactName").value.trim(),story=$("diaryArtifactStory").value.trim(),type=artifactType.value;
   if(!name||!story)return;
-  data.artifacts.push({id:"a"+Date.now(),name,type:$("diaryArtifactType").value,story,date:today()});save();$("diaryArtifactName").value="";$("diaryArtifactStory").value="";render();
+  data.artifacts.push({id:"a"+Date.now(),name,type,story,photo:type==="Photo memory"?selectedArtifactPhoto:"",date:today()});
+  save();$("diaryArtifactName").value="";$("diaryArtifactStory").value="";selectedArtifactPhoto="";photoInput.value="";setArtifactPhotoPreview("");photoWrap.hidden=true;artifactType.value="Object";render();
  });
  $("diaryThreadSave").addEventListener("click",()=>{
   const entries=getEntries(),a=entries.find(e=>e.id===$("diaryThreadFirst").value),b=entries.find(e=>e.id===$("diaryThreadSecond").value),note=$("diaryThreadNote").value.trim();
