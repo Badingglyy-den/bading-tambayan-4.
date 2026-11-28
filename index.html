@@ -1508,9 +1508,15 @@
 <script>
   if ("serviceWorker" in navigator) {
     window.addEventListener("load", () => {
-      navigator.serviceWorker.register("./sw.js")
-        .then(registration => {
+      navigator.serviceWorker.register("./sw.js", { updateViaCache: "none" })
+        .then(async registration => {
           console.log("Notification service worker ready:", registration.scope);
+          try {
+            await registration.update();
+            console.log("Notification service worker update check complete.");
+          } catch (updateError) {
+            console.warn("Notification service worker update check failed:", updateError);
+          }
         })
         .catch(error => {
           console.error("Service worker registration failed:", error);
