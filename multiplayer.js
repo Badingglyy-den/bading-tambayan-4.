@@ -1926,8 +1926,28 @@ renderRoomList();
       .filter(message => message.user_id === currentUser.id)
       .map(message => message.id);
     const incomingMessages = messages.filter(message => message.user_id !== currentUser.id);
+    const senderIds = [...new Set(incomingMessages.map(message => message.user_id).filter(Boolean))]
+      .filter(userId => !profileCache.has(userId));
 
     const tasks = [];
+
+    if (senderIds.length) {
+      tasks.push((async () => {
+        const { data, error } = await client.from("chat_profiles")
+          .select("user_id,display_name,avatar")
+          .in("user_id", senderIds);
+        if (error) {
+          console.warn("Could not preload chat profiles:", error);
+          return;
+        }
+        for (const senderId of senderIds) {
+          const found = (data || []).find(row => row.user_id === senderId);
+          profileCache.set(senderId, found
+            ? { display_name: found.display_name || "Tambay", avatar: found.avatar || "💜" }
+            : { display_name: "Tambay", avatar: "💜" });
+        }
+      })());
+    }
 
     if (ownMessageIds.length) {
       tasks.push((async () => {
