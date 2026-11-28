@@ -14,24 +14,34 @@ Deno.serve(async (request) => {
 
   try {
     const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
-    const anonKey = Deno.env.get("SUPABASE_ANON_KEY")!;
     const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
     const publicKey = Deno.env.get("VAPID_PUBLIC_KEY")!;
     const privateKey = Deno.env.get("VAPID_PRIVATE_KEY")!;
     const subject = Deno.env.get("VAPID_SUBJECT") || "https://badingglyy-den.github.io/bading-tambayan-4./";
-    const authHeader = request.headers.get("Authorization");
-    if (!authHeader) return new Response(JSON.stringify({ error: "Unauthorized" }), { status: 401, headers: cors });
+    const authHeader = request.headers.get("Authorization") || "";
+    const tokenMatch = authHeader.match(/^Bearer\\s+(.+)$/i);
+    if (!tokenMatch) {
+      console.warn("PUSH_AUTH: missing bearer token", { hasAuthorizationHeader: !!authHeader });
+      return new Response(JSON.stringify({ error: "Unauthorized" }), { status: 401, headers: cors });
+    }
 
-    const userClient = createClient(supabaseUrl, anonKey, { global: { headers: { Authorization: authHeader } } });
-    const { data: authData, error: authError } = await userClient.auth.getUser();
+    // Validate the caller's access token using the server-side Supabase client.
+    // The service-role key stays server-side and is never returned to the app.
+    const admin = createClient(supabaseUrl, serviceKey);
+    const { data: authData, error: authError } = await admin.auth.getUser(tokenMatch[1]);
     if (authError || !authData.user || authData.user.is_anonymous) {
+      console.warn("PUSH_AUTH: user validation failed", {
+        error: authError?.message || null,
+        status: authError?.status || null,
+        userFound: !!authData.user,
+        isAnonymous: authData.user?.is_anonymous ?? null
+      });
       return new Response(JSON.stringify({ error: "A signed-in account is required" }), { status: 401, headers: cors });
     }
 
     const { room_id, message_id } = await request.json();
     if (!room_id || !message_id) return new Response(JSON.stringify({ error: "Missing room_id or message_id" }), { status: 400, headers: cors });
 
-    const admin = createClient(supabaseUrl, serviceKey);
     const { data: message, error: messageError } = await admin
       .from("messages").select("id,room_id,user_id,content")
       .eq("id", message_id).eq("room_id", room_id).single();
