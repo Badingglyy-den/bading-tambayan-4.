@@ -4142,7 +4142,6 @@ $("onlinePhotoInput").addEventListener("change", async event => {
     .bt-dm-headitem{position:relative;width:48px;height:48px;flex:0 0 48px}
     .bt-dm-headbubble{position:relative;width:48px;height:48px;border-radius:50%;border:2px solid #d8bfff;background:#45315b;color:white;font-size:21px;box-shadow:0 5px 18px #0008}
     .bt-dm-headbubble small{position:absolute;right:-4px;top:-4px;background:#ff557d;color:white;border-radius:20px;font:bold 10px/16px sans-serif;min-width:16px;padding:0 3px}
-    .bt-dm-headremove{position:absolute;right:-5px;bottom:-4px;width:20px;height:20px;border:1px solid #fff;border-radius:50%;background:#e84d70;color:white;font:bold 14px/17px sans-serif;padding:0;z-index:2;box-shadow:0 2px 6px #0008}
     @media(max-width:600px){
       #btDmDock{right:12px;bottom:calc(12px + env(safe-area-inset-bottom))}
       #btDmWindow{right:10px;bottom:calc(78px + env(safe-area-inset-bottom));width:calc(100vw - 20px);height:min(62vh,480px)}
@@ -4195,7 +4194,13 @@ $("onlinePhotoInput").addEventListener("change", async event => {
     $("btDmEnableNotifications").onclick = requestDmNotifications;
     $("btDmSearch").addEventListener("input", renderDmDirectory);
     $("btDmMinimize").onclick = minimizeDmWindow;
-    $("btDmClose").onclick = () => { if (dmActiveConversation) dmHeads.set(dmActiveConversation, dmActivePeer); dmActiveConversation=null; dmActivePeer=null; win.hidden=true; renderDmHeads(); };
+    $("btDmClose").onclick = () => {
+      if (dmActiveConversation) {
+        dmHeads.delete(dmActiveConversation);
+        dmClosedHeads.add(dmActiveConversation);
+      }
+      dmActiveConversation=null; dmActivePeer=null; win.hidden=true; renderDmHeads();
+    };
     $("btDmForm").onsubmit = sendDirectMessage;
   }
 
@@ -4460,8 +4465,6 @@ $("onlinePhotoInput").addEventListener("change", async event => {
     const box=$("btDmHeads"); if(!box) return;
     box.innerHTML="";
     for(const [id,peer] of dmHeads) {
-      const item=document.createElement("div");
-      item.className="bt-dm-headitem";
       const button=document.createElement("button");
       button.type="button"; button.className="bt-dm-headbubble";
       button.title=peer.profile.display_name||"Private chat";
@@ -4474,14 +4477,7 @@ $("onlinePhotoInput").addEventListener("change", async event => {
         button.appendChild(dot);
       }
       button.onclick=()=>openDmConversation(id);
-      const close=document.createElement("button");
-      close.type="button"; close.className="bt-dm-headremove"; close.textContent="×";
-      close.title="Close this chat head"; close.setAttribute("aria-label","Close chat head for "+(peer.profile.display_name||"member"));
-      close.onclick=(event)=>{
-        event.preventDefault(); event.stopPropagation();
-        dmHeads.delete(id); dmClosedHeads.add(id); renderDmHeads();
-      };
-      item.append(button,close); box.appendChild(item);
+      box.appendChild(button);
     }
     const unread=$("btDmUnread");
     if(unread) {
