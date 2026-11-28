@@ -280,6 +280,23 @@
   <link rel="stylesheet" href="sitewide-theme-system.css?v=20261128-theme2">
   <link rel="stylesheet" href="adaptive-screen-fit.css?v=20261128-1">
   <link rel="stylesheet" href="rage-room.css?v=2">
+
+<style id="cosmic-frontier-map-position">
+/* World 08 gets its own map slot; keep it clear of World 01 and the other cards. */
+@media (min-width:601px){
+  body .verse-map-panel .map-destinations > a.map-location.map-cosmic{
+    top:auto!important;left:50%!important;right:auto!important;bottom:3%!important;
+    transform:translateX(-50%)!important;z-index:6!important;
+  }
+}
+@media (max-width:600px){
+  body .verse-map-panel .map-sky{min-height:850px!important;}
+  body .verse-map-panel .map-destinations > a.map-location.map-cosmic{
+    top:82%!important;left:50%!important;right:auto!important;bottom:auto!important;
+    transform:translateX(-50%)!important;z-index:6!important;
+  }
+}
+</style>
 </head>
 <body>
   <div id="authGate" class="auth-gate">
