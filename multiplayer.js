@@ -3346,19 +3346,31 @@ $("onlinePhotoInput").addEventListener("change", async event => {
     #onlineTambayan .online-message-actions {
       display: flex; align-items: center; gap: 8px; margin-top: 9px;
     }
-    #onlineTambayan .online-reply-button {
-      min-height: 44px; min-width: 88px; padding: 9px 15px;
-      border: 1px solid rgba(194,158,255,.16); border-radius: 12px;
-      background: transparent; color: rgba(224,207,255,.82);
-      box-shadow: none; font-size: 14px; font-weight: 600;
-      opacity: .9; transition: background .18s ease, opacity .18s ease, border-color .18s ease;
+    #onlineTambayan .online-reply-button,
+    #onlineTambayan .online-delete-photo-button {
+      min-height: 30px; min-width: 0; padding: 5px 9px;
+      border: 1px solid rgba(194,158,255,.14); border-radius: 9px;
+      background: transparent; color: rgba(224,207,255,.76);
+      box-shadow: none; font-size: 11px; line-height: 1.2; font-weight: 600;
+      opacity: .86; transition: background .18s ease, opacity .18s ease, border-color .18s ease;
+    }
+    #onlineTambayan .online-delete-photo-button {
+      color: rgba(255,190,205,.82);
+      border-color: rgba(255,160,185,.16);
     }
     #onlineTambayan .online-reply-button:hover,
     #onlineTambayan .online-reply-button:focus-visible {
-      background: rgba(169,139,255,.12);
-      border-color: rgba(194,158,255,.38); opacity: 1;
+      background: rgba(169,139,255,.10);
+      border-color: rgba(194,158,255,.32); opacity: 1;
     }
-    #onlineTambayan .online-reply-button:active { transform: scale(.97); }
+    #onlineTambayan .online-delete-photo-button:hover,
+    #onlineTambayan .online-delete-photo-button:focus-visible {
+      background: rgba(210,75,110,.12);
+      border-color: rgba(255,160,185,.34); opacity: 1;
+    }
+    #onlineTambayan .online-reply-button:active,
+    #onlineTambayan .online-delete-photo-button:active { transform: scale(.97); }
+    #onlineTambayan .online-message-actions { gap: 6px; margin-top: 6px; }
   `;
   document.head.appendChild(replyControlStyle);
 
