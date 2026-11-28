@@ -1,5 +1,6 @@
 import { createClient } from "npm:@supabase/supabase-js@2";
 import webpush from "npm:web-push@3.6.7";
+import { createRemoteJWKSet, jwtVerify } from "npm:jose@5.9.6";
 
 const cors = {
   "Access-Control-Allow-Origin": "*",
@@ -25,26 +26,27 @@ Deno.serve(async (request) => {
       return new Response(JSON.stringify({ error: "Unauthorized" }), { status: 401, headers: cors });
     }
 
-    // Validate the caller's JWT directly with Supabase Auth.
-    // This avoids relying on a local auth session inside the Edge Function.
-    const authResponse = await fetch(supabaseUrl + "/auth/v1/user", {
-      headers: {
-        apikey: serviceKey,
-        Authorization: "Bearer " + tokenMatch[1]
+    // Verify the JWT signature and expiry using this project's public signing keys.
+    // Then confirm the account still exists, without requiring its session row to exist.
+    const jwks = createRemoteJWKSet(new URL(supabaseUrl + "/auth/v1/.well-known/jwks.json"));
+    let authenticatedUserId: string;
+    try {
+      const { payload } = await jwtVerify(tokenMatch[1], jwks, {
+        issuer: supabaseUrl + "/auth/v1",
+        audience: "authenticated"
+      });
+      if (typeof payload.sub !== "string") throw new Error("JWT subject is missing");
+      const { data: userResult, error: userLookupError } = await admin.auth.admin.getUserById(payload.sub);
+      if (userLookupError || !userResult.user || userResult.user.is_anonymous) {
+        throw new Error(userLookupError?.message || "Account not found or is anonymous");
       }
-    });
-    const authData = authResponse.ok ? await authResponse.json() : null;
-    if (!authResponse.ok || !authData?.id || authData.is_anonymous) {
-      const authErrorText = authResponse.ok ? null : await authResponse.text();
-      console.warn("PUSH_AUTH: token validation failed", {
-        status: authResponse.status,
-        error: authErrorText,
-        userFound: !!authData?.id,
-        isAnonymous: authData?.is_anonymous ?? null
+      authenticatedUserId = userResult.user.id;
+    } catch (error) {
+      console.warn("PUSH_AUTH: JWT/account validation failed", {
+        error: error?.message || String(error)
       });
       return new Response(JSON.stringify({ error: "A signed-in account is required" }), { status: 401, headers: cors });
     }
-    const authenticatedUser = authData;
 
     const { room_id, message_id } = await request.json();
     if (!room_id || !message_id) return new Response(JSON.stringify({ error: "Missing room_id or message_id" }), { status: 400, headers: cors });
@@ -52,17 +54,17 @@ Deno.serve(async (request) => {
     const { data: message, error: messageError } = await admin
       .from("messages").select("id,room_id,user_id,content")
       .eq("id", message_id).eq("room_id", room_id).single();
-    if (messageError || !message || message.user_id !== authenticatedUser.id) {
+    if (messageError || !message || message.user_id !== authenticatedUserId) {
       console.warn("PUSH_DIAG: message authorization failed", {
         messageFound: !!message,
         queryError: messageError?.message || null,
-        senderMatches: !!message && message.user_id === authenticatedUser.id
+        senderMatches: !!message && message.user_id === authenticatedUserId
       });
       return new Response(JSON.stringify({ error: "Message not found or sender mismatch" }), { status: 403, headers: cors });
     }
 
     const { data: membership, error: membershipError } = await admin.from("room_members")
-      .select("user_id").eq("room_id", room_id).eq("user_id", authenticatedUser.id).maybeSingle();
+      .select("user_id").eq("room_id", room_id).eq("user_id", authenticatedUserId).maybeSingle();
     if (membershipError || !membership) {
       console.warn("PUSH_DIAG: room membership check failed", {
         membershipFound: !!membership,
@@ -72,9 +74,9 @@ Deno.serve(async (request) => {
     }
 
     const { data: room } = await admin.from("rooms").select("room_name").eq("id", room_id).single();
-    const { data: sender } = await admin.from("profiles").select("display_name").eq("user_id", authenticatedUser.id).maybeSingle();
+    const { data: sender } = await admin.from("profiles").select("display_name").eq("user_id", authenticatedUserId).maybeSingle();
     const { data: members, error: membersError } = await admin.from("room_members")
-      .select("user_id").eq("room_id", room_id).neq("user_id", authenticatedUser.id);
+      .select("user_id").eq("room_id", room_id).neq("user_id", authenticatedUserId);
     if (membersError) throw membersError;
 
     const recipientIds = (members || []).map((row) => row.user_id);
