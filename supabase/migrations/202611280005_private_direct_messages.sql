@@ -33,49 +33,46 @@ alter table public.dm_conversations enable row level security;
 alter table public.dm_participants enable row level security;
 alter table public.dm_messages enable row level security;
 
+-- SECURITY DEFINER helper avoids recursive RLS when participant policies
+-- need to check membership in the same table.
+create or replace function public.is_dm_participant(p_conversation_id uuid)
+returns boolean
+language sql
+stable
+security definer
+set search_path = public, auth
+as $
+  select exists (
+    select 1 from public.dm_participants p
+    where p.conversation_id = p_conversation_id
+      and p.user_id = auth.uid()
+  );
+$;
+
+revoke all on function public.is_dm_participant(uuid) from public;
+grant execute on function public.is_dm_participant(uuid) to authenticated;
+
 drop policy if exists "DM participants can read their conversations" on public.dm_conversations;
 create policy "DM participants can read their conversations"
   on public.dm_conversations for select to authenticated
-  using (
-    exists (
-      select 1 from public.dm_participants p
-      where p.conversation_id = dm_conversations.id
-        and p.user_id = auth.uid()
-    )
-  );
+  using (public.is_dm_participant(id));
 
 drop policy if exists "DM participants can read participant lists" on public.dm_participants;
 create policy "DM participants can read participant lists"
   on public.dm_participants for select to authenticated
-  using (
-    exists (
-      select 1 from public.dm_participants mine
-      where mine.conversation_id = dm_participants.conversation_id
-        and mine.user_id = auth.uid()
-    )
-  );
+  using (public.is_dm_participant(conversation_id));
 
 drop policy if exists "DM participants can read messages" on public.dm_messages;
 create policy "DM participants can read messages"
   on public.dm_messages for select to authenticated
-  using (
-    exists (
-      select 1 from public.dm_participants p
-      where p.conversation_id = dm_messages.conversation_id
-        and p.user_id = auth.uid()
-    )
-  );
+  using (public.is_dm_participant(conversation_id));
 
 drop policy if exists "DM participants can send as themselves" on public.dm_messages;
 create policy "DM participants can send as themselves"
   on public.dm_messages for insert to authenticated
   with check (
     sender_id = auth.uid()
-    and exists (
-      select 1 from public.dm_participants p
-      where p.conversation_id = dm_messages.conversation_id
-        and p.user_id = auth.uid()
-    )
+    and public.is_dm_participant(conversation_id)
   );
 
 grant select on public.dm_conversations to authenticated;
