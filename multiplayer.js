@@ -114,11 +114,19 @@
     }
     .online-photo-button {
   cursor: pointer;
+  flex: 0 0 44px;
+  width: 44px;
+  height: 44px;
+  box-sizing: border-box;
   padding: 8px;
   font-size: 20px;
   display: flex;
   align-items: center;
   justify-content: center;
+  border-radius: 11px;
+  background: #bd8cff;
+  color: #241532;
+  border: 1px solid rgba(255,255,255,.22);
 }
 
 .online-chat-photo {
@@ -4177,8 +4185,9 @@ $("onlinePhotoInput").addEventListener("change", async event => {
     .bt-dm-bubble.mine{align-self:flex-end;background:#9c79c9;color:#1d1428;border-radius:13px 13px 4px 13px}
     .bt-dm-time{display:block;margin-top:4px;font-size:10px;opacity:.7;text-align:right}
     .bt-dm-tools{display:flex;align-items:center;gap:12px;padding:7px 10px 0;color:#f7efff}
-    .bt-dm-tools label,.bt-dm-tools button{border:0;background:#40334f;color:#fff;border-radius:9px;padding:7px 10px;font-size:17px}
+    .bt-dm-tools label,.bt-dm-tools button{border:0;background:#bd8cff;color:#241532;border-radius:10px;padding:8px 11px;font-size:18px;min-width:42px;min-height:42px;display:inline-flex;align-items:center;justify-content:center}
     .bt-dm-emoji{display:flex;gap:5px;overflow-x:auto;padding:6px 10px}
+    .bt-dm-emoji[hidden]{display:none!important}
     .bt-dm-emoji button{border:0;background:#40334f;border-radius:8px;padding:5px;font-size:17px}
     #btDmReplyComposer{padding:7px 10px;background:#493365;color:#fff;font-size:12px}
     #btDmReplyComposer button{margin-left:8px;border:0;border-radius:7px;padding:3px 7px}
@@ -4275,9 +4284,10 @@ $("onlinePhotoInput").addEventListener("change", async event => {
       <div class="bt-dm-tools">
         <label for="btDmPhoto" title="Send photo">📷</label><input id="btDmPhoto" type="file" accept="image/jpeg,image/png,image/webp,image/gif" hidden>
         <button type="button" id="btDmVoice" title="Record voice message">🎙️</button>
+        <button type="button" id="btDmEmojiToggle" aria-label="Show emojis" aria-expanded="false">😊</button>
         <span id="btDmVoiceStatus" hidden>Recording…</span>
       </div>
-      <div id="btDmEmoji" class="bt-dm-emoji" aria-label="Insert emoji"><button type="button" data-dm-emoji="💜">💜</button><button type="button" data-dm-emoji="❤️">❤️</button><button type="button" data-dm-emoji="🩷">🩷</button><button type="button" data-dm-emoji="😂">😂</button><button type="button" data-dm-emoji="😭">😭</button><button type="button" data-dm-emoji="🥹">🥹</button><button type="button" data-dm-emoji="😍">😍</button><button type="button" data-dm-emoji="😘">😘</button><button type="button" data-dm-emoji="🫶">🫶</button><button type="button" data-dm-emoji="👏">👏</button><button type="button" data-dm-emoji="🙌">🙌</button><button type="button" data-dm-emoji="✨">✨</button><button type="button" data-dm-emoji="🥰">🥰</button><button type="button" data-dm-emoji="🤣">🤣</button><button type="button" data-dm-emoji="😳">😳</button><button type="button" data-dm-emoji="🤍">🤍</button></div>
+      <div id="btDmEmoji" class="bt-dm-emoji" aria-label="Insert emoji" hidden><button type="button" data-dm-emoji="💜">💜</button><button type="button" data-dm-emoji="❤️">❤️</button><button type="button" data-dm-emoji="🩷">🩷</button><button type="button" data-dm-emoji="😂">😂</button><button type="button" data-dm-emoji="😭">😭</button><button type="button" data-dm-emoji="🥹">🥹</button><button type="button" data-dm-emoji="😍">😍</button><button type="button" data-dm-emoji="😘">😘</button><button type="button" data-dm-emoji="🫶">🫶</button><button type="button" data-dm-emoji="👏">👏</button><button type="button" data-dm-emoji="🙌">🙌</button><button type="button" data-dm-emoji="✨">✨</button><button type="button" data-dm-emoji="🥰">🥰</button><button type="button" data-dm-emoji="🤣">🤣</button><button type="button" data-dm-emoji="😳">😳</button><button type="button" data-dm-emoji="🤍">🤍</button></div>
       <form id="btDmForm"><input id="btDmInput" maxlength="2000" placeholder="Message…" autocomplete="off"><button type="submit">Send</button></form>
     `;
     document.body.appendChild(win);
@@ -4298,8 +4308,16 @@ $("onlinePhotoInput").addEventListener("change", async event => {
       dmActiveConversation=null; dmActivePeer=null; win.hidden=true; renderDmHeads();
     };
     $("btDmForm").onsubmit = sendDirectMessage;
-    $("btDmEmoji").querySelectorAll("[data-dm-emoji]").forEach(button => button.onclick = () => {
+    const dmEmojiPanel = $("btDmEmoji");
+    const dmEmojiToggle = $("btDmEmojiToggle");
+    dmEmojiToggle.onclick = () => {
+      dmEmojiPanel.hidden = !dmEmojiPanel.hidden;
+      dmEmojiToggle.setAttribute("aria-expanded", dmEmojiPanel.hidden ? "false" : "true");
+    };
+    dmEmojiPanel.querySelectorAll("[data-dm-emoji]").forEach(button => button.onclick = () => {
       const input = $("btDmInput"); input.value += button.dataset.dmEmoji; input.focus();
+      dmEmojiPanel.hidden = true;
+      dmEmojiToggle.setAttribute("aria-expanded", "false");
     });
     $("btDmPhoto").onchange = sendDmPhoto;
     $("btDmVoice").onclick = toggleDmVoiceRecording;
