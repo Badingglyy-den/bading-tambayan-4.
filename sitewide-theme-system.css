@@ -1,0 +1,109 @@
+/* BADING TAMBAYAN — site-wide theme and contrast system
+   Shared tokens keep every page, form, card and control in the selected theme.
+   World-specific illustrations and signature artwork remain intentionally distinct. */
+:root{
+  --bt-surface:var(--panel);
+  --bt-surface-raised:var(--panel2);
+  --bt-text:var(--text);
+  --bt-muted:var(--muted);
+  --bt-border:var(--line);
+  --bt-accent:var(--accent);
+  --bt-accent-strong:var(--accent2);
+}
+body[data-theme="violet"]{
+  --bg:#100d20;--panel:#1b1630;--panel2:#292044;--text:#f7f1ff;--muted:#c8bdd8;
+  --accent:#c6a5ff;--accent2:#8d65db;--line:#ffffff24;--shadow:0 18px 55px #05030d66;color-scheme:dark;
+  background:radial-gradient(ellipse at 12% 0%,#432a6c70,transparent 38%),radial-gradient(ellipse at 94% 38%,#542b6250,transparent 34%),var(--bg);
+}
+body[data-theme="rose"]{
+  --bg:#21121f;--panel:#321d31;--panel2:#472747;--text:#fff2f8;--muted:#d8b8c8;
+  --accent:#ffc0d9;--accent2:#d66d9f;--line:#ffffff25;--shadow:0 18px 48px #13081255;color-scheme:dark;
+  background:radial-gradient(ellipse at 12% 0%,#71334f66,transparent 38%),radial-gradient(ellipse at 95% 40%,#8b3d6944,transparent 34%),var(--bg);
+}
+body[data-theme="ocean"]{
+  --bg:#0c1b2a;--panel:#142b40;--panel2:#1d3a53;--text:#eff8ff;--muted:#b5cadb;
+  --accent:#a9e1ff;--accent2:#4b9dc9;--line:#ffffff24;--shadow:0 18px 48px #030d1855;color-scheme:dark;
+  background:radial-gradient(ellipse at 12% 0%,#1c547466,transparent 38%),radial-gradient(ellipse at 95% 40%,#28678a44,transparent 34%),var(--bg);
+}
+body[data-theme="midnight"]{
+  --bg:#080b17;--panel:#13192b;--panel2:#1c2540;--text:#f0f3ff;--muted:#b9c5e0;
+  --accent:#c0d0ff;--accent2:#738fd9;--line:#ffffff24;--shadow:0 18px 48px #02040d66;color-scheme:dark;
+  background:radial-gradient(ellipse at 15% 0%,#283b7566,transparent 38%),radial-gradient(ellipse at 95% 45%,#35265d44,transparent 34%),var(--bg);
+}
+body[data-theme="cloud"]{
+  --bg:#f4f0f8;--panel:#fffdfd;--panel2:#eee7f5;--text:#30283a;--muted:#655a70;
+  --accent:#76549b;--accent2:#9877b7;--line:#57466b30;--shadow:0 12px 35px #47365714;color-scheme:light;
+  background:radial-gradient(ellipse at 12% 0%,#e4d7f288,transparent 38%),radial-gradient(ellipse at 95% 35%,#f4ddeb99,transparent 34%),var(--bg);
+}
+body[data-theme="peach"]{
+  --bg:#fff3e9;--panel:#fffaf5;--panel2:#f8e5d8;--text:#402d27;--muted:#70594f;
+  --accent:#a85c43;--accent2:#c77b5d;--line:#704b3a30;--shadow:0 12px 35px #79503b14;color-scheme:light;
+  background:radial-gradient(ellipse at 12% 0%,#f8d9c788,transparent 38%),radial-gradient(ellipse at 95% 35%,#f6dce099,transparent 34%),var(--bg);
+}
+body[data-theme="matcha"]{
+  --bg:#f0f4e9;--panel:#fbfdf6;--panel2:#e5edd9;--text:#29382b;--muted:#596b55;
+  --accent:#55764c;--accent2:#78966b;--line:#405b3d30;--shadow:0 12px 35px #34452d14;color-scheme:light;
+  background:radial-gradient(ellipse at 12% 0%,#dce9ccaa,transparent 38%),radial-gradient(ellipse at 95% 35%,#e9efd999,transparent 34%),var(--bg);
+}
+
+/* Shared page surfaces */
+body{color:var(--bt-text);background-color:var(--bg)}
+.topbar,.subnav,.site-nav,.mobile-nav,.bottom-nav{
+  background:color-mix(in srgb,var(--panel) 94%,transparent);
+  color:var(--bt-text);border-color:var(--bt-border);
+}
+.panel,.modal,.theme-panel,.shop-panel,.collection-panel,.achievements-panel,
+.hangout-card,.game-card,.tool-card,.stat,.world-card,.settings-card,
+.settings-panel,.profile-card,.account-card,.section-card{
+  color:var(--bt-text);border-color:var(--bt-border);
+}
+.panel,.modal,.theme-panel,.shop-panel,.collection-panel,.achievements-panel,
+.hangout-card,.settings-card,.settings-panel,.profile-card,.account-card,.section-card{
+  background:var(--bt-surface);box-shadow:var(--shadow);
+}
+.game-card,.tool-card,.stat,.world-card,.shop-item,.collection-pill,.chip,.kind-item{
+  color:var(--bt-text);border-color:var(--bt-border);
+}
+.panel h1,.panel h2,.panel h3,.panel h4,.panel h5,
+.modal h1,.modal h2,.modal h3,.modal h4,
+.section-heading,.section-heading h1,.section-heading h2,.section-heading h3,
+h1,h2,h3,h4,h5,h6{color:var(--bt-text)}
+p,li,label,small,summary,figcaption{color:inherit}
+.muted,.section-note,.footer,.hint,.help-text,.form-hint{color:var(--bt-muted)}
+a:not(.primary-btn):not(.soft-btn):not(.world-card):not(.game-card):not(.tool-card){color:var(--bt-accent)}
+a:hover{color:var(--bt-accent-strong)}
+button,.primary-btn,.soft-btn,.secondary-btn,.theme-choice,.icon-btn,
+input,textarea,select{
+  border-color:var(--bt-border);
+}
+input,textarea,select{
+  background:var(--bt-surface-raised);color:var(--bt-text);
+}
+input::placeholder,textarea::placeholder{color:var(--bt-muted);opacity:.82}
+input:focus,textarea:focus,select:focus{
+  border-color:var(--bt-accent);outline-color:var(--bt-accent);
+}
+.soft-btn,.theme-choice,.icon-btn,.chip,.collection-pill{
+  background:var(--bt-surface-raised);color:var(--bt-text);
+}
+.primary-btn{
+  background:linear-gradient(135deg,var(--bt-accent-strong),var(--bt-accent));
+  color:#fff;border-color:transparent;
+}
+.theme-choice.active,.tab.active,[aria-selected="true"]{
+  border-color:var(--bt-accent);box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--bt-accent) 35%,transparent);
+}
+hr,.divider{border-color:var(--bt-border)}
+.modal::backdrop{background:color-mix(in srgb,var(--bg) 76%,#05030d 24%)}
+.toast{background:var(--bt-surface-raised);color:var(--bt-text);border:1px solid var(--bt-border)}
+::selection{background:color-mix(in srgb,var(--bt-accent) 35%,transparent);color:var(--bt-text)}
+
+/* Keep the live chat readable while matching the selected surface palette. */
+#onlineTambayan .online-panel,#onlineTambayan .online-room,
+#onlineTambayan .online-members-panel{color:var(--bt-text);border-color:var(--bt-border)}
+#onlineTambayan input,#onlineTambayan textarea{color:var(--bt-text)}
+#onlineTambayan input::placeholder{color:var(--bt-muted)}
+#onlineTambayan .online-message-content{overflow-wrap:anywhere}
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
+}
