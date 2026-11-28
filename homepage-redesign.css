@@ -5700,8 +5700,13 @@ html.welcome-open,html.welcome-open body{overflow:hidden}
 .welcome-universe-sky{position:relative;display:grid;place-items:center;min-height:340px;isolation:isolate}
 .welcome-universe-sky:before{content:"";position:absolute;width:min(74vw,340px);aspect-ratio:1;border-radius:50%;background:radial-gradient(circle,rgba(191,145,224,.23),rgba(130,84,168,.08) 48%,transparent 70%);filter:blur(5px);animation:welcomeGlow 4s ease-in-out infinite alternate}
 .welcome-portal{position:relative;z-index:2;width:clamp(130px,22vw,205px);aspect-ratio:1;display:grid;place-items:center;border:1px solid rgba(239,211,255,.75);border-radius:50%;background:radial-gradient(circle at 40% 35%,#76538e,#342344 62%,#1b1428);box-shadow:0 0 0 14px rgba(204,165,226,.07),0 0 0 34px rgba(204,165,226,.045),0 0 70px rgba(177,124,221,.45),inset 0 0 34px rgba(255,255,255,.16);animation:welcomePortal 5s ease-in-out infinite}
-.welcome-portal span{font-size:clamp(46px,8vw,76px);filter:drop-shadow(0 0 16px rgba(255,220,255,.65))}
-.welcome-portal small{position:absolute;bottom:24%;font-size:9px;letter-spacing:.32em;color:#f1dff7}
+.welcome-portal-emblem{position:relative;display:grid;place-items:center;width:clamp(76px,12vw,104px);height:clamp(76px,12vw,104px);border:1px solid rgba(255,231,197,.78);border-radius:29% 29% 42% 42%;background:linear-gradient(145deg,rgba(255,240,218,.18),rgba(255,255,255,.035));box-shadow:inset 0 0 0 5px rgba(255,231,197,.07),0 0 28px rgba(239,204,255,.18);transform:rotate(45deg)}
+.welcome-portal-emblem:before,.welcome-portal-emblem:after{content:"";position:absolute;inset:9px;border:1px solid rgba(255,231,197,.28);border-radius:25% 25% 38% 25%}
+.welcome-portal-emblem:after{inset:-7px;border-color:rgba(239,211,255,.22);border-radius:50%}
+.welcome-portal-emblem i{position:absolute;top:9px;right:11px;color:#f7dfad;font-size:14px;font-style:normal;transform:rotate(-45deg);text-shadow:0 0 12px rgba(255,224,169,.9)}
+.welcome-portal-emblem b{color:#fff1dc;font:600 clamp(29px,5vw,42px)/1 Georgia,serif;letter-spacing:-.12em;text-shadow:0 2px 15px rgba(255,225,255,.55);transform:rotate(-45deg) translateX(-2px)}
+.welcome-portal small{position:absolute;bottom:17%;padding:4px 9px;border:1px solid rgba(241,223,247,.28);border-radius:20px;background:rgba(28,19,41,.62);color:#f1dff7;font-size:7px;font-weight:800;letter-spacing:.22em;white-space:nowrap}
+
 .welcome-orbit{position:absolute;border:1px solid rgba(229,197,244,.22);border-radius:50%;pointer-events:none}
 .welcome-orbit-a{width:min(88vw,390px);aspect-ratio:1;transform:rotate(-24deg) scaleY(.48)}
 .welcome-orbit-b{width:min(78vw,330px);aspect-ratio:1;transform:rotate(48deg) scaleY(.48)}
