@@ -4142,6 +4142,17 @@ $("onlinePhotoInput").addEventListener("change", async event => {
     .bt-dm-bubble{max-width:85%;align-self:flex-start;padding:9px 11px;border-radius:13px 13px 13px 4px;background:#40334f;overflow-wrap:anywhere;white-space:pre-wrap;font-size:14px}
     .bt-dm-bubble.mine{align-self:flex-end;background:#9c79c9;color:#1d1428;border-radius:13px 13px 4px 13px}
     .bt-dm-time{display:block;margin-top:4px;font-size:10px;opacity:.7;text-align:right}
+    .bt-dm-tools{display:flex;align-items:center;gap:12px;padding:7px 10px 0;color:#f7efff}
+    .bt-dm-tools label,.bt-dm-tools button{border:0;background:#40334f;color:#fff;border-radius:9px;padding:7px 10px;font-size:17px}
+    .bt-dm-emoji{display:flex;gap:5px;overflow-x:auto;padding:6px 10px}
+    .bt-dm-emoji button{border:0;background:#40334f;border-radius:8px;padding:5px;font-size:17px}
+    #btDmReplyComposer{padding:7px 10px;background:#493365;color:#fff;font-size:12px}
+    #btDmReplyComposer button{margin-left:8px;border:0;border-radius:7px;padding:3px 7px}
+    .bt-dm-message-actions{display:flex;gap:5px;margin-top:5px}
+    .bt-dm-message-actions button{border:0;border-radius:7px;padding:3px 7px;background:#ffffff22;color:inherit;font-size:11px}
+    .bt-dm-quote{display:block;opacity:.75;font-size:11px;margin-bottom:5px}
+    .bt-dm-photo{display:block;max-width:100%;max-height:220px;border-radius:9px;object-fit:contain}
+    .bt-dm-audio{display:block;max-width:230px;width:100%}
     #btDmForm{display:flex;gap:7px;padding:10px;border-top:1px solid #5a476b}
     #btDmInput{flex:1;min-width:0;border:1px solid #705a83;border-radius:12px;padding:10px;background:#171020;color:white;font:inherit;font-size:16px}
     #btDmForm button{border:0;border-radius:11px;background:#bd8cff;color:#211331;font-weight:800;padding:0 14px}
@@ -4167,6 +4178,11 @@ $("onlinePhotoInput").addEventListener("change", async event => {
   let dmUnreadConversations = new Set();
   let dmUnreadCounts = new Map();
   let dmLatestMessages = new Map();
+  let dmReplyTo = null;
+  let dmVoiceRecorder = null;
+  let dmVoiceStream = null;
+  let dmVoiceChunks = [];
+  let dmPeerLastReadAt = null;
 
   function dmEscape(value) { return safeText(value); }
   function dmReadKey(id) { return "bt_dm_read_" + currentUser.id + "_" + id; }
@@ -4206,6 +4222,13 @@ $("onlinePhotoInput").addEventListener("change", async event => {
     win.innerHTML = `
       <div class="bt-dm-head"><span id="btDmTitle">Private chat</span><span><button type="button" id="btDmMinimize" aria-label="Minimize">−</button> <button type="button" id="btDmClose" aria-label="Close chat">×</button></span></div>
       <div id="btDmMessages" aria-live="polite"></div>
+      <div id="btDmReplyComposer" hidden></div>
+      <div class="bt-dm-tools">
+        <label for="btDmPhoto" title="Send photo">📷</label><input id="btDmPhoto" type="file" accept="image/jpeg,image/png,image/webp,image/gif" hidden>
+        <button type="button" id="btDmVoice" title="Record voice message">🎙️</button>
+        <span id="btDmVoiceStatus" hidden>Recording…</span>
+      </div>
+      <div id="btDmEmoji" class="bt-dm-emoji" aria-label="Insert emoji"><button type="button" data-dm-emoji="💜">💜</button><button type="button" data-dm-emoji="❤️">❤️</button><button type="button" data-dm-emoji="🩷">🩷</button><button type="button" data-dm-emoji="😂">😂</button><button type="button" data-dm-emoji="😭">😭</button><button type="button" data-dm-emoji="🥹">🥹</button><button type="button" data-dm-emoji="😍">😍</button><button type="button" data-dm-emoji="😘">😘</button><button type="button" data-dm-emoji="🫶">🫶</button><button type="button" data-dm-emoji="👏">👏</button><button type="button" data-dm-emoji="🙌">🙌</button><button type="button" data-dm-emoji="✨">✨</button><button type="button" data-dm-emoji="🥰">🥰</button><button type="button" data-dm-emoji="🤣">🤣</button><button type="button" data-dm-emoji="😳">😳</button><button type="button" data-dm-emoji="🤍">🤍</button></div>
       <form id="btDmForm"><input id="btDmInput" maxlength="2000" placeholder="Message…" autocomplete="off"><button type="submit">Send</button></form>
     `;
     document.body.appendChild(win);
@@ -4225,6 +4248,11 @@ $("onlinePhotoInput").addEventListener("change", async event => {
       dmActiveConversation=null; dmActivePeer=null; win.hidden=true; renderDmHeads();
     };
     $("btDmForm").onsubmit = sendDirectMessage;
+    $("btDmEmoji").querySelectorAll("[data-dm-emoji]").forEach(button => button.onclick = () => {
+      const input = $("btDmInput"); input.value += button.dataset.dmEmoji; input.focus();
+    });
+    $("btDmPhoto").onchange = sendDmPhoto;
+    $("btDmVoice").onclick = toggleDmVoiceRecording;
   }
 
   async function requestDmNotifications() {
@@ -4431,11 +4459,14 @@ $("onlinePhotoInput").addEventListener("change", async event => {
     $("btDmWindow").hidden=false;
     $("btDmPanel").hidden=true;
     $("btDmMessages").innerHTML='<p style="color:#c6b5d7">Loading messages…</p>';
-    const {data,error}=await client.from("dm_messages").select("id,conversation_id,sender_id,content,created_at")
+    const {data,error}=await client.from("dm_messages").select("id,conversation_id,sender_id,content,created_at,reply_to")
       .eq("conversation_id",conversationId).order("created_at",{ascending:true}).limit(100);
     if(error) { $("btDmMessages").textContent=error.message; return; }
+    const {data: peerReadRows}=await client.from("dm_participants").select("last_read_at")
+      .eq("conversation_id",conversationId).eq("user_id",peer.peerId).limit(1);
+    dmPeerLastReadAt=peerReadRows?.[0]?.last_read_at||null;
     $("btDmMessages").innerHTML="";
-    for(const message of data||[]) appendDmMessage(message);
+    for(const message of data||[]) await appendDmMessage(message);
     $("btDmMessages").scrollTop=$("btDmMessages").scrollHeight;
     markDmRead(conversationId);
     dmUnreadConversations.delete(conversationId);
@@ -4446,18 +4477,79 @@ $("onlinePhotoInput").addEventListener("change", async event => {
     $("btDmInput").focus({preventScroll:true});
   }
 
-  function appendDmMessage(message) {
+  async function appendDmMessage(message) {
     const box=$("btDmMessages");
     if(!box || message.conversation_id!==dmActiveConversation) return;
     if(box.querySelector('[data-dm-message="'+CSS.escape(String(message.id))+'"]')) return;
     const item=document.createElement("div");
-    item.className="bt-dm-bubble"+(message.sender_id===currentUser.id?" mine":"");
+    const mine=message.sender_id===currentUser.id;
+    item.className="bt-dm-bubble"+(mine?" mine":"");
     item.dataset.dmMessage=String(message.id);
-    const body=document.createElement("span"); body.textContent=message.content;
+    const raw=String(message.content||"");
+    if(raw.startsWith("[[PHOTO]]") || raw.startsWith("[[VOICE]]")) {
+      const path=raw.slice(raw.indexOf("]]")+2);
+      const {data,error}=await client.storage.from("dm-media").createSignedUrl(path,3600);
+      if(!error && data?.signedUrl) {
+        if(raw.startsWith("[[PHOTO]]")) {
+          const img=document.createElement("img"); img.src=data.signedUrl; img.alt="Private photo"; img.loading="lazy"; img.className="bt-dm-photo"; item.appendChild(img);
+        } else {
+          const audio=document.createElement("audio"); audio.controls=true; audio.src=data.signedUrl; audio.className="bt-dm-audio"; item.appendChild(audio);
+        }
+      } else { const failed=document.createElement("span"); failed.textContent=raw.startsWith("[[PHOTO]]")?"📷 Photo unavailable":"🎙️ Voice message unavailable"; item.appendChild(failed); }
+    } else {
+      const body=document.createElement("span"); body.textContent=raw; item.appendChild(body);
+    }
+    if(message.reply_to) {
+      const quote=document.createElement("small"); quote.className="bt-dm-quote"; quote.textContent="↪ Reply to message #"+message.reply_to; item.prepend(quote);
+    }
+    const actions=document.createElement("div"); actions.className="bt-dm-message-actions";
+    const reply=document.createElement("button"); reply.type="button"; reply.textContent="↩ Reply";
+    reply.onclick=()=>{ dmReplyTo=message.id; const composer=$("btDmReplyComposer"); composer.hidden=false; composer.textContent="Replying to message #"+message.id+" "; const cancel=document.createElement("button"); cancel.type="button"; cancel.textContent="Cancel"; cancel.onclick=()=>{dmReplyTo=null;composer.hidden=true;}; composer.appendChild(cancel); $("btDmInput").focus(); };
+    const react=document.createElement("button"); react.type="button"; react.textContent="💜";
+    react.title="React with 💜"; react.onclick=async()=>{ try { const {error}=await client.from("dm_message_reactions").insert({message_id:message.id,conversation_id:message.conversation_id,user_id:currentUser.id,emoji:"💜"}); if(error && !String(error.code).includes("23505")) throw error; react.textContent="💜 ✓"; } catch(e){alert(e.message||"Could not add reaction.");} };
+    actions.append(reply,react); item.appendChild(actions);
     const time=document.createElement("small"); time.className="bt-dm-time";
-    time.textContent=new Date(message.created_at).toLocaleTimeString([],{hour:"2-digit",minute:"2-digit"});
-    item.append(body,time); box.appendChild(item);
-    box.scrollTop=box.scrollHeight;
+    time.textContent=new Date(message.created_at).toLocaleTimeString([],{hour:"2-digit",minute:"2-digit"})+(mine && dmPeerLastReadAt && new Date(dmPeerLastReadAt)>=new Date(message.created_at)?" · Seen":" · Sent");
+    item.appendChild(time); box.appendChild(item); box.scrollTop=box.scrollHeight;
+  }
+
+  async function uploadDmMedia(file, kind) {
+    if(!file || !dmActiveConversation) return;
+    if(file.size>10*1024*1024) throw new Error("Media must be 10MB or smaller.");
+    const ext=(file.name.split(".").pop()|| (kind==="photo"?"jpg":"webm")).replace(/[^a-z0-9]/gi,"").toLowerCase();
+    const path=dmActiveConversation+"/"+currentUser.id+"/"+Date.now()+"-"+Math.random().toString(36).slice(2)+"."+ext;
+    const {error:uploadError}=await client.storage.from("dm-media").upload(path,file,{contentType:file.type||undefined,upsert:false});
+    if(uploadError) throw uploadError;
+    const content=(kind==="photo"?"[[PHOTO]]":"[[VOICE]]")+path;
+    const {data,error}=await client.from("dm_messages").insert({conversation_id:dmActiveConversation,sender_id:currentUser.id,content,reply_to:dmReplyTo}).select("id,conversation_id,sender_id,content,created_at,reply_to").single();
+    if(error) { await client.storage.from("dm-media").remove([path]); throw error; }
+    dmReplyTo=null; $("btDmReplyComposer").hidden=true; await appendDmMessage(data); loadDmConversations();
+  }
+
+  async function sendDmPhoto(event) {
+    const file=event.target.files?.[0]; event.target.value="";
+    if(!file) return;
+    try { await uploadDmMedia(file,"photo"); } catch(error) { alert(error.message||"Could not send photo."); }
+  }
+
+  async function toggleDmVoiceRecording() {
+    const button=$("btDmVoice");
+    if(dmVoiceRecorder && dmVoiceRecorder.state!=="inactive") { dmVoiceRecorder.stop(); return; }
+    if(!navigator.mediaDevices?.getUserMedia || typeof MediaRecorder==="undefined") { alert("Voice recording is not supported in this browser."); return; }
+    try {
+      dmVoiceStream=await navigator.mediaDevices.getUserMedia({audio:true});
+      const mime=["audio/webm;codecs=opus","audio/mp4","audio/ogg;codecs=opus","audio/webm"].find(t=>MediaRecorder.isTypeSupported?.(t));
+      dmVoiceRecorder=mime?new MediaRecorder(dmVoiceStream,{mimeType:mime}):new MediaRecorder(dmVoiceStream);
+      dmVoiceChunks=[];
+      dmVoiceRecorder.ondataavailable=e=>{if(e.data?.size)dmVoiceChunks.push(e.data);};
+      dmVoiceRecorder.onstop=async()=>{
+        const blob=new Blob(dmVoiceChunks,{type:dmVoiceRecorder?.mimeType||"audio/webm"});
+        dmVoiceStream?.getTracks().forEach(t=>t.stop()); dmVoiceStream=null; dmVoiceRecorder=null; dmVoiceChunks=[];
+        $("btDmVoiceStatus").hidden=true; button.textContent="🎙️";
+        if(blob.size) { try { await uploadDmMedia(new File([blob],"voice-message.webm",{type:blob.type||"audio/webm"}),"voice"); } catch(error){alert(error.message||"Could not send voice message.");} }
+      };
+      dmVoiceRecorder.start(); button.textContent="⏹️"; $("btDmVoiceStatus").hidden=false;
+    } catch(error) { dmVoiceStream?.getTracks().forEach(t=>t.stop()); dmVoiceStream=null; alert(error.message||"Microphone access was unavailable."); }
   }
 
   async function sendDirectMessage(event) {
@@ -4468,11 +4560,11 @@ $("onlinePhotoInput").addEventListener("change", async event => {
     button.disabled=true;
     try {
       const {data,error}=await client.from("dm_messages").insert({
-        conversation_id:dmActiveConversation,sender_id:currentUser.id,content
-      }).select("id,conversation_id,sender_id,content,created_at").single();
+        conversation_id:dmActiveConversation,sender_id:currentUser.id,content,reply_to:dmReplyTo
+      }).select("id,conversation_id,sender_id,content,created_at,reply_to").single();
       if(error) throw error;
-      input.value="";
-      appendDmMessage(data);
+      input.value=""; dmReplyTo=null; $("btDmReplyComposer").hidden=true;
+      await appendDmMessage(data);
       // Request a background push for the other participant's registered devices.
       try {
         let senderEndpoint = null;
