@@ -30,6 +30,8 @@
       min-width: 0;
     }
 
+    #publicCommunity [hidden] { display: none !important; }
+    #publicCommunity .community-header-tools { display:flex; align-items:center; gap:10px; }
     #publicCommunity h2, #publicCommunity h3 { margin-top: 0; }
     #publicCommunity p { line-height: 1.55; }
     #publicCommunity .community-muted {
@@ -294,7 +296,7 @@
           <h2>🌟 The Public Tambayan</h2>
           <p class="community-muted">Browse conversations and meet the community. You only need to join if you want to participate.</p>
         </div>
-        <div><strong id="communityMemberCount">—</strong><div class="community-muted">community members</div></div>
+        <div class="community-header-tools"><div><strong id="communityMemberCount">—</strong><div class="community-muted">community members</div></div><button id="communityProfileToggle" class="secondary" type="button" hidden>⚙️ Profile</button></div>
       </div>
 
       <div id="communityJoinArea" class="community-join-box">
@@ -414,6 +416,8 @@
   function setMemberUI() {
     const joined = !!membership;
 
+    $("communityJoinArea").hidden = joined && !editingProfile;
+    $("communityProfileToggle").hidden = !joined || editingProfile;
     $("communityJoinFields").hidden = joined && !editingProfile;
     $("communityMemberActions").hidden = !joined || editingProfile;
 
@@ -676,14 +680,16 @@
     }
   });
 
-  $("communityEditProfileButton").addEventListener("click", () => {
+  function openCommunityProfileEditor() {
     if (!membership) return;
-
     editingProfile = true;
     setMemberUI();
     status("Make your changes, then tap Save Profile.");
     $("communityName").focus();
-  });
+  }
+
+  $("communityEditProfileButton").addEventListener("click", openCommunityProfileEditor);
+  $("communityProfileToggle").addEventListener("click", openCommunityProfileEditor);
 
   $("communityCancelEdit").addEventListener("click", () => {
     editingProfile = false;
