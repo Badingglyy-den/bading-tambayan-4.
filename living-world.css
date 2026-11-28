@@ -1,0 +1,12 @@
+/* Small seasonal touches that let the existing world feel lived-in. */
+body[data-season="bloomtide"]{--season-accent:#d79bbd}
+body[data-season="suncrest"]{--season-accent:#e5b96e}
+body[data-season="leafwhisper"]{--season-accent:#c99a68}
+body[data-season="frostveil"]{--season-accent:#9eb9df}
+.season-moment{display:flex;align-items:flex-start;gap:12px;margin-top:14px;padding:13px 15px;border:1px solid color-mix(in srgb,var(--season-accent,var(--accent)) 28%,var(--line));border-radius:14px;background:color-mix(in srgb,var(--season-accent,var(--accent)) 7%,transparent)}
+.season-moment-icon{flex:0 0 30px;width:30px;height:30px;display:grid;place-items:center;border-radius:10px;background:color-mix(in srgb,var(--season-accent,var(--accent)) 16%,transparent);color:var(--season-accent,var(--accent));font-size:17px}
+.season-moment-label{display:block;margin:1px 0 4px;color:var(--season-accent,var(--accent));font-size:9px;font-weight:800;letter-spacing:1.3px}
+.season-moment p{margin:0;color:var(--text);font-size:12px;line-height:1.55}
+body[data-season] .season-current-mark{border-color:color-mix(in srgb,var(--season-accent,var(--accent)) 45%,var(--line))}
+body[data-season] .observatory-mark{border-color:color-mix(in srgb,var(--season-accent,var(--accent)) 38%,var(--line))}
+@media(max-width:600px){.season-moment{padding:11px 12px;gap:10px}.season-moment p{font-size:11px}}
