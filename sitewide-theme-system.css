@@ -309,93 +309,186 @@ html body[data-theme] #onlineTambayan .online-message-content *{
   -webkit-text-fill-color:#fff!important;
 }
 
-/* SIMPLE HIGH-CONTRAST MODE — user-requested black/white typography.
-   Light themes use near-black text; dark themes use white text. */
-body[data-theme="cloud"],
-body[data-theme="peach"],
-body[data-theme="matcha"]{
-  --bt-text:#111111;
-  --bt-muted:#222222;
-  --bt-accent:#111111;
-  --text:#111111;
-  --muted:#222222;
-  --accent:#111111;
-  --accent2:#111111;
+
+/* COMPLETE THEME POLISH — coordinated color, surface and typography system.
+   Each palette keeps its own accent identity; muted text remains readable rather
+   than being flattened to pure black/white. */
+body[data-theme="violet"] {
+  --bt-text:#f7f1ff; --bt-muted:#d2c5e4; --bt-accent:#d2b4ff;
+  --bt-accent-strong:#a982ec; --bt-border:#ffffff2b;
+  --bt-on-accent:#241632; --bt-surface:#1b1630; --bt-surface-raised:#292044;
 }
-body[data-theme="violet"],
-body[data-theme="rose"],
-body[data-theme="ocean"],
-body[data-theme="midnight"]{
-  --bt-text:#ffffff;
-  --bt-muted:#ffffff;
-  --bt-accent:#ffffff;
-  --text:#ffffff;
-  --muted:#ffffff;
-  --accent:#ffffff;
-  --accent2:#ffffff;
+body[data-theme="rose"] {
+  --bt-text:#fff2f8; --bt-muted:#e5c6d5; --bt-accent:#ffc5dc;
+  --bt-accent-strong:#e58ab3; --bt-border:#ffffff30;
+  --bt-on-accent:#35182a; --bt-surface:#321d31; --bt-surface-raised:#472747;
 }
-html body[data-theme="cloud"] :is(
-  h1,h2,h3,h4,h5,h6,p,li,label,small,span,strong,b,em,i,
-  a,summary,figcaption,blockquote,dt,dd,time,legend,caption,
-  .eyebrow,.section-note,.muted,.hint,.help-text,.form-hint,
-  .form-note,.empty-state,.entry-meta,.world-kicker,.footer,
-  .hero-text,.tiny-link,.brand-mark
-),
-html body[data-theme="peach"] :is(
-  h1,h2,h3,h4,h5,h6,p,li,label,small,span,strong,b,em,i,
-  a,summary,figcaption,blockquote,dt,dd,time,legend,caption,
-  .eyebrow,.section-note,.muted,.hint,.help-text,.form-hint,
-  .form-note,.empty-state,.entry-meta,.world-kicker,.footer,
-  .hero-text,.tiny-link,.brand-mark
-),
-html body[data-theme="matcha"] :is(
-  h1,h2,h3,h4,h5,h6,p,li,label,small,span,strong,b,em,i,
-  a,summary,figcaption,blockquote,dt,dd,time,legend,caption,
-  .eyebrow,.section-note,.muted,.hint,.help-text,.form-hint,
-  .form-note,.empty-state,.entry-meta,.world-kicker,.footer,
-  .hero-text,.tiny-link,.brand-mark
-){
-  color:#111111!important;
-  -webkit-text-fill-color:#111111!important;
-  text-shadow:none!important;
+body[data-theme="ocean"] {
+  --bt-text:#eff8ff; --bt-muted:#c5d9e8; --bt-accent:#b6e6ff;
+  --bt-accent-strong:#70b9df; --bt-border:#ffffff2d;
+  --bt-on-accent:#10283a; --bt-surface:#142b40; --bt-surface-raised:#1d3a53;
 }
-html body[data-theme="violet"] :is(
-  h1,h2,h3,h4,h5,h6,p,li,label,small,span,strong,b,em,i,
-  a,summary,figcaption,blockquote,dt,dd,time,legend,caption,
-  .eyebrow,.section-note,.muted,.hint,.help-text,.form-hint,
-  .form-note,.empty-state,.entry-meta,.world-kicker,.footer,
-  .hero-text,.tiny-link,.brand-mark
-),
-html body[data-theme="rose"] :is(
-  h1,h2,h3,h4,h5,h6,p,li,label,small,span,strong,b,em,i,
-  a,summary,figcaption,blockquote,dt,dd,time,legend,caption,
-  .eyebrow,.section-note,.muted,.hint,.help-text,.form-hint,
-  .form-note,.empty-state,.entry-meta,.world-kicker,.footer,
-  .hero-text,.tiny-link,.brand-mark
-),
-html body[data-theme="ocean"] :is(
-  h1,h2,h3,h4,h5,h6,p,li,label,small,span,strong,b,em,i,
-  a,summary,figcaption,blockquote,dt,dd,time,legend,caption,
-  .eyebrow,.section-note,.muted,.hint,.help-text,.form-hint,
-  .form-note,.empty-state,.entry-meta,.world-kicker,.footer,
-  .hero-text,.tiny-link,.brand-mark
-),
-html body[data-theme="midnight"] :is(
-  h1,h2,h3,h4,h5,h6,p,li,label,small,span,strong,b,em,i,
-  a,summary,figcaption,blockquote,dt,dd,time,legend,caption,
-  .eyebrow,.section-note,.muted,.hint,.help-text,.form-hint,
-  .form-note,.empty-state,.entry-meta,.world-kicker,.footer,
-  .hero-text,.tiny-link,.brand-mark
-){
-  color:#ffffff!important;
-  -webkit-text-fill-color:#ffffff!important;
-  text-shadow:none!important;
+body[data-theme="midnight"] {
+  --bt-text:#f0f3ff; --bt-muted:#cbd4ec; --bt-accent:#c8d5ff;
+  --bt-accent-strong:#91a9ed; --bt-border:#ffffff2b;
+  --bt-on-accent:#171d36; --bt-surface:#13192b; --bt-surface-raised:#1c2540;
 }
-/* Preserve white text inside the dark live-chat bubbles. */
+body[data-theme="cloud"] {
+  --bt-text:#30283a; --bt-muted:#62566d; --bt-accent:#76549b;
+  --bt-accent-strong:#9a78bb; --bt-border:#57466b35;
+  --bt-on-accent:#24152f; --bt-surface:#fffdfd; --bt-surface-raised:#eee7f5;
+}
+body[data-theme="peach"] {
+  --bt-text:#402d27; --bt-muted:#70564c; --bt-accent:#a85c43;
+  --bt-accent-strong:#c77b5d; --bt-border:#704b3a38;
+  --bt-on-accent:#2c1712; --bt-surface:#fffaf5; --bt-surface-raised:#f8e5d8;
+}
+body[data-theme="matcha"] {
+  --bt-text:#29382b; --bt-muted:#53664f; --bt-accent:#55764c;
+  --bt-accent-strong:#78966b; --bt-border:#405b3d38;
+  --bt-on-accent:#182519; --bt-surface:#fbfdf6; --bt-surface-raised:#e5edd9;
+}
+
+/* Semantic text roles across every world, dialog, form, menu and footer. */
+html body[data-theme] {
+  color:var(--bt-text);
+  background-color:var(--bg);
+  font-family:'DM Sans',Arial,sans-serif;
+}
+html body[data-theme] :is(
+  h1,h2,h3,h4,h5,h6,p,li,label,small,strong,b,em,i,
+  summary,figcaption,blockquote,dt,dd,time,legend,caption,
+  .hero-text,.world-card p,.game-card p,.tool-card p,.comfort-panel p,
+  .comfort-tool p,.hangout-card p,.diary-entry p,.entry-meta,
+  .form-note,.empty-state,.theme-panel p,.footer,.muted,.hint,
+  .help-text,.form-hint,.stat span,.stat small,.diary-form label,
+  .modal label,.shop-item p,.feed-item small,.prompt-box p,
+  .section-note,.shared-space-card p,.shared-spaces-intro-copy,
+  .daily-challenge-copy p,.online-members-panel
+) {
+  color:var(--bt-text) !important;
+  -webkit-text-fill-color:var(--bt-text) !important;
+  opacity:1;
+}
+html body[data-theme] :is(
+  .muted,.section-note,.footer,.hint,.help-text,.form-hint,.form-note,
+  .empty-state,.entry-meta,.stat span,.stat small,.diary-form label,
+  .modal label,.shop-item p,.feed-item small,.prompt-box p,
+  .shared-spaces-intro-copy,.comfort-journal-footer
+) {
+  color:var(--bt-muted) !important;
+  -webkit-text-fill-color:var(--bt-muted) !important;
+}
+html body[data-theme] :is(
+  .eyebrow,.world-kicker,.world-card b,.tool-card strong,.feed-item b,
+  .tiny-link,.entry-actions button,.brand-mark,.footer>span,
+  .daily-challenge-reward,.daily-challenge-status
+) {
+  color:var(--bt-accent) !important;
+  -webkit-text-fill-color:var(--bt-accent) !important;
+}
+
+/* Keep the display typography expressive and the reading typography calm. */
+html body[data-theme] #home .hero h1,
+html body[data-theme] #home .section-heading h2,
+html body[data-theme] .world-card h3,
+html body[data-theme] .game-card h3,
+html body[data-theme] .comfort-panel h3,
+html body[data-theme] .lounge-section > h3 {
+  font-family:'Playfair Display',Georgia,serif;
+  letter-spacing:-.025em;
+}
+html body[data-theme] #home .hero-text,
+html body[data-theme] .world-card p,
+html body[data-theme] .game-card p,
+html body[data-theme] .tool-card p {
+  font-family:'DM Sans',Arial,sans-serif;
+  line-height:1.65;
+}
+
+/* Theme-aware cards and controls, retaining each world's decorative artwork. */
+html body[data-theme] :is(
+  .theme-panel,.shop-panel,.collection-panel,.achievements-panel,
+  .settings-card,.settings-panel,.profile-card,.account-card,
+  .section-card,.diary-form,.diary-list-panel,.hangout-card
+) {
+  color:var(--bt-text);
+  border-color:var(--bt-border);
+}
+html body[data-theme] :is(
+  .game-card,.tool-card,.stat,.world-card,.shop-item,.collection-pill,
+  .chip,.kind-item,.theme-choice,.soft-btn,.secondary-btn,.choice-btn,
+  .icon-btn,.collection-pill
+) {
+  color:var(--bt-text);
+  border-color:var(--bt-border);
+}
+html body[data-theme] :is(input,textarea,select,option) {
+  color:var(--bt-text) !important;
+  -webkit-text-fill-color:var(--bt-text) !important;
+  background-color:var(--bt-surface-raised) !important;
+  border-color:var(--bt-border) !important;
+}
+html body[data-theme] :is(input,textarea,select)::placeholder {
+  color:var(--bt-muted) !important;
+  -webkit-text-fill-color:var(--bt-muted) !important;
+  opacity:1 !important;
+}
+html body[data-theme] :is(button,.soft-btn,.secondary-btn,.choice-btn,.theme-choice,.icon-btn) {
+  color:var(--bt-text);
+  border-color:var(--bt-border);
+}
+html body[data-theme] :is(.primary-btn,.small-btn) {
+  background:linear-gradient(125deg,var(--bt-accent-strong),var(--bt-accent)) !important;
+  color:var(--bt-on-accent) !important;
+  -webkit-text-fill-color:var(--bt-on-accent) !important;
+  border:1px solid transparent;
+  font-weight:800;
+}
+html body[data-theme] .theme-choice.active,
+html body[data-theme] [aria-selected="true"] {
+  border-color:var(--bt-accent) !important;
+  box-shadow:0 0 0 2px color-mix(in srgb,var(--bt-accent) 24%,transparent);
+}
+html body[data-theme] :is(.topbar,.subnav,.site-nav,.mobile-nav,.bottom-nav) {
+  color:var(--bt-text) !important;
+  background:color-mix(in srgb,var(--bt-surface) 94%,transparent) !important;
+  border-color:var(--bt-border) !important;
+}
+html body[data-theme] :is(.topbar,.subnav,.site-nav,.mobile-nav,.bottom-nav) :is(a,button,span,strong,small) {
+  color:var(--bt-text) !important;
+  -webkit-text-fill-color:var(--bt-text) !important;
+}
+html body[data-theme] a:not(.primary-btn):not(.soft-btn):not(.world-card):not(.game-card):not(.tool-card) {
+  color:var(--bt-accent);
+}
+html body[data-theme] :is(.section-heading h1,.section-heading h2,.section-heading h3) {
+  color:var(--bt-text) !important;
+  -webkit-text-fill-color:var(--bt-text) !important;
+  opacity:1 !important;
+}
+html body[data-theme] :is(.section-heading .eyebrow,.section-heading .world-kicker) {
+  color:var(--bt-accent) !important;
+  -webkit-text-fill-color:var(--bt-accent) !important;
+}
+html body[data-theme] :is(.footer,.section-note,.form-note,.empty-state) { opacity:1 !important; }
+
+/* Chat uses its own dark conversation surface in every site theme. */
 html body[data-theme] #onlineTambayan .online-message-content,
-html body[data-theme] #onlineTambayan .online-message-content *{
-  color:#ffffff!important;
-  -webkit-text-fill-color:#ffffff!important;
+html body[data-theme] #onlineTambayan .online-message-content * {
+  color:#ffffff !important;
+  -webkit-text-fill-color:#ffffff !important;
+}
+html body[data-theme] #onlineTambayan .online-compose,
+html body[data-theme] #onlineTambayan .online-compose input,
+html body[data-theme] #onlineTambayan #onlineMessageInput {
+  background:#171126 !important;
+  color:#ffffff !important;
+  -webkit-text-fill-color:#ffffff !important;
+}
+html body[data-theme] #onlineTambayan #onlineMessageInput::placeholder {
+  color:#c9bddb !important;
+  -webkit-text-fill-color:#c9bddb !important;
 }
 
 
