@@ -222,6 +222,7 @@
 </style>
   <link rel="stylesheet" href="seasons.css?v=1">
   <link rel="stylesheet" href="observatory.css?v=1">
+  <link rel="stylesheet" href="living-world.css?v=1">
 </head>
 <body>
   <div id="authGate" class="auth-gate">
@@ -345,6 +346,10 @@
     <article class="season-stop" data-season-card="suncrest"><span>☀️</span><b>Suncrest</b><small>Bright days</small></article>
     <article class="season-stop" data-season-card="leafwhisper"><span>🍂</span><b>Leafwhisper</b><small>Golden moments</small></article>
     <article class="season-stop" data-season-card="frostveil"><span>❄️</span><b>Frostveil</b><small>Quiet wonder</small></article>
+  </div>
+  <div class="season-moment" id="seasonMoment" aria-live="polite">
+    <span class="season-moment-icon" id="seasonMomentIcon" aria-hidden="true">✦</span>
+    <div><span class="season-moment-label" id="seasonMomentSpeaker">A NOTE FROM THE RESIDENTS</span><p id="seasonMomentText">A little seasonal surprise is waiting here.</p></div>
   </div>
   <p class="season-calendar-footnote">A year in the Tambayanverse has four seasons, each lasting 28 days. Your progress and collections never reset when the sky changes.</p>
 </section>
@@ -1219,6 +1224,7 @@
 
 <script src="seasons.js?v=1"></script>
 <script src="observatory.js?v=1"></script>
+<script src="living-world.js?v=1"></script>
 
 <!-- Register notification service worker -->
 <script>
