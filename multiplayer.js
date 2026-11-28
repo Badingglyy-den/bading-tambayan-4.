@@ -1521,8 +1521,31 @@ currentUser = sessionData.session?.user || null;
 if (!currentUser || currentUser.is_anonymous) {
   document.documentElement.classList.remove("auth-checking");
   document.documentElement.classList.add("auth-locked");
+
+  // Visitors go straight to the actual email/password form.
+  const gate = $("authGate");
+  if (gate) gate.style.display = "none";
+  const dialog = $("accountDialog");
+  if (dialog && !dialog.open) {
+    $("accountTitle").textContent = "Welcome back! 💜";
+    $("accountDescription").textContent = "Log in to continue your Bading Tambayan journey.";
+    $("accountEmail").style.display = "";
+    $("accountPassword").style.display = "";
+    $("accountLogin").style.display = "";
+    $("accountSignup").style.display = "";
+    $("accountForgot").style.display = "";
+    $("accountNewPasswordLabel").style.display = "none";
+    $("accountNewPassword").style.display = "none";
+    $("accountChangePassword").style.display = "none";
+    $("accountStatus").textContent = "";
+    dialog.showModal();
+  }
   return;
 }
+
+// A valid session is enough to reveal the site. Do not keep the login gate
+// visible while the slower profile/progress synchronization runs.
+document.documentElement.classList.remove("auth-checking", "auth-locked");
 
 try {
   await syncPlayerProgress();
