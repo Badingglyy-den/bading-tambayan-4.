@@ -1292,6 +1292,7 @@ let loadingOlderMessages = false;
   const backgroundRoomChannels = new Map();
   const roomUnreadCounts = new Map();
 const backgroundNotificationCounts = new Map();
+let pushSubscriptionActive = false;
   let backgroundNotificationCount = 0;
 let notificationQueue = Promise.resolve();
 
@@ -1686,6 +1687,7 @@ if (currentRoom?.id !== roomId) {
 }
 
 if (!document.hidden && currentRoom?.id === roomId) return;
+if (pushSubscriptionActive) return;
 if (!("Notification" in window) || Notification.permission !== "granted") return;
 
           const count = (backgroundNotificationCounts.get(roomId) || 0) + 1;
@@ -2666,6 +2668,7 @@ $("gateSignup").onclick = () => {
     }, { onConflict: "endpoint" });
     if (error) throw error;
 
+    pushSubscriptionActive = true;
     button.textContent = "🔔 Chat notifications enabled";
     button.disabled = true;
     label.textContent = "You're all set! New chat messages can reach this device when the app is closed. 💜";
@@ -2682,10 +2685,11 @@ $("gateSignup").onclick = () => {
   };
 
   updateNotificationControl();
-  if ("serviceWorker" in navigator && "PushManager" in window) {
+  if ("serviceWorker" in navigator && "PushManager" in window && "Notification" in window) {
     navigator.serviceWorker.ready.then(async registration => {
       const subscription = await registration.pushManager.getSubscription();
       if (subscription && Notification.permission === "granted") {
+        pushSubscriptionActive = true;
         const button = $("onlineNotificationButton");
         const label = $("onlineNotificationStatus");
         if (button && label) {
