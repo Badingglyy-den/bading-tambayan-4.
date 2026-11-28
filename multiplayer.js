@@ -2583,8 +2583,7 @@ renderRoomList();
       }
     }
     const contentEl = item.querySelector(".online-message-content");
-    if (contentEl) contentEl.style.setProperty("color", "#ffffff", "important");
-    item.style.setProperty("color", "#ffffff", "important");
+    // Message colors are controlled by the active personal theme CSS.
     item.querySelector(".online-reply-button").onclick = () => { replyToMessage = { id: message.id, senderName: who || "Tambay", content: message.content || "" }; renderReplyComposer(); $("onlineMessageInput").focus(); };
     const deleteButton = item.querySelector(".online-delete-photo-button");
     if (deleteButton) deleteButton.onclick = () => deleteOwnPhoto(message, item);
@@ -4064,5 +4063,45 @@ $("onlinePhotoInput").addEventListener("change", async event => {
     }
   `;
   document.head.appendChild(mobileComposerStructureStyle);
+
+
+  // PERSONAL CHAT THEME: keep message text and reply controls readable on every palette.
+  const chatThemeContrastStyle = document.createElement("style");
+  chatThemeContrastStyle.textContent = `
+    #onlineTambayan .online-message,
+    #onlineTambayan .online-message-content,
+    #onlineTambayan .online-message small,
+    #onlineTambayan .online-message strong,
+    #onlineTambayan .online-message p,
+    #onlineTambayan .online-reply-preview {
+      color: #fff !important;
+      -webkit-text-fill-color: #fff !important;
+    }
+    #onlineTambayan .online-reply-button {
+      color: #e9ddff !important;
+      border-color: rgba(220,195,255,.28) !important;
+      background: rgba(255,255,255,.08) !important;
+    }
+    @media(max-width:760px) {
+      #onlineTambayan[data-chat-theme] .online-message,
+      #onlineTambayan[data-chat-theme] .online-message-content,
+      #onlineTambayan[data-chat-theme] .online-message small,
+      #onlineTambayan[data-chat-theme] .online-message strong,
+      #onlineTambayan[data-chat-theme] .online-message p,
+      #onlineTambayan[data-chat-theme] .online-reply-preview {
+        color: var(--chat-personal-fg) !important;
+        -webkit-text-fill-color: var(--chat-personal-fg) !important;
+      }
+      #onlineTambayan[data-chat-theme] .online-reply-button {
+        color: var(--chat-personal-fg) !important;
+        -webkit-text-fill-color: var(--chat-personal-fg) !important;
+        border-color: color-mix(in srgb,var(--chat-personal-fg) 32%,transparent) !important;
+        background: color-mix(in srgb,var(--chat-personal-fg) 9%,transparent) !important;
+        opacity: 1 !important;
+        font-weight: 700 !important;
+      }
+    }
+  `;
+  document.head.appendChild(chatThemeContrastStyle);
 
 })();
