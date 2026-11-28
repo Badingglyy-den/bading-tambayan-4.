@@ -245,3 +245,67 @@ body #home > section.section-heading#hangout .section-note{
   opacity:1!important;
 }
 
+/* FINAL SITE-WIDE TEXT CONTRAST OVERRIDES
+   Legacy world/page styles contain more-specific fixed font colors. These
+   scoped selectors deliberately outrank them while preserving artwork,
+   status colors, controls, and the live-chat bubble text. */
+html body[data-theme] #home :is(
+  h1,h2,h3,h4,h5,h6,p,li,label,small,summary,figcaption,
+  blockquote,dt,dd,time,.eyebrow,.section-note,.muted,.hint,
+  .help-text,.form-hint,.form-note,.empty-state,.entry-meta,
+  .hero-text,.world-kicker,.world-card p,.game-card p,.tool-card p,
+  .comfort-panel p,.comfort-tool p,.hangout-card p,.diary-entry p,
+  .diary-entry h4,.diary-list-head h3,.collection-panel h3,
+  .collection-sets-wrap h3,.shop-item p,.feed-item small,
+  .prompt-box p,.stat span,.stat small,.daily-challenge-copy p,
+  .shared-space-card p,.shared-spaces-intro-copy
+){
+  color:var(--bt-text)!important;
+  -webkit-text-fill-color:var(--bt-text)!important;
+  opacity:1;
+}
+html body[data-theme] #home :is(
+  .section-note,.muted,.hint,.help-text,.form-hint,.form-note,
+  .empty-state,.entry-meta,.stat span,.stat small,
+  .diary-form label,.comfort-journal-footer,.shared-spaces-intro-copy,
+  .comfort-tool>p:not(.eyebrow),.daily-challenge-copy p
+){
+  color:var(--bt-muted)!important;
+  -webkit-text-fill-color:var(--bt-muted)!important;
+}
+html body[data-theme] #home :is(
+  .eyebrow,.world-kicker,.daily-challenge-reward,
+  .daily-challenge-status,.brand-mark
+){
+  color:var(--bt-accent)!important;
+  -webkit-text-fill-color:var(--bt-accent)!important;
+}
+html body[data-theme] #home > footer.footer,
+html body[data-theme] #home > footer.footer :is(span,p,button,a){
+  color:var(--bt-muted)!important;
+  -webkit-text-fill-color:var(--bt-muted)!important;
+}
+html body[data-theme] :is(.topbar,.subnav,.site-nav,.mobile-nav,.bottom-nav)
+  :is(a,span,strong,small){
+  color:var(--bt-text)!important;
+  -webkit-text-fill-color:var(--bt-text)!important;
+}
+html body[data-theme] :is(.modal,.theme-panel,.shop-panel,.collection-panel,
+  .achievements-panel,.settings-panel,.profile-card,.account-card)
+  :is(h1,h2,h3,h4,h5,h6,p,li,label,small,span,strong,b,em,summary){
+  color:var(--bt-text)!important;
+  -webkit-text-fill-color:var(--bt-text)!important;
+}
+html body[data-theme] :is(.modal,.theme-panel,.shop-panel,.collection-panel,
+  .achievements-panel,.settings-panel,.profile-card,.account-card)
+  :is(.eyebrow,.muted,.hint,.help-text,.form-hint,.form-note,.empty-state){
+  color:var(--bt-muted)!important;
+  -webkit-text-fill-color:var(--bt-muted)!important;
+}
+/* Keep chat messages white regardless of the selected site theme. */
+html body[data-theme] #onlineTambayan .online-message-content,
+html body[data-theme] #onlineTambayan .online-message-content *{
+  color:#fff!important;
+  -webkit-text-fill-color:#fff!important;
+}
+
