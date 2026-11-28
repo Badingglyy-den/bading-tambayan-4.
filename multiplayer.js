@@ -4228,6 +4228,8 @@ $("onlinePhotoInput").addEventListener("change", async event => {
   let dmVoiceRecorder = null;
   let dmVoiceStream = null;
   let dmVoiceChunks = [];
+  let dmVoicePreviewBlob = null;
+  let dmVoicePreviewUrl = null;
   let dmPeerLastReadAt = null;
 
   function dmEscape(value) { return safeText(value); }
@@ -4287,6 +4289,10 @@ $("onlinePhotoInput").addEventListener("change", async event => {
         <button type="button" id="btDmEmojiToggle" aria-label="Show emojis" aria-expanded="false">😊</button>
         <span id="btDmVoiceStatus" hidden>Recording…</span>
       </div>
+      <div id="btDmVoicePreview" class="bt-dm-voice-preview" hidden>
+        <audio id="btDmVoicePreviewAudio" controls></audio>
+        <div><button type="button" id="btDmVoiceDiscard">Discard</button><button type="button" id="btDmVoiceSend">Send voice</button></div>
+      </div>
       <div id="btDmEmoji" class="bt-dm-emoji" aria-label="Insert emoji" hidden><button type="button" data-dm-emoji="💜">💜</button><button type="button" data-dm-emoji="❤️">❤️</button><button type="button" data-dm-emoji="🩷">🩷</button><button type="button" data-dm-emoji="😂">😂</button><button type="button" data-dm-emoji="😭">😭</button><button type="button" data-dm-emoji="🥹">🥹</button><button type="button" data-dm-emoji="😍">😍</button><button type="button" data-dm-emoji="😘">😘</button><button type="button" data-dm-emoji="🫶">🫶</button><button type="button" data-dm-emoji="👏">👏</button><button type="button" data-dm-emoji="🙌">🙌</button><button type="button" data-dm-emoji="✨">✨</button><button type="button" data-dm-emoji="🥰">🥰</button><button type="button" data-dm-emoji="🤣">🤣</button><button type="button" data-dm-emoji="😳">😳</button><button type="button" data-dm-emoji="🤍">🤍</button></div>
       <form id="btDmForm"><input id="btDmInput" maxlength="2000" placeholder="Message…" autocomplete="off"><button type="submit">Send</button></form>
     `;
@@ -4321,6 +4327,8 @@ $("onlinePhotoInput").addEventListener("change", async event => {
     });
     $("btDmPhoto").onchange = sendDmPhoto;
     $("btDmVoice").onclick = toggleDmVoiceRecording;
+    $("btDmVoiceDiscard").onclick = clearDmVoicePreview;
+    $("btDmVoiceSend").onclick = sendDmVoicePreview;
   }
 
   async function requestDmNotifications() {
@@ -4600,24 +4608,60 @@ $("onlinePhotoInput").addEventListener("change", async event => {
     try { await uploadDmMedia(file,"photo"); } catch(error) { alert(error.message||"Could not send photo."); }
   }
 
+  async function clearDmVoicePreview() {
+    const audio=$("btDmVoicePreviewAudio");
+    if(dmVoicePreviewUrl) URL.revokeObjectURL(dmVoicePreviewUrl);
+    dmVoicePreviewUrl=null; dmVoicePreviewBlob=null;
+    if(audio) { audio.pause(); audio.removeAttribute("src"); audio.load(); }
+    const preview=$("btDmVoicePreview");
+    if(preview) preview.hidden=true;
+  }
+
+  async function sendDmVoicePreview() {
+    if(!dmVoicePreviewBlob) return;
+    const sendButton=$("btDmVoiceSend");
+    sendButton.disabled=true;
+    try {
+      const mime=dmVoicePreviewBlob.type||"audio/webm";
+      const extension=mime.includes("mp4")?"m4a":mime.includes("ogg")?"ogg":"webm";
+      await uploadDmMedia(new File([dmVoicePreviewBlob],"voice-message."+extension,{type:mime}),"voice");
+      clearDmVoicePreview();
+    } catch(error) {
+      alert(error.message||"Could not send voice message.");
+    } finally { sendButton.disabled=false; }
+  }
+
   async function toggleDmVoiceRecording() {
     const button=$("btDmVoice");
     if(dmVoiceRecorder && dmVoiceRecorder.state!=="inactive") { dmVoiceRecorder.stop(); return; }
     if(!navigator.mediaDevices?.getUserMedia || typeof MediaRecorder==="undefined") { alert("Voice recording is not supported in this browser."); return; }
+    clearDmVoicePreview();
     try {
       dmVoiceStream=await navigator.mediaDevices.getUserMedia({audio:true});
       const mime=["audio/webm;codecs=opus","audio/mp4","audio/ogg;codecs=opus","audio/webm"].find(t=>MediaRecorder.isTypeSupported?.(t));
       dmVoiceRecorder=mime?new MediaRecorder(dmVoiceStream,{mimeType:mime}):new MediaRecorder(dmVoiceStream);
       dmVoiceChunks=[];
       dmVoiceRecorder.ondataavailable=e=>{if(e.data?.size)dmVoiceChunks.push(e.data);};
-      dmVoiceRecorder.onstop=async()=>{
-        const blob=new Blob(dmVoiceChunks,{type:dmVoiceRecorder?.mimeType||"audio/webm"});
+      dmVoiceRecorder.onstop=()=>{
+        const recordedMime=dmVoiceRecorder?.mimeType||dmVoiceChunks[0]?.type||"audio/webm";
+        const blob=new Blob(dmVoiceChunks,{type:recordedMime});
         dmVoiceStream?.getTracks().forEach(t=>t.stop()); dmVoiceStream=null; dmVoiceRecorder=null; dmVoiceChunks=[];
-        $("btDmVoiceStatus").hidden=true; button.textContent="🎙️";
-        if(blob.size) { try { await uploadDmMedia(new File([blob],"voice-message.webm",{type:blob.type||"audio/webm"}),"voice"); } catch(error){alert(error.message||"Could not send voice message.");} }
+        $("btDmVoiceStatus").hidden=true; button.textContent="🎙️"; button.title="Record voice message";
+        if(!blob.size) { alert("No audio was recorded. Please try again."); return; }
+        if(blob.size>10*1024*1024) { alert("Voice message must be 10MB or smaller."); return; }
+        dmVoicePreviewBlob=blob;
+        dmVoicePreviewUrl=URL.createObjectURL(blob);
+        $("btDmVoicePreviewAudio").src=dmVoicePreviewUrl;
+        $("btDmVoicePreview").hidden=false;
       };
-      dmVoiceRecorder.start(); button.textContent="⏹️"; $("btDmVoiceStatus").hidden=false;
-    } catch(error) { dmVoiceStream?.getTracks().forEach(t=>t.stop()); dmVoiceStream=null; alert(error.message||"Microphone access was unavailable."); }
+      dmVoiceRecorder.start();
+      button.textContent="⏹️"; button.title="Stop recording";
+      $("btDmVoiceStatus").hidden=false;
+    } catch(error) {
+      dmVoiceStream?.getTracks().forEach(t=>t.stop()); dmVoiceStream=null; dmVoiceRecorder=null;
+      $("btDmVoiceStatus").hidden=true; button.textContent="🎙️"; button.title="Record voice message";
+      alert(error.message||"Microphone access was unavailable.");
+    }
   }
 
   async function sendDirectMessage(event) {
