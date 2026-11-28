@@ -2303,23 +2303,38 @@ if (String(message.content || "").startsWith("[[PHOTO]]")) {
 
   if (uploadError) throw uploadError;
 
-  const { error } = await client.from("messages").insert({
+  const { data: insertedPhoto, error } = await client.from("messages").insert({
     room_id: currentRoom.id,
     user_id: currentUser.id,
     content: `[[PHOTO]]${path}`
-  });
+  }).select("id").single();
 
   if (error) throw error;
+  notifyRoomMembers(currentRoom.id, insertedPhoto.id);
       }
+
+  async function notifyRoomMembers(roomId, messageId) {
+    if (!client || !roomId || !messageId) return;
+    try {
+      const { error } = await client.functions.invoke("send-chat-push", {
+        body: { room_id: roomId, message_id: messageId }
+      });
+      if (error) console.warn("Chat push delivery could not be requested:", error);
+    } catch (error) {
+      console.warn("Chat push delivery could not be requested:", error);
+    }
+  }
 
   async function sendMessage(content) {
     if (!client || !currentRoom) return;
     const text = String(content || "").trim().slice(0, 1000);
     if (!text) return;
-    const { error } = await client.from("messages").insert({
-      room_id: currentRoom.id, user_id: currentUser.id, content: text
-    });
+    const roomId = currentRoom.id;
+    const { data: insertedMessage, error } = await client.from("messages").insert({
+      room_id: roomId, user_id: currentUser.id, content: text
+    }).select("id").single();
     if (error) throw error;
+    notifyRoomMembers(roomId, insertedMessage.id);
   }
 
   async function leaveRoom(updateStatus = true) {
@@ -2566,34 +2581,122 @@ $("gateSignup").onclick = () => {
     }
   };
     // ONLINE TAMBAYAN — BROWSER NOTIFICATION PERMISSION
+  const PUSH_VAPID_PUBLIC_KEY = "BI0r9HbpO0552pFXcAeXreotEFRL6MlwKq3SNf4m941JDTrYUe9mfIUmcJeYjgAjiAMkrxwtNupUHxHwgT8dUXM";
+
+  function base64UrlToBytes(value) {
+    const padding = "=".repeat((4 - value.length % 4) % 4);
+    const base64 = (value + padding).replace(/-/g, "+").replace(/_/g, "/");
+    const raw = atob(base64);
+    return Uint8Array.from(raw, char => char.charCodeAt(0));
+  }
+
   function updateNotificationControl() {
     const button = $("onlineNotificationButton");
     const label = $("onlineNotificationStatus");
-
     if (!button || !label) return;
 
-    if (!("Notification" in window)) {
+    const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
+    const isStandalone = window.matchMedia?.("(display-mode: standalone)").matches || navigator.standalone === true;
+
+    if (!("Notification" in window) || !("serviceWorker" in navigator) || !("PushManager" in window)) {
       button.disabled = true;
       button.textContent = "Notifications unavailable";
-      label.textContent = "This browser doesn't support notifications.";
-    } else if (Notification.permission === "granted") {
-      button.textContent = "🔔 Notifications enabled";
-      button.disabled = true;
-      label.textContent = "You'll get alerts when the site is in the background.";
-    } else if (Notification.permission === "denied") {
-      button.textContent = "🔕 Notifications blocked";
-      button.disabled = true;
-      label.textContent = "Allow notifications in your browser's site settings.";
-    } else {
-      button.textContent = "🔔 Enable notifications";
-      button.disabled = false;
-      label.textContent = "Get alerts when new messages arrive.";
+      label.textContent = isIOS && !isStandalone
+        ? "On iPhone, add Bading Tambayan to your Home Screen first, then open the app."
+        : "This browser doesn't support web push notifications.";
+      return;
     }
+
+    if (Notification.permission === "denied") {
+      button.disabled = true;
+      button.textContent = "🔕 Notifications blocked";
+      label.textContent = "Allow notifications in your browser or device settings.";
+      return;
+    }
+
+    button.disabled = false;
+    button.textContent = Notification.permission === "granted"
+      ? "🔔 Finish enabling notifications"
+      : "🔔 Enable chat notifications";
+    label.textContent = isIOS && !isStandalone
+      ? "On iPhone, install the Home Screen app first to enable push notifications."
+      : "Get chat alerts even when Bading Tambayan is closed.";
+  }
+
+  async function enableChatPushNotifications() {
+    const button = $("onlineNotificationButton");
+    const label = $("onlineNotificationStatus");
+    if (!client || !currentUser) throw new Error("Please sign in to your Bading Tambayan account first.");
+
+    const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
+    const isStandalone = window.matchMedia?.("(display-mode: standalone)").matches || navigator.standalone === true;
+    if (isIOS && !isStandalone) {
+      label.textContent = "First tap Share in Safari → Add to Home Screen. Then open the installed app and enable notifications here.";
+      return;
+    }
+
+    if (!("Notification" in window) || !("PushManager" in window) || !("serviceWorker" in navigator)) {
+      throw new Error("This browser does not support web push. On iPhone, use the installed Home Screen app.");
+    }
+
+    button.disabled = true;
+    label.textContent = "Requesting notification permission…";
+    const permission = await Notification.requestPermission();
+    if (permission !== "granted") {
+      updateNotificationControl();
+      if (permission === "default") label.textContent = "Permission wasn't granted. Tap Enable when you're ready.";
+      return;
+    }
+
+    const registration = await navigator.serviceWorker.ready;
+    let subscription = await registration.pushManager.getSubscription();
+    if (!subscription) {
+      subscription = await registration.pushManager.subscribe({
+        userVisibleOnly: true,
+        applicationServerKey: base64UrlToBytes(PUSH_VAPID_PUBLIC_KEY)
+      });
+    }
+
+    const json = subscription.toJSON();
+    const { error } = await client.from("push_subscriptions").upsert({
+      user_id: currentUser.id,
+      endpoint: subscription.endpoint,
+      subscription: json,
+      updated_at: new Date().toISOString()
+    }, { onConflict: "endpoint" });
+    if (error) throw error;
+
+    button.textContent = "🔔 Chat notifications enabled";
+    button.disabled = true;
+    label.textContent = "You're all set! New chat messages can reach this device when the app is closed. 💜";
   }
 
   $("onlineNotificationButton").onclick = async () => {
-    if (!("Notification" in window)) {
-      updateNotificationControl();
+    try {
+      await enableChatPushNotifications();
+    } catch (error) {
+      console.error("Could not enable chat push notifications:", error);
+      $("onlineNotificationStatus").textContent = error.message || "Couldn't enable notifications. Please try again.";
+      $("onlineNotificationButton").disabled = false;
+    }
+  };
+
+  updateNotificationControl();
+  if ("serviceWorker" in navigator && "PushManager" in window) {
+    navigator.serviceWorker.ready.then(async registration => {
+      const subscription = await registration.pushManager.getSubscription();
+      if (subscription && Notification.permission === "granted") {
+        const button = $("onlineNotificationButton");
+        const label = $("onlineNotificationStatus");
+        if (button && label) {
+          button.textContent = "🔔 Chat notifications enabled";
+          button.disabled = true;
+          label.textContent = "This device is registered for chat push notifications.";
+        }
+      }
+    }).catch(error => console.warn("Could not check push subscription:", error));
+  }
+
       return;
     }
 
