@@ -17,3 +17,47 @@
 /* World 09 map pin: reserve its own bottom-center position without moving existing worlds. */
 @media(min-width:601px){body .verse-map-panel .map-destinations>a.map-location.map-dopamine{left:50%!important;right:auto!important;top:auto!important;bottom:3%!important;transform:translateX(-50%)!important}}
 @media(max-width:600px){body .verse-map-panel .map-destinations>a.map-location.map-dopamine{left:50%!important;right:auto!important;top:auto!important;bottom:1%!important;transform:translateX(-50%)!important;z-index:6!important}}
+
+
+/* Contrast safeguard: the site's global button/text rules must not turn the
+   light attraction cards and game panels white. Keep the hero and sensory
+   night-sky room intentionally light-on-dark. */
+#dopamineDistrict .dopamine-hub,
+#dopamineDistrict .dopamine-attraction,
+#dopamineDistrict .dopamine-section-intro,
+#dopamineDistrict .dop-attraction-head,
+#dopamineDistrict .dop-game-card,
+#dopamineDistrict .dop-hunt-board,
+#dopamineDistrict .dop-focus-tools,
+#dopamineDistrict .dopamine-footer{
+  color:#292044!important;
+}
+#dopamineDistrict .dopamine-door{
+  color:#292044!important;
+}
+#dopamineDistrict .dopamine-door .dop-door-copy,
+#dopamineDistrict .dopamine-door .dop-door-copy strong,
+#dopamineDistrict .dopamine-door .dop-door-copy small,
+#dopamineDistrict .dopamine-door .dop-door-arrow,
+#dopamineDistrict .dop-game-card h4,
+#dopamineDistrict .dop-game-card p,
+#dopamineDistrict .dop-game-status,
+#dopamineDistrict .dop-attraction-head h3,
+#dopamineDistrict .dop-attraction-head p,
+#dopamineDistrict .dopamine-section-intro h3,
+#dopamineDistrict .dopamine-section-intro p,
+#dopamineDistrict .dop-hunt-top strong,
+#dopamineDistrict .dop-focus-tools strong{
+  color:#292044!important;
+}
+#dopamineDistrict .dop-door-copy em{color:#5f5674!important}
+#dopamineDistrict .dopamine-progress-line,
+#dopamineDistrict .dopamine-footer{color:#655b7d!important}
+#dopamineDistrict .dopamine-back-hub{color:#55446f!important}
+#dopamineDistrict .dop-quiet-action{color:#584875!important}
+#dopamineDistrict .dop-action{color:#fff!important}
+#dopamineDistrict .dop-sensory-room,
+#dopamineDistrict .dop-sensory-room *{color:#fff!important}
+#dopamineDistrict .dop-sensory-controls,
+#dopamineDistrict .dop-sensory-controls *{color:#554a68!important}
+#dopamineDistrict .dop-sensory-controls input[type=checkbox]{accent-color:#7959ad}
