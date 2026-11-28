@@ -229,28 +229,44 @@
 }
 
 @media (max-width: 850px) {
-  body { padding-bottom: calc(116px + env(safe-area-inset-bottom)); }
+  body {
+    padding-bottom: calc(76px + env(safe-area-inset-bottom));
+  }
+
   .app-nav {
     position: fixed !important;
-    top: auto !important; bottom: 0 !important; left: 0 !important; right: 0 !important;
-    display: grid !important;
-    grid-template-columns: repeat(5, minmax(0, 1fr));
-    justify-content: stretch; align-items: stretch; gap: 5px;
-    padding: 7px 8px calc(7px + env(safe-area-inset-bottom));
-    overflow: visible;
-    background: rgba(20, 14, 37, .98);
+    top: auto !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    justify-content: flex-start;
+    flex-wrap: nowrap;
+    gap: 7px;
+    padding: 9px 10px calc(9px + env(safe-area-inset-bottom));
+    overflow-x: auto;
+    overflow-y: hidden;
+    scrollbar-width: none;
+    background: rgba(20, 14, 37, .97);
     border-top: 1px solid rgba(195, 150, 255, .25);
     border-bottom: 0;
     box-shadow: 0 -8px 28px rgba(0, 0, 0, .3);
   }
-  .app-nav button {
-    display: flex; align-items: center; justify-content: center;
-    flex: initial; width: 100%; min-width: 0; min-height: 48px;
-    padding: 6px 2px; font-size: 9px; line-height: 1.15;
-    white-space: normal; overflow-wrap: anywhere; text-align: center;
-    border-radius: 11px; touch-action: manipulation;
+
+  .app-nav::-webkit-scrollbar {
+    display: none;
   }
-  .app-view { min-height: 70vh; }
+
+  .app-nav button {
+    flex: 0 0 auto;
+    min-height: 46px;
+    padding: 11px 13px;
+    font-size: 11px;
+    border-radius: 13px;
+  }
+
+  .app-view {
+    min-height: 70vh;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
