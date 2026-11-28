@@ -2134,7 +2134,7 @@ renderRoomList();
     const cursor = oldestMessageCursor;
 
     const { data, error } = await client.from("messages")
-      .select("id,user_id,content,created_at")
+      .select("id,user_id,content,created_at,reply_to")
       .eq("room_id", roomId)
       .or(
         `created_at.lt.${cursor.created_at},and(created_at.eq.${cursor.created_at},id.lt.${cursor.id})`
@@ -2327,6 +2327,22 @@ renderRoomList();
       <div class="online-message-actions"><button type="button" class="online-reply-button">↩ Reply</button>${mine && String(message.content || "").startsWith("[[PHOTO]]") ? `<button type="button" class="online-delete-photo-button">Delete for everyone</button>` : ""}</div>
       ${mine ? `<span class="online-message-receipt">${receiptMessageIds.has(id) ? "✓✓ Seen" : "✓ Sent"}</span>` : ""}
     `;
+    if (message.reply_to) {
+      const quoted = await client.from("messages").select("id,user_id,content").eq("id", message.reply_to).maybeSingle();
+      if (quoted.data) {
+        const quotedProfile = await getMessageProfile(quoted.data.user_id);
+        const quote = document.createElement("button");
+        quote.type = "button";
+        quote.className = "online-reply-preview";
+        quote.textContent = (quotedProfile.display_name || "Tambay") + ": " + (String(quoted.data.content || "").startsWith("[[PHOTO]]") ? "📷 Photo" : String(quoted.data.content || "").slice(0, 100));
+        quote.style.cssText = "display:block;width:100%;text-align:left;margin:6px 0;padding:7px 10px;border-left:3px solid #c69aff;border-radius:8px;background:rgba(160,110,220,.12);color:inherit;font-size:12px;";
+        quote.onclick = () => {
+          const original = document.querySelector('.online-message[data-message-id="' + String(quoted.data.id) + '"]');
+          if (original) original.scrollIntoView({ behavior: "smooth", block: "center" });
+        };
+        item.insertBefore(quote, item.querySelector(".online-message-content"));
+      }
+    }
     const contentEl = item.querySelector(".online-message-content");
     item.querySelector(".online-reply-button").onclick = () => { replyToMessage = { id: message.id, senderName: who || "Tambay", content: message.content || "" }; renderReplyComposer(); $("onlineMessageInput").focus(); };
     const deleteButton = item.querySelector(".online-delete-photo-button");
