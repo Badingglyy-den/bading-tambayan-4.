@@ -72,7 +72,9 @@ self.addEventListener("push", event => {
     icon: "./app-icon.svg",
     badge: "./app-icon.svg",
     tag: payload.messageId ? "tambayan-message-" + payload.messageId : (payload.roomId ? "tambayan-room-" + payload.roomId : "tambayan-chat"),
-    renotify: false,
+    // Re-alert Android when a new private message replaces/updates a notification.
+    renotify: true,
+    vibrate: [180, 100, 180],
     data: { roomId: payload.roomId || null, conversationId: payload.conversationId || null, messageId: payload.messageId || null, url: payload.url || "./" }
   };
 
