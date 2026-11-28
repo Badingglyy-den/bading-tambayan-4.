@@ -41,7 +41,7 @@
   const showLetter = () => {
     $("mailboxLetter").hidden=false;
     $("mailboxLetterSeason").textContent=seasonNames[season]||"A LITTLE NOTE";
-    $("mailboxLetterDate").textContent="DAY "+day;
+    $("mailboxLetterDate").textContent=today.toLocaleDateString("en",{month:"short",day:"numeric",year:"numeric"});
     $("mailboxSenderIcon").textContent=letter.icon;
     $("mailboxSender").textContent=letter.from;
     $("mailboxLetterTitle").textContent=letter.title;
