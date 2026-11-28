@@ -87,6 +87,10 @@
     // These interface elements sit on deliberately dark, layered surfaces.
     // Their ancestor gradients can confuse the generic background sampler,
     // so give them stable high-contrast colors instead of allowing faded text.
+    const darkTheme = ["violet","rose","ocean","midnight"].includes(document.body?.dataset?.theme);
+    const darkSurface = darkTheme && el.closest(
+      ".world-card, .attic-drawer, .garden-landscape, .garden-paths, .garden-feature-spots, .shop-panel, .collection-panel, .shop-item, .collection-pill"
+    );
     if (el.closest(".map-location")) {
       const mapColor = el.matches("small") ? "#eadcff" : "#ffffff";
       setImportant(el,"color",mapColor);
@@ -95,6 +99,11 @@
       const hudColor = el.matches(".account-chip-name") ? "#ffffff" : "#fff2c9";
       setImportant(el,"color",hudColor);
       setImportant(el,"-webkit-text-fill-color",hudColor);
+    } else if (darkSurface) {
+      const lightColor = el.matches("small, p, .world-kicker, .eyebrow, .garden-kicker, .shop-season-note")
+        ? "#eee6fa" : "#ffffff";
+      setImportant(el,"color",lightColor);
+      setImportant(el,"-webkit-text-fill-color",lightColor);
     } else {
       const color=chooseForeground(el);
       setImportant(el,"color",color);
