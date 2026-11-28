@@ -4119,7 +4119,7 @@ $("onlinePhotoInput").addEventListener("change", async event => {
     #btDmDock{position:fixed;right:16px;bottom:calc(18px + env(safe-area-inset-bottom));z-index:100500;font-family:inherit;color:#f7efff}
     #btDmLauncher{width:58px;height:58px;border-radius:50%;border:2px solid rgba(255,255,255,.7);background:linear-gradient(145deg,#bd8cff,#8055d8);color:#211331;font-size:25px;box-shadow:0 8px 28px #12091e88;position:relative}
     #btDmUnread{position:absolute;right:-3px;top:-4px;min-width:19px;height:19px;padding:0 5px;border-radius:20px;background:#ff557d;color:white;font:bold 11px/19px sans-serif}
-    #btDmWelcomeLauncher{display:inline-flex;align-items:center;gap:9px;margin:16px auto 0;padding:11px 17px;border:1px solid #d8bfff;border-radius:999px;background:linear-gradient(135deg,#bd8cff,#8055d8);color:#211331;font:800 14px inherit;box-shadow:0 8px 24px #12091e55;cursor:pointer}
+    #btDmWelcomeLauncher{display:inline-flex;align-items:center;gap:9px;margin:16px auto 0;padding:11px 17px;border:1px solid #d8bfff;border-radius:999px;background:linear-gradient(135deg,#bd8cff,#8055d8);color:#211331;font-weight:800;font-size:14px;font-family:inherit;box-shadow:0 8px 24px #12091e55;cursor:pointer}
     #btDmWelcomeBadge{display:inline-grid;place-items:center;min-width:20px;height:20px;padding:0 5px;border-radius:20px;background:#ff557d;color:#fff;font:bold 11px/20px sans-serif}
     .bt-dm-contact{position:relative}
     .bt-dm-preview{display:block!important;max-width:210px;color:#c6b5d7;font-size:12px;font-weight:400}
