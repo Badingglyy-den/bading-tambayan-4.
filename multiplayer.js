@@ -3934,4 +3934,43 @@ $("onlinePhotoInput").addEventListener("change", async event => {
   `;
   document.head.appendChild(cozyMobileChatStyle);
 
+  
+  // MOBILE COMPOSER: keep the four action buttons together on the left.
+  const composerAlignmentFix = document.createElement("style");
+  composerAlignmentFix.textContent = `
+    @media (max-width:760px) {
+      #onlineTambayan .online-compose {
+        display:grid !important;
+        grid-template-columns:42px 42px 44px 52px !important;
+        grid-template-rows:54px 44px !important;
+        justify-content:start !important;
+        justify-items:start !important;
+        align-content:start !important;
+        column-gap:8px !important;
+        row-gap:8px !important;
+      }
+      #onlineTambayan .online-compose > .online-photo-button {
+        grid-column:1 !important;grid-row:2 !important;
+        width:42px !important;min-width:42px !important;max-width:42px !important;
+        justify-self:start !important;
+      }
+      #onlineTambayan .online-compose > #onlineEmojiToggle {
+        grid-column:2 !important;grid-row:2 !important;
+        width:42px !important;min-width:42px !important;max-width:42px !important;
+        justify-self:start !important;
+      }
+      #onlineTambayan .online-compose > #onlineVoiceRecordButton {
+        grid-column:3 !important;grid-row:2 !important;
+        width:44px !important;min-width:44px !important;max-width:44px !important;
+        justify-self:start !important;
+      }
+      #onlineTambayan .online-compose > button[type="submit"] {
+        grid-column:4 !important;grid-row:2 !important;
+        width:52px !important;min-width:52px !important;max-width:52px !important;
+        justify-self:start !important;
+      }
+    }
+  `;
+  document.head.appendChild(composerAlignmentFix);
+
 })();
