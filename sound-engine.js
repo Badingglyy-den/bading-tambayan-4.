@@ -160,6 +160,48 @@
     osc.stop(now + duration + 0.03);
   }
 
+
+  function ceramicSmash() {
+    if (!context || context.state !== "running" || !settings.master || !settings.effects) return;
+    const now = context.currentTime;
+
+    // A bright, brittle ceramic crack made from filtered noise.
+    function noiseBurst(delay, duration, peak, cutoff, resonance) {
+      const length = Math.ceil(context.sampleRate * duration);
+      const buffer = context.createBuffer(1, length, context.sampleRate);
+      const data = buffer.getChannelData(0);
+      for (let i = 0; i < length; i++) {
+        const fade = Math.pow(1 - i / length, 2.2);
+        data[i] = (Math.random() * 2 - 1) * fade;
+      }
+      const source = context.createBufferSource();
+      const filter = context.createBiquadFilter();
+      const envelope = context.createGain();
+      source.buffer = buffer;
+      filter.type = "highpass";
+      filter.frequency.value = cutoff;
+      filter.Q.value = resonance;
+      envelope.gain.setValueAtTime(0.0001, now + delay);
+      envelope.gain.exponentialRampToValueAtTime(peak, now + delay + 0.003);
+      envelope.gain.exponentialRampToValueAtTime(0.0001, now + delay + duration);
+      source.connect(filter);
+      filter.connect(envelope);
+      envelope.connect(effectsGain);
+      source.start(now + delay);
+      source.stop(now + delay + duration + 0.01);
+    }
+
+    // Main impact, brittle fracture, then scattered ceramic fragments.
+    noiseBurst(0, 0.24, 0.72, 850, 0.7);
+    noiseBurst(0.025, 0.16, 0.42, 2100, 1.1);
+    noiseBurst(0.085, 0.22, 0.34, 1350, 0.8);
+    tone(185, 0.19, "triangle", 0.22, -115);
+    [0.12, 0.19, 0.27, 0.34, 0.42].forEach((delay, i) => {
+      const frequency = [1760, 2349, 1480, 2637, 1976][i];
+      setTimeout(() => tone(frequency, 0.075 + (i % 2) * 0.035, "sine", 0.16, -frequency * 0.22), delay * 1000);
+    });
+  }
+
   function play(name = "click") {
     if (!context || context.state !== "running" || !settings.master || !settings.effects) return;
     if (name === "notify") {
@@ -169,8 +211,7 @@
       tone(523.25, 0.16, "sine", 0.13);
       setTimeout(() => tone(783.99, 0.24, "sine", 0.13), 100);
     } else if (name === "break") {
-      tone(170, 0.18, "triangle", 0.2, -90);
-      setTimeout(() => tone(92, 0.12, "sawtooth", 0.08, -35), 35);
+      ceramicSmash();
     } else if (name === "pin") {
       tone(1046.5, 0.09, "triangle", 0.12, -260);
     } else if (name === "punch") {
