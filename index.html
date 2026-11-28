@@ -1023,6 +1023,69 @@
       <div class="panel diary-list-panel"><div class="diary-list-head"><div><p class="eyebrow">YOUR PRIVATE COLLECTION</p><h3>Saved thoughts</h3></div><input id="diarySearch" placeholder="Search entries..."></div><div id="diaryList" class="diary-list"><p class="empty-state">Your page is waiting for its first story.</p></div></div>
     </section>
 
+    <section class="diary-world-expansion" id="diaryKeepsakes" aria-labelledby="diaryKeepsakesTitle">
+      <div class="diary-expansion-heading">
+        <div><p class="eyebrow">THE LITTLE ROOMS INSIDE YOUR DIARY</p><h3 id="diaryKeepsakesTitle">More ways to keep a piece of you</h3><p>Private little experiences, letters, and keepsakes. Open whichever room feels right today.</p></div>
+      </div>
+      <div class="diary-room-grid">
+        <article class="diary-room diary-random-room">
+          <div class="diary-room-top"><span>🎲</span><small>COME BACK TOMORROW</small></div>
+          <h4>The Random Drawer</h4><p id="diaryRandomPrompt">A tiny surprise is waiting inside.</p>
+          <button type="button" class="diary-room-button" id="diaryRandomOpen">Open today's drawer ✦</button>
+          <p class="diary-room-status" id="diaryRandomStatus" aria-live="polite"></p>
+        </article>
+        <details class="diary-room">
+          <summary><span class="diary-room-icon">✉️</span><span><b>Letters I Never Sent</b><small>Words that don't need to be delivered</small></span><span class="diary-room-arrow">＋</span></summary>
+          <div class="diary-room-content">
+            <label for="diaryUnsentTo">To (a person, a memory, or your past self)</label><input id="diaryUnsentTo" maxlength="70" placeholder="Dear someone...">
+            <label for="diaryUnsentBody">What did you want to say?</label><textarea id="diaryUnsentBody" rows="4" maxlength="3000" placeholder="You can say it all here."></textarea>
+            <button type="button" class="diary-room-button" id="diaryUnsentSave">Seal this letter</button>
+            <div id="diaryUnsentList" class="diary-mini-list" aria-live="polite"></div>
+          </div>
+        </details>
+        <details class="diary-room">
+          <summary><span class="diary-room-icon">🍾</span><span><b>Message in a Bottle</b><small>A thought that returns on a chosen day</small></span><span class="diary-room-arrow">＋</span></summary>
+          <div class="diary-room-content">
+            <label for="diaryBottleMessage">Your message</label><textarea id="diaryBottleMessage" rows="3" maxlength="1500" placeholder="A note for the version of you who will find this..."></textarea>
+            <label for="diaryBottleDate">When should it wash ashore?</label><input id="diaryBottleDate" type="date">
+            <button type="button" class="diary-room-button" id="diaryBottleSave">Send it out to sea</button>
+            <div id="diaryBottleList" class="diary-mini-list" aria-live="polite"></div>
+          </div>
+        </details>
+        <details class="diary-room">
+          <summary><span class="diary-room-icon">🏛️</span><span><b>Museum of Me</b><small>Collect the little things that tell your story</small></span><span class="diary-room-arrow">＋</span></summary>
+          <div class="diary-room-content">
+            <label for="diaryArtifactName">What are we keeping?</label><input id="diaryArtifactName" maxlength="70" placeholder="The concert ticket, that old song...">
+            <label for="diaryArtifactType">Artifact type</label><select id="diaryArtifactType"><option>Object</option><option>Song</option><option>Photo memory</option><option>Quote</option><option>Place</option><option>Little moment</option></select>
+            <label for="diaryArtifactStory">Why does it matter?</label><textarea id="diaryArtifactStory" rows="3" maxlength="1200" placeholder="Its little story..."></textarea>
+            <button type="button" class="diary-room-button" id="diaryArtifactSave">Add to my museum</button>
+            <div id="diaryArtifactList" class="diary-mini-list" aria-live="polite"></div>
+          </div>
+        </details>
+        <details class="diary-room">
+          <summary><span class="diary-room-icon">🧵</span><span><b>The Red Thread</b><small>Find the quiet connections between your entries</small></span><span class="diary-room-arrow">＋</span></summary>
+          <div class="diary-room-content">
+            <p class="diary-room-help">Choose two saved entries and write what connects them. Your original entries stay untouched.</p>
+            <label for="diaryThreadFirst">First page</label><select id="diaryThreadFirst"><option value="">Choose an entry</option></select>
+            <label for="diaryThreadSecond">Another page</label><select id="diaryThreadSecond"><option value="">Choose another entry</option></select>
+            <label for="diaryThreadNote">What ties them together?</label><input id="diaryThreadNote" maxlength="180" placeholder="They both remind me to be brave...">
+            <button type="button" class="diary-room-button" id="diaryThreadSave">Tie the thread</button>
+            <div id="diaryThreadList" class="diary-mini-list" aria-live="polite"></div>
+          </div>
+        </details>
+        <details class="diary-room">
+          <summary><span class="diary-room-icon">🗝️</span><span><b>The Page Beneath the Page</b><small>A private footnote hidden under an entry</small></span><span class="diary-room-arrow">＋</span></summary>
+          <div class="diary-room-content">
+            <label for="diarySecretEntry">Choose the page</label><select id="diarySecretEntry"><option value="">Choose an entry</option></select>
+            <label for="diarySecretNote">The thought you kept underneath</label><textarea id="diarySecretNote" rows="3" maxlength="1500" placeholder="The part I didn't write in the main story..."></textarea>
+            <button type="button" class="diary-room-button" id="diarySecretSave">Tuck this thought away</button>
+            <div id="diarySecretList" class="diary-mini-list" aria-live="polite"></div>
+          </div>
+        </details>
+      </div>
+      <p class="diary-expansion-footnote">🔒 These keepsakes are private to this browser and stored separately. They do not edit or replace your existing diary entries, stars, collectibles, or account progress.</p>
+    </section>
+
     <section class="section-heading" id="hangout">
       <div>
         <p class="eyebrow">WORLD 06 · YOUR COMMUNITY UNIVERSE</p>
