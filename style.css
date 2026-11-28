@@ -3418,3 +3418,26 @@ img, video, canvas, svg {
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
 }
+
+
+/* Header profile photo: keep the uploaded image centered inside its circle. */
+#headerAvatar {
+  display: grid;
+  place-items: center;
+  box-sizing: border-box;
+  padding: 0 !important;
+  overflow: hidden;
+  border-radius: 50%;
+}
+#headerAvatar .profile-photo-image {
+  display: block;
+  width: 100% !important;
+  height: 100% !important;
+  max-width: none;
+  max-height: none;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  object-position: 50% 50%;
+  border-radius: 50%;
+  margin: 0;
+}
