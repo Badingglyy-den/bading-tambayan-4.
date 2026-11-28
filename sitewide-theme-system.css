@@ -622,3 +622,52 @@ html body:is([data-theme="violet"],[data-theme="rose"],[data-theme="ocean"],[dat
   color:#eee6fa !important;
   -webkit-text-fill-color:#eee6fa !important;
 }
+
+
+/* FINAL ACCESSIBILITY PASS — readable text in every theme.
+   Light palettes use deep ink; dark palettes use clean white. Headings never
+   inherit low-opacity decorative/accent colors. World artwork is untouched. */
+html body[data-theme="violet"],
+html body[data-theme="rose"],
+html body[data-theme="ocean"],
+html body[data-theme="midnight"]{--bt-text:#ffffff;--bt-muted:#eee6fa}
+html body[data-theme="cloud"],
+html body[data-theme="peach"],
+html body[data-theme="matcha"]{--bt-text:#292431;--bt-muted:#514958}
+html body[data-theme] :is(
+  h1,h2,h3,h4,h5,h6,.section-heading,.section-heading h1,.section-heading h2,
+  .section-heading h3,.world-card h3,.game-card h3,.tool-card h3,
+  .diary-room h4,.attic-drawer strong,.garden-paths-heading h4,
+  .garden-landscape-copy strong,#onlineTambayan h2,#onlineTambayan h3,
+  #onlineAccountBox strong
+){
+  color:var(--bt-text)!important;-webkit-text-fill-color:var(--bt-text)!important;
+  opacity:1!important;text-shadow:none!important
+}
+html body[data-theme] :is(
+  p,li,label,small,summary,figcaption,blockquote,.hero-text,.section-note,
+  .world-card p,.game-card p,.tool-card p,.diary-room p,.attic-drawer small,
+  .garden-intro,.garden-landscape-copy>span,.garden-spot small,
+  .garden-path-button small,.shop-season-note,.online-muted,.online-status,
+  .online-notification-settings span,.shared-spaces-intro-copy,.footer
+){
+  color:var(--bt-muted)!important;-webkit-text-fill-color:var(--bt-muted)!important;
+  opacity:1!important
+}
+html body[data-theme] :is(.eyebrow,.world-kicker,.garden-kicker){
+  color:var(--bt-text)!important;-webkit-text-fill-color:var(--bt-text)!important;
+  opacity:1!important
+}
+html body[data-theme] #onlineTambayan :is(
+  h2,h3,p,small,label,strong,.online-muted,.online-status,#onlineAccountEmailDisplay
+){
+  color:var(--bt-text)!important;-webkit-text-fill-color:var(--bt-text)!important;
+  opacity:1!important
+}
+html body[data-theme] #onlineTambayan :is(.online-muted,.online-status){
+  color:var(--bt-muted)!important;-webkit-text-fill-color:var(--bt-muted)!important
+}
+html body[data-theme] #onlineTambayan .online-message-content,
+html body[data-theme] #onlineTambayan .online-message-content *{
+  color:#fff!important;-webkit-text-fill-color:#fff!important
+}
