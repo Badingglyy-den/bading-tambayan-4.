@@ -89,7 +89,7 @@
     // so give them stable high-contrast colors instead of allowing faded text.
     const darkTheme = ["violet","rose","ocean","midnight"].includes(document.body?.dataset?.theme);
     const darkSurface = darkTheme && el.closest(
-      ".world-card, .attic-drawer, .garden-landscape, .garden-paths, .garden-feature-spots, .shop-panel, .collection-panel, .shop-item, .collection-pill"
+      ".section-heading, .world-card, .attic-drawer, .diary-random-room, .diary-room, .garden-landscape, .garden-paths, .garden-feature-spots, .shop-panel, .collection-panel, .shop-item, .collection-pill"
     );
     if (el.closest(".map-location")) {
       const mapColor = el.matches("small") ? "#eadcff" : "#ffffff";
