@@ -12,7 +12,7 @@
 .mailbox-arrival-copy{min-width:0}
 .mailbox-arrival-copy h3{margin:5px 0;font-family:Georgia,"Times New Roman",serif;font-size:21px;font-weight:500}
 .mailbox-arrival-copy p{margin:0 0 13px;color:rgba(247,240,232,.68);font-size:12px;line-height:1.6}
-.mailbox-open-btn,.mailbox-replies button{min-height:42px;padding:10px 15px;border:1px solid #d8bd94;border-radius:3px 12px 3px 12px;background:#dfc49d;color:#302438;font:700 12px inherit;cursor:pointer}
+.mailbox-open-btn,.mailbox-replies button{min-height:42px;padding:10px 15px;border:1px solid #d8bd94;border-radius:3px 12px 3px 12px;background:#dfc49d;color:#302438;font-size:12px;font-weight:700;font-family:inherit;cursor:pointer}
 .mailbox-open-btn span{margin-left:8px}
 .mailbox-letter{margin-top:17px;padding:clamp(18px,4vw,28px);border:1px solid rgba(226,194,151,.35);background:#f4ead9;color:#403346}
 .mailbox-letter[hidden],.mailbox-archive[hidden]{display:none}
