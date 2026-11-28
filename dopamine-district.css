@@ -13,3 +13,7 @@
 @keyframes dopIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}@keyframes dopBreathe{0%,100%{transform:scale(.82);box-shadow:0 0 24px #d9caff44}50%{transform:scale(1.22);box-shadow:0 0 58px #d9caff99}}
 @media(max-width:760px){.dopamine-hero-orbit{right:-75px;top:8%;opacity:.35}.dop-game-grid{grid-template-columns:1fr}.dop-focus-layout{grid-template-columns:1fr}.dop-sensory-controls{grid-template-columns:1fr}.dop-hunt-scene{grid-template-columns:repeat(4,minmax(0,1fr))}.dop-hunt-object{min-height:62px}.dopamine-door{grid-template-columns:58px minmax(0,1fr);gap:12px;padding:13px;min-height:104px}.dop-door-art{width:54px;height:54px;font-size:30px}.dop-door-arrow{grid-column:2;justify-self:start}.dop-door-copy em{font-size:12px}.dopamine-hero{padding:22px}.dopamine-hero h2{font-size:clamp(32px,10vw,48px)}}
 @media(prefers-reduced-motion:reduce){.dopamine-attraction,.dopamine-door,.dop-breath-orb{animation:none!important;transition:none!important}}
+
+/* World 09 map pin: reserve its own bottom-center position without moving existing worlds. */
+@media(min-width:601px){body .verse-map-panel .map-destinations>a.map-location.map-dopamine{left:50%!important;right:auto!important;top:auto!important;bottom:3%!important;transform:translateX(-50%)!important}}
+@media(max-width:600px){body .verse-map-panel .map-destinations>a.map-location.map-dopamine{left:50%!important;right:auto!important;top:auto!important;bottom:1%!important;transform:translateX(-50%)!important;z-index:6!important}}
