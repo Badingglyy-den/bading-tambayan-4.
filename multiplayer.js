@@ -4407,6 +4407,21 @@ $("onlinePhotoInput").addEventListener("change", async event => {
       if(error) throw error;
       input.value="";
       appendDmMessage(data);
+      // Request a background push for the other participant's registered devices.
+      try {
+        let senderEndpoint = null;
+        if ("serviceWorker" in navigator && "PushManager" in window) {
+          const registration = await navigator.serviceWorker.ready;
+          const subscription = await registration.pushManager.getSubscription();
+          senderEndpoint = subscription?.endpoint || null;
+        }
+        const { error: pushError } = await client.functions.invoke("send-dm-push", {
+          body: { dm_message_id: data.id, sender_endpoint: senderEndpoint }
+        });
+        if (pushError) console.warn("Private-message push could not be requested:", pushError);
+      } catch (pushError) {
+        console.warn("Private-message push could not be requested:", pushError);
+      }
       loadDmConversations();
     } catch(error) {
       alert(error.message||"Your message couldn't be sent.");
