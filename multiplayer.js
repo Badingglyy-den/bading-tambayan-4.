@@ -1484,13 +1484,30 @@ if (accountEmailDisplay) {
       const accountName = $("accountOpen")?.querySelector(".account-chip-name");
       if (accountName) accountName.textContent = profile.display_name || "Tambay";
       await refreshRoomList();
-      status("You're connected! Create a room or join with a code. 💜");
+      const notificationRoomId = new URLSearchParams(window.location.search).get("openRoom");
 
-            // Always show the chatroom list when the page opens.
-      saveActiveRoom(null);
-      $("onlineRoom").style.display = "none";
-      renderRoomList();
-      showWelcomeUniverse();
+      if (notificationRoomId) {
+        // Only open rooms this signed-in account is already a member of.
+        const notificationRoom = joinedRooms.find(room => String(room.id) === String(notificationRoomId));
+        window.history.replaceState({}, "", window.location.pathname + window.location.hash);
+
+        if (notificationRoom) {
+          await enterRoom(notificationRoom.id, notificationRoom.room_code, notificationRoom.room_name);
+        } else {
+          saveActiveRoom(null);
+          $("onlineRoom").style.display = "none";
+          renderRoomList();
+          showWelcomeUniverse();
+          status("That chatroom isn't available on this account.", true);
+        }
+      } else {
+        status("You're connected! Create a room or join with a code. 💜");
+        // Normal visits continue to show the chatroom list.
+        saveActiveRoom(null);
+        $("onlineRoom").style.display = "none";
+        renderRoomList();
+        showWelcomeUniverse();
+      }
     } catch (error) {
       console.error("Online Tambayan initialization failed:", error);
       const message = error.message || "Could not connect to Online Tambayan. Please refresh.";
