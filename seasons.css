@@ -1,0 +1,38 @@
+/* The Changing Seasons — an atmospheric layer, separate from player progress. */
+.season-calendar{position:relative;overflow:hidden;padding:clamp(20px,3vw,32px);margin:0 0 18px;background:
+  radial-gradient(circle at 92% 8%,color-mix(in srgb,var(--season-accent,#b9d9b4) 17%,transparent),transparent 34%),
+  linear-gradient(145deg,var(--panel),color-mix(in srgb,var(--panel),#080612 18%));}
+.season-calendar-top{display:flex;align-items:flex-start;justify-content:space-between;gap:18px}
+.season-calendar-top h2{font-size:clamp(23px,3vw,30px);letter-spacing:-.7px;margin:0}
+.season-calendar-intro{max-width:610px;color:var(--muted);font-size:13px;line-height:1.65;margin:9px 0 0}
+.season-current-mark{width:66px;height:66px;flex:0 0 66px;border-radius:22px;display:grid;place-items:center;background:color-mix(in srgb,var(--season-accent,#b9d9b4) 16%,transparent);border:1px solid color-mix(in srgb,var(--season-accent,#b9d9b4) 35%,transparent);font-size:32px}
+.season-now{display:flex;align-items:center;justify-content:space-between;gap:18px;margin-top:22px;padding:20px;border-radius:17px;background:color-mix(in srgb,var(--season-accent,#b9d9b4) 9%,transparent);border:1px solid color-mix(in srgb,var(--season-accent,#b9d9b4) 24%,var(--line))}
+.season-now-label{font-size:9px;letter-spacing:1.8px;font-weight:800;color:var(--season-accent,var(--accent))}
+.season-now h3{font-size:25px;margin:5px 0}
+.season-now p{margin:0;color:var(--muted);font-size:12px;line-height:1.5}
+.season-countdown{min-width:130px;text-align:right;display:grid;gap:5px}
+.season-countdown strong{font-size:11px;letter-spacing:1px;color:var(--season-accent,var(--accent))}
+.season-countdown span{font-size:11px;line-height:1.45;color:var(--muted)}
+.season-progress-track{height:5px;margin:13px 2px 18px;border-radius:20px;background:#ffffff17;overflow:hidden}
+.season-progress-track span{display:block;height:100%;width:0;border-radius:20px;background:var(--season-accent,var(--accent));transition:width .4s ease}
+.season-cycle{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.season-stop{min-width:0;padding:13px 12px;border:1px solid var(--line);border-radius:13px;background:#ffffff07;display:grid;gap:5px;transition:border-color .2s,background .2s}
+.season-stop>span{font-size:21px}
+.season-stop b{font-size:12px}
+.season-stop small{font-size:10px;color:var(--muted)}
+.season-stop.is-current{border-color:color-mix(in srgb,var(--season-accent,#b9d9b4) 65%,var(--line));background:color-mix(in srgb,var(--season-accent,#b9d9b4) 11%,transparent)}
+.season-stop.is-current b{color:var(--season-accent,var(--accent))}
+.season-calendar-footnote{font-size:10px;line-height:1.6;color:var(--muted);margin:15px 0 0}
+body[data-season="bloomtide"]{--season-accent:#a9d8a8}
+body[data-season="suncrest"]{--season-accent:#f2c879}
+body[data-season="leafwhisper"]{--season-accent:#d99a68}
+body[data-season="frostveil"]{--season-accent:#a9cce9}
+@media(max-width:560px){
+ .season-calendar{padding:18px;border-radius:18px}
+ .season-current-mark{width:52px;height:52px;flex-basis:52px;border-radius:17px;font-size:26px}
+ .season-now{align-items:flex-start;flex-direction:column;padding:16px;gap:12px}
+ .season-countdown{text-align:left;min-width:0}
+ .season-cycle{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+ .season-stop{padding:12px}
+}
+@media(prefers-reduced-motion:reduce){.season-progress-track span{transition:none}}
