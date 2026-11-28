@@ -4186,6 +4186,13 @@ $("onlinePhotoInput").addEventListener("change", async event => {
     .bt-dm-time{display:block;margin-top:4px;font-size:10px;opacity:.7;text-align:right}
     .bt-dm-tools{display:flex;align-items:center;gap:12px;padding:7px 10px 0;color:#f7efff}
     .bt-dm-tools label,.bt-dm-tools button{border:0;background:#bd8cff;color:#241532;border-radius:10px;padding:8px 11px;font-size:18px;min-width:42px;min-height:42px;display:inline-flex;align-items:center;justify-content:center}
+    .bt-dm-voice-preview{padding:9px 11px;background:#302342;border-top:1px solid #755d8d}
+    .bt-dm-voice-preview[hidden]{display:none!important}
+    .bt-dm-voice-preview audio{display:block;width:100%;max-width:100%;height:38px}
+    .bt-dm-voice-preview>div{display:flex;justify-content:flex-end;gap:8px;margin-top:8px}
+    .bt-dm-voice-preview button{border:0;border-radius:9px;padding:8px 12px;font:600 13px inherit}
+    #btDmVoiceDiscard{background:#51445f;color:#fff}
+    #btDmVoiceSend{background:#bd8cff;color:#241532}
     .bt-dm-emoji{display:flex;gap:5px;overflow-x:auto;padding:6px 10px}
     .bt-dm-emoji[hidden]{display:none!important}
     .bt-dm-emoji button{border:0;background:#40334f;border-radius:8px;padding:5px;font-size:17px}
