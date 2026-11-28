@@ -2583,7 +2583,7 @@ $("gateSignup").onclick = () => {
     }
   };
     // ONLINE TAMBAYAN — BROWSER NOTIFICATION PERMISSION
-  const PUSH_VAPID_PUBLIC_KEY = "BF9o195HZzS5liCfgNflqm3a_aj05nMTmQPdknLh48GIUiPWpnHjXGTmIkYP2VTFZgizAHQMCW-Hob2QCWpx1bc";
+  const PUSH_VAPID_PUBLIC_KEY = "BLYoZPrXQiPTJClseK0NsuZItBrIRkDtwgcEBg_wRnyigV1eE7YWMP0GPy0NvLotC4Zj4c6aTDhi0RpOxPgR2_s";
 
   function base64UrlToBytes(value) {
     const padding = "=".repeat((4 - value.length % 4) % 4);
