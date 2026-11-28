@@ -1,4 +1,4 @@
-const CACHE_NAME = "bading-tambayan-shell-v1";
+const CACHE_NAME = "bading-tambayan-shell-v2";
 const APP_SHELL = ["./", "./index.html", "./manifest.webmanifest", "./app-icon.svg"];
 
 self.addEventListener("install", event => {
@@ -57,14 +57,39 @@ self.addEventListener("fetch", event => {
   }
 });
 
+self.addEventListener("push", event => {
+  let payload = {};
+  try {
+    payload = event.data ? event.data.json() : {};
+  } catch (_) {
+    payload = { body: event.data?.text() || "You have a new chat message." };
+  }
+
+  const title = payload.title || "Bading Tambayan";
+  const options = {
+    body: payload.body || "You have a new message.",
+    icon: "./app-icon.svg",
+    badge: "./app-icon.svg",
+    tag: payload.roomId ? "tambayan-room-" + payload.roomId : "tambayan-chat",
+    renotify: true,
+    data: { roomId: payload.roomId || null, url: payload.url || "./" }
+  };
+
+  event.waitUntil(self.registration.showNotification(title, options));
+});
+
 self.addEventListener("notificationclick", event => {
   event.notification.close();
+  const targetUrl = new URL(event.notification.data?.url || "./", self.location.origin).href;
   event.waitUntil(
-    self.clients.matchAll({ type: "window", includeUncontrolled: true }).then(clients => {
+    self.clients.matchAll({ type: "window", includeUncontrolled: true }).then(async clients => {
       for (const client of clients) {
-        if ("focus" in client) return client.focus();
+        if ("focus" in client) {
+          if ("navigate" in client) await client.navigate(targetUrl);
+          return client.focus();
+        }
       }
-      return self.clients.openWindow("./");
+      return self.clients.openWindow(targetUrl);
     })
   );
 });
