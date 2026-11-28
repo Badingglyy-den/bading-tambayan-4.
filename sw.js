@@ -1,4 +1,4 @@
-const CACHE_NAME = "bading-tambayan-shell-v8";
+const CACHE_NAME = "bading-tambayan-shell-v9";
 const APP_SHELL = ["./", "./index.html", "./manifest.webmanifest", "./app-icon.svg"];
 
 self.addEventListener("install", event => {
