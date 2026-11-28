@@ -35,6 +35,7 @@
   <link rel="stylesheet" href="style.css?v=20261128-headeravatar2">
   <link rel="stylesheet" href="homepage-redesign.css?v=mobile-profile-3">
   <link rel="stylesheet" href="community-garden.css?v=1">
+  <link rel="stylesheet" href="cosmic-frontier.css?v=1">
   <style id="tambayanverse-map-desktop-fix">
 @media (min-width: 601px) {
 
@@ -590,11 +591,12 @@
       <a class="world-card diary" href="#diary"><span class="world-icon">📔</span><span class="world-kicker">WORLD 05</span><h3>The Confession Room</h3><p>Letters, journal entries, and memory keeping.</p><b>Enter world ↗</b></a>
       <a class="world-card community" href="#hangout"><span class="world-icon">🌟</span><span class="world-kicker">WORLD 06</span><h3>Tambayan Lounge</h3><p>Games, daily activities, discoveries, and community spaces.</p><b>Enter world ↗</b></a>
       <a class="world-card rage" href="#rageRoom"><span class="world-icon">🔥</span><span class="world-kicker">WORLD 07</span><h3>The Rage Room</h3><p>Smash virtual plates, pin the doll, punch it out, and release the pressure.</p><b>Enter world ↗</b></a>
+      <a class="world-card cosmic" href="#cosmicFrontier"><span class="world-icon">🚀</span><span class="world-kicker">WORLD 08</span><h3>The Cosmic Frontier</h3><p>Explore distant planets, discover alien life and begin your cosmic missions.</p><b>Launch expedition ↗</b></a>
     </section>
     
     <section class="section-heading" id="verse-map">
       <div>
-        <p class="eyebrow">YOUR UNIVERSE · SEVEN PLACES TO EXPLORE</p>
+        <p class="eyebrow">YOUR UNIVERSE · EIGHT PLACES TO EXPLORE</p>
         <h2>The Tambayanverse Map</h2>
       </div>
       <span class="section-note">Choose a destination and wander ✦</span>
@@ -653,6 +655,7 @@
           </a>
 
           <a class="map-location map-rage" href="#rageRoom"><span>🔥</span><strong>Rage Room</strong><small>World 07</small></a>
+          <a class="map-location map-cosmic" href="#cosmicFrontier"><span>🚀</span><strong>Cosmic Frontier</strong><small>World 08</small></a>
         </div>
       </div>
       <p class="map-caption">Every little world has a story. Which one will you visit?</p>
@@ -1407,6 +1410,42 @@
       </div>
     </section>
 
+ 
+    <section id="cosmicFrontier" aria-labelledby="cosmicFrontierTitle">
+      <div class="cosmic-shell">
+        <header class="cosmic-hero">
+          <a class="cosmic-back" href="#home">← Back to worlds</a>
+          <div class="cosmic-hero-copy">
+            <p class="cosmic-kicker">WORLD 08 · DEEP SPACE EXPEDITION</p>
+            <h2 id="cosmicFrontierTitle">THE COSMIC FRONTIER</h2>
+            <p>Your next discovery is somewhere out there. Board the ship, choose a destination and begin exploring the unknown.</p>
+            <div class="cosmic-hero-stats"><span><b>04</b><small>DESTINATIONS</small></span><span><b>∞</b><small>TO DISCOVER</small></span><span><b>01</b><small>NEW EXPEDITION</small></span></div>
+          </div>
+          <div class="cosmic-orbital-art" aria-hidden="true"><span class="cosmic-orbit orbit-a"></span><span class="cosmic-orbit orbit-b"></span><span class="cosmic-planet planet-main">🪐</span><span class="cosmic-moon moon-a">🌙</span><span class="cosmic-moon moon-b">✦</span></div>
+        </header>
+
+        <section class="cosmic-command" aria-label="Space hub">
+          <div class="cosmic-command-top"><div><p class="cosmic-kicker">YOUR SHIP · COMMAND DECK</p><h3>Welcome aboard, explorer.</h3></div><span class="cosmic-ship-status"><i></i> SYSTEMS ONLINE</span></div>
+          <div class="cosmic-command-grid">
+            <div class="cosmic-window"><div class="cosmic-window-stars">✦　·　✧　　·　✦</div><div class="cosmic-window-planet">🌌</div><strong>THE UNCHARTED</strong><small>There is a whole universe waiting.</small></div>
+            <div class="cosmic-briefing"><span class="cosmic-label">MISSION BRIEFING</span><h4 id="cosmicMissionTitle">Your first expedition awaits</h4><p id="cosmicMissionText">Choose one of the four destinations below. Each planet has its own environment and discoveries to uncover.</p><div class="cosmic-briefing-foot"><span id="cosmicSelectedPlanet">DESTINATION: NOT SELECTED</span><span>✦ FRONTIER LOG</span></div></div>
+          </div>
+        </section>
+
+        <section class="cosmic-destinations" aria-labelledby="cosmicDestinationsTitle">
+          <div class="cosmic-section-heading"><div><p class="cosmic-kicker">CHART YOUR COURSE</p><h3 id="cosmicDestinationsTitle">Choose a planet</h3><p>Select a destination to view its expedition briefing.</p></div><span class="cosmic-destination-count">01 — 04</span></div>
+          <div class="cosmic-planet-grid">
+            <button class="cosmic-planet-card lunara" type="button" data-cosmic-planet="lunara" aria-pressed="false"><span class="cosmic-planet-art">💎</span><span class="cosmic-planet-tag">CRYSTAL WORLD</span><strong>Lunara</strong><small>Glowing forests · Crystal caves</small><b>View destination ↗</b></button>
+            <button class="cosmic-planet-card verdantia" type="button" data-cosmic-planet="verdantia" aria-pressed="false"><span class="cosmic-planet-art">🌿</span><span class="cosmic-planet-tag">LIVING WORLD</span><strong>Verdantia</strong><small>Ancient jungle · Strange life</small><b>View destination ↗</b></button>
+            <button class="cosmic-planet-card solara" type="button" data-cosmic-planet="solara" aria-pressed="false"><span class="cosmic-planet-art">☀️</span><span class="cosmic-planet-tag">DESERT WORLD</span><strong>Solara</strong><small>Golden dunes · Buried ruins</small><b>View destination ↗</b></button>
+            <button class="cosmic-planet-card cryon" type="button" data-cosmic-planet="cryon" aria-pressed="false"><span class="cosmic-planet-art">❄️</span><span class="cosmic-planet-tag">FROZEN WORLD</span><strong>Cryon</strong><small>Glacial seas · Aurora skies</small><b>View destination ↗</b></button>
+          </div>
+          <p class="cosmic-selection-status" id="cosmicSelectionStatus" aria-live="polite">No destination selected yet. Choose a planet to prepare your expedition.</p>
+        </section>
+        <footer class="cosmic-footer">THE FRONTIER IS YOURS TO DISCOVER <span>✦</span> TAKE NOTHING BUT MEMORIES</footer>
+      </div>
+    </section>
+
     <section id="rageRoom" aria-labelledby="rageRoomTitle">
       <div class="rage-shell">
         <header class="rage-hero">
@@ -1616,6 +1655,7 @@
   <!-- Online multiplayer module -->
   <script src="multiplayer.js?v=20261128-dm-voice-preview2"></script>
   <script src="rage-room.js?v=2"></script>
+  <script src="cosmic-frontier.js?v=1"></script>
   <!-- Public Community module -->
   <script src="community.js?v=20261128-publicfeed1"></script>
   <script src="kindness.js?v=2"></script>
