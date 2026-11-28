@@ -1870,9 +1870,24 @@ if (accountEmailDisplay) {
       if (accountName) accountName.textContent = profile.display_name || "Tambay";
       await refreshRoomList();
       await initializeDirectMessages();
-      const notificationRoomId = new URLSearchParams(window.location.search).get("openRoom");
+      const notificationParams = new URLSearchParams(window.location.search);
+      const notificationDmId = notificationParams.get("openDm");
+      const notificationRoomId = notificationParams.get("openRoom");
 
-      if (notificationRoomId) {
+      if (notificationDmId) {
+        // Remove the one-time deep link so refreshes do not reopen the same chat.
+        window.history.replaceState({}, "", window.location.pathname + window.location.hash);
+        const dmPeer = dmConversations.get(notificationDmId);
+        if (dmPeer) {
+          await openDmConversation(notificationDmId);
+          status("Opened your private conversation. 💜");
+        } else {
+          $("btDmPanel").hidden = false;
+          await loadDmDirectory();
+          showWelcomeUniverse();
+          status("That private conversation isn't available on this account. Your inbox is open.", true);
+        }
+      } else if (notificationRoomId) {
         // Only open rooms this signed-in account is already a member of.
         const notificationRoom = joinedRooms.find(room => String(room.id) === String(notificationRoomId));
         window.history.replaceState({}, "", window.location.pathname + window.location.hash);
