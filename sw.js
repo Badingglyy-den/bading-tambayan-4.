@@ -1,4 +1,4 @@
-const CACHE_NAME = "bading-tambayan-shell-v4";
+const CACHE_NAME = "bading-tambayan-shell-v5";
 const APP_SHELL = ["./", "./index.html", "./manifest.webmanifest", "./app-icon.svg"];
 
 self.addEventListener("install", event => {
@@ -82,24 +82,48 @@ self.addEventListener("notificationclick", event => {
   event.notification.close();
 
   const data = event.notification.data || {};
-  const target = new URL(data.url || "./", self.location.origin);
+  const appScope = self.registration.scope;
+  let target;
 
-  // Some in-app background notifications only carry roomId.
-  // Convert that into the same deep-link parameter used by push notifications.
+  try {
+    // Resolve relative links against the installed app path, not the domain root.
+    target = new URL(data.url || appScope, appScope);
+  } catch (_) {
+    target = new URL(appScope);
+  }
+
+  // Never let notification data send the app outside its own installed path.
+  const scopeUrl = new URL(appScope);
+  if (target.origin !== scopeUrl.origin || !target.pathname.startsWith(scopeUrl.pathname)) {
+    target = new URL(appScope);
+  }
+
+  // Room ID is authoritative and works even when a notification has no URL.
   if (data.roomId) {
     target.searchParams.set("openRoom", String(data.roomId));
   }
 
   const targetUrl = target.href;
-  event.waitUntil(
-    self.clients.matchAll({ type: "window", includeUncontrolled: true }).then(async clients => {
-      for (const client of clients) {
-        if (client.url.startsWith(self.location.origin) && "focus" in client) {
-          if ("navigate" in client) await client.navigate(targetUrl);
-          return client.focus();
+  event.waitUntil((async () => {
+    const clients = await self.clients.matchAll({ type: "window", includeUncontrolled: true });
+
+    for (const client of clients) {
+      if (client.url.startsWith(appScope) && "focus" in client) {
+        try {
+          if ("navigate" in client) {
+            const navigated = await client.navigate(targetUrl);
+            if (navigated) {
+              await client.focus();
+              return;
+            }
+          }
+        } catch (_) {
+          // If navigation of an existing app window fails, open the target below.
         }
       }
-      return self.clients.openWindow(targetUrl);
-    })
-  );
+    }
+
+    // Reliable fallback for Android/iOS when an existing window cannot be navigated.
+    return self.clients.openWindow(targetUrl);
+  })());
 });
