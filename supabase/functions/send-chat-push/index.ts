@@ -19,6 +19,7 @@ Deno.serve(async (request) => {
     const publicKey = Deno.env.get("VAPID_PUBLIC_KEY")!;
     const privateKey = Deno.env.get("VAPID_PRIVATE_KEY")!;
     const subject = Deno.env.get("VAPID_SUBJECT") || "https://badingglyy-den.github.io/bading-tambayan-4./";
+    const admin = createClient(supabaseUrl, serviceKey);
     const authHeader = request.headers.get("Authorization") || "";
     const tokenMatch = authHeader.match(/^Bearer\s+(.+)$/i);
     if (!tokenMatch) {
