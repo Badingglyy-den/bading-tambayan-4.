@@ -256,7 +256,7 @@
   <link rel="stylesheet" href="desktop-layout-fix.css?v=20261128-touchmobile2">
   <link rel="stylesheet" href="sitewide-theme-system.css?v=20261128-theme2">
   <link rel="stylesheet" href="adaptive-screen-fit.css?v=20261128-1">
-  <link rel="stylesheet" href="rage-room.css?v=1">
+  <link rel="stylesheet" href="rage-room.css?v=2">
 </head>
 <body>
   <div id="authGate" class="auth-gate">
@@ -567,11 +567,12 @@
       <a class="world-card library" href="#mystery"><span class="world-icon">🔮</span><span class="world-kicker">WORLD 04</span><h3>The Mystery Library</h3><p>Fortunes, secrets, and strange little truths.</p><b>Enter world ↗</b></a>
       <a class="world-card diary" href="#diary"><span class="world-icon">📔</span><span class="world-kicker">WORLD 05</span><h3>The Confession Room</h3><p>Letters, journal entries, and memory keeping.</p><b>Enter world ↗</b></a>
       <a class="world-card community" href="#hangout"><span class="world-icon">🌟</span><span class="world-kicker">WORLD 06</span><h3>Tambayan Lounge</h3><p>Games, daily activities, discoveries, and community spaces.</p><b>Enter world ↗</b></a>
+      <a class="world-card rage" href="#rageRoom"><span class="world-icon">🔥</span><span class="world-kicker">WORLD 07</span><h3>The Rage Room</h3><p>Smash virtual plates, pin the doll, punch it out, and release the pressure.</p><b>Enter world ↗</b></a>
     </section>
     
     <section class="section-heading" id="verse-map">
       <div>
-        <p class="eyebrow">YOUR UNIVERSE · SIX PLACES TO EXPLORE</p>
+        <p class="eyebrow">YOUR UNIVERSE · SEVEN PLACES TO EXPLORE</p>
         <h2>The Tambayanverse Map</h2>
       </div>
       <span class="section-note">Choose a destination and wander ✦</span>
@@ -635,10 +636,7 @@
       <p class="map-caption">Every little world has a story. Which one will you visit?</p>
     </section>
 
-    <section class="rage-room-map-link panel" aria-label="World 07"><div><p class="eyebrow">WORLD 07 · THE RELEASE ROOM</p><h2>🔥 Rage Room</h2><p>A judgment-free place to vent, smash virtual things, and let go.</p></div><a class="map-location" href="#rageRoom">Enter the Rage Room ↗</a></section>
-    <!-- Rage Room world -->
-    
-    <p class="rage-muted" style="text-align:center;margin:16px 0 0">A judgment-free zone · Anonymous by design · Take breaks whenever you need.</p>
+    <section <!-- Rage Room is listed as World 07 on the map above and on the homepage worlds grid. -->
   </div>
 </section>
 
@@ -1388,18 +1386,77 @@
     </section>
 
     <section id="rageRoom" aria-labelledby="rageRoomTitle">
-  <div class="rage-shell">
-    <header class="rage-hero"><p class="rage-kicker">WORLD 07 · THE RELEASE ROOM</p><h2 id="rageRoomTitle">🔥 RAGE ROOM</h2><p>Had enough? Let it out here. No judgment, no names, no real-world damage. Break things here, not yourself.</p></header>
-    <div class="rage-grid">
-      <article class="rage-card"><div class="rage-emoji">🪡</div><h3>Voodoo Corner</h3><p>Pin your frustrations to a harmless virtual doll. Each pin can stand for something you're ready to release.</p><div class="rage-stage"><div id="ragePinboard" class="rage-pinboard"><span>🧸</span></div></div><button class="rage-btn" data-pin type="button">＋ Place a pin</button><button class="rage-btn secondary" id="rageClearPins" type="button">Reset doll</button><p class="rage-status" id="ragePinStatus" aria-live="polite"></p></article>
-      <article class="rage-card"><div class="rage-emoji">💥</div><h3>Smash & Throw</h3><p>Smash virtual plates and watch the room reset. Everything here is just pixels.</p><div class="rage-stage"><div><div class="rage-target" id="rageSmashTarget">🍽️</div><strong id="rageSmashCount">0 objects smashed</strong></div></div><button class="rage-btn" id="rageSmash" type="button">💥 Smash a plate</button><p class="rage-status" id="rageSmashStatus" aria-live="polite"></p></article>
-      <article class="rage-card"><div class="rage-emoji">🥊</div><h3>Punch It Out</h3><p>Tap the bag to build a combo. Pause or stop whenever you want.</p><div class="rage-stage"><div><div class="rage-target" id="ragePunchTarget">🥊</div><strong id="ragePunchCount">0 hits</strong><div class="rage-meter"><span id="ragePunchMeter"></span></div></div></div><button class="rage-btn" id="ragePunch" type="button">🥊 Hit the bag</button><p class="rage-status" id="ragePunchStatus" aria-live="polite"></p></article>
-      <article class="rage-card"><div class="rage-emoji">📝</div><h3>Venting Wall</h3><p>Write an anonymous thought, save it privately as an unpublished draft, or let it go.</p><textarea id="rageVentInput" class="rage-field" maxlength="1200" placeholder="What's weighing on you? You can let it out here..." aria-label="Write an anonymous vent"></textarea><button class="rage-btn" id="rageSaveDraft" type="button">Save private draft</button><button class="rage-btn secondary" id="rageLetGo" type="button">🔥 Let it go</button><p class="rage-muted">Anonymous community publishing is not enabled yet. Drafts stay on this device and are not visible to anyone else.</p><div class="rage-status" id="rageVentStatus" aria-live="polite"></div><div id="rageBurnPaper" class="rage-note" hidden></div><div id="rageDraftList"></div></article>
-    </div>
-    <section class="rage-card"><div class="rage-emoji">📓</div><h3>My Private Journal</h3><p>Your notes are saved only in this browser on this device. They are not posted to the community.</p><textarea id="rageJournalInput" class="rage-field" maxlength="3000" placeholder="This space is just for you..." aria-label="Private journal entry"></textarea><button class="rage-btn" id="rageSaveJournal" type="button">🔒 Save privately</button><p class="rage-status" id="rageJournalStatus" aria-live="polite"></p><div id="rageJournalList"></div></section>
+      <div class="rage-shell">
+        <header class="rage-hero">
+          <p class="rage-kicker">WORLD 07 · THE RELEASE ROOM</p>
+          <h2 id="rageRoomTitle">🔥 RAGE ROOM</h2>
+          <p>A wide-open space to let the pressure out. Pin the doll, shatter every plate, or throw a few punches — all safely virtual, with no names and no judgment.</p>
+        </header>
 
-    </div>
-</section>
+        <div class="rage-grid">
+          <article class="rage-card rage-doll-card">
+            <div class="rage-card-heading"><div><span class="rage-emoji">🪡</span><p class="rage-kicker">01 · VOODOO CORNER</p><h3>Pin the frustration</h3></div><span class="rage-count" id="ragePinCount">0 pins</span></div>
+            <p>Tap anywhere on the doll to place a visible needle. Each pin stays exactly where you put it.</p>
+            <div class="rage-doll-stage">
+              <button id="rageDoll" class="rage-doll" type="button" aria-label="Tap the doll to place a virtual pin">
+                <span class="doll-thread"></span><span class="doll-head"><i></i><b></b><em></em></span>
+                <span class="doll-body"></span><span class="doll-arm left"></span><span class="doll-arm right"></span><span class="doll-leg left"></span><span class="doll-leg right"></span>
+                <span class="rage-needle-layer" id="ragePinboard" aria-hidden="true"></span>
+              </button>
+              <span class="rage-stage-hint">TAP THE DOLL TO PLACE A PIN</span>
+            </div>
+            <div class="rage-actions"><button class="rage-btn secondary" id="rageClearPins" type="button">↺ Reset doll</button></div>
+            <p class="rage-status" id="ragePinStatus" aria-live="polite">Your pins stay on the doll until you reset it.</p>
+          </article>
+
+          <article class="rage-card rage-punch-card">
+            <div class="rage-card-heading"><div><span class="rage-emoji">🥊</span><p class="rage-kicker">02 · PUNCH IT OUT</p><h3>Take it out on the bag</h3></div><span class="rage-count" id="ragePunchCount">0 hits</span></div>
+            <p>Tap the hanging bag as many times as you like. Watch it swing and wobble after every hit.</p>
+            <div class="rage-punch-arena">
+              <div class="rage-chain"></div>
+              <button id="ragePunchTarget" class="rage-punch-bag" type="button" aria-label="Punch the virtual hanging bag">
+                <span class="bag-seam"></span><span class="bag-mark">HIT</span>
+              </button>
+              <span class="rage-impact" id="ragePunchImpact" aria-hidden="true">POW!</span>
+              <span class="rage-stage-hint">TAP THE BAG TO PUNCH</span>
+            </div>
+            <div class="rage-meter"><span id="ragePunchMeter"></span></div>
+            <p class="rage-status" id="ragePunchStatus" aria-live="polite">Build your combo one hit at a time.</p>
+          </article>
+
+          <article class="rage-card rage-smash-card rage-wide">
+            <div class="rage-card-heading"><div><span class="rage-emoji">💥</span><p class="rage-kicker">03 · SMASH & THROW</p><h3>A whole room of plates</h3></div><span class="rage-count" id="rageSmashCount">0 / 12 smashed</span></div>
+            <p>Choose any plate. Every single one cracks and bursts into pieces when you tap it.</p>
+            <div class="rage-plate-stage">
+              <div class="rage-plate-rack" id="ragePlateRack">
+                <button class="rage-plate" type="button" data-plate="0" aria-label="Smash plate 1"><span class="plate-inner"></span><span class="plate-shards" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span></button><button class="rage-plate" type="button" data-plate="1" aria-label="Smash plate 2"><span class="plate-inner"></span><span class="plate-shards" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span></button><button class="rage-plate" type="button" data-plate="2" aria-label="Smash plate 3"><span class="plate-inner"></span><span class="plate-shards" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span></button><button class="rage-plate" type="button" data-plate="3" aria-label="Smash plate 4"><span class="plate-inner"></span><span class="plate-shards" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span></button><button class="rage-plate" type="button" data-plate="4" aria-label="Smash plate 5"><span class="plate-inner"></span><span class="plate-shards" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span></button><button class="rage-plate" type="button" data-plate="5" aria-label="Smash plate 6"><span class="plate-inner"></span><span class="plate-shards" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span></button><button class="rage-plate" type="button" data-plate="6" aria-label="Smash plate 7"><span class="plate-inner"></span><span class="plate-shards" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span></button><button class="rage-plate" type="button" data-plate="7" aria-label="Smash plate 8"><span class="plate-inner"></span><span class="plate-shards" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span></button><button class="rage-plate" type="button" data-plate="8" aria-label="Smash plate 9"><span class="plate-inner"></span><span class="plate-shards" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span></button><button class="rage-plate" type="button" data-plate="9" aria-label="Smash plate 10"><span class="plate-inner"></span><span class="plate-shards" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span></button><button class="rage-plate" type="button" data-plate="10" aria-label="Smash plate 11"><span class="plate-inner"></span><span class="plate-shards" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span></button><button class="rage-plate" type="button" data-plate="11" aria-label="Smash plate 12"><span class="plate-inner"></span><span class="plate-shards" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span></button>
+              </div>
+              <div class="rage-plate-empty" id="ragePlateEmpty" hidden>✨ All clear. The room is quiet for a moment.</div>
+            </div>
+            <div class="rage-actions"><button class="rage-btn secondary" id="rageRefillPlates" type="button" hidden>↻ Bring in more plates</button></div>
+            <p class="rage-status" id="rageSmashStatus" aria-live="polite">12 plates ready. Pick your target.</p>
+          </article>
+
+          <article class="rage-card rage-vent-card">
+            <div class="rage-card-heading"><div><span class="rage-emoji">📝</span><p class="rage-kicker">04 · VENTING WALL</p><h3>Say it, then release it</h3></div></div>
+            <p>Write it out. Save it as a private draft or watch it burn away. Nothing is published.</p>
+            <textarea id="rageVentInput" class="rage-field" maxlength="1200" placeholder="What's weighing on you? Let it out..." aria-label="Write an anonymous vent"></textarea>
+            <div class="rage-actions"><button class="rage-btn" id="rageSaveDraft" type="button">Save private draft</button><button class="rage-btn secondary" id="rageLetGo" type="button">🔥 Let it go</button></div>
+            <p class="rage-muted">Community publishing is not enabled yet. Drafts stay on this device and are not visible to anyone else.</p>
+            <p class="rage-status" id="rageVentStatus" aria-live="polite"></p><div id="rageBurnPaper" class="rage-note" hidden></div><div id="rageDraftList"></div>
+          </article>
+
+          <article class="rage-card rage-journal-card">
+            <div class="rage-card-heading"><div><span class="rage-emoji">📓</span><p class="rage-kicker">05 · JUST FOR YOU</p><h3>Private journal</h3></div></div>
+            <p>A quiet corner after the storm. Your notes are saved only in this browser on this device.</p>
+            <textarea id="rageJournalInput" class="rage-field" maxlength="3000" placeholder="This space is just for you..." aria-label="Private journal entry"></textarea>
+            <div class="rage-actions"><button class="rage-btn" id="rageSaveJournal" type="button">🔒 Save privately</button></div>
+            <p class="rage-status" id="rageJournalStatus" aria-live="polite"></p><div id="rageJournalList"></div>
+          </article>
+        </div>
+        <p class="rage-footer-note">A judgment-free zone · Anonymous by design · Take breaks whenever you need. 💜</p>
+      </div>
+    </section>
 
     <section class="section-heading"><div><p class="eyebrow">YOUR LITTLE REWARDS</p><h2>Star Shop & collectibles</h2></div><span class="section-note">Spend stars to unlock goodies.</span></section>
     <section class="shop-layout"><div class="panel shop-panel"><div class="shop-heading"><div><p class="eyebrow">THE CELESTIAL BOUTIQUE</p><h3>Star Shop</h3></div><span class="currency">⭐ <b id="shopStars">0</b></span></div><p class="shop-season-note">Collect profile treasures, rare badges, frames, and limited-feel keepsakes. Your stars stay yours until you choose to spend them.</p><div class="shop-filters" id="shopFilters"><button class="shop-filter active" data-shop-filter="All">All treasures</button><button class="shop-filter" data-shop-filter="Common">Common</button><button class="shop-filter" data-shop-filter="Rare">Rare</button><button class="shop-filter" data-shop-filter="Epic">Epic</button><button class="shop-filter" data-shop-filter="Legendary">Legendary</button></div><div id="shopGrid" class="shop-grid"></div></div><div class="panel collection-panel"><p class="eyebrow">YOUR COLLECTION</p><h3>Unlocked goodies</h3><div id="collectionList" class="collection-list"></div><div class="collection-sets-wrap"><p class="eyebrow">COLLECTOR'S QUESTS</p><h3>Complete a collection</h3><div id="collectionSets" class="collection-sets"></div></div></div></section>
@@ -1535,7 +1592,7 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <!-- Online multiplayer module -->
   <script src="multiplayer.js?v=20261128-dm-voice-preview2"></script>
-  <script src="rage-room.js?v=1"></script>
+  <script src="rage-room.js?v=2"></script>
   <!-- Public Community module -->
   <script src="community.js?v=20261128-publicfeed1"></script>
   <script src="kindness.js?v=2"></script>
