@@ -235,6 +235,7 @@
   <link rel="stylesheet" href="mystery-mailbox.css?v=1">
   <link rel="stylesheet" href="mystery-library-expansion.css?v=1">
   <link rel="stylesheet" href="diary-keepsakes.css?v=1">
+  <link rel="stylesheet" href="whats-new.css?v=1">
 </head>
 <body>
   <div id="authGate" class="auth-gate">
@@ -332,6 +333,14 @@
       <article class="stat panel"><span>BADGES</span><strong id="badgeValue">0</strong><small>Iconic achievements</small></article>
     </section>
     
+<section class="whats-new panel" id="whatsNew" aria-labelledby="whatsNewTitle">
+  <div class="whats-new-top">
+    <div><p class="whats-new-kicker">A LITTLE NOTE FROM THE UNIVERSE</p><h2 id="whatsNewTitle">What's new in the Tambayanverse?</h2><p class="whats-new-summary">Fresh little things, recent upgrades, and places worth revisiting.</p></div>
+    <button class="whats-new-action" id="whatsNewToggle" type="button" aria-expanded="false" aria-controls="whatsNewContent"><span class="whats-new-dot" id="whatsNewDot" aria-hidden="true"></span><span class="whats-new-label">See what's new</span><span aria-hidden="true">↗</span></button>
+  </div>
+  <div class="whats-new-content" id="whatsNewContent" hidden><div class="whats-new-list" id="whatsNewList"></div><p class="whats-new-foot">Updates appear here when a new release is published. Your personal progress is not affected.</p></div>
+</section>
+
 <section class="season-calendar panel" id="seasonal-calendar" aria-labelledby="seasonCalendarTitle">
   <div class="season-calendar-top">
     <div>
@@ -1475,6 +1484,7 @@
 <script src="mystery-mailbox.js?v=1"></script>
 <script src="mystery-library-expansion.js?v=1"></script>
 <script src="diary-keepsakes.js?v=1"></script>
+<script src="whats-new.js?v=1"></script>
 
 <!-- Register notification service worker -->
 <script>
