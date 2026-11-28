@@ -1320,39 +1320,39 @@
 </form>
       
               
-            <div class="online-reactions" aria-label="Quick emoji messages">
-              <button type="button" data-reaction="💜" aria-label="Send 💜" title="Send 💜">💜</button>
-              <button type="button" data-reaction="❤️" aria-label="Send ❤️" title="Send ❤️">❤️</button>
-              <button type="button" data-reaction="🩷" aria-label="Send 🩷" title="Send 🩷">🩷</button>
-              <button type="button" data-reaction="🧡" aria-label="Send 🧡" title="Send 🧡">🧡</button>
-              <button type="button" data-reaction="💛" aria-label="Send 💛" title="Send 💛">💛</button>
-              <button type="button" data-reaction="💚" aria-label="Send 💚" title="Send 💚">💚</button>
-              <button type="button" data-reaction="💙" aria-label="Send 💙" title="Send 💙">💙</button>
-              <button type="button" data-reaction="🤍" aria-label="Send 🤍" title="Send 🤍">🤍</button>
-              <button type="button" data-reaction="😂" aria-label="Send 😂" title="Send 😂">😂</button>
-              <button type="button" data-reaction="😭" aria-label="Send 😭" title="Send 😭">😭</button>
-              <button type="button" data-reaction="🥹" aria-label="Send 🥹" title="Send 🥹">🥹</button>
-              <button type="button" data-reaction="😍" aria-label="Send 😍" title="Send 😍">😍</button>
-              <button type="button" data-reaction="😘" aria-label="Send 😘" title="Send 😘">😘</button>
-              <button type="button" data-reaction="🫶" aria-label="Send 🫶" title="Send 🫶">🫶</button>
-              <button type="button" data-reaction="👏" aria-label="Send 👏" title="Send 👏">👏</button>
-              <button type="button" data-reaction="🙌" aria-label="Send 🙌" title="Send 🙌">🙌</button>
-              <button type="button" data-reaction="🔥" aria-label="Send 🔥" title="Send 🔥">🔥</button>
-              <button type="button" data-reaction="💀" aria-label="Send 💀" title="Send 💀">💀</button>
-              <button type="button" data-reaction="🤡" aria-label="Send 🤡" title="Send 🤡">🤡</button>
-              <button type="button" data-reaction="🙄" aria-label="Send 🙄" title="Send 🙄">🙄</button>
-              <button type="button" data-reaction="👀" aria-label="Send 👀" title="Send 👀">👀</button>
-              <button type="button" data-reaction="😎" aria-label="Send 😎" title="Send 😎">😎</button>
-              <button type="button" data-reaction="🤔" aria-label="Send 🤔" title="Send 🤔">🤔</button>
-              <button type="button" data-reaction="😤" aria-label="Send 😤" title="Send 😤">😤</button>
-              <button type="button" data-reaction="🙏" aria-label="Send 🙏" title="Send 🙏">🙏</button>
-              <button type="button" data-reaction="💯" aria-label="Send 💯" title="Send 💯">💯</button>
-              <button type="button" data-reaction="🎉" aria-label="Send 🎉" title="Send 🎉">🎉</button>
-              <button type="button" data-reaction="🥳" aria-label="Send 🥳" title="Send 🥳">🥳</button>
-              <button type="button" data-reaction="✨" aria-label="Send ✨" title="Send ✨">✨</button>
-              <button type="button" data-reaction="🌈" aria-label="Send 🌈" title="Send 🌈">🌈</button>
-              <button type="button" data-reaction="☕" aria-label="Send ☕" title="Send ☕">☕</button>
-              <button type="button" data-reaction="🍿" aria-label="Send 🍿" title="Send 🍿">🍿</button>
+            <div class="online-reactions" aria-label="Insert an emoji into your message">
+              <button type="button" data-reaction="💜" aria-label="Insert 💜" title="Insert 💜">💜</button>
+              <button type="button" data-reaction="❤️" aria-label="Insert ❤️" title="Insert ❤️">❤️</button>
+              <button type="button" data-reaction="🩷" aria-label="Insert 🩷" title="Insert 🩷">🩷</button>
+              <button type="button" data-reaction="🧡" aria-label="Insert 🧡" title="Insert 🧡">🧡</button>
+              <button type="button" data-reaction="💛" aria-label="Insert 💛" title="Insert 💛">💛</button>
+              <button type="button" data-reaction="💚" aria-label="Insert 💚" title="Insert 💚">💚</button>
+              <button type="button" data-reaction="💙" aria-label="Insert 💙" title="Insert 💙">💙</button>
+              <button type="button" data-reaction="🤍" aria-label="Insert 🤍" title="Insert 🤍">🤍</button>
+              <button type="button" data-reaction="😂" aria-label="Insert 😂" title="Insert 😂">😂</button>
+              <button type="button" data-reaction="😭" aria-label="Insert 😭" title="Insert 😭">😭</button>
+              <button type="button" data-reaction="🥹" aria-label="Insert 🥹" title="Insert 🥹">🥹</button>
+              <button type="button" data-reaction="😍" aria-label="Insert 😍" title="Insert 😍">😍</button>
+              <button type="button" data-reaction="😘" aria-label="Insert 😘" title="Insert 😘">😘</button>
+              <button type="button" data-reaction="🫶" aria-label="Insert 🫶" title="Insert 🫶">🫶</button>
+              <button type="button" data-reaction="👏" aria-label="Insert 👏" title="Insert 👏">👏</button>
+              <button type="button" data-reaction="🙌" aria-label="Insert 🙌" title="Insert 🙌">🙌</button>
+              <button type="button" data-reaction="🔥" aria-label="Insert 🔥" title="Insert 🔥">🔥</button>
+              <button type="button" data-reaction="💀" aria-label="Insert 💀" title="Insert 💀">💀</button>
+              <button type="button" data-reaction="🤡" aria-label="Insert 🤡" title="Insert 🤡">🤡</button>
+              <button type="button" data-reaction="🙄" aria-label="Insert 🙄" title="Insert 🙄">🙄</button>
+              <button type="button" data-reaction="👀" aria-label="Insert 👀" title="Insert 👀">👀</button>
+              <button type="button" data-reaction="😎" aria-label="Insert 😎" title="Insert 😎">😎</button>
+              <button type="button" data-reaction="🤔" aria-label="Insert 🤔" title="Insert 🤔">🤔</button>
+              <button type="button" data-reaction="😤" aria-label="Insert 😤" title="Insert 😤">😤</button>
+              <button type="button" data-reaction="🙏" aria-label="Insert 🙏" title="Insert 🙏">🙏</button>
+              <button type="button" data-reaction="💯" aria-label="Insert 💯" title="Insert 💯">💯</button>
+              <button type="button" data-reaction="🎉" aria-label="Insert 🎉" title="Insert 🎉">🎉</button>
+              <button type="button" data-reaction="🥳" aria-label="Insert 🥳" title="Insert 🥳">🥳</button>
+              <button type="button" data-reaction="✨" aria-label="Insert ✨" title="Insert ✨">✨</button>
+              <button type="button" data-reaction="🌈" aria-label="Insert 🌈" title="Insert 🌈">🌈</button>
+              <button type="button" data-reaction="☕" aria-label="Insert ☕" title="Insert ☕">☕</button>
+              <button type="button" data-reaction="🍿" aria-label="Insert 🍿" title="Insert 🍿">🍿</button>
             </div>
           </div>
           <div class="online-box">
@@ -2927,9 +2927,19 @@ $("onlinePhotoInput").addEventListener("change", async event => {
   };
 
   section.querySelectorAll("[data-reaction]").forEach(button => {
-    button.onclick = async () => {
-      try { await sendMessage(button.dataset.reaction); }
-      catch (error) { status(error.message || "Reaction couldn't be sent.", true); }
+    button.onclick = () => {
+      const input = $("onlineMessageInput");
+      if (!input) return;
+      const emoji = button.dataset.reaction || "";
+      const start = Number.isInteger(input.selectionStart) ? input.selectionStart : input.value.length;
+      const end = Number.isInteger(input.selectionEnd) ? input.selectionEnd : input.value.length;
+      const before = input.value.slice(0, start);
+      const after = input.value.slice(end);
+      input.value = before + emoji + after;
+      const cursor = start + emoji.length;
+      input.focus();
+      input.setSelectionRange(cursor, cursor);
+      input.dispatchEvent(new Event("input", { bubbles: true }));
     };
   });
 
