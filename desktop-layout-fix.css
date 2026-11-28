@@ -1,9 +1,10 @@
 /* Desktop alignment and centered authentication — Bading Tambayan */
 @media (min-width: 901px) {
 
-  /* Center the entire Tambayan Lounge view, not just its inner cards. */
-  #view-community {
-    display: block;
+  /* The real Lounge is anchored by #hangout and .hangout-layout.
+     Keep the complete Lounge and every section on one centered desktop column. */
+  #hangout,
+  .hangout-layout {
     box-sizing: border-box;
     width: min(1280px, calc(100vw - 80px)) !important;
     max-width: 1280px !important;
@@ -11,40 +12,46 @@
     margin-right: auto !important;
   }
 
-  #view-community > .section-heading,
-  #view-community .hangout-layout,
-  #view-community .lounge-hub,
-  #view-community .lounge-welcome,
-  #view-community .lounge-section,
-  #view-community #publicCommunity,
-  #view-community #onlineTambayan {
+  .hangout-layout {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) !important;
+    justify-items: stretch;
+    align-items: stretch;
+    gap: 20px;
+  }
+
+  .hangout-layout > *,
+  .hangout-layout .lounge-section,
+  .hangout-layout .lounge-welcome,
+  .hangout-layout #publicCommunity,
+  .hangout-layout #onlineTambayan {
+    box-sizing: border-box;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0;
+    margin-left: auto !important;
+    margin-right: auto !important;
+  }
+
+  /* Keep the live chat centered and full-width within the Lounge column. */
+  #onlineTambayan {
+    display: block;
+    position: relative;
+    left: auto !important;
+    right: auto !important;
+    float: none !important;
+    width: min(1280px, calc(100vw - 80px)) !important;
+    max-width: 1280px !important;
+    margin: 30px auto 44px !important;
+  }
+
+  #onlineTambayan .online-panel,
+  #onlineTambayan .online-room {
     box-sizing: border-box;
     width: 100% !important;
     max-width: 100% !important;
     margin-left: auto !important;
     margin-right: auto !important;
-  }
-
-  #view-community .hangout-layout {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr);
-    justify-items: stretch;
-  }
-
-  #view-community .lounge-hub-grid {
-    width: 100%;
-  }
-
-  /* Keep the live chat panel centered at the same width as the Lounge. */
-  #view-community #onlineTambayan {
-    position: relative;
-    left: auto !important;
-    right: auto !important;
-    float: none !important;
-    justify-self: stretch;
-    align-self: stretch;
-    margin-top: 24px !important;
-    margin-bottom: 44px !important;
   }
 
   body {
