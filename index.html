@@ -290,9 +290,14 @@
   }
 }
 @media (max-width:600px){
+  /* Keep World 08 and World 07 perfectly aligned on one row. */
   body .verse-map-panel .map-sky{min-height:700px!important;}
   body .verse-map-panel .map-destinations > a.map-location.map-cosmic{
     top:23%!important;left:4%!important;right:auto!important;bottom:auto!important;
+    transform:none!important;z-index:5!important;
+  }
+  body .verse-map-panel .map-destinations > a.map-location.map-rage{
+    top:23%!important;left:auto!important;right:4%!important;bottom:auto!important;
     transform:none!important;z-index:5!important;
   }
 }
