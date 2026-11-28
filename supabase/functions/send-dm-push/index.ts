@@ -71,7 +71,7 @@ Deno.serve(async (request) => {
       body: preview || "You received a private message.",
       messageId: String(message.id),
       conversationId: String(message.conversation_id),
-      url: subject
+      url: "https://badingglyy-den.github.io/bading-tambayan-4./"
     });
 
     let sent = 0;
