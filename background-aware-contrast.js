@@ -84,9 +84,24 @@
     if (el.isContentEditable || el.closest("[contenteditable='true']")) return;
     if (!hasOwnText(el)) return;
 
-    const color=chooseForeground(el);
-    setImportant(el,"color",color);
-    setImportant(el,"-webkit-text-fill-color",color);
+    if (!hasOwnText(el)) return;
+
+    // These interface elements sit on deliberately dark, layered surfaces.
+    // Their ancestor gradients can confuse the generic background sampler,
+    // so give them stable high-contrast colors instead of allowing faded text.
+    if (el.closest(".map-location")) {
+      const mapColor = el.matches("small") ? "#eadcff" : "#ffffff";
+      setImportant(el,"color",mapColor);
+      setImportant(el,"-webkit-text-fill-color",mapColor);
+    } else if (el.matches("#starCount, #shopStars, .star-wallet b, .account-chip-name")) {
+      const hudColor = el.matches(".account-chip-name") ? "#ffffff" : "#fff2c9";
+      setImportant(el,"color",hudColor);
+      setImportant(el,"-webkit-text-fill-color",hudColor);
+    } else {
+      const color=chooseForeground(el);
+      setImportant(el,"color",color);
+      setImportant(el,"-webkit-text-fill-color",color);
+    }
 
     // Some legacy world styles fade the text element itself with opacity.
     // Restore readability without changing disabled-control states.
