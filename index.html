@@ -10,6 +10,7 @@
   <title>Bading Tambayan 4.2 — The Tambayanverse</title>
   <link rel="stylesheet" href="style.css?v=20261128-polish1">
   <link rel="stylesheet" href="homepage-redesign.css?v=20261128-welcome1">
+  <link rel="stylesheet" href="community-garden.css?v=1">
   <style id="tambayanverse-map-desktop-fix">
 @media (min-width: 601px) {
 
@@ -1200,24 +1201,73 @@
         </div>
       </div>
 
-      <div class="lounge-section lounge-community-garden">
-        <p class="eyebrow">02 · COMMUNITY GARDEN</p>
-        <h3>Grow Together</h3>
-        <div class="tool-grid">
-          <article class="tool-card panel">
-            <span>📊</span>
-            <h3>Daily Poll</h3>
-            <p>Share your vote and see what everyone thinks.</p>
-            <button class="small-btn" type="button" disabled>Coming soon</button>
-          </article>
-          <article class="tool-card panel">
-            <span>🌷</span>
-            <h3>Mood Garden</h3>
-            <p>Plant a flower that represents your mood today.</p>
-            <button class="small-btn" type="button" disabled>Coming soon</button>
-          </article>
+      <section class="lounge-section lounge-community-garden" id="communityGarden">
+        <div class="garden-heading">
+          <p class="eyebrow">02 · COMMUNITY GARDEN</p>
+          <h3>Grow Together</h3>
+          <p class="garden-intro">A little corner to check in, leave something kind, and watch your small moments bloom.</p>
         </div>
-      </div>
+
+        <div class="garden-hub" id="gardenHub">
+          <div class="garden-landscape" aria-label="A little garden with flowers and a winding path">
+            <div class="garden-landscape-sky"><span>☀️</span><span>🦋</span><span>☁️</span></div>
+            <div class="garden-landscape-copy">
+              <span class="garden-kicker">YOUR TAMBAYAN GARDEN</span>
+              <strong>Take a breath.<br>See what's growing.</strong>
+              <span>There is always room for one more little bloom.</span>
+            </div>
+            <div class="garden-landscape-ground" aria-hidden="true"><span>🌷</span><span>🌼</span><span>🌿</span><span>🌻</span><span>🪻</span></div>
+          </div>
+
+          <div class="garden-feature-spots" aria-label="Main garden destinations">
+            <button class="garden-spot garden-spot-featured" type="button" data-garden-open="poll">
+              <span class="garden-spot-icon">📊</span>
+              <span class="garden-spot-copy"><strong>Daily Poll</strong><small>Cast your vote and see the community results.</small></span>
+              <span class="garden-spot-arrow" aria-hidden="true">↗</span>
+            </button>
+            <button class="garden-spot garden-spot-featured" type="button" data-garden-open="mood">
+              <span class="garden-spot-icon">🌷</span>
+              <span class="garden-spot-copy"><strong>Mood Garden</strong><small>Plant the flower that matches your day.</small></span>
+              <span class="garden-spot-arrow" aria-hidden="true">↗</span>
+            </button>
+          </div>
+
+          <div class="garden-paths">
+            <div class="garden-paths-heading">
+              <div><span class="garden-kicker">FOLLOW A LITTLE PATH</span><h4>More places to wander</h4></div>
+              <span aria-hidden="true">✿</span>
+            </div>
+            <button class="garden-path-toggle" id="gardenPathsToggle" type="button" aria-expanded="false" aria-controls="gardenExtraPaths">
+              <span>Explore 5 more garden spots</span><span class="garden-toggle-mark" aria-hidden="true">＋</span>
+            </button>
+            <div class="garden-extra-paths" id="gardenExtraPaths" hidden>
+              <button class="garden-path-button" type="button" data-garden-open="wishes"><span>🌳</span><span><strong>Wish Tree</strong><small>Leave a hope among the branches.</small></span><b>↗</b></button>
+              <button class="garden-path-button" type="button" data-garden-open="acts"><span>🌱</span><span><strong>Little Acts, Big Blooms</strong><small>Try one small kindness today.</small></span><b>↗</b></button>
+              <button class="garden-path-button" type="button" data-garden-open="notes"><span>💌</span><span><strong>Garden Notes</strong><small>Write a gentle reminder or kind note.</small></span><b>↗</b></button>
+              <button class="garden-path-button" type="button" data-garden-open="fireflies"><span>✨</span><span><strong>Firefly Moments</strong><small>Keep a tiny moment worth remembering.</small></span><b>↗</b></button>
+              <button class="garden-path-button" type="button" data-garden-open="greenhouse"><span>🏡</span><span><strong>Seasonal Greenhouse</strong><small>Choose the season for your little patch.</small></span><b>↗</b></button>
+            </div>
+          </div>
+          <p class="garden-storage-note">Daily Poll and Mood Garden use the existing community service. Your other garden keepsakes are saved privately on this device.</p>
+        </div>
+
+        <div class="garden-room-view" id="gardenRoomView" hidden>
+          <button class="garden-back-button" type="button" id="gardenBackButton">← Back to the garden</button>
+          <div class="garden-room-content" id="gardenRoomContent" aria-live="polite">
+            <article class="tool-card panel garden-service-room" id="gardenDailyPollRoom" hidden>
+              <span>📊</span><h3>Daily Poll</h3>
+              <p>Share your vote and see what everyone thinks.</p>
+              <button class="small-btn" type="button" disabled>Loading today's poll...</button>
+            </article>
+            <article class="tool-card panel garden-service-room" id="gardenMoodGardenRoom" hidden>
+              <span>🌷</span><h3>Mood Garden</h3>
+              <p>Plant a flower that represents your mood today.</p>
+              <button class="small-btn" type="button" disabled>Loading today's garden...</button>
+            </article>
+            <div id="gardenLocalRoom" class="garden-local-room"></div>
+          </div>
+        </div>
+      </section>
 
       <div class="lounge-section lounge-discovery-corner">
         <p class="eyebrow">03 · DISCOVERY CORNER</p>
@@ -1400,6 +1450,7 @@
   <script src="kindness.js?v=2"></script>
   <!-- Separate-screen navigation -->
   <script src="lounge.js?v=20261126-6"></script>
+  <script src="community-garden.js?v=1"></script>
 <script src="layout.js?v=20261128-scrollfix1"></script>
   <script src="game-corner-social.js?v=20261128-social2"></script>
   <script src="secret-hunt-extras.js?v=20261128-clueladder1"></script>
