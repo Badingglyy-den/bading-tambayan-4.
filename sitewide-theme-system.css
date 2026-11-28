@@ -573,3 +573,52 @@ html body[data-theme] #onlineTambayan #onlineMessageInput::placeholder {
     padding: 10px 13px !important;
   }
 }
+
+
+/* Dark-theme contrast repairs for the specific areas reported by members.
+   Keep each world's colors and artwork; only strengthen text contrast. */
+html body:is([data-theme="violet"],[data-theme="rose"],[data-theme="ocean"],[data-theme="midnight"]) {
+  --bt-text:#ffffff;
+  --bt-muted:#eee6fa;
+}
+html body:is([data-theme="violet"],[data-theme="rose"],[data-theme="ocean"],[data-theme="midnight"]) #onlineTambayan :is(
+  .section-heading h2,.section-note,.online-panel h3,.online-box h3,
+  #onlineAccountBox strong,#onlineMyRoomsBox p,.online-grid label,
+  .online-muted,.online-status,.online-notification-settings span
+) {
+  color:#ffffff !important;
+  -webkit-text-fill-color:#ffffff !important;
+  opacity:1 !important;
+}
+html body:is([data-theme="violet"],[data-theme="rose"],[data-theme="ocean"],[data-theme="midnight"]) #onlineTambayan :is(
+  .online-muted,.online-status,.online-notification-settings span
+) {
+  color:#e6ddf4 !important;
+  -webkit-text-fill-color:#e6ddf4 !important;
+}
+html body:is([data-theme="violet"],[data-theme="rose"],[data-theme="ocean"],[data-theme="midnight"]) #home :is(
+  .attic-drawer strong,.attic-drawer small,
+  .garden-landscape-copy,.garden-landscape-copy *,
+  .garden-paths-heading,.garden-paths-heading *,
+  .garden-spot,.garden-spot *,
+  .garden-path-toggle,.garden-path-button,.garden-path-button *,
+  .shop-panel,.shop-panel *, .collection-panel,.collection-panel *
+) {
+  opacity:1 !important;
+}
+html body:is([data-theme="violet"],[data-theme="rose"],[data-theme="ocean"],[data-theme="midnight"]) #home :is(
+  .attic-drawer strong,.garden-landscape-copy strong,.garden-paths-heading h4,
+  .garden-spot strong,.garden-path-button strong,
+  .shop-panel h3,.collection-panel h3,.shop-item strong,.shop-item h4
+) {
+  color:#ffffff !important;
+  -webkit-text-fill-color:#ffffff !important;
+}
+html body:is([data-theme="violet"],[data-theme="rose"],[data-theme="ocean"],[data-theme="midnight"]) #home :is(
+  .attic-drawer small,.garden-landscape-copy > span,
+  .garden-spot small,.garden-path-button small,
+  .shop-season-note,.shop-item p,.collection-panel p
+) {
+  color:#eee6fa !important;
+  -webkit-text-fill-color:#eee6fa !important;
+}
