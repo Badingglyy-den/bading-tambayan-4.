@@ -3896,10 +3896,15 @@ $("onlinePhotoInput").addEventListener("change", async event => {
       }
       #onlineTambayan .online-chat-theme-panel[hidden] {display:none!important}
       #onlineTambayan .online-compose {
-        display:grid;grid-template-columns:42px minmax(0,1fr) 42px 52px;
-        grid-template-rows:auto auto;gap:8px;align-items:center;
-        padding:9px;margin-top:14px;
+        display:grid !important;
+        grid-template-columns:42px 42px 44px 52px !important;
+        grid-template-rows:auto auto !important;
+        justify-content:space-between !important;align-items:center !important;
+        gap:6px !important;padding:8px !important;margin-top:14px;
+        width:100% !important;max-width:100% !important;min-width:0 !important;
+        box-sizing:border-box !important;overflow:hidden;
       }
+      #onlineTambayan .online-compose > input#onlinePhotoInput {display:none !important;}
       #onlineTambayan .online-compose > input#onlineMessageInput {
         grid-column:1 / -1 !important;grid-row:1 !important;
         display:block !important;justify-self:stretch !important;
@@ -3914,7 +3919,8 @@ $("onlinePhotoInput").addEventListener("change", async event => {
         margin:0;justify-self:center;
       }
       #onlineTambayan .online-compose > #onlineEmojiToggle {
-        grid-column:2;grid-row:2;justify-self:start;
+        grid-column:2;grid-row:2;width:42px;min-width:42px;max-width:42px;
+        justify-self:center;margin:0;padding:0;
       }
       #onlineTambayan .online-compose > #onlineVoiceRecordButton {
         grid-column:3;grid-row:2;width:44px;min-width:44px;
