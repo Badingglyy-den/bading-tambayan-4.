@@ -21,7 +21,7 @@ Deno.serve(async (request) => {
     const subject = Deno.env.get("VAPID_SUBJECT") || "https://badingglyy-den.github.io/bading-tambayan-4./";
     const admin = createClient(supabaseUrl, serviceKey);
     const authHeader = request.headers.get("Authorization") || "";
-    const tokenMatch = authHeader.match(/^Bearer\\s+(.+)$/i);
+    const tokenMatch = authHeader.match(/^Bearer\s+(.+)$/i);
     if (!tokenMatch) return new Response(JSON.stringify({ error: "Unauthorized" }), { status: 401, headers: cors });
 
     const jwks = createRemoteJWKSet(new URL(supabaseUrl + "/auth/v1/.well-known/jwks.json"));
