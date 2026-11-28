@@ -84,8 +84,6 @@
     if (el.isContentEditable || el.closest("[contenteditable='true']")) return;
     if (!hasOwnText(el)) return;
 
-    if (!hasOwnText(el)) return;
-
     // These interface elements sit on deliberately dark, layered surfaces.
     // Their ancestor gradients can confuse the generic background sampler,
     // so give them stable high-contrast colors instead of allowing faded text.
