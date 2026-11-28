@@ -36,7 +36,7 @@ create policy "DM participants can add their own reactions"
     and public.is_dm_participant(conversation_id)
     and exists (
       select 1 from public.dm_messages m
-      where m.id = message_id and m.conversation_id = conversation_id
+      where m.id = message_id and m.conversation_id = dm_message_reactions.conversation_id
     )
   );
 
