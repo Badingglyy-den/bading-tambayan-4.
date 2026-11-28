@@ -1,0 +1,95 @@
+/* Desktop alignment and centered authentication — Bading Tambayan */
+@media (min-width: 901px) {
+  body {
+    overflow-x: hidden;
+  }
+
+  #home.shell {
+    width: min(100% - 64px, 1280px);
+    max-width: 1280px;
+    margin-inline: auto;
+    padding: 28px 0 64px;
+  }
+
+  #home > section,
+  #home > .section-heading,
+  #home > .stats-grid,
+  #home > .world-grid,
+  #home > footer {
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  #onlineTambayan {
+    width: min(100%, 1280px);
+    max-width: 1280px;
+    margin: 30px auto 44px !important;
+  }
+
+  #onlineTambayan .online-panel {
+    width: 100%;
+    margin-inline: auto;
+  }
+
+  #onlineTambayan .online-room {
+    width: 100%;
+  }
+
+  #onlineTambayan .online-columns {
+    grid-template-columns: minmax(0, 2.25fr) minmax(230px, .75fr);
+    align-items: stretch;
+  }
+
+  #onlineTambayan .online-box {
+    min-width: 0;
+  }
+
+  #onlineTambayan .online-messages {
+    height: clamp(420px, 58vh, 680px);
+    min-height: 420px;
+  }
+}
+
+/* Keep the login/welcome gate centered in the viewport, not at page top. */
+#authGate {
+  position: fixed !important;
+  inset: 0 !important;
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: none;
+  place-items: center !important;
+  align-content: center !important;
+  justify-content: center !important;
+  padding: 28px 20px !important;
+}
+
+html.auth-locked #authGate,
+html.auth-checking #authGate {
+  display: grid !important;
+}
+
+#authGate .auth-gate-card {
+  width: min(100%, 460px);
+  margin: auto !important;
+  align-self: center;
+  justify-self: center;
+}
+
+/* Center the email/password dialog as well when it is opened. */
+dialog#accountDialog {
+  position: fixed;
+  inset: 0;
+  margin: auto;
+  max-height: min(88vh, 760px);
+  overflow-y: auto;
+}
+
+@media (max-width: 900px) {
+  #home.shell {
+    width: auto;
+    max-width: 1180px;
+    padding-left: 22px;
+    padding-right: 22px;
+  }
+}
