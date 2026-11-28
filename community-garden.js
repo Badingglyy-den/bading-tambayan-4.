@@ -85,7 +85,7 @@
     localRoom.innerHTML = '<p class="garden-room-eyebrow">A SOFT PLACE TO LAND</p><h3>💌 Garden Notes</h3>' +
       '<p class="garden-room-description">Write a kind note, a reminder for a hard day, or words you might share with someone later. These are private drafts for now.</p>' +
       '<form data-garden-form="note"><label for="gardenNoteInput">Leave yourself a little kindness</label><textarea id="gardenNoteInput" maxlength="280" placeholder="You deserve patience, too..." required></textarea><div class="garden-form-footer"><small>280 characters max</small><button class="small-btn" type="submit">Save note 💜</button></div></form>' +
-      '<h4 class="garden-subheading">Notes you've kept</h4>' + list(items, "Your kind words will live here.", "garden-saved-list");
+      '<h4 class="garden-subheading">Notes you have kept</h4>' + list(items, "Your kind words will live here.", "garden-saved-list");
   }
 
   function renderFireflies() {
