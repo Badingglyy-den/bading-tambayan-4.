@@ -1459,7 +1459,7 @@ if (accountEmailDisplay) {
       const localAvatar = savedProgress?.profile?.avatar || "💜";
 
       const { data: savedProfile, error: profileError } = await client
-        .from("profiles").select("display_name,avatar")
+        .from("chat_profiles").select("display_name,avatar")
         .eq("user_id", currentUser.id).maybeSingle();
       if (profileError) throw profileError;
 
@@ -1474,7 +1474,6 @@ if (accountEmailDisplay) {
             avatar: localAvatar
           };
 
-      window.tambayanProgress?.setProfile?.(profile);
       $("onlineName").value = profile.display_name;
       $("onlineAvatar").value = profile.avatar;
 
@@ -1525,7 +1524,7 @@ if (accountEmailDisplay) {
     if (!client || !currentUser) return;
     const name = $("onlineName").value.trim().slice(0, 24) || "Tambay";
     const avatar = $("onlineAvatar").value.trim().slice(0, 8) || "💜";
-    const { error } = await client.from("profiles").upsert({
+    const { error } = await client.from("chat_profiles").upsert({
       user_id: currentUser.id, display_name: name, avatar
     }, { onConflict: "user_id" });
     if (error) throw error;
@@ -1541,7 +1540,8 @@ if (accountEmailDisplay) {
     if (showNotice) status("Online profile saved! ✨");
   }
 
-  // Keep Avatar Studio edits aligned with the public profile used on next login.
+  // Avatar Studio updates the main Tambayan identity only.
+  // The chatroom nickname/avatar remain independently stored in chat_profiles.
   window.tambayanSyncPublicProfile = async function (details) {
     if (!client || !currentUser) throw new Error("Account connection is not ready.");
     const name = String(details?.name || "Tambay").trim().slice(0, 24) || "Tambay";
@@ -1552,17 +1552,6 @@ if (accountEmailDisplay) {
       avatar
     }, { onConflict: "user_id" });
     if (error) throw error;
-    profile = { ...(profile || {}), display_name: name, avatar };
-    profileCache.clear();
-    if (roomChannel && currentRoom) {
-      await roomChannel.track({
-        user_id: currentUser.id,
-        display_name: name,
-        avatar,
-        online_at: new Date().toISOString()
-      });
-      renderMembers();
-    }
     const accountName = $("accountOpen")?.querySelector(".account-chip-name");
     if (accountName) accountName.textContent = name;
     return true;
@@ -1712,7 +1701,7 @@ if (!("Notification" in window) || Notification.permission !== "granted") return
 
           let senderName = "Someone";
           try {
-            const { data } = await client.from("profiles")
+            const { data } = await client.from("chat_profiles")
               .select("display_name")
               .eq("user_id", message.user_id)
               .maybeSingle();
@@ -2037,7 +2026,7 @@ for (const messageElement of prependedMessages) {
     if (userId === currentUser.id) return profile;
     if (profileCache.has(userId)) return profileCache.get(userId);
     const fallback = { display_name: "Tambay", avatar: "💜" };
-    const { data, error } = await client.from("profiles")
+    const { data, error } = await client.from("chat_profiles")
       .select("display_name,avatar").eq("user_id", userId).maybeSingle();
     const result = !error && data ? data : fallback;
     profileCache.set(userId, result);
