@@ -2344,6 +2344,8 @@ renderRoomList();
       }
     }
     const contentEl = item.querySelector(".online-message-content");
+    if (contentEl) contentEl.style.setProperty("color", "#ffffff", "important");
+    item.style.setProperty("color", "#ffffff", "important");
     item.querySelector(".online-reply-button").onclick = () => { replyToMessage = { id: message.id, senderName: who || "Tambay", content: message.content || "" }; renderReplyComposer(); $("onlineMessageInput").focus(); };
     const deleteButton = item.querySelector(".online-delete-photo-button");
     if (deleteButton) deleteButton.onclick = () => deleteOwnPhoto(message, item);
