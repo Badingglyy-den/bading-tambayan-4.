@@ -2107,6 +2107,9 @@ if (currentRoom?.id !== roomId) {
 }
 
 if (!document.hidden && currentRoom?.id === roomId) return;
+if (!document.hidden) {
+  document.dispatchEvent(new Event("tambayan:notification"));
+}
 if (pushSubscriptionActive) return;
 if (!("Notification" in window) || Notification.permission !== "granted") return;
 
@@ -2220,7 +2223,12 @@ renderRoomList();
       .on("postgres_changes", {
         event: "INSERT", schema: "public", table: "messages",
         filter: "room_id=eq." + roomId
-      }, async payload => { await appendMessage(payload.new); })
+      }, async payload => {
+        if (payload.new?.user_id !== currentUser.id && !document.hidden) {
+          document.dispatchEvent(new Event("tambayan:notification"));
+        }
+        await appendMessage(payload.new);
+      })
       .on("postgres_changes", {
         event: "DELETE", schema: "public", table: "messages", filter: "room_id=eq." + roomId
       }, payload => { const deletedId = String(payload.old?.id || ""); document.querySelector(`.online-message[data-message-id="${deletedId}"]`)?.remove(); messageIds.delete(deletedId); })
@@ -4368,6 +4376,9 @@ $("onlinePhotoInput").addEventListener("change", async event => {
       .on("postgres_changes", {event:"INSERT",schema:"public",table:"dm_messages"}, payload => {
         const msg = payload.new;
         if (!msg || !dmConversations.has(msg.conversation_id)) return;
+        if (msg.sender_id !== currentUser.id && !document.hidden) {
+          document.dispatchEvent(new Event("tambayan:notification"));
+        }
         if (msg.conversation_id === dmActiveConversation) {
           appendDmMessage(msg);
           markDmRead(msg.conversation_id);
