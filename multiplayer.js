@@ -4141,7 +4141,7 @@ $("onlinePhotoInput").addEventListener("change", async event => {
   dmStyle.textContent = `
     #btDmDock{position:fixed;right:16px;bottom:calc(18px + env(safe-area-inset-bottom));z-index:100500;font-family:inherit;color:#f7efff;pointer-events:none}
     #btDmHeads,#btDmPanel{pointer-events:auto}
-    #btDmLauncher{display:inline-flex;align-items:center;justify-content:center;gap:7px;min-height:38px;padding:0 12px;border:1px solid rgba(216,191,255,.55);border-radius:13px;background:linear-gradient(145deg,#bd8cff,#8055d8);color:#211331;font:800 13px inherit;box-shadow:0 5px 18px #12091e55;position:relative;white-space:nowrap}
+    #btDmLauncher{display:inline-flex;align-items:center;justify-content:center;gap:7px;min-height:38px;padding:0 12px;border:1px solid rgba(216,191,255,.55);border-radius:13px;background:linear-gradient(145deg,#bd8cff,#8055d8);color:#211331;font-family:inherit;font-size:13px;font-weight:800;box-shadow:0 5px 18px #12091e55;position:relative;white-space:nowrap}
     #btDmLauncher>span:first-child{font-size:16px}
     #btDmUnread{display:inline-grid;place-items:center;min-width:17px;height:17px;padding:0 4px;border-radius:20px;background:#ff557d;color:white;font:bold 10px/17px sans-serif}
     #btDmUnread[hidden]{display:none!important}
