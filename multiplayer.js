@@ -1869,6 +1869,7 @@ if (accountEmailDisplay) {
       const accountName = $("accountOpen")?.querySelector(".account-chip-name");
       if (accountName) accountName.textContent = profile.display_name || "Tambay";
       await refreshRoomList();
+      await initializeDirectMessages();
       const notificationRoomId = new URLSearchParams(window.location.search).get("openRoom");
 
       if (notificationRoomId) {
@@ -4110,6 +4111,266 @@ $("onlinePhotoInput").addEventListener("change", async event => {
   `;
   document.head.appendChild(chatThemeContrastStyle);
 
+
+
+  // WEBSITE-WIDE PRIVATE MESSAGING / FLOATING CHAT HEADS
+  const dmStyle = document.createElement("style");
+  dmStyle.textContent = `
+    #btDmDock{position:fixed;right:16px;bottom:calc(18px + env(safe-area-inset-bottom));z-index:100500;font-family:inherit;color:#f7efff}
+    #btDmLauncher{width:58px;height:58px;border-radius:50%;border:2px solid rgba(255,255,255,.7);background:linear-gradient(145deg,#bd8cff,#8055d8);color:#211331;font-size:25px;box-shadow:0 8px 28px #12091e88;position:relative}
+    #btDmUnread{position:absolute;right:-3px;top:-4px;min-width:19px;height:19px;padding:0 5px;border-radius:20px;background:#ff557d;color:white;font:bold 11px/19px sans-serif}
+    #btDmPanel{position:absolute;right:0;bottom:70px;width:min(340px,calc(100vw - 28px));max-height:min(68vh,560px);overflow:hidden;border:1px solid #b99ae2;border-radius:19px;background:#21182f;box-shadow:0 16px 55px #08040dbb;display:flex;flex-direction:column}
+    #btDmPanel[hidden],#btDmWindow[hidden]{display:none!important}
+    .bt-dm-head{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:13px 14px;background:linear-gradient(120deg,#493365,#302342);font-weight:800}
+    .bt-dm-head button{border:0;background:#ffffff18;color:#fff;border-radius:9px;padding:5px 9px;font-size:18px}
+    #btDmSearch{margin:10px 12px 6px;width:calc(100% - 24px);box-sizing:border-box;border:1px solid #755d8d;border-radius:11px;padding:11px;background:#171020;color:white;font:inherit}
+    #btDmList{overflow:auto;padding:4px 10px 12px}
+    .bt-dm-contact{display:flex;align-items:center;gap:10px;width:100%;padding:10px;border:0;border-radius:12px;background:transparent;color:#fff;text-align:left}
+    .bt-dm-contact:hover{background:#ffffff12}
+    .bt-dm-avatar{width:39px;height:39px;flex:0 0 39px;display:grid;place-items:center;border-radius:50%;background:#59436d;font-size:20px}
+    .bt-dm-contact strong,.bt-dm-contact small{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+    .bt-dm-contact small{color:#c6b5d7;font-size:12px;margin-top:3px}
+    #btDmWindow{position:fixed;right:88px;bottom:calc(18px + env(safe-area-inset-bottom));z-index:100499;width:min(350px,calc(100vw - 28px));height:min(470px,65vh);border:1px solid #b99ae2;border-radius:18px;background:#21182f;color:#f7efff;box-shadow:0 16px 55px #08040dbb;overflow:hidden;display:flex;flex-direction:column}
+    #btDmMessages{flex:1;overflow:auto;padding:12px;display:flex;flex-direction:column;gap:8px}
+    .bt-dm-bubble{max-width:85%;align-self:flex-start;padding:9px 11px;border-radius:13px 13px 13px 4px;background:#40334f;overflow-wrap:anywhere;white-space:pre-wrap;font-size:14px}
+    .bt-dm-bubble.mine{align-self:flex-end;background:#9c79c9;color:#1d1428;border-radius:13px 13px 4px 13px}
+    .bt-dm-time{display:block;margin-top:4px;font-size:10px;opacity:.7;text-align:right}
+    #btDmForm{display:flex;gap:7px;padding:10px;border-top:1px solid #5a476b}
+    #btDmInput{flex:1;min-width:0;border:1px solid #705a83;border-radius:12px;padding:10px;background:#171020;color:white;font:inherit;font-size:16px}
+    #btDmForm button{border:0;border-radius:11px;background:#bd8cff;color:#211331;font-weight:800;padding:0 14px}
+    #btDmHeads{display:flex;gap:9px;justify-content:flex-end;margin-bottom:9px;flex-wrap:wrap;max-width:min(340px,calc(100vw - 28px))}
+    .bt-dm-headbubble{position:relative;width:48px;height:48px;border-radius:50%;border:2px solid #d8bfff;background:#45315b;color:white;font-size:21px;box-shadow:0 5px 18px #0008}
+    .bt-dm-headbubble small{position:absolute;right:-4px;top:-4px;background:#ff557d;color:white;border-radius:50%;font:10px sans-serif;padding:3px 5px}
+    @media(max-width:600px){
+      #btDmDock{right:12px;bottom:calc(12px + env(safe-area-inset-bottom))}
+      #btDmWindow{right:10px;bottom:calc(78px + env(safe-area-inset-bottom));width:calc(100vw - 20px);height:min(62vh,480px)}
+      #btDmPanel{right:0;bottom:68px;width:calc(100vw - 24px);max-height:65vh}
+    }
+  `;
+  document.head.appendChild(dmStyle);
+
+  let dmChannel = null;
+  let dmConversations = new Map();
+  let dmActiveConversation = null;
+  let dmActivePeer = null;
+  let dmHeads = new Map();
+  let dmMessagesBusy = false;
+
+  function dmEscape(value) { return safeText(value); }
+  function dmReadKey(id) { return "bt_dm_read_" + currentUser.id + "_" + id; }
+
+  function ensureDmDock() {
+    if ($("btDmDock")) return;
+    const dock = document.createElement("div");
+    dock.id = "btDmDock";
+    dock.innerHTML = `
+      <div id="btDmHeads"></div>
+      <section id="btDmPanel" hidden>
+        <div class="bt-dm-head"><span>💌 Private messages</span><button type="button" id="btDmClosePanel" aria-label="Close">×</button></div>
+        <input id="btDmSearch" type="search" placeholder="Find a member…" autocomplete="off">
+        <div id="btDmList"><p style="padding:8px;color:#c6b5d7">Loading your conversations…</p></div>
+      </section>
+      <button type="button" id="btDmLauncher" aria-label="Open private messages" title="Private messages">💬<span id="btDmUnread" hidden>0</span></button>
+    `;
+    document.body.appendChild(dock);
+    const win = document.createElement("section");
+    win.id = "btDmWindow";
+    win.hidden = true;
+    win.innerHTML = `
+      <div class="bt-dm-head"><span id="btDmTitle">Private chat</span><span><button type="button" id="btDmMinimize" aria-label="Minimize">−</button> <button type="button" id="btDmClose" aria-label="Close chat">×</button></span></div>
+      <div id="btDmMessages" aria-live="polite"></div>
+      <form id="btDmForm"><input id="btDmInput" maxlength="2000" placeholder="Message…" autocomplete="off"><button type="submit">Send</button></form>
+    `;
+    document.body.appendChild(win);
+    $("btDmLauncher").addEventListener("click", () => {
+      $("btDmPanel").hidden = !$("btDmPanel").hidden;
+      if (!$("btDmPanel").hidden) loadDmDirectory();
+    });
+    $("btDmClosePanel").onclick = () => $("btDmPanel").hidden = true;
+    $("btDmSearch").addEventListener("input", renderDmDirectory);
+    $("btDmMinimize").onclick = minimizeDmWindow;
+    $("btDmClose").onclick = () => { if (dmActiveConversation) dmHeads.set(dmActiveConversation, dmActivePeer); dmActiveConversation=null; dmActivePeer=null; win.hidden=true; renderDmHeads(); };
+    $("btDmForm").onsubmit = sendDirectMessage;
+  }
+
+  async function initializeDirectMessages() {
+    if (!client || !currentUser || currentUser.is_anonymous) return;
+    ensureDmDock();
+    await loadDmConversations();
+    if (dmChannel) await client.removeChannel(dmChannel);
+    dmChannel = client.channel("bt-direct-messages-" + currentUser.id)
+      .on("postgres_changes", {event:"INSERT",schema:"public",table:"dm_messages"}, payload => {
+        const msg = payload.new;
+        if (!msg || !dmConversations.has(msg.conversation_id)) return;
+        if (msg.conversation_id === dmActiveConversation) {
+          appendDmMessage(msg);
+          markDmRead(msg.conversation_id);
+        } else if (msg.sender_id !== currentUser.id) {
+          renderDmHeads(true);
+        }
+        loadDmConversations();
+      }).subscribe();
+  }
+
+  async function loadDmConversations() {
+    if (!client || !currentUser) return;
+    const {data: mine, error} = await client.from("dm_participants")
+      .select("conversation_id").eq("user_id", currentUser.id);
+    if (error) throw error;
+    const ids = [...new Set((mine||[]).map(x=>x.conversation_id))];
+    const next = new Map();
+    if (ids.length) {
+      const {data: participants, error: pError} = await client.from("dm_participants")
+        .select("conversation_id,user_id").in("conversation_id",ids);
+      if (pError) throw pError;
+      const peers = [...new Set((participants||[]).map(x=>x.user_id).filter(id=>id!==currentUser.id))];
+      const {data: profiles, error: profileError} = await client.from("chat_profiles")
+        .select("user_id,display_name,avatar").in("user_id",peers);
+      if (profileError) throw profileError;
+      const byId = new Map((profiles||[]).map(x=>[x.user_id,x]));
+      for (const id of ids) {
+        const peerId = (participants||[]).find(x=>x.conversation_id===id && x.user_id!==currentUser.id)?.user_id;
+        if (peerId) next.set(id,{peerId,profile:byId.get(peerId)||{display_name:"Tambay",avatar:"💜"}});
+      }
+    }
+    dmConversations = next;
+    await renderDmDirectory();
+    renderDmHeads();
+  }
+
+  async function loadDmDirectory() {
+    if (!client || !currentUser) return;
+    try {
+      const {data,error}=await client.from("chat_profiles")
+        .select("user_id,display_name,avatar").neq("user_id",currentUser.id)
+        .order("display_name").limit(150);
+      if (error) throw error;
+      window.__btDmDirectory = data||[];
+      renderDmDirectory();
+    } catch(error) {
+      $("btDmList").innerHTML='<p style="padding:10px;color:#ffc1d0">Could not load members: '+dmEscape(error.message)+'</p>';
+    }
+  }
+
+  async function renderDmDirectory() {
+    const list=$("btDmList"); if(!list) return;
+    const query=String($("btDmSearch")?.value||"").trim().toLowerCase();
+    const contacts=window.__btDmDirectory||[];
+    const existing=[...dmConversations.entries()].map(([id,item])=>({id,...item}));
+    const matching=contacts.filter(x=>(x.display_name||"Tambay").toLowerCase().includes(query));
+    const inbox=existing.filter(x=>(x.profile.display_name||"Tambay").toLowerCase().includes(query));
+    let html='';
+    if(inbox.length) html+='<div style="padding:8px 8px 4px;color:#c6b5d7;font-size:12px;font-weight:800">YOUR CHATS</div>'+inbox.map(x=>`
+      <button class="bt-dm-contact" type="button" data-dm-conversation="${dmEscape(x.id)}">
+        <span class="bt-dm-avatar">${dmEscape(x.profile.avatar||"💜")}</span><span><strong>${dmEscape(x.profile.display_name||"Tambay")}</strong><small>Open private conversation</small></span>
+      </button>`).join("");
+    html+='<div style="padding:10px 8px 4px;color:#c6b5d7;font-size:12px;font-weight:800">MEMBERS</div>';
+    html+=matching.map(x=>`
+      <button class="bt-dm-contact" type="button" data-dm-user="${dmEscape(x.user_id)}">
+        <span class="bt-dm-avatar">${dmEscape(x.avatar||"💜")}</span><span><strong>${dmEscape(x.display_name||"Tambay")}</strong><small>Start a private chat</small></span>
+      </button>`).join("");
+    if(!html) html='<p style="padding:10px;color:#c6b5d7">No members found yet.</p>';
+    list.innerHTML=html;
+    list.querySelectorAll("[data-dm-user]").forEach(button=>button.onclick=()=>startDirectConversation(button.dataset.dmUser));
+    list.querySelectorAll("[data-dm-conversation]").forEach(button=>button.onclick=()=>openDmConversation(button.dataset.dmConversation));
+  }
+
+  async function startDirectConversation(userId) {
+    try {
+      const {data,error}=await client.rpc("open_direct_conversation",{target_user_id:userId});
+      if(error) throw error;
+      await loadDmConversations();
+      $("btDmPanel").hidden=true;
+      await openDmConversation(data);
+    } catch(error) {
+      alert(error.message||"Could not open private conversation.");
+    }
+  }
+
+  async function openDmConversation(conversationId) {
+    const record=dmConversations.get(conversationId);
+    if(!record) { await loadDmConversations(); }
+    const peer=dmConversations.get(conversationId);
+    if(!peer) return;
+    dmActiveConversation=conversationId;
+    dmActivePeer=peer;
+    $("btDmTitle").textContent=(peer.profile.avatar||"💜")+" "+(peer.profile.display_name||"Tambay");
+    $("btDmWindow").hidden=false;
+    $("btDmPanel").hidden=true;
+    $("btDmMessages").innerHTML='<p style="color:#c6b5d7">Loading messages…</p>';
+    const {data,error}=await client.from("dm_messages").select("id,conversation_id,sender_id,content,created_at")
+      .eq("conversation_id",conversationId).order("created_at",{ascending:true}).limit(100);
+    if(error) { $("btDmMessages").textContent=error.message; return; }
+    $("btDmMessages").innerHTML="";
+    for(const message of data||[]) appendDmMessage(message);
+    $("btDmMessages").scrollTop=$("btDmMessages").scrollHeight;
+    markDmRead(conversationId);
+    renderDmHeads();
+    $("btDmInput").focus({preventScroll:true});
+  }
+
+  function appendDmMessage(message) {
+    const box=$("btDmMessages");
+    if(!box || message.conversation_id!==dmActiveConversation) return;
+    if(box.querySelector('[data-dm-message="'+CSS.escape(String(message.id))+'"]')) return;
+    const item=document.createElement("div");
+    item.className="bt-dm-bubble"+(message.sender_id===currentUser.id?" mine":"");
+    item.dataset.dmMessage=String(message.id);
+    const body=document.createElement("span"); body.textContent=message.content;
+    const time=document.createElement("small"); time.className="bt-dm-time";
+    time.textContent=new Date(message.created_at).toLocaleTimeString([],{hour:"2-digit",minute:"2-digit"});
+    item.append(body,time); box.appendChild(item);
+    box.scrollTop=box.scrollHeight;
+  }
+
+  async function sendDirectMessage(event) {
+    event.preventDefault();
+    const input=$("btDmInput"), content=input.value.trim();
+    if(!content || !dmActiveConversation) return;
+    const button=$("btDmForm").querySelector("button");
+    button.disabled=true;
+    try {
+      const {data,error}=await client.from("dm_messages").insert({
+        conversation_id:dmActiveConversation,sender_id:currentUser.id,content
+      }).select("id,conversation_id,sender_id,content,created_at").single();
+      if(error) throw error;
+      input.value="";
+      appendDmMessage(data);
+      loadDmConversations();
+    } catch(error) {
+      alert(error.message||"Your message couldn't be sent.");
+    } finally { button.disabled=false; input.focus(); }
+  }
+
+  function markDmRead(conversationId) {
+    try { localStorage.setItem(dmReadKey(conversationId),new Date().toISOString()); } catch(_){}
+    renderDmHeads();
+  }
+
+  function minimizeDmWindow() {
+    if(dmActiveConversation && dmActivePeer) dmHeads.set(dmActiveConversation,dmActivePeer);
+    dmActiveConversation=null; dmActivePeer=null;
+    $("btDmWindow").hidden=true;
+    renderDmHeads();
+  }
+
+  function renderDmHeads(hasNew=false) {
+    const box=$("btDmHeads"); if(!box) return;
+    box.innerHTML="";
+    for(const [id,peer] of dmHeads) {
+      const button=document.createElement("button");
+      button.type="button"; button.className="bt-dm-headbubble";
+      button.title=peer.profile.display_name||"Private chat";
+      button.textContent=peer.profile.avatar||"💜";
+      button.onclick=()=>openDmConversation(id);
+      box.appendChild(button);
+    }
+    const unread=$("btDmUnread");
+    if(unread) {
+      const count=hasNew?1:0;
+      unread.hidden=!count; unread.textContent=String(count);
+    }
+  }
 
   // Make message action buttons distinct and readable in every personal theme.
   const chatActionContrastStyle = document.createElement("style");
