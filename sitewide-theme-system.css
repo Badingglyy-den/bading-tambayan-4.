@@ -398,3 +398,85 @@ html body[data-theme] #onlineTambayan .online-message-content *{
   -webkit-text-fill-color:#ffffff!important;
 }
 
+
+
+/* Mobile live chat: give the conversation and composer more room. */
+@media (max-width: 760px) {
+  html body #onlineTambayan {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+  }
+  html body #onlineTambayan .online-room,
+  html body #onlineTambayan .online-columns,
+  html body #onlineTambayan .online-columns > .online-box {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    box-sizing: border-box !important;
+  }
+  html body #onlineTambayan .online-columns > .online-box:first-child {
+    padding: 14px !important;
+  }
+  html body #onlineTambayan .online-messages {
+    height: min(64vh, 620px) !important;
+    min-height: 420px !important;
+    max-height: 620px !important;
+    padding: 14px !important;
+    gap: 12px !important;
+    box-sizing: border-box !important;
+  }
+  html body #onlineTambayan .online-message {
+    max-width: 96% !important;
+    padding: 13px 15px !important;
+    font-size: 16px !important;
+    line-height: 1.55 !important;
+  }
+  html body #onlineTambayan .online-message-content {
+    font-size: 16px !important;
+    line-height: 1.55 !important;
+  }
+  html body #onlineTambayan .online-compose {
+    display: flex !important;
+    align-items: stretch !important;
+    gap: 8px !important;
+    width: 100% !important;
+    padding: 8px !important;
+    margin-top: 12px !important;
+    box-sizing: border-box !important;
+    background: #171126 !important;
+    border: 1px solid rgba(194,158,255,.28) !important;
+    border-radius: 16px !important;
+  }
+  html body #onlineTambayan .online-compose input,
+  html body #onlineTambayan #onlineMessageInput {
+    flex: 1 1 auto !important;
+    width: 0 !important;
+    min-width: 0 !important;
+    min-height: 58px !important;
+    height: 58px !important;
+    box-sizing: border-box !important;
+    padding: 13px 14px !important;
+    margin: 0 !important;
+    background: #0f0b1c !important;
+    color: #ffffff !important;
+    -webkit-text-fill-color: #ffffff !important;
+    caret-color: #ffffff !important;
+    font-size: 17px !important;
+    line-height: 1.4 !important;
+    opacity: 1 !important;
+  }
+  html body #onlineTambayan .online-compose input::placeholder,
+  html body #onlineTambayan #onlineMessageInput::placeholder {
+    color: #c9bddb !important;
+    -webkit-text-fill-color: #c9bddb !important;
+    opacity: 1 !important;
+  }
+  html body #onlineTambayan .online-compose button {
+    min-height: 58px !important;
+    flex-shrink: 0 !important;
+    font-size: 15px !important;
+    padding: 10px 13px !important;
+  }
+}
