@@ -37,6 +37,7 @@
   <link rel="stylesheet" href="homepage-redesign.css?v=mobile-profile-3">
   <link rel="stylesheet" href="community-garden.css?v=1">
   <link rel="stylesheet" href="cosmic-frontier.css?v=4">
+  <link rel="stylesheet" href="dopamine-district.css?v=2">
   <style id="tambayanverse-map-desktop-fix">
 @media (min-width: 601px) {
 
@@ -691,6 +692,7 @@ body .verse-map-panel .map-location:hover{
       <a class="world-card community" href="#hangout"><span class="world-icon">🌟</span><span class="world-kicker">WORLD 06</span><h3>Tambayan Lounge</h3><p>Games, daily activities, discoveries, and community spaces.</p><b>Enter world ↗</b></a>
       <a class="world-card rage" href="#rageRoom"><span class="world-icon">🔥</span><span class="world-kicker">WORLD 07</span><h3>The Rage Room</h3><p>Smash virtual plates, pin the doll, punch it out, and release the pressure.</p><b>Enter world ↗</b></a>
       <a class="world-card cosmic" href="#cosmicFrontier"><span class="world-icon">🚀</span><span class="world-kicker">WORLD 08</span><h3>The Cosmic Frontier</h3><p>Explore distant planets, discover alien life and begin your cosmic missions.</p><b>Launch expedition ↗</b></a>
+      <a class="world-card dopamine" href="#dopamineDistrict"><span class="world-icon">🪩</span><span class="world-kicker">WORLD 09</span><h3>Dopamine District</h3><p>Quick games, sensory resets, little hunts, and a room to make your own.</p><b>Explore World 09 ↗</b></a>
     </section>
     
     <section class="section-heading" id="verse-map">
@@ -755,6 +757,7 @@ body .verse-map-panel .map-location:hover{
 
           <a class="map-location map-rage" href="#rageRoom"><span>🔥</span><strong>Rage Room</strong><small>World 07</small></a>
           <a class="map-location map-cosmic" href="#cosmicFrontier"><span>🚀</span><strong>Cosmic Frontier</strong><small>World 08</small></a>
+          <a class="map-location map-dopamine" href="#dopamineDistrict"><span>🪩</span><strong>Dopamine District</strong><small>World 09</small></a>
         </div>
       </div>
       <p class="map-caption">Every little world has a story. Which one will you visit?</p>
@@ -1646,6 +1649,67 @@ body .verse-map-panel .map-location:hover{
           <p class="cosmic-save-note" id="cosmicSaveNote">Expedition progress saves privately on this device.</p>Expedition progress saves privately on this device.</p>
         </section>
         <footer class="cosmic-footer">THE FRONTIER IS YOURS TO DISCOVER <span>✦</span> TAKE NOTHING BUT MEMORIES</footer>
+      </div>
+
+    </section>
+
+    <section id="dopamineDistrict" aria-labelledby="dopamineTitle">
+      <div class="dopamine-shell">
+        <header class="dopamine-hero">
+          <a class="dopamine-back-map" href="#verse-map">← Back to the world map</a>
+          <div class="dopamine-hero-orbit" aria-hidden="true"><span>✦</span><span>🪩</span><span>✧</span><span>💫</span></div>
+          <p class="dopamine-kicker">WORLD 09 · YOUR BRAIN'S PLAYGROUND</p>
+          <h2 id="dopamineTitle">DOPAMINE DISTRICT</h2>
+          <p>A playful little place for quick wins, quiet moments, tiny discoveries, and making a space that feels like yours. No pressure to finish anything.</p>
+          <div class="dopamine-welcome-note"><span>🧠</span><span><strong>Choose your own pace</strong><small>Nothing here is timed unless you choose a game that is.</small></span></div>
+        </header>
+
+        <div class="dopamine-hub" id="dopamineHub">
+          <div class="dopamine-section-intro"><p class="dopamine-kicker">FOUR LITTLE DESTINATIONS</p><h3>Where do you feel like going?</h3><p>Pick one. You can always come back.</p></div>
+          <div class="dopamine-doors">
+            <button class="dopamine-door door-arcade" type="button" data-dop-open="arcade"><span class="dop-door-art">🕹️</span><span class="dop-door-copy"><small>01 · QUICK PLAY</small><strong>Quick Dopamine Arcade</strong><em>Short reaction, memory, and color games.</em></span><span class="dop-door-arrow">PLAY ↗</span></button>
+            <button class="dopamine-door door-sensory" type="button" data-dop-open="sensory"><span class="dop-door-art">🌙</span><span class="dop-door-copy"><small>02 · SENSORY RESET</small><strong>Sensory Reset Room</strong><em>Adjust the glow, colors, and gentle breathing guide.</em></span><span class="dop-door-arrow">UNWIND ↗</span></button>
+            <button class="dopamine-door door-hunt" type="button" data-dop-open="hunt"><span class="dop-door-art">🔎</span><span class="dop-door-copy"><small>03 · LITTLE QUEST</small><strong>Where Did I Put It?</strong><em>Find the hidden objects in a playful clutter scene.</em></span><span class="dop-door-arrow">SEARCH ↗</span></button>
+            <button class="dopamine-door door-focus" type="button" data-dop-open="focus"><span class="dop-door-art">🪴</span><span class="dop-door-copy"><small>04 · MAKE A SPACE</small><strong>Hyperfocus Corner</strong><em>Build a cozy room with your favorite things.</em></span><span class="dop-door-arrow">CREATE ↗</span></button>
+          </div>
+          <p class="dopamine-progress-line" id="dopamineProgressLine" aria-live="polite">Your little district is ready whenever you are.</p>
+        </div>
+
+        <section class="dopamine-attraction" data-dop-panel="arcade" hidden>
+          <button class="dopamine-back-hub" type="button" data-dop-back>← Back to Dopamine District</button>
+          <div class="dop-attraction-head"><p class="dopamine-kicker">QUICK DOPAMINE ARCADE</p><h3>Small games. Tiny victories.</h3><p>Play one round or keep going. There is no penalty for stopping.</p></div>
+          <div class="dop-game-grid">
+            <article class="dop-game-card"><span class="dop-game-icon">🟢</span><h4>Green Light</h4><p>Wait for green, then tap as quickly as you can. Early taps reset the round.</p><div class="dop-reaction-light" id="dopReactionLight" role="button" tabindex="0" aria-label="Reaction target">WAIT FOR GREEN</div><button class="dop-action" id="dopReactionStart" type="button">Start round</button><p class="dop-game-status" id="dopReactionStatus" aria-live="polite">Best: —</p></article>
+            <article class="dop-game-card"><span class="dop-game-icon">🔢</span><h4>Number Blink</h4><p>Remember the number before it disappears, then type it back.</p><div class="dop-memory-number" id="dopMemoryNumber">Ready?</div><button class="dop-action" id="dopMemoryStart" type="button">Show me a number</button><div class="dop-inline-controls"><input id="dopMemoryInput" inputmode="numeric" maxlength="4" placeholder="Your number" aria-label="Remembered number"><button class="dop-quiet-action" id="dopMemoryCheck" type="button">Check</button></div><p class="dop-game-status" id="dopMemoryStatus" aria-live="polite"></p></article>
+            <article class="dop-game-card"><span class="dop-game-icon">🎨</span><h4>Color Match</h4><p>Tap the color named in the prompt. The choices shuffle each round.</p><strong class="dop-color-prompt" id="dopColorPrompt">Find: coral</strong><div class="dop-color-options" id="dopColorOptions"><button type="button" data-dop-color="coral">Coral</button><button type="button" data-dop-color="mint">Mint</button><button type="button" data-dop-color="lilac">Lilac</button><button type="button" data-dop-color="sun">Sun</button></div><p class="dop-game-status" id="dopColorStatus" aria-live="polite">Score: 0</p></article>
+          </div>
+        </section>
+
+        <section class="dopamine-attraction" data-dop-panel="sensory" hidden>
+          <button class="dopamine-back-hub" type="button" data-dop-back>← Back to Dopamine District</button>
+          <div class="dop-attraction-head"><p class="dopamine-kicker">SENSORY RESET ROOM</p><h3>Make the room feel comfortable.</h3><p>Adjust the visuals to your preference. You can turn off motion and skip the breathing guide at any time.</p></div>
+          <div class="dop-sensory-room" id="dopSensoryRoom"><span class="dop-sensory-moon">☾</span><div class="dop-breath-orb"><span id="dopBreathText">Take your time</span></div><span class="dop-sensory-stars">✦　·　✧　·　✦</span></div>
+          <div class="dop-sensory-controls">
+            <label>Room atmosphere<select id="dopMood"><option value="lavender">Lavender dusk</option><option value="ocean">Ocean blue</option><option value="peach">Soft peach</option><option value="forest">Quiet forest</option></select></label>
+            <label>Glow intensity <output id="dopGlowValue">55%</output><input id="dopGlow" type="range" min="10" max="90" value="55"></label>
+            <label class="dop-toggle-row">Gentle motion <input id="dopMotion" type="checkbox" checked></label>
+            <label class="dop-toggle-row">Breathing guide <input id="dopBreathing" type="checkbox"></label>
+          </div>
+          <p class="dop-game-status" id="dopSensoryStatus" aria-live="polite">Your settings save on this device.</p>
+        </section>
+
+        <section class="dopamine-attraction" data-dop-panel="hunt" hidden>
+          <button class="dopamine-back-hub" type="button" data-dop-back>← Back to Dopamine District</button>
+          <div class="dop-attraction-head"><p class="dopamine-kicker">WHERE DID I PUT IT?</p><h3>A tiny hidden-object hunt.</h3><p>Find all four targets. Tap objects to inspect them. No countdown, no rush.</p></div>
+          <div class="dop-hunt-board"><div class="dop-hunt-top"><strong>Find these four things:</strong><button class="dop-quiet-action" id="dopHuntNew" type="button">New hunt ↻</button></div><div class="dop-hunt-targets" id="dopHuntTargets"></div><div class="dop-hunt-scene" id="dopHuntScene" aria-label="Hidden object scene"></div><p class="dop-game-status" id="dopHuntStatus" aria-live="polite">0 / 4 found</p></div>
+        </section>
+
+        <section class="dopamine-attraction" data-dop-panel="focus" hidden>
+          <button class="dopamine-back-hub" type="button" data-dop-back>← Back to Dopamine District</button>
+          <div class="dop-attraction-head"><p class="dopamine-kicker">HYPERFOCUS CORNER</p><h3>Build your own cozy corner.</h3><p>Add decorations to the room. Tap any item in the room to remove it. Your arrangement saves automatically.</p></div>
+          <div class="dop-focus-layout"><div class="dop-focus-room" id="dopFocusRoom" data-room-color="lilac"><span class="dop-focus-window">☀️</span><span class="dop-focus-floor"></span></div><aside class="dop-focus-tools"><strong>Pick something to add</strong><div class="dop-focus-items" id="dopFocusItems"><button type="button" data-focus-item="🪴">🪴 Plant</button><button type="button" data-focus-item="🧸">🧸 Plushie</button><button type="button" data-focus-item="💡">💡 Lamp</button><button type="button" data-focus-item="📚">📚 Books</button><button type="button" data-focus-item="🖼️">🖼️ Art</button><button type="button" data-focus-item="🐈">🐈 Cat</button><button type="button" data-focus-item="🪩">🪩 Disco</button><button type="button" data-focus-item="🍓">🍓 Treat</button></div><label>Room color<select id="dopRoomColor"><option value="lilac">Lilac</option><option value="mint">Mint</option><option value="peach">Peach</option><option value="blue">Sky blue</option></select></label><div class="dop-focus-actions"><button class="dop-quiet-action" id="dopFocusClear" type="button">Clear room</button><button class="dop-action" id="dopFocusSave" type="button">Save room</button></div><p class="dop-game-status" id="dopFocusStatus" aria-live="polite">Your room saves on this device.</p></aside></div>
+        </section>
+        <p class="dopamine-footer">A little play, a little pause, a little space to be yourself. 💜</p>
       </div>
     </section>
 
