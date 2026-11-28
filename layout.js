@@ -20,6 +20,7 @@
   const diaryIndex = findIndex("diary");
   const hangoutIndex = findIndex("hangout");
   const rageIndex = findIndex("rageRoom");
+  const cosmicIndex = findIndex("cosmicFrontier");
 
   if (
     mapIndex < 0 ||
@@ -29,7 +30,8 @@
     mysteryIndex < 0 ||
     diaryIndex < 0 ||
     hangoutIndex < 0 ||
-    rageIndex < 0
+    rageIndex < 0 ||
+    cosmicIndex < 0
   ) {
     console.error("Tambayan layout: required sections were not found.");
     return;
@@ -117,8 +119,15 @@
       id: "rage",
       label: "🔥 Rage Room",
       start: rageIndex,
-      end: spaceIndex,
+      end: cosmicIndex,
       routes: ["rageRoom", "rage"]
+    },
+    {
+      id: "cosmic",
+      label: "🚀 Cosmic Frontier",
+      start: cosmicIndex,
+      end: spaceIndex,
+      routes: ["cosmicFrontier", "cosmic"]
     },
     {
       id: "space",
