@@ -4104,4 +4104,39 @@ $("onlinePhotoInput").addEventListener("change", async event => {
   `;
   document.head.appendChild(chatThemeContrastStyle);
 
+
+  // Make message action buttons distinct and readable in every personal theme.
+  const chatActionContrastStyle = document.createElement("style");
+  chatActionContrastStyle.textContent = `
+    #onlineTambayan[data-chat-theme] .online-message-actions .online-reply-button {
+      color: var(--chat-personal-fg) !important;
+      -webkit-text-fill-color: var(--chat-personal-fg) !important;
+      background: color-mix(in srgb,var(--chat-personal-fg) 10%,var(--chat-personal-bubble)) !important;
+      border: 1px solid color-mix(in srgb,var(--chat-personal-fg) 38%,transparent) !important;
+      opacity: 1 !important;
+      font-weight: 800 !important;
+      text-shadow: none !important;
+    }
+    #onlineTambayan[data-chat-theme] .online-message-actions .online-delete-photo-button {
+      color: #87364d !important;
+      -webkit-text-fill-color: #87364d !important;
+      background: #ffe2e9 !important;
+      border: 1px solid #d98da2 !important;
+      opacity: 1 !important;
+      font-weight: 800 !important;
+      text-shadow: none !important;
+    }
+    #onlineTambayan[data-chat-theme="midnight"] .online-message-actions .online-delete-photo-button {
+      color: #ffe5ed !important;
+      -webkit-text-fill-color: #ffe5ed !important;
+      background: #713b55 !important;
+      border-color: #d99ab2 !important;
+    }
+    #onlineTambayan[data-chat-theme] .online-message-actions button:focus-visible {
+      outline: 2px solid var(--chat-personal-fg) !important;
+      outline-offset: 2px !important;
+    }
+  `;
+  document.head.appendChild(chatActionContrastStyle);
+
 })();
