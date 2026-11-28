@@ -222,7 +222,7 @@
 </style>
   <link rel="stylesheet" href="seasons.css?v=1">
   <link rel="stylesheet" href="observatory.css?v=1">
-  <link rel="stylesheet" href="living-world.css?v=1">
+  <link rel="stylesheet" href="living-world.css?v=1">\n  <link rel="stylesheet" href="mystery-mailbox.css?v=1">
 </head>
 <body>
   <div id="authGate" class="auth-gate">
@@ -386,6 +386,47 @@
     </article>
   </div>
   <p class="observatory-fiction-note">The four illustrated constellations are original creations from the Tambayanverse. The sky patterns are imaginative guides, while the astronomy notes share real-world sky facts.</p>
+</section>
+
+
+<section class="mystery-mailbox panel" id="mystery-mailbox" aria-labelledby="mysteryMailboxTitle">
+  <div class="mailbox-heading">
+    <div>
+      <p class="eyebrow">A LITTLE SOMETHING, LEFT JUST FOR YOU</p>
+      <h2 id="mysteryMailboxTitle">The Mystery Mailbox</h2>
+      <p class="mailbox-intro">The residents sometimes leave a thought, a story, or a question here. Take a moment and see what's arrived.</p>
+    </div>
+    <div class="mailbox-stamp" aria-hidden="true">💌</div>
+  </div>
+  <div class="mailbox-arrival" id="mailboxArrival">
+    <div class="mailbox-envelope" aria-hidden="true"><span>✉</span><i>✦</i></div>
+    <div class="mailbox-arrival-copy">
+      <span class="mailbox-kicker" id="mailboxSeasonLabel">A NOTE FROM THE TAMBAYANVERSE</span>
+      <h3 id="mailboxArrivalTitle">A letter is waiting.</h3>
+      <p id="mailboxArrivalHint">Someone left a little something in the mailbox.</p>
+      <button class="mailbox-open-btn" id="mailboxOpenButton" type="button">Open your letter <span aria-hidden="true">↗</span></button>
+    </div>
+  </div>
+  <article class="mailbox-letter" id="mailboxLetter" hidden aria-live="polite">
+    <div class="mailbox-letter-top"><span id="mailboxLetterSeason">A LITTLE NOTE</span><span id="mailboxLetterDate"></span></div>
+    <div class="mailbox-letter-from"><span class="mailbox-sender-icon" id="mailboxSenderIcon">🌱</span><div><small>FROM</small><strong id="mailboxSender">A Tambayan resident</strong></div></div>
+    <h3 id="mailboxLetterTitle">A little note for you</h3>
+    <p class="mailbox-letter-message" id="mailboxLetterMessage"></p>
+    <div class="mailbox-reply-area">
+      <p>IF YOU COULD WRITE BACK, YOU MIGHT SAY…</p>
+      <div class="mailbox-replies" id="mailboxReplies"></div>
+      <p class="mailbox-reply-status" id="mailboxReplyStatus" role="status" aria-live="polite"></p>
+    </div>
+  </article>
+  <div class="mailbox-footer">
+    <p id="mailboxArchiveCount">Your little collection of opened letters will live here.</p>
+    <button class="mailbox-archive-toggle" id="mailboxArchiveToggle" type="button" aria-expanded="false" aria-controls="mailboxArchive">View opened letters <span aria-hidden="true">↓</span></button>
+  </div>
+  <div class="mailbox-archive" id="mailboxArchive" hidden>
+    <p class="mailbox-archive-heading">LETTERS YOU'VE OPENED</p>
+    <div id="mailboxArchiveList"></div>
+  </div>
+  <p class="mailbox-footnote">Letters are kept separately on this device. They never change your stars, collectibles, or existing account progress.</p>
 </section>
 
 <section class="section-heading" id="daily-tambayan">
@@ -1224,7 +1265,7 @@
 
 <script src="seasons.js?v=1"></script>
 <script src="observatory.js?v=1"></script>
-<script src="living-world.js?v=1"></script>
+<script src="living-world.js?v=1"></script>\n<script src="mystery-mailbox.js?v=1"></script>
 
 <!-- Register notification service worker -->
 <script>
