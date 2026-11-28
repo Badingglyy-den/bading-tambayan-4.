@@ -4154,7 +4154,7 @@ $("onlinePhotoInput").addEventListener("change", async event => {
   let dmActiveConversation = null;
   let dmActivePeer = null;
   let dmHeads = new Map();
-  let dmMessagesBusy = false;
+  let dmUnreadConversations = new Set();
 
   function dmEscape(value) { return safeText(value); }
   function dmReadKey(id) { return "bt_dm_read_" + currentUser.id + "_" + id; }
@@ -4206,7 +4206,10 @@ $("onlinePhotoInput").addEventListener("change", async event => {
           appendDmMessage(msg);
           markDmRead(msg.conversation_id);
         } else if (msg.sender_id !== currentUser.id) {
-          renderDmHeads(true);
+          const peer = dmConversations.get(msg.conversation_id);
+          if (peer) dmHeads.set(msg.conversation_id, peer);
+          dmUnreadConversations.add(msg.conversation_id);
+          renderDmHeads();
         }
         loadDmConversations();
       }).subscribe();
@@ -4305,6 +4308,8 @@ $("onlinePhotoInput").addEventListener("change", async event => {
     for(const message of data||[]) appendDmMessage(message);
     $("btDmMessages").scrollTop=$("btDmMessages").scrollHeight;
     markDmRead(conversationId);
+    dmUnreadConversations.delete(conversationId);
+    dmHeads.delete(conversationId);
     renderDmHeads();
     $("btDmInput").focus({preventScroll:true});
   }
@@ -4344,6 +4349,7 @@ $("onlinePhotoInput").addEventListener("change", async event => {
 
   function markDmRead(conversationId) {
     try { localStorage.setItem(dmReadKey(conversationId),new Date().toISOString()); } catch(_){}
+    dmUnreadConversations.delete(conversationId);
     renderDmHeads();
   }
 
@@ -4362,13 +4368,16 @@ $("onlinePhotoInput").addEventListener("change", async event => {
       button.type="button"; button.className="bt-dm-headbubble";
       button.title=peer.profile.display_name||"Private chat";
       button.textContent=peer.profile.avatar||"💜";
+      if (dmUnreadConversations.has(id)) {
+        const dot=document.createElement("small"); dot.textContent="1"; button.appendChild(dot);
+      }
       button.onclick=()=>openDmConversation(id);
       box.appendChild(button);
     }
     const unread=$("btDmUnread");
     if(unread) {
-      const count=hasNew?1:0;
-      unread.hidden=!count; unread.textContent=String(count);
+      const count=dmUnreadConversations.size;
+      unread.hidden=!count; unread.textContent=count>9?"9+":String(count);
     }
   }
 
