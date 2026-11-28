@@ -3370,7 +3370,13 @@ $("onlinePhotoInput").addEventListener("change", async event => {
     }
     #onlineTambayan .online-reply-button:active,
     #onlineTambayan .online-delete-photo-button:active { transform: scale(.97); }
-    #onlineTambayan .online-message-actions { gap: 6px; margin-top: 6px; }
+    #onlineTambayan .online-message-actions {
+      display: flex; align-items: center; flex-wrap: wrap; gap: 6px;
+      width: 100%; margin-top: 13px; padding-top: 9px;
+      border-top: 1px solid rgba(220,195,255,.13);
+    }
+    #onlineTambayan .online-message-content { display: block; }
+    #onlineTambayan .online-message-actions button { margin: 0; }
   `;
   document.head.appendChild(replyControlStyle);
 
