@@ -5853,3 +5853,85 @@ html.welcome-open,html.welcome-open body{overflow:hidden}
   #home #games h2 { font-size: clamp(34px, 10vw, 43px) !important; }
   #home #games + .content-panel .game-card h3 { font-size: 21px !important; }
 }
+
+
+/* iPhone-sized screens: give the profile header and status cards room */
+@media (max-width: 520px) {
+  #home {
+    width: 100%;
+    min-width: 0;
+    padding-left: 14px;
+    padding-right: 14px;
+    box-sizing: border-box;
+  }
+  #home .profile-hero {
+    gap: 18px;
+    padding: 18px 16px;
+    overflow: visible;
+  }
+  #home .profile-hero-top {
+    align-items: flex-start;
+    gap: 12px;
+  }
+  #home .profile-hero-avatar-wrap {
+    flex: 0 0 62px;
+    width: 62px;
+    height: 62px;
+  }
+  #home .profile-hero-identity {
+    min-width: 0;
+    flex: 1 1 0;
+  }
+  #home .profile-hero-identity h1 {
+    font-size: clamp(24px, 7vw, 30px);
+    line-height: 1.15;
+  }
+  #home .profile-hero-greeting {
+    font-size: 12px;
+    line-height: 1.55;
+  }
+  #home .profile-hero-equipped {
+    gap: 7px;
+  }
+  #home .profile-hero-chip {
+    min-height: 30px;
+    padding: 6px 10px;
+  }
+  #home .profile-hero-bio {
+    padding: 14px;
+  }
+  #home .profile-hero-bottom {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  #home .profile-hero-stats {
+    justify-content: flex-start;
+    gap: 28px;
+  }
+  #home .profile-edit-btn {
+    width: 100%;
+    min-height: 48px;
+    font-size: 13px;
+  }
+  #home > .stats-grid {
+    gap: 8px;
+    overflow: visible;
+    border: 0;
+    background: transparent;
+    box-shadow: none;
+  }
+  #home > .stats-grid .stat {
+    min-height: 116px;
+    padding: 15px 14px;
+    border: 1px solid rgba(233,200,141,.22);
+    border-radius: 14px;
+  }
+  #home > .stats-grid .stat > strong {
+    font-size: 25px;
+    letter-spacing: .04em;
+  }
+  #home > .stats-grid .stat:nth-child(2) > strong {
+    font-size: 23px;
+  }
+}
