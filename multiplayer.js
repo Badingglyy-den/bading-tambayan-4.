@@ -3973,4 +3973,96 @@ $("onlinePhotoInput").addEventListener("change", async event => {
   `;
   document.head.appendChild(composerAlignmentFix);
 
+
+  // MOBILE COMPOSER: put action controls in a dedicated, left-aligned toolbar.
+  const mobileComposer = document.querySelector("#onlineTambayan #onlineMessageForm");
+  if (mobileComposer && !mobileComposer.querySelector(".online-compose-actions")) {
+    const photoLabel = mobileComposer.querySelector(".online-photo-button");
+    const emojiButton = mobileComposer.querySelector("#onlineEmojiToggle");
+    const micButton = mobileComposer.querySelector("#onlineVoiceRecordButton");
+    const sendButton = mobileComposer.querySelector('button[type="submit"]');
+    const actions = document.createElement("div");
+    actions.className = "online-compose-actions";
+    [photoLabel, emojiButton, micButton, sendButton].forEach(control => {
+      if (control) actions.appendChild(control);
+    });
+    mobileComposer.appendChild(actions);
+  }
+
+  const mobileComposerStructureStyle = document.createElement("style");
+  mobileComposerStructureStyle.textContent = `
+    @media (max-width:760px) {
+      #onlineTambayan #onlineMessageForm.online-compose {
+        display:flex !important;
+        flex-direction:column !important;
+        align-items:stretch !important;
+        justify-content:flex-start !important;
+        gap:9px !important;
+        width:100% !important;
+        min-width:0 !important;
+        box-sizing:border-box !important;
+        overflow:visible !important;
+      }
+      #onlineTambayan #onlineMessageForm > #onlineMessageInput {
+        display:block !important;
+        order:0 !important;
+        width:100% !important;
+        min-width:0 !important;
+        max-width:100% !important;
+        height:54px !important;
+        min-height:54px !important;
+        max-height:54px !important;
+        flex:0 0 54px !important;
+        box-sizing:border-box !important;
+      }
+      #onlineTambayan #onlineMessageForm > .online-compose-actions {
+        display:flex !important;
+        flex-direction:row !important;
+        align-items:center !important;
+        justify-content:flex-start !important;
+        flex-wrap:nowrap !important;
+        gap:8px !important;
+        width:100% !important;
+        min-width:0 !important;
+        margin:0 !important;
+        padding:0 !important;
+        box-sizing:border-box !important;
+      }
+      #onlineTambayan .online-compose-actions > .online-photo-button,
+      #onlineTambayan .online-compose-actions > #onlineEmojiToggle,
+      #onlineTambayan .online-compose-actions > #onlineVoiceRecordButton,
+      #onlineTambayan .online-compose-actions > button[type="submit"] {
+        display:inline-flex !important;
+        flex:0 0 42px !important;
+        width:42px !important;
+        min-width:42px !important;
+        max-width:42px !important;
+        height:44px !important;
+        min-height:44px !important;
+        max-height:44px !important;
+        align-items:center !important;
+        justify-content:center !important;
+        justify-self:auto !important;
+        margin:0 !important;
+        padding:4px !important;
+        box-sizing:border-box !important;
+      }
+      #onlineTambayan .online-compose-actions > #onlineVoiceRecordButton {
+        flex-basis:44px !important;
+        width:44px !important;
+        min-width:44px !important;
+        max-width:44px !important;
+      }
+      #onlineTambayan .online-compose-actions > button[type="submit"] {
+        flex-basis:58px !important;
+        width:58px !important;
+        min-width:58px !important;
+        max-width:58px !important;
+        font-size:12px !important;
+        white-space:nowrap !important;
+      }
+    }
+  `;
+  document.head.appendChild(mobileComposerStructureStyle);
+
 })();
