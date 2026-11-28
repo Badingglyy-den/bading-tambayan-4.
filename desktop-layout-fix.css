@@ -98,13 +98,39 @@ html.auth-checking #authGate {
   justify-self: center;
 }
 
-/* Center the email/password dialog as well when it is opened. */
+/* Give the email/password login its own full-screen layer.
+   It must not inherit the homepage's centered content layout. */
 dialog#accountDialog {
-  position: fixed;
-  inset: 0;
-  margin: auto;
+  position: fixed !important;
+  inset: 0 !important;
+  box-sizing: border-box;
+  width: min(460px, calc(100vw - 36px)) !important;
+  max-width: 460px !important;
+  height: fit-content;
   max-height: min(88vh, 760px);
+  margin: auto !important;
+  padding: 32px 28px !important;
   overflow-y: auto;
+  z-index: 100000;
+  border-radius: 24px;
+  box-shadow: 0 28px 90px rgba(0,0,0,.6);
+}
+
+dialog#accountDialog::backdrop {
+  background: rgba(8, 5, 20, .92);
+  backdrop-filter: blur(12px);
+}
+
+/* On desktop and mobile, the login dialog remains a standalone screen. */
+dialog#accountDialog[open] {
+  display: block;
+}
+
+@media (max-width: 560px) {
+  dialog#accountDialog {
+    width: min(460px, calc(100vw - 24px)) !important;
+    padding: 24px 18px !important;
+  }
 }
 
 @media (max-width: 900px) {
