@@ -19,7 +19,7 @@ Deno.serve(async (request) => {
     const privateKey = Deno.env.get("VAPID_PRIVATE_KEY")!;
     const subject = Deno.env.get("VAPID_SUBJECT") || "https://badingglyy-den.github.io/bading-tambayan-4./";
     const authHeader = request.headers.get("Authorization") || "";
-    const tokenMatch = authHeader.match(/^Bearer\\s+(.+)$/i);
+    const tokenMatch = authHeader.match(/^Bearer\s+(.+)$/i);
     if (!tokenMatch) {
       console.warn("PUSH_AUTH: missing bearer token", { hasAuthorizationHeader: !!authHeader });
       return new Response(JSON.stringify({ error: "Unauthorized" }), { status: 401, headers: cors });
