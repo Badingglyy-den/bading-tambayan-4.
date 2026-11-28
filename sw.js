@@ -1,4 +1,4 @@
-const CACHE_NAME = "bading-tambayan-shell-v3";
+const CACHE_NAME = "bading-tambayan-shell-v4";
 const APP_SHELL = ["./", "./index.html", "./manifest.webmanifest", "./app-icon.svg"];
 
 self.addEventListener("install", event => {
@@ -80,11 +80,21 @@ self.addEventListener("push", event => {
 
 self.addEventListener("notificationclick", event => {
   event.notification.close();
-  const targetUrl = new URL(event.notification.data?.url || "./", self.location.origin).href;
+
+  const data = event.notification.data || {};
+  const target = new URL(data.url || "./", self.location.origin);
+
+  // Some in-app background notifications only carry roomId.
+  // Convert that into the same deep-link parameter used by push notifications.
+  if (data.roomId) {
+    target.searchParams.set("openRoom", String(data.roomId));
+  }
+
+  const targetUrl = target.href;
   event.waitUntil(
     self.clients.matchAll({ type: "window", includeUncontrolled: true }).then(async clients => {
       for (const client of clients) {
-        if ("focus" in client) {
+        if (client.url.startsWith(self.location.origin) && "focus" in client) {
           if ("navigate" in client) await client.navigate(targetUrl);
           return client.focus();
         }
