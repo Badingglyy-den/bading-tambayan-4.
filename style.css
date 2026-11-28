@@ -3473,3 +3473,18 @@ img, video, canvas, svg {
   margin: 0;
   border-radius: 50%;
 }
+
+
+/* Correctly spaced profile layout on narrow phones */
+@media (max-width: 520px) {
+  #home .profile-hero { gap: 18px !important; padding: 18px 16px !important; }
+  #home .profile-hero-top { align-items: flex-start !important; gap: 12px !important; }
+  #home .profile-hero-avatar-wrap { flex: 0 0 62px !important; width: 62px !important; height: 62px !important; }
+  #home .profile-hero-identity { min-width: 0 !important; flex: 1 1 0 !important; }
+  #home .profile-hero-identity h1 { font-size: clamp(24px,7vw,30px) !important; }
+  #home .profile-hero-bottom { display: grid !important; grid-template-columns: 1fr !important; gap: 16px !important; }
+  #home .profile-hero-stats { gap: 28px !important; }
+  #home .profile-edit-btn { width: 100% !important; min-height: 48px !important; font-size: 13px !important; }
+  #home > .stats-grid { display: grid !important; grid-template-columns: repeat(2,minmax(0,1fr)) !important; gap: 8px !important; overflow: visible !important; border: 0 !important; background: transparent !important; box-shadow: none !important; }
+  #home > .stats-grid .stat { min-width: 0 !important; min-height: 116px !important; padding: 15px 14px !important; border: 1px solid rgba(233,200,141,.22) !important; border-radius: 14px !important; }
+}
