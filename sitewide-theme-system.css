@@ -309,3 +309,92 @@ html body[data-theme] #onlineTambayan .online-message-content *{
   -webkit-text-fill-color:#fff!important;
 }
 
+/* SIMPLE HIGH-CONTRAST MODE — user-requested black/white typography.
+   Light themes use near-black text; dark themes use white text. */
+body[data-theme="cloud"],
+body[data-theme="peach"],
+body[data-theme="matcha"]{
+  --bt-text:#111111;
+  --bt-muted:#222222;
+  --bt-accent:#111111;
+  --text:#111111;
+  --muted:#222222;
+  --accent:#111111;
+  --accent2:#111111;
+}
+body[data-theme="violet"],
+body[data-theme="rose"],
+body[data-theme="ocean"],
+body[data-theme="midnight"]{
+  --bt-text:#ffffff;
+  --bt-muted:#ffffff;
+  --bt-accent:#ffffff;
+  --text:#ffffff;
+  --muted:#ffffff;
+  --accent:#ffffff;
+  --accent2:#ffffff;
+}
+html body[data-theme="cloud"] :is(
+  h1,h2,h3,h4,h5,h6,p,li,label,small,span,strong,b,em,i,
+  a,summary,figcaption,blockquote,dt,dd,time,legend,caption,
+  .eyebrow,.section-note,.muted,.hint,.help-text,.form-hint,
+  .form-note,.empty-state,.entry-meta,.world-kicker,.footer,
+  .hero-text,.tiny-link,.brand-mark
+),
+html body[data-theme="peach"] :is(
+  h1,h2,h3,h4,h5,h6,p,li,label,small,span,strong,b,em,i,
+  a,summary,figcaption,blockquote,dt,dd,time,legend,caption,
+  .eyebrow,.section-note,.muted,.hint,.help-text,.form-hint,
+  .form-note,.empty-state,.entry-meta,.world-kicker,.footer,
+  .hero-text,.tiny-link,.brand-mark
+),
+html body[data-theme="matcha"] :is(
+  h1,h2,h3,h4,h5,h6,p,li,label,small,span,strong,b,em,i,
+  a,summary,figcaption,blockquote,dt,dd,time,legend,caption,
+  .eyebrow,.section-note,.muted,.hint,.help-text,.form-hint,
+  .form-note,.empty-state,.entry-meta,.world-kicker,.footer,
+  .hero-text,.tiny-link,.brand-mark
+){
+  color:#111111!important;
+  -webkit-text-fill-color:#111111!important;
+  text-shadow:none!important;
+}
+html body[data-theme="violet"] :is(
+  h1,h2,h3,h4,h5,h6,p,li,label,small,span,strong,b,em,i,
+  a,summary,figcaption,blockquote,dt,dd,time,legend,caption,
+  .eyebrow,.section-note,.muted,.hint,.help-text,.form-hint,
+  .form-note,.empty-state,.entry-meta,.world-kicker,.footer,
+  .hero-text,.tiny-link,.brand-mark
+),
+html body[data-theme="rose"] :is(
+  h1,h2,h3,h4,h5,h6,p,li,label,small,span,strong,b,em,i,
+  a,summary,figcaption,blockquote,dt,dd,time,legend,caption,
+  .eyebrow,.section-note,.muted,.hint,.help-text,.form-hint,
+  .form-note,.empty-state,.entry-meta,.world-kicker,.footer,
+  .hero-text,.tiny-link,.brand-mark
+),
+html body[data-theme="ocean"] :is(
+  h1,h2,h3,h4,h5,h6,p,li,label,small,span,strong,b,em,i,
+  a,summary,figcaption,blockquote,dt,dd,time,legend,caption,
+  .eyebrow,.section-note,.muted,.hint,.help-text,.form-hint,
+  .form-note,.empty-state,.entry-meta,.world-kicker,.footer,
+  .hero-text,.tiny-link,.brand-mark
+),
+html body[data-theme="midnight"] :is(
+  h1,h2,h3,h4,h5,h6,p,li,label,small,span,strong,b,em,i,
+  a,summary,figcaption,blockquote,dt,dd,time,legend,caption,
+  .eyebrow,.section-note,.muted,.hint,.help-text,.form-hint,
+  .form-note,.empty-state,.entry-meta,.world-kicker,.footer,
+  .hero-text,.tiny-link,.brand-mark
+){
+  color:#ffffff!important;
+  -webkit-text-fill-color:#ffffff!important;
+  text-shadow:none!important;
+}
+/* Preserve white text inside the dark live-chat bubbles. */
+html body[data-theme] #onlineTambayan .online-message-content,
+html body[data-theme] #onlineTambayan .online-message-content *{
+  color:#ffffff!important;
+  -webkit-text-fill-color:#ffffff!important;
+}
+
