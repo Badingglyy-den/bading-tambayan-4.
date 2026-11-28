@@ -3341,4 +3341,25 @@ $("onlinePhotoInput").addEventListener("change", async event => {
   `;
   document.head.appendChild(organizedChatStyle);
 
+  const replyControlStyle = document.createElement("style");
+  replyControlStyle.textContent = `
+    #onlineTambayan .online-message-actions {
+      display: flex; align-items: center; gap: 8px; margin-top: 9px;
+    }
+    #onlineTambayan .online-reply-button {
+      min-height: 44px; min-width: 88px; padding: 9px 15px;
+      border: 1px solid rgba(194,158,255,.16); border-radius: 12px;
+      background: transparent; color: rgba(224,207,255,.82);
+      box-shadow: none; font-size: 14px; font-weight: 600;
+      opacity: .9; transition: background .18s ease, opacity .18s ease, border-color .18s ease;
+    }
+    #onlineTambayan .online-reply-button:hover,
+    #onlineTambayan .online-reply-button:focus-visible {
+      background: rgba(169,139,255,.12);
+      border-color: rgba(194,158,255,.38); opacity: 1;
+    }
+    #onlineTambayan .online-reply-button:active { transform: scale(.97); }
+  `;
+  document.head.appendChild(replyControlStyle);
+
 })();
