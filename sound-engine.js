@@ -2,7 +2,7 @@
   "use strict";
 
   const STORE = "bt_sound_settings_v1";
-  const defaults = { master: true, music: true, effects: true, musicVolume: 0.35, effectsVolume: 0.65 };
+  const defaults = { master: true, music: true, effects: true, musicVolume: 0.55, effectsVolume: 0.85 };
   let settings = { ...defaults };
   try {
     const saved = JSON.parse(localStorage.getItem(STORE) || "null");
@@ -101,7 +101,7 @@
       gain.connect(musicGain);
       osc.start(now);
       lfo.start(now);
-      gain.gain.setTargetAtTime(0.022 - index * 0.003, now, 1.1);
+      gain.gain.setTargetAtTime(0.045 - index * 0.006, now, 1.1);
       ambienceNodes.push({ osc, gain, lfo });
     });
   }
@@ -203,7 +203,7 @@
     if (el) el.textContent = message;
   }
 
-  document.addEventListener("pointerdown", () => { unlock(); }, { once: true, capture: true });
+  document.addEventListener("pointerdown", () => { unlock(); }, { capture: true });
   document.addEventListener("click", event => {
     const target = event.target.closest("button, a, [role='button']");
     if (!target) return;
@@ -269,8 +269,22 @@
     });
     document.getElementById("soundTestButton")?.addEventListener("click", async () => {
       await unlock();
-      play("notify");
-      setStatus(context ? "Sound test played. Your browser may need one tap to enable audio." : "Audio is not supported by this browser.");
+      if (!context) {
+        setStatus("This browser does not support Web Audio.");
+        return;
+      }
+      if (context.state !== "running") {
+        setStatus("Audio is still blocked by the browser. Tap Test sound once more, and check your phone's media volume.");
+        return;
+      }
+      if (!settings.master || !settings.effects) {
+        setStatus("Turn on All sounds and Sound effects before testing.");
+        return;
+      }
+      tone(880, 0.42, "sine", 0.34);
+      setTimeout(() => tone(1174.66, 0.48, "sine", 0.3), 180);
+      setStatus("Playing a louder two-note test. If silent, check Android media volume.");
+
     });
     if (activeWorld) syncWorld();
   });
