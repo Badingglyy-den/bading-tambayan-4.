@@ -4166,7 +4166,7 @@ $("onlinePhotoInput").addEventListener("change", async event => {
     dock.innerHTML = `
       <div id="btDmHeads"></div>
       <section id="btDmPanel" hidden>
-        <div class="bt-dm-head"><span>💌 Private messages</span><button type="button" id="btDmClosePanel" aria-label="Close">×</button></div>
+        <div class="bt-dm-head"><span>💌 Private messages</span><span><button type="button" id="btDmEnableNotifications" title="Enable message notifications">🔔</button> <button type="button" id="btDmClosePanel" aria-label="Close">×</button></span></div>
         <input id="btDmSearch" type="search" placeholder="Find a member…" autocomplete="off">
         <div id="btDmList"><p style="padding:8px;color:#c6b5d7">Loading your conversations…</p></div>
       </section>
@@ -4187,10 +4187,46 @@ $("onlinePhotoInput").addEventListener("change", async event => {
       if (!$("btDmPanel").hidden) loadDmDirectory();
     });
     $("btDmClosePanel").onclick = () => $("btDmPanel").hidden = true;
+    $("btDmEnableNotifications").onclick = requestDmNotifications;
     $("btDmSearch").addEventListener("input", renderDmDirectory);
     $("btDmMinimize").onclick = minimizeDmWindow;
     $("btDmClose").onclick = () => { if (dmActiveConversation) dmHeads.set(dmActiveConversation, dmActivePeer); dmActiveConversation=null; dmActivePeer=null; win.hidden=true; renderDmHeads(); };
     $("btDmForm").onsubmit = sendDirectMessage;
+  }
+
+  async function requestDmNotifications() {
+    if (!("Notification" in window)) {
+      alert("This browser does not support message notifications.");
+      return;
+    }
+    try {
+      const permission = await Notification.requestPermission();
+      if (permission === "granted") {
+        alert("Private-message notifications are enabled while Bading Tambayan is open.");
+      } else {
+        alert("Notifications were not enabled. You can allow them in your browser site settings.");
+      }
+    } catch (error) {
+      alert("Could not enable notifications in this browser.");
+    }
+  }
+
+  function showDmBrowserNotification(message) {
+    if (!("Notification" in window) || Notification.permission !== "granted") return;
+    if (!document.hidden) return;
+    const peer = dmConversations.get(message.conversation_id);
+    const name = peer?.profile?.display_name || "Tambay";
+    try {
+      const notice = new Notification("New private message from " + name, {
+        body: message.content || "You received a private message.",
+        tag: "bt-dm-" + message.conversation_id
+      });
+      notice.onclick = () => {
+        window.focus();
+        openDmConversation(message.conversation_id);
+        notice.close();
+      };
+    } catch (_) {}
   }
 
   async function initializeDirectMessages() {
@@ -4210,6 +4246,7 @@ $("onlinePhotoInput").addEventListener("change", async event => {
           if (peer) dmHeads.set(msg.conversation_id, peer);
           dmUnreadConversations.add(msg.conversation_id);
           renderDmHeads();
+          showDmBrowserNotification(msg);
         }
         loadDmConversations();
       }).subscribe();
@@ -4237,6 +4274,34 @@ $("onlinePhotoInput").addEventListener("change", async event => {
       }
     }
     dmConversations = next;
+    // Keep every existing private conversation available as a floating chat head.
+    for (const [id, peer] of dmConversations) {
+      if (id !== dmActiveConversation) dmHeads.set(id, peer);
+    }
+    // Rebuild unread indicators from the latest incoming message in each conversation.
+    if (ids.length) {
+      const {data: recentMessages, error: messageError} = await client.from("dm_messages")
+        .select("conversation_id,sender_id,created_at")
+        .in("conversation_id", ids)
+        .order("created_at", {ascending:false})
+        .limit(300);
+      if (messageError) throw messageError;
+      const latest = new Map();
+      for (const message of recentMessages || []) {
+        if (!latest.has(message.conversation_id)) latest.set(message.conversation_id, message);
+      }
+      for (const id of ids) {
+        const message = latest.get(id);
+        if (!message || message.sender_id === currentUser.id || id === dmActiveConversation) {
+          dmUnreadConversations.delete(id);
+          continue;
+        }
+        let readAt = "";
+        try { readAt = localStorage.getItem(dmReadKey(id)) || ""; } catch (_) {}
+        if (message.created_at > readAt) dmUnreadConversations.add(id);
+        else dmUnreadConversations.delete(id);
+      }
+    }
     await renderDmDirectory();
     renderDmHeads();
   }
