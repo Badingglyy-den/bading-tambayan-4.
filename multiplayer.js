@@ -1132,6 +1132,100 @@
   document.head.appendChild(notificationStyle);
 
 
+  // ONLINE TAMBAYAN — WIDE DESKTOP LAYOUT
+  const desktopChatStyle = document.createElement("style");
+  desktopChatStyle.textContent = `
+    @media (min-width: 1000px) {
+      #onlineTambayan {
+        width: 100%;
+        max-width: none;
+        margin: 30px auto 44px;
+      }
+
+      #onlineTambayan .online-panel {
+        width: 100%;
+        max-width: none;
+      }
+
+      #onlineTambayan .online-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 18px;
+      }
+
+      #onlineTambayan .online-room {
+        width: 100%;
+        padding: 26px;
+      }
+
+      #onlineTambayan .online-room-top {
+        padding: 24px;
+      }
+
+      #onlineTambayan .online-columns {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(280px, 340px);
+        gap: 22px;
+        align-items: stretch;
+      }
+
+      #onlineTambayan .online-columns > .online-box {
+        min-width: 0;
+        padding: 24px;
+      }
+
+      #onlineTambayan .online-messages {
+        height: clamp(480px, 62vh, 760px);
+        padding: 20px;
+        gap: 16px;
+      }
+
+      #onlineTambayan .online-message {
+        max-width: min(76%, 780px);
+        padding: 15px 19px;
+        font-size: 1rem;
+        line-height: 1.6;
+      }
+
+      #onlineTambayan .online-message small {
+        font-size: .82rem;
+      }
+
+      #onlineTambayan .online-compose {
+        gap: 12px;
+        padding: 12px;
+      }
+
+      #onlineTambayan .online-compose input {
+        min-height: 56px;
+        font-size: 1rem;
+      }
+
+      #onlineTambayan .online-compose button {
+        min-width: 100px;
+        min-height: 52px;
+        font-size: 1rem;
+      }
+
+      #onlineTambayan .online-reactions button {
+        min-width: 48px;
+        min-height: 46px;
+      }
+    }
+
+    @media (min-width: 1500px) {
+      #onlineTambayan .online-columns {
+        grid-template-columns: minmax(0, 1fr) 380px;
+        gap: 26px;
+      }
+
+      #onlineTambayan .online-messages {
+        height: min(68vh, 820px);
+      }
+    }
+  `;
+  document.head.appendChild(desktopChatStyle);
+
   const section = document.createElement("section");
   section.id = "onlineTambayan";
   section.innerHTML = `
