@@ -75,7 +75,7 @@ Deno.serve(async (request) => {
     }
 
     const { data: room } = await admin.from("rooms").select("room_name").eq("id", room_id).single();
-    const { data: sender } = await admin.from("profiles").select("display_name").eq("user_id", authenticatedUserId).maybeSingle();
+    const { data: sender } = await admin.from("chat_profiles").select("display_name").eq("user_id", authenticatedUserId).maybeSingle();
     const { data: members, error: membersError } = await admin.from("room_members")
       .select("user_id").eq("room_id", room_id).neq("user_id", authenticatedUserId);
     if (membersError) throw membersError;
