@@ -2649,8 +2649,18 @@ if (String(message.content || "").startsWith("[[VOICE]]")) {
   async function notifyRoomMembers(roomId, messageId) {
     if (!client || !roomId || !messageId) return;
     try {
+      let senderEndpoint = null;
+      if ("serviceWorker" in navigator && "PushManager" in window) {
+        try {
+          const registration = await navigator.serviceWorker.ready;
+          const subscription = await registration.pushManager.getSubscription();
+          senderEndpoint = subscription?.endpoint || null;
+        } catch (subscriptionError) {
+          console.warn("Could not identify this device's push endpoint:", subscriptionError);
+        }
+      }
       const { error } = await client.functions.invoke("send-chat-push", {
-        body: { room_id: roomId, message_id: messageId }
+        body: { room_id: roomId, message_id: messageId, sender_endpoint: senderEndpoint }
       });
       if (error) console.warn("Chat push delivery could not be requested:", error);
     } catch (error) {
