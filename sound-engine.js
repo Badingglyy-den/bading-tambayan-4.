@@ -281,14 +281,57 @@
     tone(235 + Math.random() * 45, 0.075, "triangle", 0.035, -90);
   }
 
+  // Short, tactile interface Foley synthesized locally (no remote audio dependency).
+  function uiFoley(kind = "click") {
+    if (!context || context.state !== "running" || !settings.master || !settings.effects) return;
+    const now = context.currentTime;
+    const noise = (duration, peak, filterType, frequency, delay = 0) => {
+      const length = Math.max(1, Math.ceil(context.sampleRate * duration));
+      const buffer = context.createBuffer(1, length, context.sampleRate);
+      const data = buffer.getChannelData(0);
+      for (let i = 0; i < length; i++) {
+        const t = i / length;
+        data[i] = (Math.random() * 2 - 1) * Math.pow(1 - t, 3.4);
+      }
+      const src = context.createBufferSource();
+      const filter = context.createBiquadFilter();
+      const gain = context.createGain();
+      src.buffer = buffer;
+      filter.type = filterType;
+      filter.frequency.value = frequency;
+      filter.Q.value = 0.75;
+      gain.gain.setValueAtTime(0.0001, now + delay);
+      gain.gain.exponentialRampToValueAtTime(peak, now + delay + 0.004);
+      gain.gain.exponentialRampToValueAtTime(0.0001, now + delay + duration);
+      src.connect(filter); filter.connect(gain); gain.connect(effectsGain);
+      src.start(now + delay); src.stop(now + delay + duration + 0.01);
+    };
+    if (kind === "click") {
+      noise(0.045, 0.11, "bandpass", 1850);
+      tone(720 + Math.random() * 90, 0.035, "triangle", 0.025, -180);
+    } else if (kind === "open") {
+      noise(0.09, 0.075, "bandpass", 1150);
+      tone(520, 0.11, "sine", 0.045, 240);
+    } else if (kind === "close") {
+      noise(0.075, 0.07, "lowpass", 900);
+      tone(560, 0.09, "sine", 0.035, -190);
+    } else if (kind === "switch") {
+      noise(0.035, 0.12, "highpass", 1450);
+      tone(390, 0.045, "triangle", 0.035, 110);
+    } else if (kind === "error") {
+      tone(210, 0.12, "triangle", 0.09, -55);
+      setTimeout(() => tone(165, 0.13, "triangle", 0.075, -30), 105);
+    }
+  }
+
   function play(name = "click") {
     if (!context || context.state !== "running" || !settings.master || !settings.effects) return;
     if (name === "notify") {
       tone(659.25, 0.24, "sine", 0.16);
       setTimeout(() => tone(880, 0.3, "sine", 0.12), 100);
     } else if (name === "success") {
-      tone(523.25, 0.16, "sine", 0.13);
-      setTimeout(() => tone(783.99, 0.24, "sine", 0.13), 100);
+      tone(587.33, 0.12, "sine", 0.11);
+      setTimeout(() => tone(783.99, 0.18, "sine", 0.10), 90);
     } else if (name === "break") {
       ceramicSmash();
     } else if (name === "pin") {
@@ -298,8 +341,8 @@
     } else if (name === "discover") {
       tone(587.33, 0.18, "sine", 0.12);
       setTimeout(() => tone(783.99, 0.22, "sine", 0.12), 90);
-    } else {
-      tone(480, 0.045, "sine", 0.055);
+    } else if (["click", "open", "close", "switch", "error"].includes(name)) {
+      uiFoley(name);
     }
   }
 
@@ -325,7 +368,7 @@
 
   document.addEventListener("pointerdown", () => { unlock(); }, { capture: true });
   document.addEventListener("click", event => {
-    const target = event.target.closest("button, a, [role='button']");
+    const target = event.target.closest("button, a, [role='button'], input[type='checkbox'], input[type='radio']");
     if (!target) return;
     const now = Date.now();
     if (now - lastUiSound < 65) return;
@@ -334,7 +377,21 @@
     else if (target.matches("[data-plate]")) play("break");
     else if (target.id === "ragePunchTarget") play("punch");
     else if (target.matches("[data-cosmic-find], [data-cosmic-planet], #cosmicScanCreature")) play("discover");
+    else if (target.matches("input[type='checkbox'], input[type='radio'], [role='switch']")) play("switch");
+    else if (target.matches("[data-sound='success']")) play("success");
+    else if (target.matches("[data-sound='error']")) play("error");
+    else if (target.matches("[data-open], [aria-haspopup='dialog'], #soundSettingsOpen")) play("open");
+    else if (target.matches("[data-close], .modal-close, [aria-label*='Close'], [aria-label*='close']")) play("close");
+    else if (target.closest("dialog") && target.matches("button")) play("click");
     else play("click");
+  }, true);
+
+  // Native dialog lifecycle sounds for modal open/close, including programmatic closes.
+  document.addEventListener("toggle", event => {
+    if (event.target instanceof HTMLDialogElement && event.target.open) play("open");
+  }, true);
+  document.addEventListener("close", event => {
+    if (event.target instanceof HTMLDialogElement) play("close");
   }, true);
 
   document.addEventListener("tambayan:notification", () => play("notify"));
