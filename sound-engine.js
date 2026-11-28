@@ -101,12 +101,23 @@
       gain.connect(musicGain);
       osc.start(now);
       lfo.start(now);
-      gain.gain.setTargetAtTime(0.045 - index * 0.006, now, 1.1);
+      gain.gain.setTargetAtTime(0.085 - index * 0.012, now, 1.1);
       ambienceNodes.push({ osc, gain, lfo });
     });
   }
 
   function routeWorld() {
+    // The app's main navigation switches .app-view sections with pushState,
+    // which does not emit hashchange. Prefer the active view over the URL.
+    const activeView = document.querySelector(".app-view.active");
+    const viewId = (activeView?.dataset.view || "").toLowerCase();
+    const viewRoutes = {
+      arcade: "games", games: "games", comfort: "comfort", lab: "lab",
+      mystery: "mystery", diary: "diary", community: "community",
+      rage: "rage", cosmic: "cosmic", space: "space"
+    };
+    if (viewRoutes[viewId]) return viewRoutes[viewId];
+
     const route = (location.hash || "#home").slice(1).toLowerCase();
     const routes = {
       games: "games", arcade: "games", comfort: "comfort", lab: "lab",
@@ -261,6 +272,15 @@
   document.addEventListener("tambayan:notification", () => play("notify"));
   document.addEventListener("tambayan:sound-success", () => play("success"));
   window.addEventListener("hashchange", syncWorld);
+  // Observe app-view activation so ambience follows the real in-app navigation,
+  // including navigation that uses history.pushState instead of hashchange.
+  const viewObserver = new MutationObserver(() => syncWorld());
+  document.addEventListener("DOMContentLoaded", () => {
+    document.querySelectorAll(".app-view").forEach(view => {
+      viewObserver.observe(view, { attributes: true, attributeFilter: ["class"] });
+    });
+    syncWorld();
+  });
   document.addEventListener("click", event => {
     if (event.target.closest("[data-go], a[href^=\"#\"]")) setTimeout(syncWorld, 0);
   }, true);
