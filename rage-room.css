@@ -1,0 +1,36 @@
+/* Rage Room — World 07 */
+#rageRoom{margin:28px 0 42px;scroll-margin-top:88px}
+#rageRoom[hidden]{display:none!important}
+#rageRoom .rage-shell{padding:clamp(16px,3vw,28px);border:1px solid #ef8b9b44;border-radius:26px;background:radial-gradient(ellipse at 90% 0%,#8f36502c,transparent 38%),linear-gradient(145deg,#211722,#130f1b 75%);box-shadow:0 20px 55px #08050c88;color:#fff}
+#rageRoom .rage-kicker{font-size:10px;letter-spacing:2px;font-weight:900;color:#ff9b9e}
+#rageRoom h2,#rageRoom h3,#rageRoom p{margin-top:0}
+#rageRoom .rage-hero{padding:clamp(18px,4vw,30px);border-radius:20px;background:linear-gradient(120deg,#3b1e30,#25182d 65%,#1b192b);border:1px solid #ff9caa33}
+#rageRoom .rage-hero h2{font-size:clamp(30px,6vw,48px);margin:7px 0;letter-spacing:-1.5px}
+#rageRoom .rage-hero p{color:#e4cbd7;max-width:620px;line-height:1.65;margin-bottom:0}
+#rageRoom .rage-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:16px 0}
+#rageRoom .rage-card{min-width:0;padding:16px;border:1px solid #ffffff1b;border-radius:18px;background:linear-gradient(145deg,#342330,#211c2b);color:#fff}
+#rageRoom .rage-card h3{font-size:16px;margin:8px 0 5px}
+#rageRoom .rage-card p{font-size:12px;line-height:1.5;color:#d5c4d0;margin-bottom:12px}
+#rageRoom .rage-emoji{font-size:30px}
+#rageRoom button{font:inherit;cursor:pointer}
+#rageRoom .rage-btn{border:0;border-radius:11px;padding:10px 13px;background:linear-gradient(110deg,#b34c66,#e17d83);color:white;font-weight:800;font-size:12px}
+#rageRoom .rage-btn.secondary{background:#ffffff12;border:1px solid #ffffff26;color:#fff}
+#rageRoom .rage-btn:disabled{opacity:.45;cursor:not-allowed}
+#rageRoom .rage-stage{min-height:118px;padding:15px;border-radius:14px;background:#100d18;border:1px solid #ffffff17;display:grid;place-items:center;text-align:center;margin:10px 0}
+#rageRoom .rage-target{font-size:58px;line-height:1.2;user-select:none;transition:transform .12s}
+#rageRoom .rage-target.hit{transform:rotate(-13deg) scale(.88)}
+#rageRoom .rage-meter{height:7px;border-radius:10px;background:#ffffff18;overflow:hidden;margin:10px 0}
+#rageRoom .rage-meter span{display:block;height:100%;width:0;background:linear-gradient(90deg,#bd4e67,#ffb26f);transition:width .2s}
+#rageRoom .rage-pinboard{display:flex;justify-content:center;align-items:center;gap:5px;flex-wrap:wrap;min-height:95px;font-size:30px}
+#rageRoom .rage-pinboard button{border:0;background:transparent;font-size:26px;padding:5px}
+#rageRoom .rage-field{width:100%;box-sizing:border-box;border:1px solid #ffffff2a;border-radius:11px;background:#100d18;color:#fff;padding:12px;margin:5px 0 10px;font:inherit}
+#rageRoom textarea.rage-field{min-height:94px;resize:vertical}
+#rageRoom .rage-note{padding:13px;border:1px solid #ffffff1a;background:#ffffff08;border-radius:13px;margin:9px 0;white-space:pre-wrap;overflow-wrap:anywhere;font-size:13px}
+#rageRoom .rage-note small{display:block;color:#c9b8c5;margin-top:8px;font-size:10px}
+#rageRoom .rage-tabs{display:flex;gap:7px;flex-wrap:wrap;margin:18px 0 10px}
+#rageRoom .rage-tabs button[aria-pressed=true]{background:#a94b63;color:#fff;border-color:#e98c9a}
+#rageRoom .rage-status{min-height:18px;color:#ffb5bd;font-size:11px;margin:6px 0}
+#rageRoom .rage-muted{font-size:11px;color:#cbb9c7;line-height:1.5}
+#rageRoom .rage-wall-lock{border:1px dashed #ff9aa655;border-radius:15px;padding:14px;background:#351d2b66}
+@media(max-width:560px){#rageRoom .rage-grid{grid-template-columns:1fr}#rageRoom .rage-card{padding:14px}}
+@media(prefers-reduced-motion:reduce){#rageRoom *{transition:none!important;animation:none!important}}
