@@ -1447,12 +1447,34 @@
 
     const sectionNavStyle = document.createElement("style");
     sectionNavStyle.textContent = `
+      /* These are direct children of the 12-column online panel.
+         Make each view span the full panel so it cannot collapse to one grid track. */
+      #onlineTambayan .online-section-nav,
+      #onlineTambayan .online-section-view {
+        grid-column: 1 / -1 !important;
+        width: 100% !important;
+        min-width: 0 !important;
+        max-width: 100% !important;
+      }
       #onlineTambayan .online-section-nav {
-        display:grid; grid-template-columns:repeat(2,minmax(0,1fr));
-        gap:9px; margin:16px 0;
+        display: grid !important;
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+        gap: 10px !important;
+        margin: 16px 0 !important;
+        align-items: stretch;
       }
       #onlineTambayan .online-section-nav button {
-        min-height:54px; margin:0; padding:12px 10px;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: flex-start !important;
+        width: 100% !important;
+        min-width: 0 !important;
+        min-height: 58px !important;
+        margin: 0 !important;
+        padding: 13px 14px !important;
+        white-space: normal !important;
+        overflow-wrap: anywhere;
+        line-height: 1.3 !important;
         border:1px solid rgba(194,158,255,.22);
         background:rgba(169,139,255,.09); color:inherit;
         box-shadow:none; text-align:left;
@@ -1461,6 +1483,7 @@
         background:linear-gradient(135deg,#c3a2ff,#9872ed);
         color:#211432; border-color:#c7a8ff;
       }
+      #onlineTambayan .online-section-view { display: block; }
       #onlineTambayan .online-section-view[hidden] { display:none !important; }
       #onlineTambayan .online-section-view > .online-box,
       #onlineTambayan .online-section-view > .online-grid > div {
@@ -1471,7 +1494,7 @@
         margin-bottom:12px;
       }
       @media(max-width:380px) {
-        #onlineTambayan .online-section-nav { grid-template-columns:1fr; }
+        #onlineTambayan .online-section-nav { grid-template-columns:1fr !important; }
       }
     `;
     document.head.appendChild(sectionNavStyle);
