@@ -209,3 +209,39 @@ body #home > .section-heading#worlds .eyebrow{
   color:var(--bt-accent)!important;
 }
 
+/* Final override for the six world section headers.
+   The homepage redesign stylesheet assigns fixed colors to these headings,
+   so target the actual section IDs with higher specificity. */
+body #home > section.section-heading#games h2,
+body #home > section.section-heading#comfort h2,
+body #home > section.section-heading#lab h2,
+body #home > section.section-heading#mystery h2,
+body #home > section.section-heading#diary h2,
+body #home > section.section-heading#hangout h2{
+  color:var(--bt-text)!important;
+  -webkit-text-fill-color:var(--bt-text)!important;
+  opacity:1!important;
+  text-shadow:none!important;
+}
+body #home > section.section-heading#games .eyebrow,
+body #home > section.section-heading#comfort .eyebrow,
+body #home > section.section-heading#lab .eyebrow,
+body #home > section.section-heading#mystery .eyebrow,
+body #home > section.section-heading#diary .eyebrow,
+body #home > section.section-heading#hangout .eyebrow{
+  color:var(--bt-accent)!important;
+  -webkit-text-fill-color:var(--bt-accent)!important;
+  opacity:1!important;
+  text-shadow:none!important;
+}
+body #home > section.section-heading#games .section-note,
+body #home > section.section-heading#comfort .section-note,
+body #home > section.section-heading#lab .section-note,
+body #home > section.section-heading#mystery .section-note,
+body #home > section.section-heading#diary .section-note,
+body #home > section.section-heading#hangout .section-note{
+  color:var(--bt-muted)!important;
+  -webkit-text-fill-color:var(--bt-muted)!important;
+  opacity:1!important;
+}
+
