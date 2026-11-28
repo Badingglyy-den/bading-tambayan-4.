@@ -104,6 +104,9 @@ self.addEventListener("notificationclick", event => {
     target.searchParams.set("openRoom", String(data.roomId));
   }
 
+  // Private-message notifications open the exact conversation after account restore.
+  if (data.conversationId) target.searchParams.set("openDm", String(data.conversationId));
+
   const targetUrl = target.href;
   event.waitUntil((async () => {
     const clients = await self.clients.matchAll({ type: "window", includeUncontrolled: true });
