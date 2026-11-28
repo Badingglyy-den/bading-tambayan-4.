@@ -2697,19 +2697,7 @@ $("gateSignup").onclick = () => {
     }).catch(error => console.warn("Could not check push subscription:", error));
   }
 
-      return;
-    }
 
-    try {
-      await Notification.requestPermission();
-    } catch (error) {
-      console.warn("Notification permission request failed:", error);
-    }
-
-    updateNotificationControl();
-  };
-
-    updateNotificationControl();
 
   $("onlineCreateRoom").onclick = createRoom;
   $("onlineJoinRoom").onclick = joinRoom;
