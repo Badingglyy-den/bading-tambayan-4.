@@ -1305,6 +1305,7 @@
 </p>
 <div class="online-messages" id="onlineMessages" aria-live="polite"></div>
             <p class="online-typing" id="onlineTypingIndicator" aria-live="polite"></p>
+            <div id="onlineReplyComposer" class="online-reply-composer" hidden></div>
             <form class="online-compose" id="onlineMessageForm">
   <label for="onlinePhotoInput" class="online-photo-button" title="Send a photo">
     📷
@@ -1397,6 +1398,7 @@
   let client = null;
   let currentUser = null;
   let currentRoom = null;
+  let replyToMessage = null;
   let roomChannel = null;
   let profile = { display_name: "Tambay", avatar: "💜" };
   let messageIds = new Set();
@@ -1952,6 +1954,9 @@ renderRoomList();
         filter: "room_id=eq." + roomId
       }, async payload => { await appendMessage(payload.new); })
       .on("postgres_changes", {
+        event: "DELETE", schema: "public", table: "messages", filter: "room_id=eq." + roomId
+      }, payload => { const deletedId = String(payload.old?.id || ""); document.querySelector(`.online-message[data-message-id="${deletedId}"]`)?.remove(); messageIds.delete(deletedId); })
+      .on("postgres_changes", {
         event: "INSERT", schema: "public", table: "message_reads"
       }, payload => { handleReadReceipt(payload.new); })
       .on("presence", { event: "sync" }, renderMembers)
@@ -2049,7 +2054,7 @@ renderRoomList();
     if (olderStatus) olderStatus.style.display = "none";
 
     const { data, error } = await client.from("messages")
-      .select("id,user_id,content,created_at")
+      .select("id,user_id,content,created_at,reply_to")
       .eq("room_id", roomId)
       .order("created_at", { ascending: false })
       .order("id", { ascending: false })
@@ -2081,7 +2086,7 @@ renderRoomList();
     const roomId = currentRoom.id;
     try {
       const { data, error } = await client.from("messages")
-        .select("id,user_id,content,created_at")
+        .select("id,user_id,content,created_at,reply_to")
         .eq("room_id", roomId)
         .order("created_at", { ascending: false })
         .order("id", { ascending: false })
@@ -2319,9 +2324,13 @@ renderRoomList();
         · ${safeText(time)}
       </small>
       <div class="online-message-content">${safeText(message.content)}</div>
+      <div class="online-message-actions"><button type="button" class="online-reply-button">↩ Reply</button>${mine && String(message.content || "").startsWith("[[PHOTO]]") ? `<button type="button" class="online-delete-photo-button">Delete for everyone</button>` : ""}</div>
       ${mine ? `<span class="online-message-receipt">${receiptMessageIds.has(id) ? "✓✓ Seen" : "✓ Sent"}</span>` : ""}
     `;
     const contentEl = item.querySelector(".online-message-content");
+    item.querySelector(".online-reply-button").onclick = () => { replyToMessage = { id: message.id, senderName: who || "Tambay", content: message.content || "" }; renderReplyComposer(); $("onlineMessageInput").focus(); };
+    const deleteButton = item.querySelector(".online-delete-photo-button");
+    if (deleteButton) deleteButton.onclick = () => deleteOwnPhoto(message, item);
 
 if (String(message.content || "").startsWith("[[PHOTO]]")) {
   const path = message.content.slice(9);
@@ -2510,12 +2519,32 @@ if (String(message.content || "").startsWith("[[PHOTO]]")) {
     if (!text) return;
     const roomId = currentRoom.id;
     const { data: insertedMessage, error } = await client.from("messages").insert({
-      room_id: roomId, user_id: currentUser.id, content: text
+      room_id: roomId, user_id: currentUser.id, content: text,
+      ...(replyToMessage ? { reply_to: replyToMessage.id } : {})
     }).select("id").single();
+    replyToMessage = null;
+    renderReplyComposer();
     if (error) throw error;
     notifyRoomMembers(roomId, insertedMessage.id);
   }
 
+  function renderReplyComposer() {
+    const banner = $("onlineReplyComposer"); if (!banner) return;
+    if (!replyToMessage) { banner.hidden = true; banner.textContent = ""; return; }
+    const preview = String(replyToMessage.content).startsWith("[[PHOTO]]") ? "📷 Photo" : String(replyToMessage.content).slice(0, 100);
+    banner.hidden = false; banner.textContent = "Replying to " + replyToMessage.senderName + ": " + preview + "  ×";
+    banner.onclick = () => { replyToMessage = null; renderReplyComposer(); };
+  }
+  async function deleteOwnPhoto(message, item) {
+    if (!message || message.user_id !== currentUser.id || !String(message.content || "").startsWith("[[PHOTO]]")) return;
+    if (!window.confirm("Delete this photo for everyone in the chatroom?")) return;
+    const path = String(message.content).slice(9); const button = item.querySelector(".online-delete-photo-button"); if (button) button.disabled = true;
+    try {
+      const result = await client.from("messages").delete().eq("id", message.id).eq("user_id", currentUser.id); if (result.error) throw result.error;
+      const storageResult = await client.storage.from("chat-photos").remove([path]); item.remove(); messageIds.delete(String(message.id));
+      status(storageResult.error ? "Photo removed from chat; storage cleanup needs attention." : "Photo deleted for everyone.");
+    } catch (error) { if (button) button.disabled = false; status(error.message || "Photo could not be deleted.", true); }
+  }
   async function leaveRoom(updateStatus = true) {
     clearTimeout(typingTimer);
     typingTimer = null;
