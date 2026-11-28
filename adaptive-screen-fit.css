@@ -1,0 +1,59 @@
+/* Adaptive screen sizing: phones, tablets, and desktop */
+:root {
+  --bt-screen-gutter: clamp(12px, 3.5vw, 28px);
+  --bt-card-gap: clamp(10px, 2.4vw, 18px);
+}
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+*, *::before, *::after { box-sizing: border-box; }
+body {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: clip;
+}
+img, video, canvas, svg { max-width: 100%; }
+button, input, select, textarea { max-width: 100%; }
+@media (max-width: 600px) {
+  body { min-width: 0 !important; }
+  #home.shell, .shell, main, .page-shell {
+    max-width: 100% !important;
+  }
+  #home.shell, .shell {
+    padding-left: var(--bt-screen-gutter) !important;
+    padding-right: var(--bt-screen-gutter) !important;
+  }
+  .topbar {
+    padding-left: max(10px, env(safe-area-inset-left)) !important;
+    padding-right: max(10px, env(safe-area-inset-right)) !important;
+  }
+  .stats-grid, .world-grid, .shop-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: var(--bt-card-gap) !important;
+  }
+  .stats-grid > *, .world-grid > *, .shop-grid > *,
+  .card, .panel, .profile-card {
+    min-width: 0 !important;
+    max-width: 100%;
+  }
+  h1 { font-size: clamp(1.8rem, 7vw, 2.8rem); }
+  h2 { font-size: clamp(1.35rem, 5vw, 2rem); }
+  p, .card p { overflow-wrap: anywhere; }
+}
+@media (max-width: 360px) {
+  :root { --bt-screen-gutter: 10px; --bt-card-gap: 8px; }
+  .topbar { gap: 5px !important; }
+  .top-actions { gap: 4px !important; }
+  .stats-grid, .world-grid, .shop-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+}
+@media (min-width: 601px) and (max-width: 900px) {
+  #home.shell, .shell {
+    width: 100% !important;
+    max-width: 100% !important;
+    padding-left: clamp(18px, 4vw, 36px) !important;
+    padding-right: clamp(18px, 4vw, 36px) !important;
+  }
+}
