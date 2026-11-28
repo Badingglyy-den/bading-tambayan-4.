@@ -1,4 +1,4 @@
-const CACHE_NAME = "bading-tambayan-shell-v15";
+const CACHE_NAME = "bading-tambayan-shell-v16";
 const APP_SHELL = ["./", "./index.html", "./manifest.webmanifest", "./app-icon.svg"];
 
 self.addEventListener("install", event => {
@@ -74,6 +74,7 @@ self.addEventListener("push", event => {
     tag: payload.messageId ? "tambayan-message-" + payload.messageId : (payload.roomId ? "tambayan-room-" + payload.roomId : "tambayan-chat"),
     // Re-alert Android when a new private message replaces/updates a notification.
     renotify: true,
+    silent: false,
     vibrate: [180, 100, 180],
     data: { roomId: payload.roomId || null, conversationId: payload.conversationId || null, messageId: payload.messageId || null, url: payload.url || "./" }
   };
