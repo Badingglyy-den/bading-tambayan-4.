@@ -121,9 +121,16 @@ dialog#accountDialog::backdrop {
   backdrop-filter: blur(12px);
 }
 
-/* On desktop and mobile, the login dialog remains a standalone screen. */
+/* Never leave a closed login dialog or its backdrop over the homepage. */
+dialog#accountDialog:not([open]) {
+  display: none !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+}
+
 dialog#accountDialog[open] {
-  display: block;
+  visibility: visible;
+  pointer-events: auto;
 }
 
 @media (max-width: 560px) {
@@ -140,4 +147,22 @@ dialog#accountDialog[open] {
     padding-left: 22px;
     padding-right: 22px;
   }
+}
+
+
+/* Fully remove the initial gate after session restoration.
+   This prevents a translucent card/shadow from lingering over the homepage. */
+html:not(.auth-locked):not(.auth-checking) #authGate {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+html:not(.auth-locked):not(.auth-checking) #authGate .auth-gate-card {
+  visibility: hidden !important;
+  opacity: 0 !important;
+  box-shadow: none !important;
 }
