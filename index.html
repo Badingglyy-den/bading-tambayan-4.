@@ -290,16 +290,22 @@
   }
 }
 @media (max-width:600px){
-  /* Keep World 08 and World 07 perfectly aligned on one row. */
-  body .verse-map-panel .map-sky{min-height:700px!important;}
+  /* Compact mobile map: bring all world rows closer without enlarging the map. */
+  body .verse-map-panel .map-sky{min-height:590px!important;height:590px!important;}
+  body .verse-map-panel .map-destinations > a.map-location.map-arcade{top:4%!important;left:3%!important;right:auto!important;bottom:auto!important;}
+  body .verse-map-panel .map-destinations > a.map-location.map-comfort{top:4%!important;right:3%!important;left:auto!important;bottom:auto!important;}
   body .verse-map-panel .map-destinations > a.map-location.map-cosmic{
-    top:23%!important;left:4%!important;right:auto!important;bottom:auto!important;
+    top:22%!important;left:3%!important;right:auto!important;bottom:auto!important;
     transform:none!important;z-index:5!important;
   }
   body .verse-map-panel .map-destinations > a.map-location.map-rage{
-    top:23%!important;left:auto!important;right:4%!important;bottom:auto!important;
+    top:22%!important;left:auto!important;right:3%!important;bottom:auto!important;
     transform:none!important;z-index:5!important;
   }
+  body .verse-map-panel .map-destinations > a.map-location.map-lounge{top:40%!important;left:0!important;right:auto!important;bottom:auto!important;}
+  body .verse-map-panel .map-destinations > a.map-location.map-lab{top:40%!important;right:0!important;left:auto!important;bottom:auto!important;}
+  body .verse-map-panel .map-destinations > a.map-location.map-diary{bottom:4%!important;left:3%!important;top:auto!important;right:auto!important;}
+  body .verse-map-panel .map-destinations > a.map-location.map-library{bottom:4%!important;right:3%!important;top:auto!important;left:auto!important;}
 }
 </style>
 </head>
