@@ -4139,8 +4139,10 @@ $("onlinePhotoInput").addEventListener("change", async event => {
     #btDmInput{flex:1;min-width:0;border:1px solid #705a83;border-radius:12px;padding:10px;background:#171020;color:white;font:inherit;font-size:16px}
     #btDmForm button{border:0;border-radius:11px;background:#bd8cff;color:#211331;font-weight:800;padding:0 14px}
     #btDmHeads{display:flex;gap:9px;justify-content:flex-end;margin-bottom:9px;flex-wrap:wrap;max-width:min(340px,calc(100vw - 28px))}
+    .bt-dm-headitem{position:relative;width:48px;height:48px;flex:0 0 48px}
     .bt-dm-headbubble{position:relative;width:48px;height:48px;border-radius:50%;border:2px solid #d8bfff;background:#45315b;color:white;font-size:21px;box-shadow:0 5px 18px #0008}
-    .bt-dm-headbubble small{position:absolute;right:-4px;top:-4px;background:#ff557d;color:white;border-radius:50%;font:10px sans-serif;padding:3px 5px}
+    .bt-dm-headbubble small{position:absolute;right:-4px;top:-4px;background:#ff557d;color:white;border-radius:20px;font:bold 10px/16px sans-serif;min-width:16px;padding:0 3px}
+    .bt-dm-headremove{position:absolute;right:-5px;bottom:-4px;width:20px;height:20px;border:1px solid #fff;border-radius:50%;background:#e84d70;color:white;font:bold 14px/17px sans-serif;padding:0;z-index:2;box-shadow:0 2px 6px #0008}
     @media(max-width:600px){
       #btDmDock{right:12px;bottom:calc(12px + env(safe-area-inset-bottom))}
       #btDmWindow{right:10px;bottom:calc(78px + env(safe-area-inset-bottom));width:calc(100vw - 20px);height:min(62vh,480px)}
@@ -4154,6 +4156,8 @@ $("onlinePhotoInput").addEventListener("change", async event => {
   let dmActiveConversation = null;
   let dmActivePeer = null;
   let dmHeads = new Map();
+  let dmClosedHeads = new Set();
+  let dmLoadVersion = 0;
   let dmUnreadConversations = new Set();
   let dmUnreadCounts = new Map();
 
@@ -4241,7 +4245,10 @@ $("onlinePhotoInput").addEventListener("change", async event => {
           markDmRead(msg.conversation_id);
         } else if (msg.sender_id !== currentUser.id) {
           const peer = dmConversations.get(msg.conversation_id);
-          if (peer) dmHeads.set(msg.conversation_id, peer);
+          if (peer) {
+            dmClosedHeads.delete(msg.conversation_id);
+            dmHeads.set(msg.conversation_id, peer);
+          }
           dmUnreadConversations.add(msg.conversation_id);
           dmUnreadCounts.set(msg.conversation_id, (dmUnreadCounts.get(msg.conversation_id) || 0) + 1);
           renderDmHeads();
@@ -4253,6 +4260,7 @@ $("onlinePhotoInput").addEventListener("change", async event => {
 
   async function loadDmConversations() {
     if (!client || !currentUser) return;
+    const loadVersion = ++dmLoadVersion;
     const {data: mine, error} = await client.from("dm_participants")
       .select("conversation_id").eq("user_id", currentUser.id);
     if (error) throw error;
@@ -4272,10 +4280,11 @@ $("onlinePhotoInput").addEventListener("change", async event => {
         if (peerId) next.set(id,{peerId,profile:byId.get(peerId)||{display_name:"Tambay",avatar:"💜"}});
       }
     }
+    if (loadVersion !== dmLoadVersion) return;
     dmConversations = next;
-    // Keep every existing private conversation available as a floating chat head.
+    // Keep heads unless the user explicitly closed them during this page session.
     for (const [id, peer] of dmConversations) {
-      if (id !== dmActiveConversation) dmHeads.set(id, peer);
+      if (id !== dmActiveConversation && !dmClosedHeads.has(id)) dmHeads.set(id, peer);
     }
     // Count every incoming message after the last locally recorded read time.
     dmUnreadCounts.clear();
@@ -4302,6 +4311,7 @@ $("onlinePhotoInput").addEventListener("change", async event => {
         }
       }
     }
+    if (loadVersion !== dmLoadVersion) return;
     await renderDmDirectory();
     renderDmHeads();
   }
@@ -4376,6 +4386,7 @@ $("onlinePhotoInput").addEventListener("change", async event => {
     dmUnreadConversations.delete(conversationId);
     dmUnreadCounts.delete(conversationId);
     dmHeads.delete(conversationId);
+    dmClosedHeads.delete(conversationId);
     renderDmHeads();
     $("btDmInput").focus({preventScroll:true});
   }
@@ -4436,7 +4447,10 @@ $("onlinePhotoInput").addEventListener("change", async event => {
   }
 
   function minimizeDmWindow() {
-    if(dmActiveConversation && dmActivePeer) dmHeads.set(dmActiveConversation,dmActivePeer);
+    if(dmActiveConversation && dmActivePeer) {
+      dmClosedHeads.delete(dmActiveConversation);
+      dmHeads.set(dmActiveConversation,dmActivePeer);
+    }
     dmActiveConversation=null; dmActivePeer=null;
     $("btDmWindow").hidden=true;
     renderDmHeads();
@@ -4446,9 +4460,12 @@ $("onlinePhotoInput").addEventListener("change", async event => {
     const box=$("btDmHeads"); if(!box) return;
     box.innerHTML="";
     for(const [id,peer] of dmHeads) {
+      const item=document.createElement("div");
+      item.className="bt-dm-headitem";
       const button=document.createElement("button");
       button.type="button"; button.className="bt-dm-headbubble";
       button.title=peer.profile.display_name||"Private chat";
+      button.setAttribute("aria-label","Open chat with "+(peer.profile.display_name||"member"));
       button.textContent=peer.profile.avatar||"💜";
       if (dmUnreadConversations.has(id)) {
         const dot=document.createElement("small");
@@ -4457,12 +4474,19 @@ $("onlinePhotoInput").addEventListener("change", async event => {
         button.appendChild(dot);
       }
       button.onclick=()=>openDmConversation(id);
-      box.appendChild(button);
+      const close=document.createElement("button");
+      close.type="button"; close.className="bt-dm-headremove"; close.textContent="×";
+      close.title="Close this chat head"; close.setAttribute("aria-label","Close chat head for "+(peer.profile.display_name||"member"));
+      close.onclick=(event)=>{
+        event.preventDefault(); event.stopPropagation();
+        dmHeads.delete(id); dmClosedHeads.add(id); renderDmHeads();
+      };
+      item.append(button,close); box.appendChild(item);
     }
     const unread=$("btDmUnread");
     if(unread) {
-      const count=dmUnreadConversations.size;
-      unread.hidden=!count; unread.textContent=count>9?"9+":String(count);
+      const count=[...dmUnreadCounts.values()].reduce((sum,value)=>sum+value,0);
+      unread.hidden=!count; unread.textContent=count>99?"99+":String(count);
     }
   }
 
