@@ -1384,6 +1384,97 @@
 
   const $ = id => document.getElementById(id);
 
+  // Personal chat appearance and a collapsible emoji picker.
+  const chatThemeChoices = [
+    ["lavender", "Lavender Dreams", "#f2eafa", "#493657", "#e7d8f4", "#765b91"],
+    ["peach", "Peachy Cozy", "#fff0e7", "#684536", "#f6dfd2", "#9a6754"],
+    ["matcha", "Matcha Garden", "#e9f2e8", "#34533b", "#d8e8d5", "#55745a"],
+    ["midnight", "Midnight Glow", "#242238", "#f7f0ff", "#37324f", "#cfc2e8"],
+    ["rose", "Rose Garden", "#f8e7ee", "#633b4d", "#f1d5e0", "#956276"],
+    ["ocean", "Ocean Breeze", "#e4f0f5", "#294b5c", "#d3e6ee", "#527b8c"]
+  ];
+  const themeButton = document.createElement("button");
+  themeButton.type = "button";
+  themeButton.id = "onlineChatThemeToggle";
+  themeButton.className = "online-chat-theme-toggle";
+  themeButton.textContent = "🎨 Chat theme";
+  themeButton.setAttribute("aria-expanded", "false");
+  const roomTop = section.querySelector(".online-room-top");
+  roomTop?.appendChild(themeButton);
+
+  const themePanel = document.createElement("div");
+  themePanel.id = "onlineChatThemePanel";
+  themePanel.className = "online-chat-theme-panel";
+  themePanel.hidden = true;
+  themePanel.innerHTML = '<div class="online-chat-theme-panel-head"><strong>Chat appearance</strong><button type="button" class="online-chat-theme-close" aria-label="Close themes">×</button></div><p>Only you will see your selected theme.</p><div class="online-chat-theme-options"></div>';
+  section.querySelector(".online-room")?.appendChild(themePanel);
+  const themeOptions = themePanel.querySelector(".online-chat-theme-options");
+  chatThemeChoices.forEach(([id, name, bg, fg, bubble, muted]) => {
+    const choice = document.createElement("button");
+    choice.type = "button";
+    choice.className = "online-chat-theme-choice";
+    choice.dataset.chatTheme = id;
+    choice.innerHTML = '<span class="online-chat-theme-swatch"></span><span></span>';
+    choice.querySelector(".online-chat-theme-swatch").style.background = `linear-gradient(135deg,${bg} 0 50%,${bubble} 50% 100%)`;
+    choice.querySelector("span:last-child").textContent = name;
+    choice.setAttribute("aria-label", name);
+    themeOptions.appendChild(choice);
+  });
+  function chatThemeStorageKey() {
+    return "bt_online_chat_theme_" + (currentUser?.id || "guest");
+  }
+  function applyChatTheme(themeId) {
+    const choice = chatThemeChoices.find(item => item[0] === themeId) || chatThemeChoices[0];
+    const [, , bg, fg, bubble, muted] = choice;
+    section.dataset.chatTheme = choice[0];
+    section.style.setProperty("--chat-personal-bg", bg);
+    section.style.setProperty("--chat-personal-fg", fg);
+    section.style.setProperty("--chat-personal-bubble", bubble);
+    section.style.setProperty("--chat-personal-muted", muted);
+    themeOptions?.querySelectorAll("[data-chat-theme]").forEach(button => {
+      button.classList.toggle("active", button.dataset.chatTheme === choice[0]);
+      button.setAttribute("aria-pressed", button.dataset.chatTheme === choice[0] ? "true" : "false");
+    });
+    try { localStorage.setItem(chatThemeStorageKey(), choice[0]); } catch (_) {}
+  }
+  themeButton.addEventListener("click", () => {
+    themePanel.hidden = !themePanel.hidden;
+    themeButton.setAttribute("aria-expanded", themePanel.hidden ? "false" : "true");
+  });
+  themePanel.querySelector(".online-chat-theme-close").addEventListener("click", () => {
+    themePanel.hidden = true;
+    themeButton.setAttribute("aria-expanded", "false");
+  });
+  themeOptions.addEventListener("click", event => {
+    const button = event.target.closest("[data-chat-theme]");
+    if (button) applyChatTheme(button.dataset.chatTheme);
+  });
+
+  const emojiPanel = section.querySelector(".online-reactions");
+  const composer = section.querySelector(".online-compose");
+  if (emojiPanel && composer) {
+    emojiPanel.hidden = true;
+    const emojiToggle = document.createElement("button");
+    emojiToggle.type = "button";
+    emojiToggle.id = "onlineEmojiToggle";
+    emojiToggle.className = "online-emoji-toggle";
+    emojiToggle.textContent = "😊";
+    emojiToggle.setAttribute("aria-label", "Show emojis");
+    emojiToggle.setAttribute("aria-expanded", "false");
+    const voiceButton = $("onlineVoiceRecordButton");
+    composer.insertBefore(emojiToggle, voiceButton || composer.lastElementChild);
+    emojiToggle.addEventListener("click", () => {
+      emojiPanel.hidden = !emojiPanel.hidden;
+      emojiToggle.setAttribute("aria-expanded", emojiPanel.hidden ? "false" : "true");
+    });
+    emojiPanel.addEventListener("click", event => {
+      if (event.target.closest("[data-reaction]")) {
+        emojiPanel.hidden = true;
+        emojiToggle.setAttribute("aria-expanded", "false");
+      }
+    });
+  }
+
   function showWelcomeUniverse() {
     const screen = $("welcomeUniverse");
     if (!screen) return;
@@ -1561,6 +1652,13 @@ function handleProgressSaved(event) {
 if (sessionError) throw sessionError;
 
 currentUser = sessionData.session?.user || null;
+
+try {
+  const savedChatTheme = localStorage.getItem(chatThemeStorageKey()) || "lavender";
+  applyChatTheme(savedChatTheme);
+} catch (_) {
+  applyChatTheme("lavender");
+}
 
 if (!currentUser || currentUser.is_anonymous) {
   document.documentElement.classList.remove("auth-checking");
@@ -3570,5 +3668,102 @@ $("onlinePhotoInput").addEventListener("change", async event => {
     #onlineTambayan .online-message-actions button { margin: 0; }
   `;
   document.head.appendChild(replyControlStyle);
+
+
+  const cozyMobileChatStyle = document.createElement("style");
+  cozyMobileChatStyle.textContent = `
+    #onlineTambayan .online-chat-theme-toggle,
+    #onlineTambayan .online-emoji-toggle { display:none; }
+    #onlineTambayan .online-chat-theme-panel[hidden],
+    #onlineTambayan .online-reactions[hidden] { display:none!important; }
+    #onlineTambayan .online-chat-theme-panel {
+      margin:12px 0 0;padding:15px;border-radius:18px;
+      background:var(--chat-personal-bg,#f2eafa);
+      color:var(--chat-personal-fg,#493657);
+      border:1px solid rgba(110,80,130,.18);
+    }
+    #onlineTambayan .online-chat-theme-panel p {
+      margin:5px 0 12px;color:var(--chat-personal-fg,#493657);font-size:.85rem;
+    }
+    #onlineTambayan .online-chat-theme-panel-head {
+      display:flex;align-items:center;justify-content:space-between;gap:10px;
+    }
+    #onlineTambayan .online-chat-theme-panel-head strong {color:var(--chat-personal-fg,#493657)}
+    #onlineTambayan .online-chat-theme-panel-head button {
+      min-width:34px;min-height:34px;padding:4px;margin:0;
+      background:rgba(100,70,120,.12);color:var(--chat-personal-fg,#493657);
+    }
+    #onlineTambayan .online-chat-theme-options {
+      display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;
+    }
+    #onlineTambayan .online-chat-theme-choice {
+      display:flex;align-items:center;gap:9px;min-width:0;margin:0;padding:9px;
+      border:1px solid rgba(100,70,120,.2);border-radius:12px;
+      background:rgba(255,255,255,.55);color:#352b3d;
+      text-align:left;font-size:.82rem;
+    }
+    #onlineTambayan .online-chat-theme-choice.active {
+      outline:2px solid #80629b;border-color:transparent;
+    }
+    #onlineTambayan .online-chat-theme-swatch {
+      flex:0 0 28px;width:28px;height:28px;border-radius:50%;
+      border:1px solid rgba(0,0,0,.12);
+    }
+    @media(max-width:760px) {
+      #onlineTambayan .online-chat-theme-toggle,
+      #onlineTambayan .online-emoji-toggle {
+        display:inline-flex;align-items:center;justify-content:center;
+        min-height:42px;min-width:42px;margin:0;padding:8px 10px;
+        border-radius:12px;font-size:14px;
+      }
+      #onlineTambayan .online-chat-theme-toggle {
+        flex:0 0 auto;background:rgba(255,255,255,.12);
+        color:#fff;border:1px solid rgba(255,255,255,.2);
+      }
+      #onlineTambayan .online-emoji-toggle {
+        flex:0 0 42px;background:rgba(255,255,255,.12);
+        color:#fff;border:1px solid rgba(255,255,255,.2);font-size:20px;
+      }
+      #onlineTambayan .online-reactions {
+        display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;padding:10px;
+        border-radius:14px;background:var(--chat-personal-bg,#f2eafa);
+        border:1px solid rgba(120,90,140,.18);
+      }
+      #onlineTambayan .online-reactions button {
+        min-width:38px;min-height:38px;margin:0;padding:5px;
+        background:rgba(255,255,255,.72);color:#382d42;border-radius:10px;
+      }
+      #onlineTambayan[data-chat-theme] .online-messages {
+        background:var(--chat-personal-bg)!important;
+        border-color:color-mix(in srgb,var(--chat-personal-fg) 18%,transparent)!important;
+      }
+      #onlineTambayan[data-chat-theme] .online-message:not(.is-mine) {
+        background:var(--chat-personal-bubble)!important;
+        border-color:color-mix(in srgb,var(--chat-personal-fg) 18%,transparent)!important;
+        color:var(--chat-personal-fg)!important;
+      }
+      #onlineTambayan[data-chat-theme] .online-message:not(.is-mine) :is(.online-message-content,small,strong,p,.online-reply-preview) {
+        color:var(--chat-personal-fg)!important;
+        -webkit-text-fill-color:var(--chat-personal-fg)!important;
+      }
+      #onlineTambayan[data-chat-theme] .online-message.is-mine {
+        filter:saturate(.9);
+      }
+      #onlineTambayan[data-chat-theme] .online-compose {
+        background:var(--chat-personal-bg)!important;
+        border-color:color-mix(in srgb,var(--chat-personal-fg) 20%,transparent)!important;
+      }
+      #onlineTambayan[data-chat-theme] .online-compose input,
+      #onlineTambayan[data-chat-theme] #onlineMessageInput {
+        background:rgba(255,255,255,.78)!important;
+        color:#30283a!important;-webkit-text-fill-color:#30283a!important;
+      }
+      #onlineTambayan[data-chat-theme] .online-compose input::placeholder {
+        color:#62566d!important;-webkit-text-fill-color:#62566d!important;
+      }
+      #onlineTambayan .online-room-top {gap:9px}
+    }
+  `;
+  document.head.appendChild(cozyMobileChatStyle);
 
 })();
