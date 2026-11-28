@@ -1528,7 +1528,13 @@
   themePanel.className = "online-chat-theme-panel";
   themePanel.hidden = true;
   themePanel.innerHTML = '<div class="online-chat-theme-panel-head"><strong>Chat appearance</strong><button type="button" class="online-chat-theme-close" aria-label="Close themes">×</button></div><p>Only you will see your selected theme.</p><div class="online-chat-theme-options"></div>';
-  section.querySelector(".online-room")?.appendChild(themePanel);
+  const themeRoom = section.querySelector(".online-room");
+  const themeRoomTop = themeRoom?.querySelector(".online-room-top");
+  if (themeRoom && themeRoomTop) {
+    themeRoomTop.insertAdjacentElement("afterend", themePanel);
+  } else {
+    themeRoom?.prepend(themePanel);
+  }
   const themeOptions = themePanel.querySelector(".online-chat-theme-options");
   chatThemeChoices.forEach(([id, name, bg, fg, bubble, muted]) => {
     const choice = document.createElement("button");
