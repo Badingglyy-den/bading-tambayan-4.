@@ -4383,10 +4383,7 @@ $("onlinePhotoInput").addEventListener("change", async event => {
     }
     if (loadVersion !== dmLoadVersion) return;
     dmConversations = next;
-    // Keep heads unless the user explicitly closed them during this page session.
-    for (const [id, peer] of dmConversations) {
-      if (id !== dmActiveConversation && !dmClosedHeads.has(id)) dmHeads.set(id, peer);
-    }
+    // Existing conversations stay in the inbox; heads appear only after a chat is selected or a new DM arrives.
     // Prefer server-side read state so unread counts remain consistent across devices.
     dmUnreadCounts.clear();
     dmUnreadConversations.clear();
