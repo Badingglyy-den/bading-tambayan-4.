@@ -971,6 +971,18 @@
   pointer-events: none;
 }
 
+
+/* Give the homepage welcome panel room below the site header */
+#home > .hero {
+  margin-top: clamp(28px, 4.5vh, 54px);
+}
+
+@media (max-width: 700px) {
+  #home > .hero {
+    margin-top: 28px;
+  }
+}
+
 /* Refined page rhythm */
 #home.shell {
   padding-top: 24px;
