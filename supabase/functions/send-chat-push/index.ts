@@ -25,19 +25,26 @@ Deno.serve(async (request) => {
       return new Response(JSON.stringify({ error: "Unauthorized" }), { status: 401, headers: cors });
     }
 
-    // Validate the caller's access token using the server-side Supabase client.
-    // The service-role key stays server-side and is never returned to the app.
-    const admin = createClient(supabaseUrl, serviceKey);
-    const { data: authData, error: authError } = await admin.auth.getUser(tokenMatch[1]);
-    if (authError || !authData.user || authData.user.is_anonymous) {
-      console.warn("PUSH_AUTH: user validation failed", {
-        error: authError?.message || null,
-        status: authError?.status || null,
-        userFound: !!authData.user,
-        isAnonymous: authData.user?.is_anonymous ?? null
+    // Validate the caller's JWT directly with Supabase Auth.
+    // This avoids relying on a local auth session inside the Edge Function.
+    const authResponse = await fetch(supabaseUrl + "/auth/v1/user", {
+      headers: {
+        apikey: serviceKey,
+        Authorization: "Bearer " + tokenMatch[1]
+      }
+    });
+    const authData = authResponse.ok ? await authResponse.json() : null;
+    if (!authResponse.ok || !authData?.id || authData.is_anonymous) {
+      const authErrorText = authResponse.ok ? null : await authResponse.text();
+      console.warn("PUSH_AUTH: token validation failed", {
+        status: authResponse.status,
+        error: authErrorText,
+        userFound: !!authData?.id,
+        isAnonymous: authData?.is_anonymous ?? null
       });
       return new Response(JSON.stringify({ error: "A signed-in account is required" }), { status: 401, headers: cors });
     }
+    const authenticatedUser = authData;
 
     const { room_id, message_id } = await request.json();
     if (!room_id || !message_id) return new Response(JSON.stringify({ error: "Missing room_id or message_id" }), { status: 400, headers: cors });
@@ -45,17 +52,17 @@ Deno.serve(async (request) => {
     const { data: message, error: messageError } = await admin
       .from("messages").select("id,room_id,user_id,content")
       .eq("id", message_id).eq("room_id", room_id).single();
-    if (messageError || !message || message.user_id !== authData.user.id) {
+    if (messageError || !message || message.user_id !== authenticatedUser.id) {
       console.warn("PUSH_DIAG: message authorization failed", {
         messageFound: !!message,
         queryError: messageError?.message || null,
-        senderMatches: !!message && message.user_id === authData.user.id
+        senderMatches: !!message && message.user_id === authenticatedUser.id
       });
       return new Response(JSON.stringify({ error: "Message not found or sender mismatch" }), { status: 403, headers: cors });
     }
 
     const { data: membership, error: membershipError } = await admin.from("room_members")
-      .select("user_id").eq("room_id", room_id).eq("user_id", authData.user.id).maybeSingle();
+      .select("user_id").eq("room_id", room_id).eq("user_id", authenticatedUser.id).maybeSingle();
     if (membershipError || !membership) {
       console.warn("PUSH_DIAG: room membership check failed", {
         membershipFound: !!membership,
@@ -65,9 +72,9 @@ Deno.serve(async (request) => {
     }
 
     const { data: room } = await admin.from("rooms").select("room_name").eq("id", room_id).single();
-    const { data: sender } = await admin.from("profiles").select("display_name").eq("user_id", authData.user.id).maybeSingle();
+    const { data: sender } = await admin.from("profiles").select("display_name").eq("user_id", authenticatedUser.id).maybeSingle();
     const { data: members, error: membersError } = await admin.from("room_members")
-      .select("user_id").eq("room_id", room_id).neq("user_id", authData.user.id);
+      .select("user_id").eq("room_id", room_id).neq("user_id", authenticatedUser.id);
     if (membersError) throw membersError;
 
     const recipientIds = (members || []).map((row) => row.user_id);
