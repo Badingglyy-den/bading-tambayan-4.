@@ -1384,6 +1384,100 @@
 
   const $ = id => document.getElementById(id);
 
+  // Tambayan Lounge: turn the account/profile/room areas into four simple views.
+  const onlinePanel = section.querySelector(".online-panel");
+  const originalGrid = onlinePanel?.querySelector(".online-grid");
+  const profileCard = originalGrid?.children[0];
+  const createRoomCard = originalGrid?.children[1];
+  const accountCard = section.querySelector("#onlineAccountBox");
+  const statusLine = section.querySelector("#onlineStatus");
+  const notificationArea = section.querySelector(".online-notification-settings");
+  const roomsCard = section.querySelector("#onlineMyRoomsBox");
+  const activeRoom = section.querySelector("#onlineRoom");
+
+  if (onlinePanel && originalGrid && profileCard && createRoomCard && accountCard && roomsCard && activeRoom) {
+    const nav = document.createElement("div");
+    nav.className = "online-section-nav";
+    nav.setAttribute("aria-label", "Tambayan account and chat sections");
+    nav.innerHTML = `
+      <button type="button" data-online-view="account">💜 Tambayan Account</button>
+      <button type="button" data-online-view="profile">🪩 Your Online Profile</button>
+      <button type="button" data-online-view="create">✨ Create a Room</button>
+      <button type="button" data-online-view="chat" class="active" aria-pressed="true">💬 Chat Room</button>
+    `;
+
+    const views = {};
+    for (const [key, label] of [["account","Tambayan Account"],["profile","Your Online Profile"],["create","Create a Room"],["chat","Chat Room"]]) {
+      const view = document.createElement("div");
+      view.className = "online-section-view";
+      view.dataset.onlinePanel = key;
+      view.setAttribute("aria-label", label);
+      views[key] = view;
+    }
+
+    profileCard.classList.add("online-box");
+    createRoomCard.classList.add("online-box");
+    views.account.appendChild(accountCard);
+    views.profile.appendChild(profileCard);
+    views.create.appendChild(createRoomCard);
+    if (statusLine) views.chat.appendChild(statusLine);
+    if (notificationArea) views.chat.appendChild(notificationArea);
+    views.chat.appendChild(roomsCard);
+    views.chat.appendChild(activeRoom);
+
+    originalGrid.remove();
+    onlinePanel.insertBefore(nav, onlinePanel.children[1] || null);
+    Object.values(views).forEach(view => onlinePanel.appendChild(view));
+
+    const showOnlineView = key => {
+      Object.entries(views).forEach(([name, view]) => {
+        view.hidden = name !== key;
+      });
+      nav.querySelectorAll("button[data-online-view]").forEach(button => {
+        const selected = button.dataset.onlineView === key;
+        button.classList.toggle("active", selected);
+        button.setAttribute("aria-pressed", selected ? "true" : "false");
+      });
+    };
+    nav.addEventListener("click", event => {
+      const button = event.target.closest("button[data-online-view]");
+      if (button) showOnlineView(button.dataset.onlineView);
+    });
+    showOnlineView("chat");
+
+    const sectionNavStyle = document.createElement("style");
+    sectionNavStyle.textContent = `
+      #onlineTambayan .online-section-nav {
+        display:grid; grid-template-columns:repeat(2,minmax(0,1fr));
+        gap:9px; margin:16px 0;
+      }
+      #onlineTambayan .online-section-nav button {
+        min-height:54px; margin:0; padding:12px 10px;
+        border:1px solid rgba(194,158,255,.22);
+        background:rgba(169,139,255,.09); color:inherit;
+        box-shadow:none; text-align:left;
+      }
+      #onlineTambayan .online-section-nav button.active {
+        background:linear-gradient(135deg,#c3a2ff,#9872ed);
+        color:#211432; border-color:#c7a8ff;
+      }
+      #onlineTambayan .online-section-view[hidden] { display:none !important; }
+      #onlineTambayan .online-section-view > .online-box,
+      #onlineTambayan .online-section-view > .online-grid > div {
+        margin:0; width:100%; box-sizing:border-box;
+      }
+      #onlineTambayan .online-section-view > .online-status,
+      #onlineTambayan .online-section-view > .online-notification-settings {
+        margin-bottom:12px;
+      }
+      @media(max-width:380px) {
+        #onlineTambayan .online-section-nav { grid-template-columns:1fr; }
+      }
+    `;
+    document.head.appendChild(sectionNavStyle);
+  }
+
+
   // Personal chat appearance and a collapsible emoji picker.
   const chatThemeChoices = [
     ["lavender", "Lavender Dreams", "#f2eafa", "#493657", "#e7d8f4", "#765b91"],
