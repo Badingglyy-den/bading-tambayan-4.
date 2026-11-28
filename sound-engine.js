@@ -213,6 +213,74 @@
     });
   }
 
+  function punchImpact() {
+    if (!context || context.state !== "running" || !settings.master || !settings.effects) return;
+    const now = context.currentTime;
+    const variation = 0.88 + Math.random() * 0.24;
+
+    // Short airy swing immediately before the hit.
+    const airLength = Math.ceil(context.sampleRate * 0.105);
+    const airBuffer = context.createBuffer(1, airLength, context.sampleRate);
+    const airData = airBuffer.getChannelData(0);
+    for (let i = 0; i < airLength; i++) {
+      const t = i / airLength;
+      airData[i] = (Math.random() * 2 - 1) * Math.pow(1 - t, 2) * Math.sin(Math.PI * t);
+    }
+    const air = context.createBufferSource();
+    const airFilter = context.createBiquadFilter();
+    const airGain = context.createGain();
+    air.buffer = airBuffer;
+    airFilter.type = "bandpass";
+    airFilter.frequency.value = 1250 + Math.random() * 500;
+    airFilter.Q.value = 0.7;
+    airGain.gain.setValueAtTime(0.0001, now);
+    airGain.gain.exponentialRampToValueAtTime(0.12 * variation, now + 0.018);
+    airGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.105);
+    air.connect(airFilter);
+    airFilter.connect(airGain);
+    airGain.connect(effectsGain);
+    air.start(now);
+
+    // Soft, low-frequency body thump plus a textured glove/bag contact.
+    const hitLength = Math.ceil(context.sampleRate * 0.22);
+    const hitBuffer = context.createBuffer(1, hitLength, context.sampleRate);
+    const hitData = hitBuffer.getChannelData(0);
+    for (let i = 0; i < hitLength; i++) {
+      const t = i / hitLength;
+      hitData[i] = (Math.random() * 2 - 1) * Math.pow(1 - t, 3.1);
+    }
+    const hit = context.createBufferSource();
+    const low = context.createBiquadFilter();
+    const bodyGain = context.createGain();
+    hit.buffer = hitBuffer;
+    low.type = "lowpass";
+    low.frequency.value = 430 + Math.random() * 100;
+    low.Q.value = 0.8;
+    bodyGain.gain.setValueAtTime(0.0001, now + 0.035);
+    bodyGain.gain.exponentialRampToValueAtTime(0.52 * variation, now + 0.043);
+    bodyGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.25);
+    hit.connect(low);
+    low.connect(bodyGain);
+    bodyGain.connect(effectsGain);
+    hit.start(now + 0.035);
+
+    const thud = context.createOscillator();
+    const thudGain = context.createGain();
+    thud.type = "sine";
+    thud.frequency.setValueAtTime(118 * variation, now + 0.035);
+    thud.frequency.exponentialRampToValueAtTime(58, now + 0.2);
+    thudGain.gain.setValueAtTime(0.0001, now + 0.035);
+    thudGain.gain.exponentialRampToValueAtTime(0.24, now + 0.045);
+    thudGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.23);
+    thud.connect(thudGain);
+    thudGain.connect(effectsGain);
+    thud.start(now + 0.035);
+    thud.stop(now + 0.25);
+
+    // Light bag/chain rattle after the impact.
+    tone(235 + Math.random() * 45, 0.075, "triangle", 0.035, -90);
+  }
+
   function play(name = "click") {
     if (!context || context.state !== "running" || !settings.master || !settings.effects) return;
     if (name === "notify") {
@@ -226,7 +294,7 @@
     } else if (name === "pin") {
       tone(1046.5, 0.09, "triangle", 0.12, -260);
     } else if (name === "punch") {
-      tone(105, 0.16, "sine", 0.2, -45);
+      punchImpact();
     } else if (name === "discover") {
       tone(587.33, 0.18, "sine", 0.12);
       setTimeout(() => tone(783.99, 0.22, "sine", 0.12), 90);
