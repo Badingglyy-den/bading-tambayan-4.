@@ -95,7 +95,8 @@ Deno.serve(async (request) => {
       title: room?.room_name || "Bading Tambayan",
       body: (sender?.display_name || "A tambay friend") + ": " + preview,
       roomId: String(room_id),
-      url: "./"
+      messageId: String(message.id),
+      url: new URL("./?openRoom=" + encodeURIComponent(String(room_id)), subject).toString()
     });
 
     let sent = 0;
