@@ -107,3 +107,57 @@ hr,.divider{border-color:var(--bt-border)}
 @media(prefers-reduced-motion:reduce){
   *,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
 }
+
+/* Strong typography pass: override legacy hard-coded font colors site-wide. */
+body,
+body :is(h1,h2,h3,h4,h5,h6,p,li,label,small,summary,figcaption,
+  .hero-text,.section-note,.world-card p,.game-card p,.tool-card p,
+  .comfort-panel p,.hangout-card p,.diary-entry p,.entry-meta,
+  .form-note,.empty-state,.theme-panel p,.footer,.muted,.hint,
+  .help-text,.form-hint,.stat span,.stat small,.diary-form label,
+  .modal label,.shop-item p,.feed-item small,.prompt-box p){
+  color:var(--bt-text)!important;
+}
+body :is(.muted,.section-note,.footer,.hint,.help-text,.form-hint,
+  .form-note,.empty-state,.entry-meta,.stat span,.stat small,
+  .diary-form label,.modal label,.shop-item p,.feed-item small,
+  .prompt-box p){
+  color:var(--bt-muted)!important;
+}
+body :is(.eyebrow,.world-kicker,.world-card b,.tool-card strong,
+  .feed-item b,.tiny-link,.entry-actions button,.brand-mark,
+  .hero h1 em,.footer>span){
+  color:var(--bt-accent)!important;
+}
+body :is(.topbar,.subnav,.site-nav,.mobile-nav,.bottom-nav){
+  color:var(--bt-text)!important;
+}
+body :is(.topbar,.subnav,.site-nav,.mobile-nav,.bottom-nav) :is(a,button,span,strong,small){
+  color:inherit;
+}
+body :is(.panel,.modal,.theme-panel,.shop-panel,.collection-panel,
+  .achievements-panel,.hangout-card,.game-card,.tool-card,.stat,
+  .world-card,.settings-card,.settings-panel,.profile-card,
+  .account-card,.section-card,.shop-item,.collection-pill,.chip,.kind-item){
+  color:var(--bt-text);
+}
+body :is(input,textarea,select,option){
+  color:var(--bt-text)!important;
+  background-color:var(--bt-surface-raised);
+}
+body :is(input,textarea,select)::placeholder{
+  color:var(--bt-muted)!important;opacity:1;
+}
+body :is(button,.primary-btn,.soft-btn,.secondary-btn,.small-btn,
+  .choice-btn,.theme-choice,.icon-btn){
+  color:var(--bt-text);
+}
+body :is(.primary-btn,.small-btn,.danger-btn){
+  color:#fff!important;
+}
+/* Keep chat message bubbles legible; the message text itself stays white. */
+#onlineTambayan .online-message-content,
+#onlineTambayan .online-message-content *{
+  color:#fff!important;
+}
+
