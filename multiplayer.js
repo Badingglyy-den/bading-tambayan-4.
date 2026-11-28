@@ -1877,15 +1877,23 @@ if (accountEmailDisplay) {
       if (notificationDmId) {
         // Remove the one-time deep link so refreshes do not reopen the same chat.
         window.history.replaceState({}, "", window.location.pathname + window.location.hash);
+        // Refresh the participant list before deciding that this conversation is unavailable.
+        await loadDmConversations();
         const dmPeer = dmConversations.get(notificationDmId);
         if (dmPeer) {
+          const welcomeScreen = $("welcomeUniverse");
+          if (welcomeScreen) welcomeScreen.hidden = true;
+          document.documentElement.classList.remove("welcome-open");
           await openDmConversation(notificationDmId);
           status("Opened your private conversation. 💜");
         } else {
+          // A notification should never strand the user on the welcome screen.
+          const welcomeScreen = $("welcomeUniverse");
+          if (welcomeScreen) welcomeScreen.hidden = true;
+          document.documentElement.classList.remove("welcome-open");
           $("btDmPanel").hidden = false;
           await loadDmDirectory();
-          showWelcomeUniverse();
-          status("That private conversation isn't available on this account. Your inbox is open.", true);
+          status("Your inbox is open, but that conversation couldn't be matched. Please choose it from the inbox.", true);
         }
       } else if (notificationRoomId) {
         // Only open rooms this signed-in account is already a member of.
