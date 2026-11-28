@@ -6,6 +6,21 @@
 </script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script>
+  (function () {
+    try {
+      var screenWidth = Math.min(window.screen.width || 9999, window.screen.height || 9999);
+      var hasTouch = (navigator.maxTouchPoints || 0) > 0 ||
+        (window.matchMedia && window.matchMedia("(pointer: coarse)").matches);
+      if (hasTouch && screenWidth <= 900) {
+        document.documentElement.classList.add("touch-mobile");
+        var viewport = document.querySelector('meta[name="viewport"]');
+        if (viewport) viewport.setAttribute("content",
+          "width=" + Math.round(screenWidth) + ", initial-scale=1.0, viewport-fit=cover");
+      }
+    } catch (e) {}
+  })();
+</script>
   <meta name="theme-color" content="#17112f">
   <meta name="description" content="Your little corner of the universe. A cozy, playful community for friends.">
   <link rel="manifest" href="./manifest.webmanifest">
@@ -237,8 +252,8 @@
   <link rel="stylesheet" href="diary-keepsakes.css?v=2">
   <link rel="stylesheet" href="whats-new.css?v=1">
   <link rel="stylesheet" href="pwa-install-guide.css?v=1">
-  <link rel="stylesheet" href="desktop-layout-fix.css?v=20261128-touchmobile1">
-  <link rel="stylesheet" href="sitewide-theme-system.css?v=20261128-theme1">
+  <link rel="stylesheet" href="desktop-layout-fix.css?v=20261128-touchmobile2">
+  <link rel="stylesheet" href="sitewide-theme-system.css?v=20261128-theme2">
 </head>
 <body>
   <div id="authGate" class="auth-gate">
