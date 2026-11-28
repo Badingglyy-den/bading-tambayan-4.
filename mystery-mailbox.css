@@ -1,0 +1,45 @@
+/* THE MYSTERY MAILBOX — a quiet resident-letter experience */
+.mystery-mailbox{position:relative;overflow:hidden;margin:28px 0;padding:clamp(20px,4vw,34px);border:1px solid rgba(198,166,218,.28);background:linear-gradient(145deg,rgba(42,30,55,.96),rgba(28,25,43,.97));color:#f7f0e8}
+.mailbox-heading{display:flex;align-items:flex-start;justify-content:space-between;gap:18px}
+.mailbox-heading h2{margin:5px 0 8px;font-family:Georgia,"Times New Roman",serif;font-size:clamp(26px,4vw,36px);font-weight:500;letter-spacing:-.03em}
+.mailbox-heading .eyebrow,.mailbox-kicker{color:#d9bd91;font-size:9px;font-weight:800;letter-spacing:.18em}
+.mailbox-intro{max-width:570px;margin:0;color:rgba(247,240,232,.72);font-size:13px;line-height:1.75}
+.mailbox-stamp{display:grid;place-items:center;flex:0 0 52px;width:52px;height:52px;border:1px solid rgba(226,194,151,.35);border-radius:50%;font-size:25px;background:rgba(226,194,151,.08)}
+.mailbox-arrival{display:flex;align-items:center;gap:22px;margin-top:22px;padding:20px;border:1px solid rgba(226,194,151,.2);background:rgba(255,255,255,.035)}
+.mailbox-envelope{position:relative;display:grid;place-items:center;flex:0 0 82px;width:82px;height:68px;border:1px solid rgba(230,199,158,.65);border-radius:5px 5px 12px 12px;background:linear-gradient(145deg,#e9d7b9,#c9a982);color:#60475d;font-size:35px;box-shadow:0 8px 20px rgba(0,0,0,.15)}
+.mailbox-envelope span{transform:translateY(-2px)}
+.mailbox-envelope i{position:absolute;right:-5px;top:-9px;color:#f1d79e;font-size:17px;font-style:normal}
+.mailbox-arrival-copy{min-width:0}
+.mailbox-arrival-copy h3{margin:5px 0;font-family:Georgia,"Times New Roman",serif;font-size:21px;font-weight:500}
+.mailbox-arrival-copy p{margin:0 0 13px;color:rgba(247,240,232,.68);font-size:12px;line-height:1.6}
+.mailbox-open-btn,.mailbox-replies button{min-height:42px;padding:10px 15px;border:1px solid #d8bd94;border-radius:3px 12px 3px 12px;background:#dfc49d;color:#302438;font:700 12px inherit;cursor:pointer}
+.mailbox-open-btn span{margin-left:8px}
+.mailbox-letter{margin-top:17px;padding:clamp(18px,4vw,28px);border:1px solid rgba(226,194,151,.35);background:#f4ead9;color:#403346}
+.mailbox-letter[hidden],.mailbox-archive[hidden]{display:none}
+.mailbox-letter-top{display:flex;justify-content:space-between;gap:12px;color:#866c77;font-size:9px;font-weight:800;letter-spacing:.13em}
+.mailbox-letter-from{display:flex;align-items:center;gap:11px;margin:23px 0 17px}
+.mailbox-sender-icon{display:grid;place-items:center;width:43px;height:43px;border-radius:50%;background:#e8d8c5;font-size:22px}
+.mailbox-letter-from small{display:block;color:#967f87;font-size:8px;letter-spacing:.16em}
+.mailbox-letter-from strong{font-family:Georgia,"Times New Roman",serif;font-size:15px;font-weight:600}
+.mailbox-letter h3{margin:0 0 10px;font-family:Georgia,"Times New Roman",serif;font-size:clamp(21px,3vw,27px);font-weight:500}
+.mailbox-letter-message{max-width:650px;margin:0;color:#594b58;font-size:14px;line-height:1.9;white-space:pre-line}
+.mailbox-reply-area{margin-top:23px;padding-top:17px;border-top:1px solid #dfd0bd}
+.mailbox-reply-area>p:first-child,.mailbox-archive-heading{margin:0 0 10px;color:#927b81;font-size:9px;font-weight:800;letter-spacing:.14em}
+.mailbox-replies{display:flex;flex-wrap:wrap;gap:8px}
+.mailbox-replies button{border-color:#c8b39b;background:#fffaf1;color:#57465a;font-size:11px}
+.mailbox-replies button:disabled{opacity:.55;cursor:default}
+.mailbox-reply-status{min-height:18px;margin:9px 0 0;color:#6c7656;font-size:11px}
+.mailbox-footer{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:16px}
+.mailbox-footer p{margin:0;color:rgba(247,240,232,.58);font-size:10px}
+.mailbox-archive-toggle{padding:8px 0;border:0;background:none;color:#e4cda9;font-size:11px;font-weight:700;cursor:pointer}
+.mailbox-archive{margin-top:12px;padding:15px;border-top:1px solid rgba(226,194,151,.2)}
+.mailbox-archive-item{display:flex;justify-content:space-between;gap:12px;padding:10px 0;border-bottom:1px solid rgba(226,194,151,.12);color:#f2e9dc;font-size:11px}
+.mailbox-archive-item small{color:rgba(247,240,232,.5);white-space:nowrap}
+.mailbox-archive-empty{margin:0;color:rgba(247,240,232,.6);font-size:11px}
+.mailbox-footnote{margin:13px 0 0;color:rgba(247,240,232,.42);font-size:9px;line-height:1.6}
+body[data-season="bloomtide"] .mailbox-envelope{box-shadow:0 8px 20px rgba(215,155,189,.16)}
+body[data-season="suncrest"] .mailbox-envelope{box-shadow:0 8px 20px rgba(229,185,110,.2)}
+body[data-season="leafwhisper"] .mailbox-envelope{box-shadow:0 8px 20px rgba(201,154,104,.18)}
+body[data-season="frostveil"] .mailbox-envelope{box-shadow:0 8px 20px rgba(158,185,223,.18)}
+@media(max-width:560px){.mailbox-arrival{align-items:flex-start;gap:14px;padding:15px}.mailbox-envelope{flex-basis:62px;width:62px;height:55px;font-size:28px}.mailbox-arrival-copy h3{font-size:19px}.mailbox-footer{align-items:flex-start;flex-direction:column;gap:5px}.mailbox-replies{display:grid;grid-template-columns:1fr}.mailbox-replies button{text-align:left}.mailbox-letter-top{font-size:8px}}
+@media(prefers-reduced-motion:reduce){.mailbox-open-btn,.mailbox-replies button{transition:none}}
