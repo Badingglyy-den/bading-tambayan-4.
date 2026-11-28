@@ -4119,6 +4119,13 @@ $("onlinePhotoInput").addEventListener("change", async event => {
     #btDmDock{position:fixed;right:16px;bottom:calc(18px + env(safe-area-inset-bottom));z-index:100500;font-family:inherit;color:#f7efff}
     #btDmLauncher{width:58px;height:58px;border-radius:50%;border:2px solid rgba(255,255,255,.7);background:linear-gradient(145deg,#bd8cff,#8055d8);color:#211331;font-size:25px;box-shadow:0 8px 28px #12091e88;position:relative}
     #btDmUnread{position:absolute;right:-3px;top:-4px;min-width:19px;height:19px;padding:0 5px;border-radius:20px;background:#ff557d;color:white;font:bold 11px/19px sans-serif}
+    #btDmWelcomeLauncher{display:inline-flex;align-items:center;gap:9px;margin:16px auto 0;padding:11px 17px;border:1px solid #d8bfff;border-radius:999px;background:linear-gradient(135deg,#bd8cff,#8055d8);color:#211331;font:800 14px inherit;box-shadow:0 8px 24px #12091e55;cursor:pointer}
+    #btDmWelcomeBadge{display:inline-grid;place-items:center;min-width:20px;height:20px;padding:0 5px;border-radius:20px;background:#ff557d;color:#fff;font:bold 11px/20px sans-serif}
+    .bt-dm-contact{position:relative}
+    .bt-dm-preview{display:block!important;max-width:210px;color:#c6b5d7;font-size:12px;font-weight:400}
+    .bt-dm-unread{margin-left:auto;flex:0 0 auto;display:inline-grid;place-items:center;min-width:21px;height:21px;padding:0 5px;border-radius:20px;background:#ff557d;color:#fff;font:bold 11px/21px sans-serif}
+    .bt-dm-contact.is-unread{background:#ffffff12}
+
     #btDmPanel{position:absolute;right:0;bottom:70px;width:min(340px,calc(100vw - 28px));max-height:min(68vh,560px);overflow:hidden;border:1px solid #b99ae2;border-radius:19px;background:#21182f;box-shadow:0 16px 55px #08040dbb;display:flex;flex-direction:column}
     #btDmPanel[hidden],#btDmWindow[hidden]{display:none!important}
     .bt-dm-head{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:13px 14px;background:linear-gradient(120deg,#493365,#302342);font-weight:800}
@@ -4159,6 +4166,7 @@ $("onlinePhotoInput").addEventListener("change", async event => {
   let dmLoadVersion = 0;
   let dmUnreadConversations = new Set();
   let dmUnreadCounts = new Map();
+  let dmLatestMessages = new Map();
 
   function dmEscape(value) { return safeText(value); }
   function dmReadKey(id) { return "bt_dm_read_" + currentUser.id + "_" + id; }
@@ -4177,6 +4185,21 @@ $("onlinePhotoInput").addEventListener("change", async event => {
       <button type="button" id="btDmLauncher" aria-label="Open private messages" title="Private messages">💬<span id="btDmUnread" hidden>0</span></button>
     `;
     document.body.appendChild(dock);
+    const welcomeContent = $("welcomeUniverse")?.querySelector(".welcome-universe-content");
+    if (welcomeContent && !$("btDmWelcomeLauncher")) {
+      const welcomeButton = document.createElement("button");
+      welcomeButton.type = "button";
+      welcomeButton.id = "btDmWelcomeLauncher";
+      welcomeButton.innerHTML = '💬 Open inbox <span id="btDmWelcomeBadge" hidden>0</span>';
+      welcomeButton.addEventListener("click", () => {
+        $("btDmPanel").hidden = false;
+        loadDmDirectory();
+      });
+      const enterButton = $("enterUniverseButton");
+      if (enterButton) enterButton.insertAdjacentElement("afterend", welcomeButton);
+      else welcomeContent.appendChild(welcomeButton);
+    }
+
     const win = document.createElement("section");
     win.id = "btDmWindow";
     win.hidden = true;
@@ -4291,30 +4314,48 @@ $("onlinePhotoInput").addEventListener("change", async event => {
     for (const [id, peer] of dmConversations) {
       if (id !== dmActiveConversation && !dmClosedHeads.has(id)) dmHeads.set(id, peer);
     }
-    // Count every incoming message after the last locally recorded read time.
+    // Prefer server-side read state so unread counts remain consistent across devices.
     dmUnreadCounts.clear();
+    dmUnreadConversations.clear();
     if (ids.length) {
-      const {data: recentMessages, error: messageError} = await client.from("dm_messages")
-        .select("conversation_id,sender_id,created_at")
-        .in("conversation_id", ids)
-        .neq("sender_id", currentUser.id)
-        .order("created_at", {ascending:true})
-        .limit(2000);
-      if (messageError) throw messageError;
-      for (const id of ids) {
-        let readAt = "";
-        try { readAt = localStorage.getItem(dmReadKey(id)) || ""; } catch (_) {}
-        const count = (recentMessages || []).filter(message =>
-          message.conversation_id === id && message.created_at > readAt
-        ).length;
-        if (count > 0 && id !== dmActiveConversation) {
-          dmUnreadConversations.add(id);
-          dmUnreadCounts.set(id, count);
-        } else {
-          dmUnreadConversations.delete(id);
-          dmUnreadCounts.delete(id);
+      const {data: unreadRows, error: unreadError} = await client.rpc("get_my_dm_unread_counts");
+      if (!unreadError && Array.isArray(unreadRows)) {
+        for (const row of unreadRows) {
+          const count = Number(row.unread_count || 0);
+          if (count > 0 && row.conversation_id !== dmActiveConversation) {
+            dmUnreadCounts.set(row.conversation_id, count);
+            dmUnreadConversations.add(row.conversation_id);
+          }
+        }
+      } else {
+        // Backward-compatible fallback until the feature-parity SQL migration is applied.
+        const {data: recentMessages, error: messageError} = await client.from("dm_messages")
+          .select("conversation_id,sender_id,created_at")
+          .in("conversation_id", ids).neq("sender_id", currentUser.id)
+          .order("created_at", {ascending:true}).limit(2000);
+        if (messageError) throw messageError;
+        for (const id of ids) {
+          let readAt = "";
+          try { readAt = localStorage.getItem(dmReadKey(id)) || ""; } catch (_) {}
+          const count = (recentMessages || []).filter(message =>
+            message.conversation_id === id && message.created_at > readAt
+          ).length;
+          if (count > 0 && id !== dmActiveConversation) {
+            dmUnreadCounts.set(id, count);
+            dmUnreadConversations.add(id);
+          }
         }
       }
+      const {data: latestRows, error: latestError} = await client.from("dm_messages")
+        .select("id,conversation_id,sender_id,content,created_at")
+        .in("conversation_id", ids).order("created_at", {ascending:false}).limit(2000);
+      if (latestError) throw latestError;
+      dmLatestMessages.clear();
+      for (const message of latestRows || []) {
+        if (!dmLatestMessages.has(message.conversation_id)) dmLatestMessages.set(message.conversation_id, message);
+      }
+    } else {
+      dmLatestMessages.clear();
     }
     if (loadVersion !== dmLoadVersion) return;
     await renderDmDirectory();
@@ -4343,10 +4384,19 @@ $("onlinePhotoInput").addEventListener("change", async event => {
     const matching=contacts.filter(x=>(x.display_name||"Tambay").toLowerCase().includes(query));
     const inbox=existing.filter(x=>(x.profile.display_name||"Tambay").toLowerCase().includes(query));
     let html='';
-    if(inbox.length) html+='<div style="padding:8px 8px 4px;color:#c6b5d7;font-size:12px;font-weight:800">YOUR CHATS</div>'+inbox.map(x=>`
-      <button class="bt-dm-contact" type="button" data-dm-conversation="${dmEscape(x.id)}">
-        <span class="bt-dm-avatar">${dmEscape(x.profile.avatar||"💜")}</span><span><strong>${dmEscape(x.profile.display_name||"Tambay")}</strong><small>Open private conversation</small></span>
-      </button>`).join("");
+    if(inbox.length) html+='<div style="padding:8px 8px 4px;color:#c6b5d7;font-size:12px;font-weight:800">INBOX · YOUR CHATS</div>'+inbox.map(x=>{
+      const latest=dmLatestMessages.get(x.id);
+      const raw=String(latest?.content||"No messages yet");
+      const preview=raw.startsWith("[[PHOTO]]")?"📷 Photo":raw.startsWith("[[VOICE]]")?"🎙️ Voice message":raw;
+      const unread=dmUnreadCounts.get(x.id)||0;
+      const stamp=latest?.created_at?new Date(latest.created_at).toLocaleString([],{month:"short",day:"numeric",hour:"numeric",minute:"2-digit"}):"";
+      return `
+      <button class="bt-dm-contact ${unread?"is-unread":""}" type="button" data-dm-conversation="${dmEscape(x.id)}">
+        <span class="bt-dm-avatar">${dmEscape(x.profile.avatar||"💜")}</span>
+        <span style="min-width:0;flex:1"><strong>${dmEscape(x.profile.display_name||"Tambay")}</strong><small class="bt-dm-preview">${dmEscape(preview.slice(0,72))}${preview.length>72?"…":""}</small><small>${dmEscape(stamp)}</small></span>
+        ${unread?'<span class="bt-dm-unread">'+(unread>99?"99+":unread)+'</span>':""}
+      </button>`;
+    }).join("");
     html+='<div style="padding:10px 8px 4px;color:#c6b5d7;font-size:12px;font-weight:800">MEMBERS</div>';
     html+=matching.map(x=>`
       <button class="bt-dm-contact" type="button" data-dm-user="${dmEscape(x.user_id)}">
@@ -4448,7 +4498,10 @@ $("onlinePhotoInput").addEventListener("change", async event => {
     try { localStorage.setItem(dmReadKey(conversationId),new Date().toISOString()); } catch(_){}
     dmUnreadConversations.delete(conversationId);
     dmUnreadCounts.delete(conversationId);
+    if (client) client.rpc("mark_dm_read", {p_conversation_id:conversationId})
+      .then(({error}) => { if(error) console.warn("Could not sync DM read state:",error); });
     renderDmHeads();
+    renderDmDirectory();
   }
 
   function minimizeDmWindow() {
@@ -4483,6 +4536,11 @@ $("onlinePhotoInput").addEventListener("change", async event => {
     if(unread) {
       const count=[...dmUnreadCounts.values()].reduce((sum,value)=>sum+value,0);
       unread.hidden=!count; unread.textContent=count>99?"99+":String(count);
+    }
+    const welcomeBadge=$("btDmWelcomeBadge");
+    if(welcomeBadge) {
+      const count=[...dmUnreadCounts.values()].reduce((sum,value)=>sum+value,0);
+      welcomeBadge.hidden=!count; welcomeBadge.textContent=count>99?"99+":String(count);
     }
   }
 
