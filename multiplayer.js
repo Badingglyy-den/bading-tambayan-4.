@@ -1320,12 +1320,39 @@
 </form>
       
               
-            <div class="online-reactions">
-              <button type="button" data-reaction="💜">💜</button>
-              <button type="button" data-reaction="😂">😂</button>
-              <button type="button" data-reaction="😭">😭</button>
-              <button type="button" data-reaction="🫶">🫶</button>
-              <button type="button" data-reaction="✨">✨</button>
+            <div class="online-reactions" aria-label="Quick emoji messages">
+              <button type="button" data-reaction="💜" aria-label="Send 💜" title="Send 💜">💜</button>
+              <button type="button" data-reaction="❤️" aria-label="Send ❤️" title="Send ❤️">❤️</button>
+              <button type="button" data-reaction="🩷" aria-label="Send 🩷" title="Send 🩷">🩷</button>
+              <button type="button" data-reaction="🧡" aria-label="Send 🧡" title="Send 🧡">🧡</button>
+              <button type="button" data-reaction="💛" aria-label="Send 💛" title="Send 💛">💛</button>
+              <button type="button" data-reaction="💚" aria-label="Send 💚" title="Send 💚">💚</button>
+              <button type="button" data-reaction="💙" aria-label="Send 💙" title="Send 💙">💙</button>
+              <button type="button" data-reaction="🤍" aria-label="Send 🤍" title="Send 🤍">🤍</button>
+              <button type="button" data-reaction="😂" aria-label="Send 😂" title="Send 😂">😂</button>
+              <button type="button" data-reaction="😭" aria-label="Send 😭" title="Send 😭">😭</button>
+              <button type="button" data-reaction="🥹" aria-label="Send 🥹" title="Send 🥹">🥹</button>
+              <button type="button" data-reaction="😍" aria-label="Send 😍" title="Send 😍">😍</button>
+              <button type="button" data-reaction="😘" aria-label="Send 😘" title="Send 😘">😘</button>
+              <button type="button" data-reaction="🫶" aria-label="Send 🫶" title="Send 🫶">🫶</button>
+              <button type="button" data-reaction="👏" aria-label="Send 👏" title="Send 👏">👏</button>
+              <button type="button" data-reaction="🙌" aria-label="Send 🙌" title="Send 🙌">🙌</button>
+              <button type="button" data-reaction="🔥" aria-label="Send 🔥" title="Send 🔥">🔥</button>
+              <button type="button" data-reaction="💀" aria-label="Send 💀" title="Send 💀">💀</button>
+              <button type="button" data-reaction="🤡" aria-label="Send 🤡" title="Send 🤡">🤡</button>
+              <button type="button" data-reaction="🙄" aria-label="Send 🙄" title="Send 🙄">🙄</button>
+              <button type="button" data-reaction="👀" aria-label="Send 👀" title="Send 👀">👀</button>
+              <button type="button" data-reaction="😎" aria-label="Send 😎" title="Send 😎">😎</button>
+              <button type="button" data-reaction="🤔" aria-label="Send 🤔" title="Send 🤔">🤔</button>
+              <button type="button" data-reaction="😤" aria-label="Send 😤" title="Send 😤">😤</button>
+              <button type="button" data-reaction="🙏" aria-label="Send 🙏" title="Send 🙏">🙏</button>
+              <button type="button" data-reaction="💯" aria-label="Send 💯" title="Send 💯">💯</button>
+              <button type="button" data-reaction="🎉" aria-label="Send 🎉" title="Send 🎉">🎉</button>
+              <button type="button" data-reaction="🥳" aria-label="Send 🥳" title="Send 🥳">🥳</button>
+              <button type="button" data-reaction="✨" aria-label="Send ✨" title="Send ✨">✨</button>
+              <button type="button" data-reaction="🌈" aria-label="Send 🌈" title="Send 🌈">🌈</button>
+              <button type="button" data-reaction="☕" aria-label="Send ☕" title="Send ☕">☕</button>
+              <button type="button" data-reaction="🍿" aria-label="Send 🍿" title="Send 🍿">🍿</button>
             </div>
           </div>
           <div class="online-box">
