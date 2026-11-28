@@ -3376,6 +3376,14 @@ $("onlinePhotoInput").addEventListener("change", async event => {
       border-top: 1px solid rgba(220,195,255,.13);
     }
     #onlineTambayan .online-message-content { display: block; }
+    #onlineTambayan .online-message,
+    #onlineTambayan .online-message-content,
+    #onlineTambayan .online-message small,
+    #onlineTambayan .online-message p,
+    #onlineTambayan .online-reply-preview {
+      color: #fff !important;
+    }
+    #onlineTambayan .online-message strong { color: #fff !important; }
     #onlineTambayan .online-message-actions button { margin: 0; }
   `;
   document.head.appendChild(replyControlStyle);
