@@ -1605,10 +1605,17 @@
   function showWelcomeUniverse() {
     const screen = $("welcomeUniverse");
     if (!screen) return;
+    // Remember that the welcome screen was shown across app/browser restarts.
+    // localStorage persists when the app is closed and reopened; sessionStorage does not.
     try {
-      if (sessionStorage.getItem("tambayanWelcomeShown") === "yes") return;
-      sessionStorage.setItem("tambayanWelcomeShown", "yes");
-    } catch (_) {}
+      if (localStorage.getItem("tambayanWelcomeShown") === "yes") return;
+      localStorage.setItem("tambayanWelcomeShown", "yes");
+    } catch (_) {
+      try {
+        if (sessionStorage.getItem("tambayanWelcomeShown") === "yes") return;
+        sessionStorage.setItem("tambayanWelcomeShown", "yes");
+      } catch (_) {}
+    }
     screen.hidden = false;
     document.documentElement.classList.add("welcome-open");
     const enter = $("enterUniverseButton");
