@@ -4139,9 +4139,13 @@ $("onlinePhotoInput").addEventListener("change", async event => {
   // WEBSITE-WIDE PRIVATE MESSAGING / FLOATING CHAT HEADS
   const dmStyle = document.createElement("style");
   dmStyle.textContent = `
-    #btDmDock{position:fixed;right:16px;bottom:calc(18px + env(safe-area-inset-bottom));z-index:100500;font-family:inherit;color:#f7efff}
-    #btDmLauncher{width:58px;height:58px;border-radius:50%;border:2px solid rgba(255,255,255,.7);background:linear-gradient(145deg,#bd8cff,#8055d8);color:#211331;font-size:25px;box-shadow:0 8px 28px #12091e88;position:relative}
-    #btDmUnread{position:absolute;right:-3px;top:-4px;min-width:19px;height:19px;padding:0 5px;border-radius:20px;background:#ff557d;color:white;font:bold 11px/19px sans-serif}
+    #btDmDock{position:fixed;right:16px;bottom:calc(18px + env(safe-area-inset-bottom));z-index:100500;font-family:inherit;color:#f7efff;pointer-events:none}
+    #btDmHeads,#btDmPanel{pointer-events:auto}
+    #btDmLauncher{display:inline-flex;align-items:center;justify-content:center;gap:7px;min-height:38px;padding:0 12px;border:1px solid rgba(216,191,255,.55);border-radius:13px;background:linear-gradient(145deg,#bd8cff,#8055d8);color:#211331;font:800 13px inherit;box-shadow:0 5px 18px #12091e55;position:relative;white-space:nowrap}
+    #btDmLauncher>span:first-child{font-size:16px}
+    #btDmUnread{display:inline-grid;place-items:center;min-width:17px;height:17px;padding:0 4px;border-radius:20px;background:#ff557d;color:white;font:bold 10px/17px sans-serif}
+    #btDmUnread[hidden]{display:none!important}
+    @media(max-width:600px){#btDmLauncher{min-width:38px;padding:0 8px;gap:4px}.bt-dm-top-label{display:none!important}}
     #btDmWelcomeLauncher{display:inline-flex;align-items:center;gap:9px;margin:16px auto 0;padding:11px 17px;border:1px solid #d8bfff;border-radius:999px;background:linear-gradient(135deg,#bd8cff,#8055d8);color:#211331;font-weight:800;font-size:14px;font-family:inherit;box-shadow:0 8px 24px #12091e55;cursor:pointer}
     #btDmWelcomeBadge{display:inline-grid;place-items:center;min-width:20px;height:20px;padding:0 5px;border-radius:20px;background:#ff557d;color:#fff;font:bold 11px/20px sans-serif}
     .bt-dm-contact{position:relative}
@@ -4149,7 +4153,7 @@ $("onlinePhotoInput").addEventListener("change", async event => {
     .bt-dm-unread{margin-left:auto;flex:0 0 auto;display:inline-grid;place-items:center;min-width:21px;height:21px;padding:0 5px;border-radius:20px;background:#ff557d;color:#fff;font:bold 11px/21px sans-serif}
     .bt-dm-contact.is-unread{background:#ffffff12}
 
-    #btDmPanel{position:absolute;right:0;bottom:70px;width:min(340px,calc(100vw - 28px));max-height:min(68vh,560px);overflow:hidden;border:1px solid #b99ae2;border-radius:19px;background:#21182f;box-shadow:0 16px 55px #08040dbb;display:flex;flex-direction:column}
+    #btDmPanel{position:fixed;right:16px;top:82px;width:min(340px,calc(100vw - 28px));max-height:min(68vh,560px);overflow:hidden;border:1px solid #b99ae2;border-radius:19px;background:#21182f;box-shadow:0 16px 55px #08040dbb;display:flex;flex-direction:column}
     #btDmPanel[hidden],#btDmWindow[hidden]{display:none!important}
     .bt-dm-head{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:13px 14px;background:linear-gradient(120deg,#493365,#302342);font-weight:800}
     .bt-dm-head button{border:0;background:#ffffff18;color:#fff;border-radius:9px;padding:5px 9px;font-size:18px}
@@ -4179,14 +4183,16 @@ $("onlinePhotoInput").addEventListener("change", async event => {
     #btDmForm{display:flex;gap:7px;padding:10px;border-top:1px solid #5a476b}
     #btDmInput{flex:1;min-width:0;border:1px solid #705a83;border-radius:12px;padding:10px;background:#171020;color:white;font:inherit;font-size:16px}
     #btDmForm button{border:0;border-radius:11px;background:#bd8cff;color:#211331;font-weight:800;padding:0 14px}
-    #btDmHeads{display:flex;gap:9px;justify-content:flex-end;margin-bottom:9px;flex-wrap:wrap;max-width:min(340px,calc(100vw - 28px))}
+    #btDmHeads{display:flex;flex-direction:column;align-items:flex-end;justify-content:flex-end;gap:9px;margin-bottom:0;flex-wrap:nowrap;max-height:min(62vh,520px);max-width:58px;overflow-y:auto;overflow-x:visible;padding:4px 3px 4px 0;scrollbar-width:none}
+    #btDmHeads::-webkit-scrollbar{display:none}
     .bt-dm-headitem{position:relative;width:48px;height:48px;flex:0 0 48px}
     .bt-dm-headbubble{position:relative;width:48px;height:48px;border-radius:50%;border:2px solid #d8bfff;background:#45315b;color:white;font-size:21px;box-shadow:0 5px 18px #0008}
     .bt-dm-headbubble small{position:absolute;right:-4px;top:-4px;background:#ff557d;color:white;border-radius:20px;font:bold 10px/16px sans-serif;min-width:16px;padding:0 3px}
     @media(max-width:600px){
       #btDmDock{right:12px;bottom:calc(12px + env(safe-area-inset-bottom))}
       #btDmWindow{right:10px;bottom:calc(78px + env(safe-area-inset-bottom));width:calc(100vw - 20px);height:min(62vh,480px)}
-      #btDmPanel{right:0;bottom:68px;width:calc(100vw - 24px);max-height:65vh}
+      #btDmPanel{right:10px;top:76px;width:calc(100vw - 20px);max-height:65vh}
+      #btDmHeads{max-height:58vh}
     }
   `;
   document.head.appendChild(dmStyle);
@@ -4221,7 +4227,6 @@ $("onlinePhotoInput").addEventListener("change", async event => {
         <input id="btDmSearch" type="search" placeholder="Find a member…" autocomplete="off">
         <div id="btDmList"><p style="padding:8px;color:#c6b5d7">Loading your conversations…</p></div>
       </section>
-      <button type="button" id="btDmLauncher" aria-label="Open private messages" title="Private messages">💬<span id="btDmUnread" hidden>0</span></button>
     `;
     document.body.appendChild(dock);
     const welcomeContent = $("welcomeUniverse")?.querySelector(".welcome-universe-content");
