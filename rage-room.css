@@ -99,3 +99,7 @@
  #rageRoom .rage-actions .rage-btn{flex:1 1 auto}
 }
 @media(prefers-reduced-motion:reduce){#rageRoom *{transition:none!important;animation:none!important}}
+
+/* Clear return path from World 07 to the homepage world directory */
+#rageRoom .rage-back-button{display:inline-flex;align-items:center;min-height:42px;margin:0 0 22px;padding:10px 15px;border:1px solid #ffffff38;border-radius:12px;background:#ffffff12;color:#fff;text-decoration:none;font-size:12px;font-weight:850;transition:background .18s ease,border-color .18s ease,transform .18s ease;-webkit-tap-highlight-color:transparent}
+#rageRoom .rage-back-button:hover,#rageRoom .rage-back-button:focus-visible{background:#ffffff22;border-color:#ff9eae;transform:translateX(-2px);outline:none}
