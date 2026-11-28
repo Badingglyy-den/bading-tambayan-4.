@@ -1,0 +1,12 @@
+.pwa-install-guide{margin:20px 0 4px;padding:14px 15px;border:1px solid rgba(194,160,235,.22);border-radius:16px;background:rgba(165,125,215,.075);text-align:left}
+.pwa-install-guide summary{display:flex;align-items:center;gap:10px;cursor:pointer;list-style:none;color:var(--text);font-size:13px;font-weight:800}
+.pwa-install-guide summary::-webkit-details-marker{display:none}
+.pwa-install-guide summary:after{content:"＋";margin-left:auto;color:var(--accent);font-size:17px}
+.pwa-install-guide[open] summary:after{content:"−"}
+.pwa-install-guide-icon{display:grid;place-items:center;flex:0 0 34px;width:34px;height:34px;border-radius:11px;background:rgba(190,145,255,.14);font-size:18px}
+.pwa-install-guide-intro{margin:9px 0 12px 44px;color:var(--muted);font-size:11px;line-height:1.5}
+.pwa-install-platform{margin:12px 0 0 44px}
+.pwa-install-platform strong{display:block;margin-bottom:5px;color:var(--text);font-size:12px}
+.pwa-install-platform p{margin:4px 0;color:var(--muted);font-size:11px;line-height:1.55}
+.pwa-install-guide-note{margin:12px 0 0 44px;color:var(--muted);font-size:10px;line-height:1.5;opacity:.85}
+@media(max-width:420px){.pwa-install-guide{padding:12px}.pwa-install-guide-intro,.pwa-install-platform,.pwa-install-guide-note{margin-left:0}}
