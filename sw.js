@@ -1,4 +1,4 @@
-const CACHE_NAME = "bading-tambayan-shell-v5";
+const CACHE_NAME = "bading-tambayan-shell-v6";
 const APP_SHELL = ["./", "./index.html", "./manifest.webmanifest", "./app-icon.svg"];
 
 self.addEventListener("install", event => {
@@ -43,16 +43,17 @@ self.addEventListener("fetch", event => {
   // Cache same-origin static assets only. Supabase and external services are untouched.
   if (/\.(?:css|js|svg|png|jpg|jpeg|webp|woff2?)$/i.test(url.pathname) ||
       url.pathname.endsWith("manifest.webmanifest")) {
+    // Network-first: always try to load the newest app assets, then fall back
+    // to the cached copy only when offline. This prevents installed apps from
+    // staying stuck on old JavaScript or CSS after a deployment.
     event.respondWith(
-      caches.match(request).then(cached => {
-        const network = fetch(request).then(response => {
-          if (response && response.ok && response.type === "basic") {
-            caches.open(CACHE_NAME).then(cache => cache.put(request, response.clone()));
-          }
-          return response;
-        });
-        return cached || network;
-      })
+      fetch(request).then(response => {
+        if (response && response.ok && response.type === "basic") {
+          const copy = response.clone();
+          caches.open(CACHE_NAME).then(cache => cache.put(request, copy));
+        }
+        return response;
+      }).catch(() => caches.match(request))
     );
   }
 });
