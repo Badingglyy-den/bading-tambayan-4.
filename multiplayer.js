@@ -3901,10 +3901,13 @@ $("onlinePhotoInput").addEventListener("change", async event => {
         padding:9px;margin-top:14px;
       }
       #onlineTambayan .online-compose > input#onlineMessageInput {
-        grid-column:1 / -1;grid-row:1;width:100%;min-width:0;
-        min-height:56px;height:56px;box-sizing:border-box;
-        padding:14px 16px;font-size:16px;line-height:1.4;
-        border-radius:14px;
+        grid-column:1 / -1 !important;grid-row:1 !important;
+        display:block !important;justify-self:stretch !important;
+        width:100% !important;min-width:0 !important;max-width:none !important;
+        min-height:54px !important;height:54px !important;max-height:54px !important;
+        box-sizing:border-box !important;flex:none !important;
+        padding:12px 16px !important;font-size:16px !important;line-height:1.4 !important;
+        border-radius:14px !important;
       }
       #onlineTambayan .online-compose > .online-photo-button {
         grid-column:1;grid-row:2;width:42px;height:44px;padding:0;
