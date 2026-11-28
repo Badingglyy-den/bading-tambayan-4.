@@ -1,4 +1,4 @@
-const CACHE_NAME = "bading-tambayan-shell-v2";
+const CACHE_NAME = "bading-tambayan-shell-v3";
 const APP_SHELL = ["./", "./index.html", "./manifest.webmanifest", "./app-icon.svg"];
 
 self.addEventListener("install", event => {
@@ -70,8 +70,8 @@ self.addEventListener("push", event => {
     body: payload.body || "You have a new message.",
     icon: "./app-icon.svg",
     badge: "./app-icon.svg",
-    tag: payload.roomId ? "tambayan-room-" + payload.roomId : "tambayan-chat",
-    renotify: true,
+    tag: payload.messageId ? "tambayan-message-" + payload.messageId : (payload.roomId ? "tambayan-room-" + payload.roomId : "tambayan-chat"),
+    renotify: false,
     data: { roomId: payload.roomId || null, url: payload.url || "./" }
   };
 
