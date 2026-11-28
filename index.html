@@ -234,7 +234,7 @@
   <link rel="stylesheet" href="living-world.css?v=1">
   <link rel="stylesheet" href="mystery-mailbox.css?v=1">
   <link rel="stylesheet" href="mystery-library-expansion.css?v=1">
-  <link rel="stylesheet" href="diary-keepsakes.css?v=1">
+  <link rel="stylesheet" href="diary-keepsakes.css?v=2">
   <link rel="stylesheet" href="whats-new.css?v=1">
   <link rel="stylesheet" href="pwa-install-guide.css?v=1">
   <link rel="stylesheet" href="desktop-layout-fix.css?v=20261128-authflow2">
@@ -1095,6 +1095,13 @@
           <div class="diary-room-content">
             <label for="diaryArtifactName">What are we keeping?</label><input id="diaryArtifactName" maxlength="70" placeholder="The concert ticket, that old song...">
             <label for="diaryArtifactType">Artifact type</label><select id="diaryArtifactType"><option>Object</option><option>Song</option><option>Photo memory</option><option>Quote</option><option>Place</option><option>Little moment</option></select>
+<div class="diary-photo-upload" id="diaryPhotoUpload" hidden>
+<label for="diaryArtifactPhoto">Add a photo from your device</label>
+<label class="diary-photo-pick" for="diaryArtifactPhoto">📷 Choose photo</label>
+<input id="diaryArtifactPhoto" type="file" accept="image/*" hidden>
+<div class="diary-photo-preview" id="diaryArtifactPhotoPreview" hidden></div>
+<p class="diary-room-help">Your photo is resized before it is saved with this keepsake on this device.</p>
+</div>
             <label for="diaryArtifactStory">Why does it matter?</label><textarea id="diaryArtifactStory" rows="3" maxlength="1200" placeholder="Its little story..."></textarea>
             <button type="button" class="diary-room-button" id="diaryArtifactSave">Add to my museum</button>
             <div id="diaryArtifactList" class="diary-mini-list" aria-live="polite"></div>
@@ -1502,7 +1509,7 @@
 <script src="living-world.js?v=1"></script>
 <script src="mystery-mailbox.js?v=1"></script>
 <script src="mystery-library-expansion.js?v=1"></script>
-<script src="diary-keepsakes.js?v=1"></script>
+<script src="diary-keepsakes.js?v=2"></script>
 <script src="whats-new.js?v=1"></script>
 
 <!-- Register notification service worker -->
