@@ -1098,11 +1098,11 @@
       /mystery\s*box/i.test(card.textContent)
     );
 
-    const pollCard = cards.find(card =>
+    const pollCard = document.getElementById("gardenDailyPollRoom") || cards.find(card =>
       /daily\s*poll/i.test(card.textContent)
     );
 
-    const moodCard = cards.find(card =>
+    const moodCard = document.getElementById("gardenMoodGardenRoom") || cards.find(card =>
       /mood\s*garden/i.test(card.textContent)
     );
 
