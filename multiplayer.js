@@ -1317,8 +1317,17 @@
     hidden
   >
   <input id="onlineMessageInput" maxlength="1000" placeholder="Say something...">
+  <button type="button" id="onlineVoiceRecordButton" class="online-voice-record-button" aria-label="Start voice recording" title="Record a voice message">🎙️</button>
   <button type="submit">Send</button>
 </form>
+<div id="onlineVoiceRecordingStatus" class="online-voice-recording-status" hidden>Recording… tap Stop when you're done.</div>
+<div id="onlineVoicePreview" class="online-voice-preview" hidden>
+  <audio id="onlineVoicePreviewAudio" controls></audio>
+  <div class="online-voice-preview-actions">
+    <button type="button" id="onlineVoiceDiscardButton" class="online-voice-discard-button">Discard</button>
+    <button type="button" id="onlineVoiceSendButton">Send voice</button>
+  </div>
+</div>
       
               
             <div class="online-reactions" aria-label="Insert an emoji into your message">
@@ -1399,6 +1408,12 @@
   let currentUser = null;
   let currentRoom = null;
   let replyToMessage = null;
+  let voiceRecorder = null;
+  let voiceStream = null;
+  let voiceChunks = [];
+  let voicePreviewBlob = null;
+  let voicePreviewUrl = null;
+  let voiceStopTimer = null;
   let roomChannel = null;
   let profile = { display_name: "Tambay", avatar: "💜" };
   let messageIds = new Set();
@@ -2279,7 +2294,9 @@ renderRoomList();
 
       const cachedSender = profileCache.get(message.user_id);
       const notificationName = cachedSender?.display_name || "New message";
-      const messagePreview = String(message.content || "").slice(0, 180);
+      const rawMessagePreview = String(message.content || "");
+      const messagePreview = rawMessagePreview.startsWith("[[VOICE]]") ? "🎙️ Voice message" :
+        rawMessagePreview.startsWith("[[PHOTO]]") ? "📷 Photo" : rawMessagePreview.slice(0, 180);
       const count = backgroundNotificationCount;
 
       notificationQueue = notificationQueue
@@ -2334,7 +2351,10 @@ renderRoomList();
         const quote = document.createElement("button");
         quote.type = "button";
         quote.className = "online-reply-preview";
-        quote.textContent = (quotedProfile.display_name || "Tambay") + ": " + (String(quoted.data.content || "").startsWith("[[PHOTO]]") ? "📷 Photo" : String(quoted.data.content || "").slice(0, 100));
+        const quotedContent = String(quoted.data.content || "");
+        const quotedPreview = quotedContent.startsWith("[[PHOTO]]") ? "📷 Photo" :
+          quotedContent.startsWith("[[VOICE]]") ? "🎙️ Voice message" : quotedContent.slice(0, 100);
+        quote.textContent = (quotedProfile.display_name || "Tambay") + ": " + quotedPreview;
         quote.style.cssText = "display:block;width:100%;text-align:left;margin:6px 0;padding:7px 10px;border-left:3px solid #c69aff;border-radius:8px;background:rgba(160,110,220,.12);color:inherit;font-size:12px;";
         quote.onclick = () => {
           const original = document.querySelector('.online-message[data-message-id="' + String(quoted.data.id) + '"]');
@@ -2350,7 +2370,22 @@ renderRoomList();
     const deleteButton = item.querySelector(".online-delete-photo-button");
     if (deleteButton) deleteButton.onclick = () => deleteOwnPhoto(message, item);
 
-if (String(message.content || "").startsWith("[[PHOTO]]")) {
+if (String(message.content || "").startsWith("[[VOICE]]")) {
+  const path = message.content.slice(9);
+  const { data, error } = await client.storage.from("chat-voice").createSignedUrl(path, 3600);
+  contentEl.textContent = "";
+  if (!error && data?.signedUrl) {
+    const audio = document.createElement("audio");
+    audio.controls = true;
+    audio.preload = "metadata";
+    audio.src = data.signedUrl;
+    audio.className = "online-chat-voice";
+    audio.setAttribute("aria-label", "Voice message");
+    contentEl.appendChild(audio);
+  } else {
+    contentEl.textContent = "🎙️ Voice message unavailable";
+  }
+} else if (String(message.content || "").startsWith("[[PHOTO]]")) {
   const path = message.content.slice(9);
 
   const { data, error } = await client.storage
@@ -2486,6 +2521,98 @@ if (String(message.content || "").startsWith("[[PHOTO]]")) {
       broadcastTyping(false);
     }, 1800);
   }
+  function clearVoicePreview() {
+    const preview = $("onlineVoicePreview");
+    const audio = $("onlineVoicePreviewAudio");
+    if (voicePreviewUrl) URL.revokeObjectURL(voicePreviewUrl);
+    voicePreviewUrl = null;
+    voicePreviewBlob = null;
+    if (audio) { audio.pause(); audio.removeAttribute("src"); audio.load(); }
+    if (preview) preview.hidden = true;
+  }
+
+  function stopVoiceRecording() {
+    if (voiceStopTimer) { clearTimeout(voiceStopTimer); voiceStopTimer = null; }
+    if (voiceRecorder && voiceRecorder.state !== "inactive") voiceRecorder.stop();
+  }
+
+  async function startVoiceRecording() {
+    if (!currentRoom || !currentUser) { status("Join a chatroom before recording.", true); return; }
+    if (!navigator.mediaDevices?.getUserMedia || typeof MediaRecorder === "undefined") {
+      status("Voice recording isn't supported in this browser. Try an updated Chrome or Safari.", true);
+      return;
+    }
+    try {
+      clearVoicePreview();
+      voiceStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      const mimeCandidates = ["audio/webm;codecs=opus", "audio/mp4", "audio/ogg;codecs=opus", "audio/webm"];
+      const selectedMime = mimeCandidates.find(type => MediaRecorder.isTypeSupported?.(type));
+      voiceRecorder = selectedMime ? new MediaRecorder(voiceStream, { mimeType: selectedMime }) : new MediaRecorder(voiceStream);
+      voiceChunks = [];
+      voiceRecorder.ondataavailable = event => { if (event.data?.size) voiceChunks.push(event.data); };
+      voiceRecorder.onstop = () => {
+        const mime = voiceRecorder?.mimeType || voiceChunks[0]?.type || "audio/webm";
+        voicePreviewBlob = new Blob(voiceChunks, { type: mime });
+        voiceChunks = [];
+        if (voiceStream) voiceStream.getTracks().forEach(track => track.stop());
+        voiceStream = null;
+        voiceRecorder = null;
+        if (voiceStopTimer) { clearTimeout(voiceStopTimer); voiceStopTimer = null; }
+        $("onlineVoiceRecordingStatus").hidden = true;
+        const recordButton = $("onlineVoiceRecordButton");
+        if (recordButton) { recordButton.textContent = "🎙️"; recordButton.title = "Record a voice message"; recordButton.setAttribute("aria-label", "Start voice recording"); }
+        if (!voicePreviewBlob.size) { status("No audio was recorded. Please try again.", true); return; }
+        if (voicePreviewBlob.size > 10 * 1024 * 1024) { clearVoicePreview(); status("Voice message must be 10MB or smaller.", true); return; }
+        voicePreviewUrl = URL.createObjectURL(voicePreviewBlob);
+        $("onlineVoicePreviewAudio").src = voicePreviewUrl;
+        $("onlineVoicePreview").hidden = false;
+        status("Listen to your recording, then send it or discard it.");
+      };
+      voiceRecorder.start();
+      $("onlineVoiceRecordingStatus").hidden = false;
+      const recordButton = $("onlineVoiceRecordButton");
+      recordButton.textContent = "■";
+      recordButton.title = "Stop recording";
+      recordButton.setAttribute("aria-label", "Stop voice recording");
+      status("Recording voice message…");
+      voiceStopTimer = setTimeout(() => stopVoiceRecording(), 120000);
+    } catch (error) {
+      if (voiceStream) voiceStream.getTracks().forEach(track => track.stop());
+      voiceStream = null;
+      voiceRecorder = null;
+      $("onlineVoiceRecordingStatus").hidden = true;
+      const recordButton = $("onlineVoiceRecordButton");
+      if (recordButton) { recordButton.textContent = "🎙️"; recordButton.title = "Record a voice message"; }
+      status(error.name === "NotAllowedError" ? "Please allow microphone access to record a voice message." : (error.message || "Couldn't start voice recording."), true);
+    }
+  }
+
+  async function sendVoiceMessage(blob) {
+    if (!client || !currentRoom || !currentUser || !blob) return;
+    if (blob.size > 10 * 1024 * 1024) throw new Error("Voice message must be 10MB or smaller.");
+    const mime = (blob.type || "audio/webm").split(";")[0].toLowerCase();
+    const extension = mime === "audio/mp4" ? "m4a" :
+      mime === "audio/ogg" ? "ogg" : mime === "audio/mpeg" ? "mp3" :
+      mime === "audio/wav" ? "wav" : "webm";
+    const path = `${currentRoom.id}/${currentUser.id}/${crypto.randomUUID()}.${extension}`;
+    const { error: uploadError } = await client.storage.from("chat-voice").upload(path, blob, {
+      contentType: mime, upsert: false
+    });
+    if (uploadError) throw uploadError;
+    const roomId = currentRoom.id;
+    const { data: insertedMessage, error } = await client.from("messages").insert({
+      room_id: roomId, user_id: currentUser.id, content: `[[VOICE]]${path}`,
+      ...(replyToMessage ? { reply_to: replyToMessage.id } : {})
+    }).select("id").single();
+    if (error) {
+      await client.storage.from("chat-voice").remove([path]);
+      throw error;
+    }
+    replyToMessage = null;
+    renderReplyComposer();
+    notifyRoomMembers(roomId, insertedMessage.id);
+  }
+
   async function sendPhoto(file) {
   if (!client || !currentRoom || !currentUser) return;
 
@@ -2549,7 +2676,9 @@ if (String(message.content || "").startsWith("[[PHOTO]]")) {
   function renderReplyComposer() {
     const banner = $("onlineReplyComposer"); if (!banner) return;
     if (!replyToMessage) { banner.hidden = true; banner.textContent = ""; return; }
-    const preview = String(replyToMessage.content).startsWith("[[PHOTO]]") ? "📷 Photo" : String(replyToMessage.content).slice(0, 100);
+    const replyContent = String(replyToMessage.content);
+    const preview = replyContent.startsWith("[[PHOTO]]") ? "📷 Photo" :
+      replyContent.startsWith("[[VOICE]]") ? "🎙️ Voice message" : replyContent.slice(0, 100);
     banner.hidden = false; banner.textContent = "Replying to " + replyToMessage.senderName + ": " + preview + "  ×";
     banner.onclick = () => { replyToMessage = null; renderReplyComposer(); };
   }
@@ -2953,6 +3082,28 @@ $("onlinePhotoInput").addEventListener("change", async event => {
 
   event.target.value = "";
 });
+  $("onlineVoiceRecordButton").addEventListener("click", () => {
+    if (voiceRecorder && voiceRecorder.state === "recording") stopVoiceRecording();
+    else startVoiceRecording();
+  });
+  $("onlineVoiceDiscardButton").addEventListener("click", () => {
+    if (voiceRecorder && voiceRecorder.state === "recording") stopVoiceRecording();
+    clearVoicePreview();
+    status("Voice recording discarded.");
+  });
+  $("onlineVoiceSendButton").addEventListener("click", async () => {
+    if (!voicePreviewBlob) return;
+    const button = $("onlineVoiceSendButton");
+    button.disabled = true;
+    try {
+      await sendVoiceMessage(voicePreviewBlob);
+      clearVoicePreview();
+      status("Voice message sent!");
+    } catch (error) {
+      button.disabled = false;
+      status(error.message || "Voice message couldn't be sent.", true);
+    }
+  });
   $("onlineMessageInput").addEventListener("input", handleMessageTyping);
   $("onlineMessageForm").onsubmit = async event => {
     event.preventDefault();
@@ -3386,6 +3537,26 @@ $("onlinePhotoInput").addEventListener("change", async event => {
       color: #fff !important;
     }
     #onlineTambayan .online-message strong { color: #fff !important; }
+    #onlineTambayan .online-voice-record-button {
+      flex: 0 0 44px; min-width: 44px; min-height: 44px;
+      padding: 8px; border-radius: 13px; background: rgba(194,158,255,.16);
+      color: #fff; border: 1px solid rgba(194,158,255,.28); font-size: 19px;
+    }
+    #onlineTambayan .online-voice-recording-status {
+      margin: 8px 0; color: #ffd0df; font-size: .88rem;
+    }
+    #onlineTambayan .online-voice-preview {
+      display: flex; flex-wrap: wrap; align-items: center; gap: 10px;
+      margin-top: 10px; padding: 10px; border-radius: 13px;
+      background: rgba(194,158,255,.08); border: 1px solid rgba(194,158,255,.18);
+    }
+    #onlineTambayan .online-voice-preview[hidden],
+    #onlineTambayan .online-voice-recording-status[hidden] { display: none; }
+    #onlineTambayan .online-voice-preview audio,
+    #onlineTambayan .online-chat-voice { width: min(100%, 280px); max-width: 100%; }
+    #onlineTambayan .online-voice-preview-actions { display: flex; gap: 6px; }
+    #onlineTambayan .online-voice-preview-actions button { margin: 0; }
+    #onlineTambayan .online-voice-discard-button { background: rgba(255,255,255,.1); color: #fff; }
     #onlineTambayan .online-message-actions button { margin: 0; }
   `;
   document.head.appendChild(replyControlStyle);
