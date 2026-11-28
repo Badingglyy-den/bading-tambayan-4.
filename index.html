@@ -224,6 +224,7 @@
   <link rel="stylesheet" href="observatory.css?v=1">
   <link rel="stylesheet" href="living-world.css?v=1">
   <link rel="stylesheet" href="mystery-mailbox.css?v=1">
+  <link rel="stylesheet" href="mystery-library-expansion.css?v=1">
 </head>
 <body>
   <div id="authGate" class="auth-gate">
@@ -929,6 +930,87 @@
 </article>
     </section>
 
+
+    <section class="mystery-wing" id="mystery-restricted" aria-labelledby="mysteryWingTitle">
+      <div class="mystery-wing-heading">
+        <div><p class="eyebrow">BEYOND THE ARCHIVE DOOR</p><h2 id="mysteryWingTitle">The Restricted Collection</h2>
+          <p>Four rooms. Four kinds of curiosity. Take your time—nothing here expires.</p></div>
+        <span class="mystery-wing-seal" aria-hidden="true">✧</span>
+      </div>
+
+      <div class="mystery-wing-grid">
+        <article class="mystery-wing-room" id="unsolvedFiles">
+          <div class="mystery-room-top"><span class="mystery-room-icon">🗂️</span><span class="mystery-room-index">FILE ROOM · 01</span></div>
+          <h3>The Unsolved Files</h3>
+          <p class="mystery-room-intro">Read the evidence. Compare the details. Decide what really happened.</p>
+          <div class="mystery-case-tabs" role="group" aria-label="Choose a case">
+            <button type="button" class="mystery-choice active" data-case="bell">The 9:17 Bell</button>
+            <button type="button" class="mystery-choice" data-case="bookmark">The Missing Bookmark</button>
+            <button type="button" class="mystery-choice" data-case="window">The Sealed Window</button>
+          </div>
+          <div class="mystery-evidence" id="mysteryCaseEvidence" aria-live="polite"></div>
+          <p class="mystery-prompt">Who do you think is responsible?</p>
+          <div class="mystery-case-answers" id="mysteryCaseAnswers"></div>
+          <p class="mystery-feedback" id="mysteryCaseFeedback" role="status" aria-live="polite">A case is waiting on your desk.</p>
+          <div class="mystery-progress-line"><span id="mysteryCasesSolved">0 of 3 files solved</span><button type="button" class="mystery-text-button" id="mysteryCaseReset">Review this file</button></div>
+        </article>
+
+        <article class="mystery-wing-room" id="cipherCabinet">
+          <div class="mystery-room-top"><span class="mystery-room-icon">🔐</span><span class="mystery-room-index">CODE ROOM · 02</span></div>
+          <h3>The Cipher Cabinet</h3>
+          <p class="mystery-room-intro">A locked drawer, a coded note, and no key in sight. Can you read what was hidden?</p>
+          <div class="mystery-cipher-paper">
+            <span class="mystery-paper-label" id="mysteryCipherLabel">ENVELOPE 01 · SHIFT CIPHER</span>
+            <strong id="mysteryCipherCode">Uif lfz jt voefs uif cppl</strong>
+          </div>
+          <p id="mysteryCipherHint" class="mystery-cipher-hint">Hint: Each letter moved one place forward. Move it one place back.</p>
+          <form id="mysteryCipherForm" class="mystery-cipher-form">
+            <label for="mysteryCipherAnswer">Your decoded message</label>
+            <input id="mysteryCipherAnswer" type="text" maxlength="90" autocomplete="off" placeholder="Type what you think it says..." required>
+            <button type="submit" class="mystery-action-button">Try the lock</button>
+          </form>
+          <p id="mysteryCipherFeedback" class="mystery-feedback" role="status" aria-live="polite">The cabinet is listening.</p>
+          <div class="mystery-progress-line"><span id="mysteryCipherProgress">0 of 3 envelopes opened</span><button type="button" class="mystery-text-button" id="mysteryCipherHintButton">Another hint</button></div>
+        </article>
+
+        <article class="mystery-wing-room" id="impossibleMuseum">
+          <div class="mystery-room-top"><span class="mystery-room-icon">🪞</span><span class="mystery-room-index">ODDITY HALL · 03</span></div>
+          <h3>Museum of Impossible Things</h3>
+          <p class="mystery-room-intro">These artifacts have no place in an ordinary world. Choose one and see what it does.</p>
+          <div class="mystery-artifact-list">
+            <button type="button" class="mystery-artifact active" data-artifact="compass"><span>🧭</span><span><b>The Untrue Compass</b><small>It points toward promises left unfinished.</small></span><i>›</i></button>
+            <button type="button" class="mystery-artifact" data-artifact="jar"><span>🌧️</span><span><b>The Pocket Rainstorm</b><small>A whole rainy afternoon inside a glass jar.</small></span><i>›</i></button>
+            <button type="button" class="mystery-artifact" data-artifact="clock"><span>⌛</span><span><b>The Borrowed Minute</b><small>A clock that keeps time for someone else.</small></span><i>›</i></button>
+          </div>
+          <div class="mystery-artifact-display" id="mysteryArtifactDisplay" aria-live="polite">
+            <span class="mystery-artifact-display-icon">🧭</span><b>The Untrue Compass</b>
+            <p>Its needle trembles whenever someone remembers a promise they made to themselves.</p>
+            <button type="button" class="mystery-action-button" id="mysteryArtifactAction">Inspect the compass</button>
+          </div>
+          <p class="mystery-feedback" id="mysteryArtifactFeedback" role="status" aria-live="polite">The museum lights are on.</p>
+          <div class="mystery-progress-line"><span id="mysteryArtifactsSeen">0 of 3 artifacts examined</span><span class="mystery-small-note">No collecting required.</span></div>
+        </article>
+
+        <article class="mystery-wing-room" id="unwrittenChapter">
+          <div class="mystery-room-top"><span class="mystery-room-icon">📖</span><span class="mystery-room-index">STORY ROOM · 04</span></div>
+          <h3>The Unwritten Chapter</h3>
+          <p class="mystery-room-intro">A story that changes with your choices. There is more than one way through it.</p>
+          <div class="mystery-story-page">
+            <span class="mystery-paper-label" id="mysteryStoryChapter">CHAPTER 01 · THE ARRIVAL</span>
+            <h4 id="mysteryStoryTitle">The Door That Borrowed Your Name</h4>
+            <p id="mysteryStoryText">At the end of a quiet hallway, you find a door with your name written on a paper label. You are certain it wasn't there yesterday. From the other side comes a gentle tapping.</p>
+            <div class="mystery-story-choices" id="mysteryStoryChoices">
+              <button type="button" class="mystery-story-choice" data-story-choice="knock">Knock three times.</button>
+              <button type="button" class="mystery-story-choice" data-story-choice="listen">Listen at the keyhole.</button>
+            </div>
+          </div>
+          <p class="mystery-feedback" id="mysteryStoryFeedback" role="status" aria-live="polite">Your choices shape this chapter.</p>
+          <div class="mystery-progress-line"><span id="mysteryStoryEndings">0 endings found</span><button type="button" class="mystery-text-button" id="mysteryStoryRestart" hidden>Read again</button></div>
+        </article>
+      </div>
+      <p class="mystery-wing-footnote">✦ These rooms keep their own notes on this device. They do not change your stars, collectibles, account progress, or existing discoveries.</p>
+    </section>
+
     <section class="section-heading" id="diary"><div><p class="eyebrow">WORLD 05 · THIS SPACE IS YOURS</p><h2>Confession Room</h2></div><span class="section-note">Saved on this device.</span></section>
     <section class="diary-layout">
       <form class="panel diary-form" id="diaryForm">
@@ -1268,6 +1350,7 @@
 <script src="observatory.js?v=1"></script>
 <script src="living-world.js?v=1"></script>
 <script src="mystery-mailbox.js?v=1"></script>
+<script src="mystery-library-expansion.js?v=1"></script>
 
 <!-- Register notification service worker -->
 <script>
