@@ -4213,7 +4213,6 @@ $("onlinePhotoInput").addEventListener("change", async event => {
 
   function showDmBrowserNotification(message) {
     if (!("Notification" in window) || Notification.permission !== "granted") return;
-    if (!document.hidden) return;
     const peer = dmConversations.get(message.conversation_id);
     const name = peer?.profile?.display_name || "Tambay";
     try {
