@@ -184,3 +184,28 @@ body :is(.soft-btn,.secondary-btn,.choice-btn,.theme-choice,.icon-btn){
 }
 body :is(.primary-btn,.small-btn):disabled{opacity:.72}
 
+/* Section headers for the six worlds and all other destination sections. */
+body .section-heading h1,
+body .section-heading h2,
+body .section-heading h3{
+  color:var(--bt-text)!important;
+  opacity:1!important;
+  text-shadow:none;
+}
+body .section-heading .eyebrow{
+  color:var(--bt-accent)!important;
+  opacity:1!important;
+  text-shadow:none;
+}
+body .section-heading .section-note{
+  color:var(--bt-muted)!important;
+  opacity:1!important;
+}
+/* Homepage's editorial worlds heading uses a dark hero-like backdrop. */
+body #home > .section-heading#worlds h2{
+  color:var(--bt-text)!important;
+}
+body #home > .section-heading#worlds .eyebrow{
+  color:var(--bt-accent)!important;
+}
+
