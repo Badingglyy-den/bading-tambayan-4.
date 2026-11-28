@@ -22,6 +22,10 @@
   const keepsakeShelf = document.getElementById("attic-keepsake-shelf");
   const keepsakeCount = document.getElementById("attic-keepsake-count");
 
+  const today = new Date();
+  const dateKey = [today.getFullYear(), String(today.getMonth() + 1).padStart(2, "0"), String(today.getDate()).padStart(2, "0")].join("-");
+  const dayNumber = Math.floor(Date.UTC(today.getFullYear(), today.getMonth(), today.getDate()) / 86400000);
+
   const musicRecordings = [
     "A soft voice counts: “Two knocks. One pause. One final knock.” Then the recording ends.",
     "A music-box melody plays backwards. At the end, someone whispers: “The quietest drawer is not empty.”",
@@ -31,8 +35,110 @@
     "A paper rustle, a small laugh, then: “If you found this, you were meant to look closer.”",
     "The recording is almost silent. Just before it ends, a voice says: “The attic is only the beginning.”"
   ];
-  const musicMessageToday = musicRecordings[dayNumber % musicRecordings.length];
+  const musicMessageToday = musicRecordings[((dayNumber % musicRecordings.length) + musicRecordings.length) % musicRecordings.length];
   const musicDateKey = dateKey;
+
+  // Original synthesized music-box audio; no external tracks or paid assets.
+  let atticAudioContext = null;
+  let atticAudioNodes = [];
+  let atticAudioTimers = [];
+
+  function stopAtticMusic() {
+    atticAudioTimers.forEach(clearTimeout);
+    atticAudioTimers = [];
+    atticAudioNodes.forEach(node => { try { node.stop(); } catch (error) {} });
+    atticAudioNodes = [];
+    if (musicStopButton) musicStopButton.hidden = true;
+    if (musicButton) musicButton.textContent = "Play today's melody again";
+  }
+
+  function playAtticMusic() {
+    const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+    if (!AudioContextClass) {
+      if (musicMessage) musicMessage.textContent += " This browser does not support in-page audio.";
+      return;
+    }
+    stopAtticMusic();
+    try {
+      atticAudioContext = atticAudioContext || new AudioContextClass();
+      const ctx = atticAudioContext;
+      const begin = () => {
+        if (ctx.state !== "running") return;
+        if (musicStopButton) musicStopButton.hidden = false;
+        if (musicButton) musicButton.textContent = "Play today's melody again";
+        const master = ctx.createGain();
+        master.gain.value = 0.24;
+        master.connect(ctx.destination);
+        const patterns = [
+          [659.25,783.99,987.77,783.99,587.33,659.25,523.25,587.33],
+          [523.25,659.25,783.99,1046.5,783.99,659.25,587.33,523.25],
+          [587.33,698.46,880,698.46,659.25,783.99,987.77,880],
+          [440,554.37,659.25,880,659.25,554.37,493.88,440],
+          [659.25,880,783.99,659.25,587.33,783.99,698.46,587.33],
+          [523.25,587.33,698.46,783.99,698.46,587.33,523.25,392],
+          [783.99,698.46,659.25,523.25,587.33,659.25,523.25,392]
+        ];
+        const melody = patterns[((dayNumber % patterns.length) + patterns.length) % patterns.length];
+        const start = ctx.currentTime + 0.08;
+        melody.concat(melody.slice(0,4)).forEach((frequency,index) => {
+          const at = start + index * 0.48;
+          const osc = ctx.createOscillator();
+          const overtone = ctx.createOscillator();
+          const tone = ctx.createGain();
+          const shimmer = ctx.createGain();
+          osc.type = "sine";
+          osc.frequency.setValueAtTime(frequency,at);
+          overtone.type = "triangle";
+          overtone.frequency.setValueAtTime(frequency * 2.003,at);
+          tone.gain.setValueAtTime(0.0001,at);
+          tone.gain.exponentialRampToValueAtTime(0.55,at+0.018);
+          tone.gain.exponentialRampToValueAtTime(0.0001,at+0.42);
+          shimmer.gain.setValueAtTime(0.0001,at);
+          shimmer.gain.exponentialRampToValueAtTime(0.12,at+0.012);
+          shimmer.gain.exponentialRampToValueAtTime(0.0001,at+0.25);
+          osc.connect(tone); tone.connect(master);
+          overtone.connect(shimmer); shimmer.connect(master);
+          osc.start(at); overtone.start(at);
+          osc.stop(at+0.45); overtone.stop(at+0.28);
+          atticAudioNodes.push(osc,overtone);
+        });
+        // Three soft clock-like knocks echo the cabinet clue.
+        for (let i=0;i<3;i++) {
+          const at=start+0.15+i*1.05+(i===2?0.42:0);
+          const tick=ctx.createOscillator();
+          const gain=ctx.createGain();
+          tick.type="sine";
+          tick.frequency.value=i===2?180:240;
+          gain.gain.setValueAtTime(0.0001,at);
+          gain.gain.exponentialRampToValueAtTime(0.08,at+0.008);
+          gain.gain.exponentialRampToValueAtTime(0.0001,at+0.09);
+          tick.connect(gain); gain.connect(master);
+          tick.start(at); tick.stop(at+0.1);
+          atticAudioNodes.push(tick);
+        }
+        const duration=melody.length*0.48+4*0.48+0.8;
+        atticAudioTimers.push(setTimeout(stopAtticMusic,duration*1000+250));
+      };
+      if(ctx.state==="suspended") ctx.resume().then(begin).catch(()=>{
+        if(musicMessage) musicMessage.textContent += " Tap play again to enable sound.";
+      });
+      else begin();
+    } catch(error) {
+      if(musicMessage) musicMessage.textContent += " Audio couldn't start on this device. Please try again.";
+    }
+  }
+
+  let musicStopButton = null;
+  if (musicButton) {
+    musicStopButton=document.createElement("button");
+    musicStopButton.type="button";
+    musicStopButton.className=musicButton.className;
+    musicStopButton.textContent="Stop audio";
+    musicStopButton.hidden=true;
+    musicStopButton.style.marginLeft="8px";
+    musicButton.insertAdjacentElement("afterend",musicStopButton);
+    musicStopButton.addEventListener("click",stopAtticMusic);
+  }
 
   function getAtticProgress() {
     try {
@@ -99,8 +205,8 @@
   if (musicButton && musicMessage) {
     musicButton.addEventListener("click", () => {
       musicMessage.hidden = false;
-      musicMessage.textContent = "“" + musicMessageToday + "”";
-      musicButton.textContent = "Play today's recording again";
+      musicMessage.textContent = "“" + musicMessageToday + "”  ♪ Today's original melody is playing below. Use Stop audio whenever you like.";
+      playAtticMusic();
       const progress = getAtticProgress();
       if (progress.atticMusicDate !== musicDateKey) {
         progress.atticMusicDate = musicDateKey;
@@ -176,9 +282,6 @@
     { image: "🔔", detail: "A little bell hangs from the frame, but the photograph is completely silent.", secret: "The final note says: “When you hear nothing, listen closer.”" }
   ];
 
-  const today = new Date();
-  const dateKey = [today.getFullYear(), String(today.getMonth() + 1).padStart(2, "0"), String(today.getDate()).padStart(2, "0")].join("-");
-  const dayNumber = Math.floor(Date.UTC(today.getFullYear(), today.getMonth(), today.getDate()) / 86400000);
   const clue = dailyPhotoClues[((dayNumber % dailyPhotoClues.length) + dailyPhotoClues.length) % dailyPhotoClues.length];
 
   if (photoNumber) photoNumber.textContent = "NO. " + String((dayNumber % dailyPhotoClues.length) + 1).padStart(3, "0");
