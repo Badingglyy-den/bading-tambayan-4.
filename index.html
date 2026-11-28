@@ -1516,6 +1516,20 @@
           </div>
           <p class="cosmic-selection-status" id="cosmicSelectionStatus" aria-live="polite">No destination selected yet. Choose a planet to prepare your expedition.</p>
         </section>
+        <section class="cosmic-exploration" id="cosmicExplore" aria-labelledby="cosmicExploreTitle" hidden>
+          <div class="cosmic-section-heading"><div><p class="cosmic-kicker">PLANETARY SURFACE · FIELD EXPLORATION</p><h3 id="cosmicExploreTitle">Your landing zone</h3><p id="cosmicExploreIntro">Choose a planet to unlock its surface.</p></div><span class="cosmic-landing-status" id="cosmicLandingStatus">SHIP IN ORBIT</span></div>
+          <div class="cosmic-landscape" id="cosmicLandscape">
+            <div class="cosmic-landscape-sky"><span>✦</span><span>·</span><span>✧</span><span>·</span><span>✦</span></div>
+            <div class="cosmic-landscape-horizon" aria-hidden="true"><span class="cosmic-landscape-moon">◐</span><span class="cosmic-landscape-ridge ridge-one"></span><span class="cosmic-landscape-ridge ridge-two"></span></div>
+            <div class="cosmic-discovery-grid" id="cosmicDiscoveryGrid" aria-label="Tap discoveries in this environment"></div>
+          </div>
+          <div class="cosmic-explore-bottom">
+            <div class="cosmic-progress-card"><span class="cosmic-label">PLANET SURVEY</span><strong id="cosmicPlanetProgress">0 / 4 discoveries</strong><div class="cosmic-progress-track"><i id="cosmicPlanetProgressBar"></i></div><small id="cosmicPlanetProgressHint">Explore the landing zone to complete your survey.</small></div>
+            <div class="cosmic-inventory-card"><span class="cosmic-label">YOUR FIELD PACK</span><div class="cosmic-inventory-items"><span>🔹 <b id="cosmicCrystalCount">0</b> Crystals</span><span>🌱 <b id="cosmicBioCount">0</b> Bio-samples</span><span>🪙 <b id="cosmicRelicCount">0</b> Relics</span></div></div>
+          </div>
+          <div class="cosmic-discovery-log"><div class="cosmic-log-heading"><div><span class="cosmic-label">CAPTAIN'S LOG</span><h4>Discoveries & artifacts</h4></div><span id="cosmicLogCount">0 found</span></div><div id="cosmicDiscoveryLog" class="cosmic-log-list"><p>No discoveries yet. Your first find is waiting.</p></div></div>
+          <p class="cosmic-save-note" id="cosmicSaveNote">Expedition progress saves privately on this device.</p>
+        </section>
         <footer class="cosmic-footer">THE FRONTIER IS YOURS TO DISCOVER <span>✦</span> TAKE NOTHING BUT MEMORIES</footer>
       </div>
     </section>
