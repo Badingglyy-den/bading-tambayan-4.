@@ -33,6 +33,7 @@
   <meta name="apple-mobile-web-app-title" content="Bading Tambayan">
   <title>Bading Tambayan 4.2 — The Tambayanverse</title>
   <link rel="stylesheet" href="style.css?v=20261128-headeravatar2">
+  <link rel="stylesheet" href="sound-engine.css?v=1">
   <link rel="stylesheet" href="homepage-redesign.css?v=mobile-profile-3">
   <link rel="stylesheet" href="community-garden.css?v=1">
   <link rel="stylesheet" href="cosmic-frontier.css?v=4">
@@ -464,6 +465,8 @@ body .verse-map-panel .map-location:hover{
     <span class="account-chip-icon">♙</span>
     <span class="account-chip-name">Log in</span>
   </button>
+
+  <button class="icon-btn sound-settings-open" id="soundSettingsOpen" type="button" title="Sound settings" aria-label="Open sound settings">♫</button>
 
   <button class="icon-btn profile-avatar-btn" id="profileOpen"
     type="button" title="Your profile" aria-label="Open Avatar Studio">
@@ -1660,7 +1663,20 @@ body .verse-map-panel .map-location:hover{
     <footer class="footer"><span>✦ BADING TAMBAYAN 4.2 ✦</span><p>Made for the soft-hearted, the chaotic, and everyone in between.</p><button class="tiny-link" id="backupOpen">Backup & settings</button></footer>
   </main>
   
-<dialog id="accountDialog" class="modal">
+<dialog id="soundSettingsDialog" class="modal sound-settings-dialog">
+  <form method="dialog" class="modal-close"><button aria-label="Close">✕</button></form>
+  <p class="eyebrow">THE TAMBAYANVERSE · AUDIO</p>
+  <h2>Sound settings ♫</h2>
+  <p class="sound-settings-intro">A quiet homepage, with a different atmosphere waiting inside each world. Audio begins after you interact with the site.</p>
+  <label class="sound-setting-toggle"><span><strong>All sounds</strong><small>Master sound switch</small></span><input id="soundMasterToggle" type="checkbox" checked></label>
+  <label class="sound-setting-toggle"><span><strong>World ambience</strong><small>Atmospheric music inside worlds only</small></span><input id="soundMusicToggle" type="checkbox" checked></label>
+  <label class="sound-setting-range" for="soundMusicVolume"><span><strong>Music volume</strong><output id="soundMusicValue">35%</output></span><input id="soundMusicVolume" type="range" min="0" max="100" value="35"></label>
+  <label class="sound-setting-toggle"><span><strong>Sound effects</strong><small>Buttons, game actions and discoveries</small></span><input id="soundEffectsToggle" type="checkbox" checked></label>
+  <label class="sound-setting-range" for="soundEffectsVolume"><span><strong>Effects volume</strong><output id="soundEffectsValue">65%</output></span><input id="soundEffectsVolume" type="range" min="0" max="100" value="65"></label>
+  <p class="sound-settings-note" id="soundSettingsStatus" role="status" aria-live="polite">Tap a control to preview its sound.</p>
+  <button class="primary-btn full-btn" id="soundTestButton" type="button">▶ Test sound</button>
+ </dialog>
+  <dialog id="accountDialog" class="modal">
   <form method="dialog" class="modal-close">
     <button aria-label="Close">✕</button>
   </form>
@@ -1778,6 +1794,7 @@ body .verse-map-panel .map-location:hover{
 
   <!-- Existing Bading Tambayan features -->
   <script src="script.js?v=20261128-main-profile-header1"></script>
+  <script src="sound-engine.js?v=1"></script>
   <!-- Supabase library required by online multiplayer -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <!-- Online multiplayer module -->
