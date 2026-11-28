@@ -1900,6 +1900,7 @@ renderRoomList();
         .select("id,user_id,content,created_at")
         .eq("room_id", currentRoom.id)
         .order("created_at", { ascending: false })
+        .order("id", { ascending: false })
         .limit(100);
 
       if (error) throw error;
@@ -2157,6 +2158,7 @@ for (const messageElement of prependedMessages) {
     const item = document.createElement("div");
     item.className = "online-message" + (mine ? " is-mine" : " is-other");
     item.dataset.messageId = id;
+    item.dataset.createdAt = message.created_at || "";
 
     const time = message.created_at ? new Date(message.created_at).toLocaleTimeString([], {
       hour: "2-digit",
@@ -2198,7 +2200,18 @@ if (String(message.content || "").startsWith("[[PHOTO]]")) {
     const wasNearBottom =
       messageList.scrollHeight - messageList.scrollTop - messageList.clientHeight < 80;
 
-    messageList.appendChild(item);
+    const incomingTime = Date.parse(message.created_at || "");
+    const existingItems = Array.from(messageList.querySelectorAll(".online-message"));
+    const insertBefore = existingItems.find(existing => {
+      const existingTime = Date.parse(existing.dataset.createdAt || "");
+      if (Number.isFinite(incomingTime) && Number.isFinite(existingTime) && incomingTime !== existingTime) {
+        return existingTime > incomingTime;
+      }
+      return String(existing.dataset.messageId || "").localeCompare(id) > 0;
+    });
+
+    if (insertBefore) messageList.insertBefore(item, insertBefore);
+    else messageList.appendChild(item);
 
     if (wasNearBottom) {
       messageList.scrollTop = messageList.scrollHeight;
