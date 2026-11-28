@@ -4203,6 +4203,7 @@ $("onlinePhotoInput").addEventListener("change", async event => {
   let dmActivePeer = null;
   let dmHeads = new Map();
   let dmClosedHeads = new Set();
+  let dmClosedHeadsLoadedFor = null;
   let dmLoadVersion = 0;
   let dmUnreadConversations = new Set();
   let dmUnreadCounts = new Map();
@@ -4215,6 +4216,19 @@ $("onlinePhotoInput").addEventListener("change", async event => {
 
   function dmEscape(value) { return safeText(value); }
   function dmReadKey(id) { return "bt_dm_read_" + currentUser.id + "_" + id; }
+  function dmClosedHeadsKey() { return "bt_dm_closed_heads_" + currentUser.id; }
+  function loadDmClosedHeads() {
+    if (!currentUser || dmClosedHeadsLoadedFor === currentUser.id) return;
+    dmClosedHeadsLoadedFor = currentUser.id;
+    try {
+      const saved = JSON.parse(localStorage.getItem(dmClosedHeadsKey()) || "[]");
+      dmClosedHeads = new Set(Array.isArray(saved) ? saved : []);
+    } catch (_) { dmClosedHeads = new Set(); }
+  }
+  function saveDmClosedHeads() {
+    if (!currentUser) return;
+    try { localStorage.setItem(dmClosedHeadsKey(), JSON.stringify([...dmClosedHeads])); } catch (_) {}
+  }
 
   function ensureDmDock() {
     if ($("btDmDock")) return;
@@ -4272,6 +4286,7 @@ $("onlinePhotoInput").addEventListener("change", async event => {
       if (dmActiveConversation) {
         dmHeads.delete(dmActiveConversation);
         dmClosedHeads.add(dmActiveConversation);
+        saveDmClosedHeads();
       }
       dmActiveConversation=null; dmActivePeer=null; win.hidden=true; renderDmHeads();
     };
@@ -4331,6 +4346,7 @@ $("onlinePhotoInput").addEventListener("change", async event => {
           const peer = dmConversations.get(msg.conversation_id);
           if (peer) {
             dmClosedHeads.delete(msg.conversation_id);
+            saveDmClosedHeads();
             dmHeads.set(msg.conversation_id, peer);
           }
           dmUnreadConversations.add(msg.conversation_id);
@@ -4344,6 +4360,7 @@ $("onlinePhotoInput").addEventListener("change", async event => {
 
   async function loadDmConversations() {
     if (!client || !currentUser) return;
+    loadDmClosedHeads();
     const loadVersion = ++dmLoadVersion;
     const {data: mine, error} = await client.from("dm_participants")
       .select("conversation_id").eq("user_id", currentUser.id);
@@ -4501,6 +4518,7 @@ $("onlinePhotoInput").addEventListener("change", async event => {
     dmUnreadCounts.delete(conversationId);
     dmHeads.delete(conversationId);
     dmClosedHeads.delete(conversationId);
+    saveDmClosedHeads();
     renderDmHeads();
     $("btDmInput").focus({preventScroll:true});
   }
@@ -4627,6 +4645,7 @@ $("onlinePhotoInput").addEventListener("change", async event => {
   function minimizeDmWindow() {
     if(dmActiveConversation && dmActivePeer) {
       dmClosedHeads.delete(dmActiveConversation);
+      saveDmClosedHeads();
       dmHeads.set(dmActiveConversation,dmActivePeer);
     }
     dmActiveConversation=null; dmActivePeer=null;
