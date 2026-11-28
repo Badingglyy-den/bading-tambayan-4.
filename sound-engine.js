@@ -220,6 +220,9 @@
   document.addEventListener("tambayan:notification", () => play("notify"));
   document.addEventListener("tambayan:sound-success", () => play("success"));
   window.addEventListener("hashchange", syncWorld);
+  document.addEventListener("click", event => {
+    if (event.target.closest("[data-go], a[href^=\"#\"]")) setTimeout(syncWorld, 0);
+  }, true);
   document.addEventListener("visibilitychange", () => {
     if (document.hidden && context && context.state === "running") {
       stopAmbience();
