@@ -211,9 +211,9 @@
     if (now - lastUiSound < 65) return;
     lastUiSound = now;
     if (target.id === "rageDoll") play("pin");
-    else if (target.closest(".rage-plate") || target.matches("[data-rage-plate]")) play("break");
-    else if (target.id === "ragePunchBag") play("punch");
-    else if (target.matches("[data-cosmic-discovery], .cosmic-discovery, .cosmic-discovery-button")) play("discover");
+    else if (target.matches("[data-plate]")) play("break");
+    else if (target.id === "ragePunchTarget") play("punch");
+    else if (target.matches("[data-cosmic-find], [data-cosmic-planet], #cosmicScanCreature")) play("discover");
     else play("click");
   }, true);
 
