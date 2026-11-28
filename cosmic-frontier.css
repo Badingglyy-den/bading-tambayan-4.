@@ -116,3 +116,27 @@
 #cosmicFrontier .cosmic-planet-card.survey-complete{border-color:#6ee5bd!important}
 @media(max-width:760px){#cosmicFrontier .cosmic-discovery-grid{grid-template-columns:repeat(2,minmax(0,1fr));min-height:360px}#cosmicFrontier .cosmic-find{min-height:150px}}
 @media(max-width:520px){#cosmicFrontier .cosmic-landscape{min-height:470px;padding:12px}#cosmicFrontier .cosmic-discovery-grid{min-height:440px;gap:9px}#cosmicFrontier .cosmic-find{min-height:185px;padding:10px 6px}#cosmicFrontier .cosmic-find-icon{width:50px;height:50px;font-size:29px}#cosmicFrontier .cosmic-find strong{font-size:11px}#cosmicFrontier .cosmic-explore-bottom{grid-template-columns:1fr}#cosmicFrontier .cosmic-section-heading{align-items:flex-start}}
+
+/* Interactive expedition systems: encounter, mission board and creature archive. */
+#cosmicFrontier .cosmic-interactive-panel{margin-top:14px;padding:16px;border:1px solid #9e9cff38;border-radius:15px;background:linear-gradient(145deg,#101a35,#0a1026)}
+#cosmicFrontier .cosmic-interactive-panel>p{font-size:12px;margin:10px 0;color:#c3c9e8!important}
+#cosmicFrontier .cosmic-encounter-card{display:flex;align-items:center;gap:13px;min-height:84px;padding:12px;border:1px solid #8ea6ff38;border-radius:13px;background:#ffffff08}
+#cosmicFrontier .cosmic-encounter-card>div{display:grid;gap:5px;min-width:0}
+#cosmicFrontier .cosmic-encounter-card strong{font-size:13px}
+#cosmicFrontier .cosmic-encounter-card small{font-size:11px;color:#c3c9e8!important;line-height:1.5}
+#cosmicFrontier .cosmic-encounter-art{display:grid;place-items:center;flex:0 0 58px;width:58px;height:58px;border-radius:16px;background:#8d8aff20;font-size:34px}
+#cosmicFrontier .cosmic-action-button,#cosmicFrontier .cosmic-rename-button{display:inline-flex;align-items:center;justify-content:center;min-height:44px;margin-top:12px;padding:10px 15px;border:1px solid #8f9cff88;border-radius:12px;background:linear-gradient(120deg,#544ca0,#315f91);color:#fff!important;font-size:12px;font-weight:800;cursor:pointer}
+#cosmicFrontier .cosmic-action-button:disabled{opacity:.48;cursor:not-allowed}
+#cosmicFrontier .cosmic-mission-track{height:9px;margin:12px 0;overflow:hidden;border-radius:9px;background:#ffffff20}
+#cosmicFrontier .cosmic-mission-track i{display:block;width:0;height:100%;border-radius:9px;background:linear-gradient(90deg,#a98bff,#65e5d3);transition:width .3s}
+#cosmicFrontier .cosmic-creature-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:12px}
+#cosmicFrontier .cosmic-creature-card{display:flex;gap:10px;min-width:0;padding:12px;border:1px solid #8ea6ff38;border-radius:13px;background:#ffffff08}
+#cosmicFrontier .cosmic-creature-card>div{display:grid;gap:6px;min-width:0;flex:1}
+#cosmicFrontier .cosmic-creature-art{font-size:32px}
+#cosmicFrontier .cosmic-creature-card strong{font-size:12px;overflow-wrap:anywhere}
+#cosmicFrontier .cosmic-creature-card small{font-size:10px;color:#c3c9e8!important}
+#cosmicFrontier .cosmic-creature-card label{display:grid;gap:5px;font-size:10px;color:#c3c9e8!important}
+#cosmicFrontier .cosmic-creature-card input{width:100%;min-width:0;min-height:38px;padding:8px;border:1px solid #9e9cff55;border-radius:9px;background:#080e20;color:#fff!important;font:inherit;font-size:12px}
+#cosmicFrontier .cosmic-rename-button{min-height:36px;margin-top:0;padding:7px 10px;font-size:10px}
+#cosmicFrontier .cosmic-creature-grid>p{grid-column:1/-1}
+@media(max-width:600px){#cosmicFrontier .cosmic-creature-grid{grid-template-columns:1fr}#cosmicFrontier .cosmic-action-button{width:100%}}
