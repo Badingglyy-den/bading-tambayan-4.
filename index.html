@@ -33,7 +33,7 @@
   <meta name="apple-mobile-web-app-title" content="Bading Tambayan">
   <title>Bading Tambayan 4.2 — The Tambayanverse</title>
   <link rel="stylesheet" href="style.css?v=20261128-headeravatar2">
-  <link rel="stylesheet" href="homepage-redesign.css?v=20261128-type2">
+  <link rel="stylesheet" href="homepage-redesign.css?v=mobile-profile-3">
   <link rel="stylesheet" href="community-garden.css?v=1">
   <style id="tambayanverse-map-desktop-fix">
 @media (min-width: 601px) {
@@ -216,6 +216,14 @@
     transform: translateY(-50%) !important;
   }
 
+  body .verse-map-panel .map-rage {
+    top: 8% !important;
+    left: 50% !important;
+    right: auto !important;
+    bottom: auto !important;
+    transform: translateX(-50%) !important;
+  }
+
   body .verse-map-panel .map-caption {
     color: #d8baff !important;
     font-size: 13px !important;
@@ -228,6 +236,20 @@
   to { opacity: 1; }
 }
   </style>
+  <style id="tambayanverse-map-rage-mobile-fix">
+@media (max-width: 600px) {
+  .verse-map-panel .map-sky { min-height: 700px !important; }
+  .verse-map-panel .map-rage {
+    top: 23% !important;
+    left: 50% !important;
+    right: auto !important;
+    bottom: auto !important;
+    transform: translateX(-50%) !important;
+    z-index: 4 !important;
+  }
+}
+</style>
+
 <style id="daily-dispatch-five-challenges">
 .daily-dispatch-intro{margin:8px 0 16px}
 .daily-dispatch-intro h3{margin:4px 0}
