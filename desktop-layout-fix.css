@@ -206,6 +206,12 @@ dialog#accountDialog[open] {
 
 /* Fully remove the initial gate after session restoration.
    This prevents a translucent card/shadow from lingering over the homepage. */
+/* Once session checking finishes without an account, replace the welcome gate
+   with the real email/password dialog opened by multiplayer.js. */
+html.auth-locked:not(.auth-checking) #authGate {
+  display: none !important;
+}
+
 html:not(.auth-locked):not(.auth-checking) #authGate {
   display: none !important;
   visibility: hidden !important;
