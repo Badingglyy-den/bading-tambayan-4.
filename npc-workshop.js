@@ -74,6 +74,9 @@
       .npc-tool { margin-top:12px; padding:16px; border:1px solid var(--line); border-radius:16px; background:var(--panel); }
       .npc-tool h5 { margin:0 0 5px; font-size:1rem; }
       .npc-tool > p { margin:0 0 13px; color:var(--muted); font-size:.85rem; }
+      .npc-seasonal-voice { margin:0 0 14px; padding:11px 12px; border-left:3px solid var(--season-accent,var(--accent)); border-radius:0 10px 10px 0; background:color-mix(in srgb,var(--season-accent,var(--accent)) 9%,var(--panel)); }
+      .npc-seasonal-label { display:block; margin-bottom:4px; color:var(--season-accent,var(--accent)); font-size:.62rem; font-weight:800; letter-spacing:1.2px; }
+      .npc-seasonal-voice p { margin:0; color:var(--text); font-size:.8rem; line-height:1.5; }
       .npc-tool label { display:block; margin:10px 0 5px; font-size:.8rem; font-weight:700; color:var(--text); }
       .npc-tool input,.npc-tool textarea,.npc-tool select { width:100%; min-width:0; padding:10px 11px; border:1px solid var(--line); border-radius:10px; background:var(--bg); color:var(--text); font:inherit; }
       .npc-tool textarea { min-height:90px; resize:vertical; }
@@ -130,7 +133,32 @@
     const resident=residents.find(x=>x[0]===id)||residents[0];
     const heading=$("h5",{},resident[3]+" "+resident[1]);
     const desc=$("p",{},resident[2]);
-    host.append(heading,desc);
+    const seasonId = document.body.dataset.season || "bloomtide";
+    const seasonWhispers = {
+      bloomtide: "Everything feels like it's beginning again. No need to rush the first little step.",
+      suncrest: "There's a little extra light around today. Make room for something fun alongside the things you need to do.",
+      leafwhisper: "The world is slowing down a little. Keep what matters, and let the rest wait.",
+      frostveil: "It's a good day for a softer pace. Small progress still counts, even when it's quiet."
+    };
+    const residentWhispers = {
+      lumi: "I've picked three tiny stars for your priorities. Which one will you reach for first?",
+      bibi: "Bring me the tangled task. We'll loosen one knot at a time.",
+      momo: "The season has a mood of its own. Maybe your next sentence is hiding in it.",
+      pochi: "Even the smallest habit grows better with a little patience.",
+      nubi: "Check in with your energy before you fill your day.",
+      ruru: "I found a question worth keeping. Curiosity is a lovely companion.",
+      yuki: "Take a moment to notice what this season is teaching you.",
+      tavi: "A fresh page, a warm drink, and one focused chapter. That's enough to begin.",
+      kiko: "Let's make a little room for the things you want to remember.",
+      sora: "Ideas change with the weather. Catch yours before it drifts away.",
+      pippa: "A short focused burst can be its own kind of sunshine.",
+      remy: "There's always something new to notice if you follow one good question.",
+      olli: "Growth doesn't have to be loud. A small milestone is still a milestone.",
+      aki: "Let's turn the season's mood into one doable little challenge."
+    };
+    const seasonalVoice = $("div",{className:"npc-seasonal-voice",role:"note"});
+    seasonalVoice.append($("span",{className:"npc-seasonal-label"},"A LITTLE SEASONAL THOUGHT"),$("p",{},(seasonWhispers[seasonId] || seasonWhispers.bloomtide)+" "+(residentWhispers[id] || "")));
+    host.append(heading,desc,seasonalVoice);
     if(id==="lumi") {
       const fields=[0,1,2].map(i=>{const f=input("Priority "+(i+1));f.value=data.priorities[i]||"";return f;});
       fields.forEach((f,i)=>{host.append($("label",{}, "Priority "+(i+1)),f);});
