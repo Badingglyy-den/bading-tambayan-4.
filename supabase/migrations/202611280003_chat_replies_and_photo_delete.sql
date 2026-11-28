@@ -1,6 +1,6 @@
 -- Online Tambayan: threaded replies and sender-controlled photo removal.
 alter table public.messages
-  add column if not exists reply_to uuid
+  add column if not exists reply_to bigint
   references public.messages(id) on delete set null;
 
 create index if not exists messages_reply_to_idx
