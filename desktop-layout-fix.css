@@ -226,3 +226,28 @@ html:not(.auth-locked):not(.auth-checking) #authGate .auth-gate-card {
   opacity: 0 !important;
   box-shadow: none !important;
 }
+
+
+/* Keep the welcome/login gate completely out of view while restoring a session.
+   The page stays covered until auth finishes, without flashing the login card. */
+html.auth-locked.auth-checking #authGate {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+html.auth-locked.auth-checking body::before {
+  content: "Restoring your Tambayan... 💜";
+  position: fixed;
+  inset: 0;
+  z-index: 100001;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  box-sizing: border-box;
+  background: #100d20;
+  color: #d0c5dc;
+  font: 500 15px/1.5 system-ui, sans-serif;
+  text-align: center;
+}
