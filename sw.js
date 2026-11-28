@@ -73,7 +73,7 @@ self.addEventListener("push", event => {
     badge: "./app-icon.svg",
     tag: payload.messageId ? "tambayan-message-" + payload.messageId : (payload.roomId ? "tambayan-room-" + payload.roomId : "tambayan-chat"),
     renotify: false,
-    data: { roomId: payload.roomId || null, url: payload.url || "./" }
+    data: { roomId: payload.roomId || null, conversationId: payload.conversationId || null, messageId: payload.messageId || null, url: payload.url || "./" }
   };
 
   event.waitUntil(self.registration.showNotification(title, options));
