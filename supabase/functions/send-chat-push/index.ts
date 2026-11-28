@@ -49,7 +49,7 @@ Deno.serve(async (request) => {
       return new Response(JSON.stringify({ error: "A signed-in account is required" }), { status: 401, headers: cors });
     }
 
-    const { room_id, message_id } = await request.json();
+    const { room_id, message_id, sender_endpoint } = await request.json();
     if (!room_id || !message_id) return new Response(JSON.stringify({ error: "Missing room_id or message_id" }), { status: 400, headers: cors });
 
     const { data: message, error: messageError } = await admin
@@ -88,6 +88,13 @@ Deno.serve(async (request) => {
       .in("user_id", recipientIds);
     if (subscriptionsError) throw subscriptionsError;
 
+    // A push endpoint can be stale or associated with another account on the same device.
+    // Never send the sender's current browser/device endpoint a notification for its own message.
+    const senderEndpoint = typeof sender_endpoint === "string" ? sender_endpoint : "";
+    const recipientSubscriptions = (subscriptions || []).filter((row) =>
+      !senderEndpoint || row.endpoint !== senderEndpoint
+    );
+
     webpush.setVapidDetails(subject, publicKey, privateKey);
     const rawContent = String(message.content || "");
     const preview = rawContent.startsWith("[[PHOTO]]") ? "sent a photo 📷" : rawContent.slice(0, 110);
@@ -100,7 +107,7 @@ Deno.serve(async (request) => {
     });
 
     let sent = 0;
-    await Promise.all((subscriptions || []).map(async (row) => {
+    await Promise.all(recipientSubscriptions.map(async (row) => {
       try {
         await webpush.sendNotification(row.subscription, payload, { TTL: 60, urgency: "normal" });
         sent += 1;
