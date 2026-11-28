@@ -18,7 +18,7 @@ Deno.serve(async (request) => {
     const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
     const publicKey = Deno.env.get("VAPID_PUBLIC_KEY")!;
     const privateKey = Deno.env.get("VAPID_PRIVATE_KEY")!;
-    const subject = Deno.env.get("VAPID_SUBJECT") || "mailto:admin@badingtambayan.invalid";
+    const subject = Deno.env.get("VAPID_SUBJECT") || "https://badingglyy-den.github.io/bading-tambayan-4./";
     const authHeader = request.headers.get("Authorization");
     if (!authHeader) return new Response(JSON.stringify({ error: "Unauthorized" }), { status: 401, headers: cors });
 
