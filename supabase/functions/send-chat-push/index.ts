@@ -36,12 +36,23 @@ Deno.serve(async (request) => {
       .from("messages").select("id,room_id,user_id,content")
       .eq("id", message_id).eq("room_id", room_id).single();
     if (messageError || !message || message.user_id !== authData.user.id) {
+      console.warn("PUSH_DIAG: message authorization failed", {
+        messageFound: !!message,
+        queryError: messageError?.message || null,
+        senderMatches: !!message && message.user_id === authData.user.id
+      });
       return new Response(JSON.stringify({ error: "Message not found or sender mismatch" }), { status: 403, headers: cors });
     }
 
-    const { data: membership } = await admin.from("room_members")
+    const { data: membership, error: membershipError } = await admin.from("room_members")
       .select("user_id").eq("room_id", room_id).eq("user_id", authData.user.id).maybeSingle();
-    if (!membership) return new Response(JSON.stringify({ error: "Not a member of this room" }), { status: 403, headers: cors });
+    if (membershipError || !membership) {
+      console.warn("PUSH_DIAG: room membership check failed", {
+        membershipFound: !!membership,
+        queryError: membershipError?.message || null
+      });
+      return new Response(JSON.stringify({ error: "Not a member of this room" }), { status: 403, headers: cors });
+    }
 
     const { data: room } = await admin.from("rooms").select("room_name").eq("id", room_id).single();
     const { data: sender } = await admin.from("profiles").select("display_name").eq("user_id", authData.user.id).maybeSingle();
