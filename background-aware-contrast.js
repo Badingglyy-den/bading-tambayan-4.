@@ -67,7 +67,9 @@
     return base;
   }
   function chooseForeground(el) {
-    return luminance(backgroundColor(el)) > 0.43 ? DARK_TEXT : LIGHT_TEXT;
+    const theme = document.body?.dataset?.theme || "violet";
+    const lightTheme = ["cloud","peach","matcha"].includes(theme);
+    return lightTheme ? "#292431" : "#ffffff";
   }
   function hasOwnText(el) {
     if (el.matches("input,textarea,select,option,button")) return true;
@@ -84,26 +86,16 @@
     if (el.isContentEditable || el.closest("[contenteditable='true']")) return;
     if (!hasOwnText(el)) return;
 
-    // These interface elements sit on deliberately dark, layered surfaces.
-    // Their ancestor gradients can confuse the generic background sampler,
-    // so give them stable high-contrast colors instead of allowing faded text.
-    const darkTheme = ["violet","rose","ocean","midnight"].includes(document.body?.dataset?.theme);
-    const darkSurface = darkTheme && el.closest(
-      ".section-heading, .world-card, .attic-drawer, .diary-random-room, .diary-room, .garden-landscape, .garden-paths, .garden-feature-spots, .shop-panel, .collection-panel, .shop-item, .collection-pill"
-    );
+    // Use the selected palette's accessible foreground consistently.
     if (el.closest(".map-location")) {
-      const mapColor = el.matches("small") ? "#eadcff" : "#ffffff";
+      const lightTheme = ["cloud","peach","matcha"].includes(document.body?.dataset?.theme);
+      const mapColor = lightTheme ? "#292431" : (el.matches("small") ? "#f0e8ff" : "#ffffff");
       setImportant(el,"color",mapColor);
       setImportant(el,"-webkit-text-fill-color",mapColor);
-    } else if (el.matches("#starCount, #shopStars, .star-wallet b, .account-chip-name")) {
-      const hudColor = el.matches(".account-chip-name") ? "#ffffff" : "#fff2c9";
+    } else if (el.matches("#starCount, #shopStars, .star-wallet b")) {
+      const hudColor = "#ffe8a3";
       setImportant(el,"color",hudColor);
       setImportant(el,"-webkit-text-fill-color",hudColor);
-    } else if (darkSurface) {
-      const lightColor = el.matches("small, p, .world-kicker, .eyebrow, .garden-kicker, .shop-season-note")
-        ? "#eee6fa" : "#ffffff";
-      setImportant(el,"color",lightColor);
-      setImportant(el,"-webkit-text-fill-color",lightColor);
     } else {
       const color=chooseForeground(el);
       setImportant(el,"color",color);
