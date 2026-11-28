@@ -459,6 +459,8 @@ function render() {
   $("starCount").textContent = state.stars;
   $("shopStars").textContent = state.stars;
   const profileName = state.profile.name || "Sis";
+  const headerName = $("accountOpen")?.querySelector(".account-chip-name");
+  if (headerName) headerName.textContent = profileName;
   const welcomeNameEl = $("welcomeName");
   if (welcomeNameEl) welcomeNameEl.textContent = profileName;
   const heroName = $("profileHeroName"); if (heroName) heroName.textContent = profileName;
